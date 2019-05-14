@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/bottom_sheet_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="title"
+        android:padding="16dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/bottom_sheet_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false" />
+
+</LinearLayout>

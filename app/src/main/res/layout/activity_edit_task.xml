@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/task_name_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/taak"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/task_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionNext"
+            android:inputType="textCapSentences"
+            android:singleLine="true"
+            android:theme="@style/MyTheme.EditText" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/task_points_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/punten"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/task_name_hint"
+        app:layout_constraintWidth_percent="0.25">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/task_points_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:maxLength="2"
+            android:theme="@style/MyTheme.EditText" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/task_description_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/beschrijving"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/task_points_hint">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/task_description_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionDone"
+            android:inputType="textCapSentences|textMultiLine"
+            android:theme="@style/MyTheme.EditText" />
+    </android.support.design.widget.TextInputLayout>
+
+
+</android.support.constraint.ConstraintLayout>

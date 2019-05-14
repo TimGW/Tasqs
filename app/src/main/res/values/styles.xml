@@ -1,0 +1,62 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="chipIconTint">@color/grey</item>-->
+
+        <item name="android:windowBackground">@color/colorPrimary</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/white</item>
+    </style>
+
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launcher_icon</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="AppTheme.Login">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/white</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/colorAccent</item>
+    </style>
+
+    <style name="MyTheme.EditText" parent="Widget.AppCompat.EditText">
+        <!-- Inactive underline color-->
+        <item name="colorControlNormal">@color/grey</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+
+        <!-- Cursor and Active underline color, uses colorAccent by default if not defined-->
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
+    <style name="HintTextAppearance">
+        <!-- Inactive and Active label color, pointing to a selector-->
+        <item name="android:textColor">@drawable/hint_color</item>
+    </style>
+
+    <style name="ErrorTextAppearance">
+        <!-- Error text color-->
+        <item name="android:textColor">@color/error</item>
+    </style>
+
+</resources>
