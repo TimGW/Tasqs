@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.timgortworst.roomy">
+
+    <application
+            android:name=".RoomyApp"
+            android:allowBackup="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme"
+            tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
+        <!-- Main activities -->
+        <activity
+                android:name=".ui.splash.ui.SplashActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.Launcher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+
+            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.VIEW"/>-->
+
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
+                <!--<category android:name="android.intent.category.BROWSABLE"/>-->
+
+                <!--<data-->
+                        <!--android:host="huishoudgenoot.xyz"-->
+                        <!--android:pathPrefix="/households"-->
+                        <!--android:scheme="https"/>-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity
+                android:name=".ui.main.view.MainActivity"
+                android:screenOrientation="portrait"/>
+        <activity android:name=".ui.base.view.BaseActivity"/>
+        <activity
+                android:name=".ui.signin.view.SignInActivity"
+                android:theme="@style/AppTheme.Login"/>
+        <activity
+                android:name=".ui.eventcategory.view.EditEventCategoryActivity"
+                android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <activity android:name=".ui.agenda.ui.EditAgendaEventActivity"/>
+        <activity
+                android:name=".ui.profile.view.ProfileActivity"
+                android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+                android:name=".ui.setup.view.SetupActivity"
+                android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".ui.base.view.BaseAuthActivity"/>
+        <activity android:name=".ui.users.view.UsersActivity"/>
+    </application>
+
+</manifest>

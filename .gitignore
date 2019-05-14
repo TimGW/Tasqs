@@ -1,0 +1,16 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+*.iml
+nosapp/build/
+.idea/
+gradle/local.properties
+app/build/
+castlib/build/
+bottom-bar/build/
+video-player/build/
+imagin/build/

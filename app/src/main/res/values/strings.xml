@@ -1,0 +1,79 @@
+<resources>
+    <string name="home">home</string>
+    <string name="profile">profile</string>
+
+    <string name="material_calendar_monday">Mon</string>
+    <string name="material_calendar_tuesday">Tue</string>
+    <string name="material_calendar_wednesday">Wed</string>
+    <string name="material_calendar_thursday">Thu</string>
+    <string name="material_calendar_friday">Fri</string>
+    <string name="material_calendar_saturday">Sat</string>
+    <string name="material_calendar_sunday">Sun</string>
+
+    <array name="material_calendar_months_array">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </array>
+
+
+    <string name="current_date">June, 2016</string>
+    <string name="add_event">ADD CALENDAR EVENT</string>
+    <string name="sun">SUN</string>
+    <string name="mon">MON</string>
+    <string name="tue">TUE</string>
+    <string name="wed">WED</string>
+    <string name="thu">THU</string>
+    <string name="fri">FRI</string>
+    <string name="sat">SAT</string>
+    <string name="last_date">30</string>
+
+    <string name="material_calendar_today_button">Today</string>
+    <string name="material_calendar_positive_button">OK</string>
+    <string name="material_calendar_negative_button">Cancel</string>
+    <string name="household_tasks">Household tasks</string>
+    <string name="add_roommate">add roommate</string>
+    <string name="schema_toolbar_title">Schema</string>
+    <string name="householdtasks_toolbar_title">Household tasks</string>
+    <string name="householdtask_points">Points: %1$d</string>
+    <string name="loading">loading</string>
+    <string name="profile_invite">Vriend uitnodigen</string>
+    <string name="profile_help">Help</string>
+    <string name="profile_logout_text">Logout</string>
+    <string name="profile_notifications">Meldingen</string>
+    <string name="event_today">Vandaag</string>
+    <string name="planning">Planning</string>
+    <string name="three_days">3 dagen</string>
+    <string name="week">Week</string>
+    <string name="setup_new_household_rb_text">Create new household</string>
+    <string name="setup_existing_household_rb_text">Join existing household</string>
+    <string name="setup_existing_household_code_hint">Household code</string>
+    <string name="setup_referral_code_empty_error">Please provide a referral code</string>
+    <string name="button_next">Volgende</string>
+    <string name="generic_error">Something went wrong</string>
+    <string name="punten">Punten</string>
+    <string name="beschrijving">Beschrijving</string>
+    <string name="taak">Taak</string>
+    <string name="roommates">Huisgenoten</string>
+    <string name="date_hint">Datum</string>
+    <string name="task_hint">Taak</string>
+    <string name="user_hint">Persoon</string>
+    <string name="repeat_checkbox_text">Herhalen</string>
+    <string name="repeat_interval_hint">repeat interval</string>
+    <string name="repeating_interval_single_event">Single event</string>
+    <string name="repeating_interval_daily_event">Daily</string>
+    <string name="repeating_interval_weekly_event">Weekly</string>
+    <string name="repeating_interval_monthly_event">Monthly</string>
+    <string name="repeating_interval_annually_event">Annually</string>
+    <string name="next_occurance">Next occurrence: %1$s</string>
+
+</resources>
