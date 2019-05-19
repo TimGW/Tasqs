@@ -2,6 +2,7 @@ package com.timgortworst.roomy.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.AuthenticationResult
 import com.timgortworst.roomy.model.User
@@ -62,6 +63,7 @@ class UserRepository(
     }
 
     fun updateUser(
+        userId : String = auth.currentUser?.uid.orEmpty(),
         name: String = "",
         email: String = "",
         totalPoints: Int = 0,
@@ -69,7 +71,7 @@ class UserRepository(
         role: String = "",
         onComplete: () -> Unit
     ) {
-        val currentUserDocRef = userCollectionRef.document(auth.currentUser?.uid.orEmpty())
+        val currentUserDocRef = userCollectionRef.document(userId)
 
         val userFieldMap = mutableMapOf<String, Any>()
         if (name.isNotBlank()) userFieldMap[USER_NAME_REF] = name
@@ -78,7 +80,7 @@ class UserRepository(
         if (householdId.isNotBlank()) userFieldMap[USER_HOUSEHOLDID_REF] = householdId
         if (role.isNotBlank()) userFieldMap[USER_ROLE_REF] = role
 
-        currentUserDocRef.update(userFieldMap).addOnSuccessListener { onComplete() }
+        currentUserDocRef.set(userFieldMap, SetOptions.merge()).addOnSuccessListener { onComplete() }
     }
 
     fun getUsersForHouseholdId(householdId: String, onComplete: (List<User>) -> Unit) {
