@@ -21,26 +21,25 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-
             </intent-filter>
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW"/>-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
 
-                <!--<category android:name="android.intent.category.DEFAULT"/>-->
-                <!--<category android:name="android.intent.category.BROWSABLE"/>-->
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <!--<data-->
-                        <!--android:host="huishoudgenoot.xyz"-->
-                        <!--android:pathPrefix="/households"-->
-                        <!--android:scheme="https"/>-->
-            <!--</intent-filter>-->
+                <data
+                        android:host="roomy.xyz"
+                        android:pathPrefix="/households"
+                        android:scheme="https"/>
+            </intent-filter>
         </activity>
         <activity
                 android:name=".ui.main.view.MainActivity"
                 android:screenOrientation="portrait"/>
         <activity android:name=".ui.base.view.BaseActivity"/>
         <activity
-                android:name=".ui.signin.view.SignInActivity"
+                android:name=".ui.googlesignin.view.GoogleSignInActivity"
                 android:theme="@style/AppTheme.Login"/>
         <activity
                 android:name=".ui.eventcategory.view.EditEventCategoryActivity"
