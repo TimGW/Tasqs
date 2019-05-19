@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.timgortworst.roomy.R
+import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.setup.presenter.SetupPresenter
 import com.timgortworst.roomy.ui.splash.ui.SplashActivity
@@ -14,7 +16,7 @@ import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 
-class SetupActivity : AppCompatActivity(), SetupView {
+class SetupActivity : BaseActivity(), SetupView {
     @Inject
     lateinit var presenter: SetupPresenter
 
@@ -28,12 +30,13 @@ class SetupActivity : AppCompatActivity(), SetupView {
             intent.putExtra(referredHouseholdIdKey, referredHouseholdId)
             context.startActivity(intent)
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
+
+        showProgressDialog()
 
         referredHouseholdId = intent.getStringExtra(referredHouseholdIdKey)
 
@@ -41,15 +44,20 @@ class SetupActivity : AppCompatActivity(), SetupView {
     }
 
     override fun presentToastError(error: Int) {
+        hideProgressDialog()
+
         Toast.makeText(this, getString(error), Toast.LENGTH_LONG).show()
     }
 
     override fun goToMainActivity() {
+        hideProgressDialog()
         MainActivity.start(this)
         finish()
     }
 
     override fun presentHouseholdOverwriteDialog() {
+        hideProgressDialog()
+
         AlertDialog.Builder(this)
             .setTitle("Household overwrite")
             .setMessage("Your current household will be overwritten. All data will be lost. Are you sure?")
@@ -62,8 +70,8 @@ class SetupActivity : AppCompatActivity(), SetupView {
     }
 
     override fun restartApplication() {
+        hideProgressDialog()
         finishAffinity()
         SplashActivity.start(this)
     }
-
 }
