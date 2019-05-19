@@ -75,7 +75,7 @@ class UsersActivity : BaseAuthActivity(), UsersView {
                 true
             }
             R.id.action_invite -> {
-                share(sharedPref.getHouseholdId())
+                share(sharedPref.getActiveHouseholdId())
                 true
             }
             else -> super.onOptionsItemSelected(item)
