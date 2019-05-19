@@ -1,18 +1,20 @@
 package com.timgortworst.roomy.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.Household
 import com.timgortworst.roomy.utils.Constants
 import com.timgortworst.roomy.utils.Constants.AGENDA_EVENT_CATEGORIES_COLLECTION_REF
 import com.timgortworst.roomy.utils.GenerateData
+import kotlinx.coroutines.tasks.await
 
 class HouseholdRepository(db: FirebaseFirestore, private val sharedPref: HuishoudGenootSharedPref) {
 
     private val householdsCollectionRef = db.collection(Constants.HOUSEHOLD_COLLECTION_REF)
     private val householdDocRef = householdsCollectionRef.document()
 
-    fun createNewHousehold(onComplete: (householdID: String) -> Unit, onFailure: () -> Unit) {
+    suspend fun createNewHousehold(): String? {
         val householdID = householdDocRef.id
 
         // update local household id
@@ -20,30 +22,34 @@ class HouseholdRepository(db: FirebaseFirestore, private val sharedPref: Huishou
 
         val categories = GenerateData.eventCategories()
         for (category in categories) {
-            val householdSubEventCategories = householdDocRef.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document()
+            val householdSubEventCategories =
+                householdDocRef.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document()
             category.categoryId = householdSubEventCategories.id
-            householdSubEventCategories.set(category)
-                .addOnFailureListener {
-                    onFailure()
-                }
+
+            try {
+                householdSubEventCategories.set(category).await() // todo coroutine async and join for multithreading
+            } catch (e: FirebaseFirestoreException) {
+                return null
+            }
         }
 
-        householdDocRef.set(Household(householdId = householdID))
-            .addOnCompleteListener {
-                onComplete.invoke(householdID)
-            }.addOnFailureListener {
-                onFailure.invoke()
-            }
+        return try {
+            householdDocRef.set(Household(householdId = householdID)).await()
+            householdID
+        } catch (e: FirebaseFirestoreException) {
+            null
+        }
+
     }
 
-    fun removeHousehold(householdId: String) {
+    suspend fun removeHousehold(householdId: String) {
         //delete sub items
-        householdDocRef.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document().delete()
+        householdDocRef.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document().delete().await()
 
-        // delte household
+        // delete household
         householdsCollectionRef
             .document(householdId)
-            .delete()
+            .delete().await()
     }
 
     companion object {

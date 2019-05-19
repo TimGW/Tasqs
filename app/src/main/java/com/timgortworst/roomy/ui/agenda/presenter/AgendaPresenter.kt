@@ -1,17 +1,15 @@
 package com.timgortworst.roomy.ui.agenda.presenter
 
-import android.text.format.DateUtils
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.repository.AgendaRepository
 import com.timgortworst.roomy.ui.agenda.ui.AgendaView
-import com.timgortworst.roomy.utils.AndroidUtil
-import kotlinx.coroutines.InternalCoroutinesApi
+import com.timgortworst.roomy.utils.isTimeStampInPast
 
 
 class AgendaPresenter(
-        val view: AgendaView,
-        val repository: AgendaRepository
+    val view: AgendaView,
+    val repository: AgendaRepository
 ) : AgendaRepository.AgendaEventListener {
 
     override fun eventAdded(agendaEvent: Event) {
@@ -38,8 +36,8 @@ class AgendaPresenter(
         repository.getAgendaEvents { events ->
 
 
-            for (event in events){
-                if(event.isDone){
+            for (event in events) {
+                if (event.isDone) {
                     events.remove(event)
 
                     repository.removeAgendaEvent(event.agendaId)
@@ -48,9 +46,13 @@ class AgendaPresenter(
                     if (event.eventMetaData.repeatInterval != EventMetaData.RepeatingInterval.SINGLE_EVENT) {
 
                         // if date is in past, update with next interval
-                        if (AndroidUtil.isInPast(event.eventMetaData.repeatStartDate)) {
-                            val newStartDate = event.eventMetaData.repeatStartDate + (event.eventMetaData.repeatInterval.interval * 1000)
-                            val eventMetaData = EventMetaData(repeatStartDate = newStartDate, repeatInterval = event.eventMetaData.repeatInterval)
+                        if (event.eventMetaData.repeatStartDate.isTimeStampInPast()) {
+                            val newStartDate =
+                                event.eventMetaData.repeatStartDate + (event.eventMetaData.repeatInterval.interval * 1000)
+                            val eventMetaData = EventMetaData(
+                                repeatStartDate = newStartDate,
+                                repeatInterval = event.eventMetaData.repeatInterval
+                            )
 
                             event.eventMetaData = eventMetaData
 
@@ -59,7 +61,7 @@ class AgendaPresenter(
                     } else {
 
                         // if single event is in past, remove from list
-                        if (AndroidUtil.isInPast(event.eventMetaData.repeatStartDate)) {
+                        if (event.eventMetaData.repeatStartDate.isTimeStampInPast()) {
                             events.remove(event)
 
                             repository.removeAgendaEvent(event.agendaId)

@@ -7,6 +7,7 @@ import com.google.firebase.auth.AuthCredential
 import com.timgortworst.roomy.repository.AuthRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInView
+import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -19,16 +20,13 @@ class GoogleSignInPresenter(
     private val view: GoogleSignInView,
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository
-) : CoroutineScope, DefaultLifecycleObserver {
+) : DefaultLifecycleObserver {
 
-    lateinit var job: Job // todo improve coroutine setup
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
+    private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
         if (view is LifecycleOwner) {
-            (view as LifecycleOwner).lifecycle.addObserver(this)
+            view.lifecycle.addObserver(scope)
         }
     }
 
@@ -37,19 +35,14 @@ class GoogleSignInPresenter(
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        job = Job()
         if (authRepository.getFirebaseUser() != null) {
             loginSuccessful()
         }
     }
 
-    override fun onDestroy(owner: LifecycleOwner) {
-        job.cancel()
-    }
-
-    fun signInWithCredential(credential: AuthCredential) = launch {
+    fun signInWithCredential(credential: AuthCredential) = scope.launch {
         try {
-            authRepository.signIn(credential).await()
+            authRepository.signIn(credential)
             Log.d(TAG, "signInTask:success")
             loginSuccessful()
         } catch (e: Exception) {
@@ -57,7 +50,7 @@ class GoogleSignInPresenter(
         }
     }
 
-    private fun loginSuccessful() = launch {
+    private fun loginSuccessful() = scope.launch {
         if (userRepository.getOrCreateUser() != null) {
             view.loginSuccessful()
         } else {

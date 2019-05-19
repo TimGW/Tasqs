@@ -45,19 +45,19 @@ class SetupPresenter(
                 view.goToMainActivity()
             } else {
                 // user is not invited and has no household (new user)
-                householdRepository.createNewHousehold(
-                    onComplete = { householdID ->
+                val householdID = householdRepository.createNewHousehold()
 
-                        // update household id for user remote
-                        userRepository.setOrUpdateUser(
-                            householdId = householdID,
-                            role = AuthenticationResult.Role.ADMIN.name,
-                            onComplete = { view.goToMainActivity() },
-                            onFailure = { view.presentToastError(R.string.generic_error) })
-                    },
-                    onFailure = {
-                        view.presentToastError(R.string.generic_error)
-                    })
+                if (householdID != null) {
+                    // update household id for user remote
+                    userRepository.setOrUpdateUser(
+                        householdId = householdID,
+                        role = AuthenticationResult.Role.ADMIN.name
+                    )
+                    view.goToMainActivity()
+                } else {
+                    view.presentToastError(R.string.generic_error)
+
+                }
             }
         }
     }
@@ -67,37 +67,25 @@ class SetupPresenter(
         if (sharedPref.getActiveHouseholdId().isNotBlank()) {
             return true
         }
-
         // check remote fallback when local is blank
         val user = userRepository.getOrCreateUser()
-
-        // update household id locallt
+        // update household id locally
         user?.let { sharedPref.setActiveHouseholdId(it.householdId) }
         return user?.householdId?.isNotBlank() == true
     }
 
-    fun changeCurrentUserHousehold(newHouseholdId: String) {
+    fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
         userRepository.setOrUpdateUser(
             householdId = newHouseholdId,
-            role = AuthenticationResult.Role.NORMAL.name,
-
-            onComplete = {
-                userRepository.getUsersForHouseholdId(sharedPref.getActiveHouseholdId(),
-                    onComplete = {
-                        if (it.isEmpty()) {
-                            // remove old household if there are no more users in the household
-                            householdRepository.removeHousehold(sharedPref.getActiveHouseholdId())
-                        }
-
-                        // safe to update local household id
-                        sharedPref.setActiveHouseholdId(newHouseholdId)
-
-                        view.goToMainActivity()
-                    }, onFailure = {
-                        view.presentToastError(R.string.generic_error)
-                    })
-            }, onFailure = {
-                view.presentToastError(R.string.generic_error)
-            })
+            role = AuthenticationResult.Role.NORMAL.name
+        )
+        val userList = userRepository.getUsersForHouseholdId(sharedPref.getActiveHouseholdId())
+        if (userList.isEmpty()) {
+            // remove old household if there are no more users in the household
+            householdRepository.removeHousehold(sharedPref.getActiveHouseholdId())
+        }
+        // safe to update local household id
+        sharedPref.setActiveHouseholdId(newHouseholdId)
+        view.goToMainActivity()
     }
 }
