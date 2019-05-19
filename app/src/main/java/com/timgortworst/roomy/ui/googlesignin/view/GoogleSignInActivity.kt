@@ -58,7 +58,7 @@ class GoogleSignInActivity : BaseAuthActivity(), GoogleSignInView {
 
     override fun loginSuccessful() {
         hideProgressDialog()
-        SplashActivity.start(this)
+        SetupActivity.start(this)
         finish()
     }
 

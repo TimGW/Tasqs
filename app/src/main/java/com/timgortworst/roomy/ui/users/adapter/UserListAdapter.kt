@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.model.AuthenticationResult
 import com.timgortworst.roomy.model.User
 
 /**
@@ -29,7 +30,7 @@ class UserListAdapter(
 
         viewHolder.userTitle.text = user.name
 
-        if (user.role == User.Role.ADMIN.name) {
+        if (user.role == AuthenticationResult.Role.ADMIN.name) {
             viewHolder.adminLabel.visibility = View.VISIBLE
         } else {
             viewHolder.adminLabel.visibility = View.GONE
