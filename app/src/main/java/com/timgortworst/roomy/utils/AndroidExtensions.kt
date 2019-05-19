@@ -3,6 +3,9 @@ package com.timgortworst.roomy.utils
 import android.content.Context
 import android.os.IBinder
 import android.support.design.widget.TextInputEditText
+import android.util.Log
+import android.util.Log.d
+import android.util.Log.e
 import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -44,3 +47,5 @@ fun Context.spToDp(size: Int): Int {
 fun Context.spToPx(sp: Float): Int {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics).toInt()
 }
+
+fun Log.msg(message : String) = e("TIMTIM", message)
