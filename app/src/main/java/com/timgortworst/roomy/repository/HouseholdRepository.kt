@@ -1,12 +1,13 @@
 package com.timgortworst.roomy.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.Household
 import com.timgortworst.roomy.utils.Constants
 import com.timgortworst.roomy.utils.Constants.AGENDA_EVENT_CATEGORIES_COLLECTION_REF
 import com.timgortworst.roomy.utils.GenerateData
 
-class HouseholdRepository(db: FirebaseFirestore) {
+class HouseholdRepository(db: FirebaseFirestore, private val sharedPref: HuishoudGenootSharedPref) {
 
     private val householdsCollectionRef = db.collection(Constants.HOUSEHOLD_COLLECTION_REF)
     private val householdDocRef = householdsCollectionRef.document()
@@ -14,12 +15,17 @@ class HouseholdRepository(db: FirebaseFirestore) {
     fun createNewHousehold(onComplete: (householdID: String) -> Unit, onFailure: () -> Unit) {
         val householdID = householdDocRef.id
 
+        // update local household id
+        sharedPref.setActiveHouseholdId(householdID)
+
         val categories = GenerateData.eventCategories()
         for (category in categories) {
-            val householdSubEventCategories =
-                householdDocRef.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document()
+            val householdSubEventCategories = householdDocRef.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document()
             category.categoryId = householdSubEventCategories.id
             householdSubEventCategories.set(category)
+                .addOnFailureListener {
+                    onFailure()
+                }
         }
 
         householdDocRef.set(Household(householdId = householdID))

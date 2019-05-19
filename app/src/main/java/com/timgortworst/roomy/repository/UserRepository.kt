@@ -16,9 +16,7 @@ import com.timgortworst.roomy.utils.Constants.USER_TOTALPOINTS_REF
 
 class UserRepository(
     private val db: FirebaseFirestore,
-    private val auth: FirebaseAuth,
-    private val sharedPref: HuishoudGenootSharedPref
-) {
+    private val auth: FirebaseAuth) {
     val userCollectionRef = db.collection(USERS_COLLECTION_REF)
 
     companion object {
@@ -50,26 +48,15 @@ class UserRepository(
         }
     }
 
-    fun getUser(onComplete: (User?) -> Unit) {
-        val currentUserDocRef = userCollectionRef.document(auth.currentUser?.uid.orEmpty())
-        currentUserDocRef.get().addOnSuccessListener {
-            onComplete(it.toObject(User::class.java))
-        }
-    }
-
-    fun setUser(user: User, onComplete: () -> Unit) {
-        val currentUserDocRef = userCollectionRef.document(user.userId)
-        currentUserDocRef.set(user).addOnSuccessListener { onComplete() }
-    }
-
-    fun updateUser(
+    fun setOrUpdateUser(
         userId : String = auth.currentUser?.uid.orEmpty(),
         name: String = "",
         email: String = "",
         totalPoints: Int = 0,
         householdId: String = "",
         role: String = "",
-        onComplete: () -> Unit
+        onComplete: () -> Unit,
+        onFailure: () -> Unit
     ) {
         val currentUserDocRef = userCollectionRef.document(userId)
 
@@ -80,13 +67,17 @@ class UserRepository(
         if (householdId.isNotBlank()) userFieldMap[USER_HOUSEHOLDID_REF] = householdId
         if (role.isNotBlank()) userFieldMap[USER_ROLE_REF] = role
 
-        currentUserDocRef.set(userFieldMap, SetOptions.merge()).addOnSuccessListener { onComplete() }
+        currentUserDocRef.set(userFieldMap, SetOptions.merge())
+            .addOnSuccessListener { onComplete() }
+            .addOnFailureListener { onFailure() }
     }
 
-    fun getUsersForHouseholdId(householdId: String, onComplete: (List<User>) -> Unit) {
+    fun getUsersForHouseholdId(householdId: String, onComplete: (List<User>) -> Unit, onFailure: () -> Unit) {
         val query = userCollectionRef.whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
         query.get().addOnSuccessListener { snapshot ->
             onComplete(snapshot.toObjects(User::class.java))
+        }.addOnFailureListener {
+            onFailure()
         }
     }
 }

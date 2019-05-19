@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.widget.Toast
 import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.setup.presenter.SetupPresenter
+import com.timgortworst.roomy.utils.showToast
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
@@ -19,8 +19,8 @@ class SetupActivity : BaseActivity(), SetupView {
     private lateinit var referredHouseholdId: String
 
     companion object {
-
         const val referredHouseholdIdKey = "referredHouseholdIdKey"
+
         fun start(context: Context, referredHouseholdId: String = "") {
             val intent = Intent(context, SetupActivity::class.java)
             intent.putExtra(referredHouseholdIdKey, referredHouseholdId)
@@ -33,20 +33,16 @@ class SetupActivity : BaseActivity(), SetupView {
         super.onCreate(savedInstanceState)
 
         showProgressDialog()
-
         referredHouseholdId = intent.getStringExtra(referredHouseholdIdKey) ?: ""
-
         presenter.setupHousehold(referredHouseholdId)
     }
 
     override fun presentToastError(error: Int) {
         hideProgressDialog()
-
-        Toast.makeText(this, getString(error), Toast.LENGTH_LONG).show()
+        showToast(error)
     }
 
     override fun goToMainActivity() {
-        hideProgressDialog()
         MainActivity.start(this)
         finish()
     }
@@ -58,7 +54,7 @@ class SetupActivity : BaseActivity(), SetupView {
             .setTitle("Household overwrite")
             .setMessage("Your current household will be overwritten. All data will be lost. Are you sure?")
             .setPositiveButton(android.R.string.yes) { dialog, which ->
-                presenter.changeUserHousehold(referredHouseholdId)
+                presenter.changeCurrentUserHousehold(referredHouseholdId)
             }
             .setNegativeButton(android.R.string.no) { dialog, which ->
                 goToMainActivity()

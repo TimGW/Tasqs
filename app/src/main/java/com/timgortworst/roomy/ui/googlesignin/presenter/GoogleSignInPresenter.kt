@@ -53,16 +53,13 @@ class GoogleSignInPresenter(
             Log.d(TAG, "signInTask:success")
             loginSuccessful()
         } catch (e: Exception) {
-            // todo show error message
-            Log.d(TAG, "signInWithCredential:failure ${e.message}")
+            view.loginFailed()
         }
     }
 
     private fun loginSuccessful() {
         userRepository.getOrCreateUser(
-            onComplete = { user ->
-                view.loginSuccessful()
-            },
-            onFailure = { /*todo */ })
+            onComplete = { view.loginSuccessful() },
+            onFailure = { view.failedInitUser() })
     }
 }

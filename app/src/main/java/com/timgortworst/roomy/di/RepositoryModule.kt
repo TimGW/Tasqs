@@ -26,18 +26,18 @@ abstract class RepositoryModule {
         @JvmStatic
         internal fun provideSignInRepository(
             database: FirebaseFirestore,
-            auth: FirebaseAuth,
-            sharedPref: HuishoudGenootSharedPref
+            auth: FirebaseAuth
         ): UserRepository {
-            return UserRepository(database, auth, sharedPref)
+            return UserRepository(database, auth)
         }
 
         @Provides
         @JvmStatic
         internal fun provideHouseholdRepository(
-            database: FirebaseFirestore
+            database: FirebaseFirestore,
+            sharedPref: HuishoudGenootSharedPref
         ): HouseholdRepository {
-            return HouseholdRepository(database)
+            return HouseholdRepository(database, sharedPref)
         }
 
         @Provides
