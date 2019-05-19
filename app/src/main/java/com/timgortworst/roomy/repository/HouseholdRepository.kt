@@ -26,11 +26,7 @@ class HouseholdRepository(db: FirebaseFirestore, private val sharedPref: Huishou
                 householdDocRef.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document()
             category.categoryId = householdSubEventCategories.id
 
-            try {
-                householdSubEventCategories.set(category).await() // todo coroutine async and join for multithreading
-            } catch (e: FirebaseFirestoreException) {
-                return null
-            }
+            householdSubEventCategories.set(category)
         }
 
         return try {
@@ -39,13 +35,11 @@ class HouseholdRepository(db: FirebaseFirestore, private val sharedPref: Huishou
         } catch (e: FirebaseFirestoreException) {
             null
         }
-
     }
 
     suspend fun removeHousehold(householdId: String) {
         //delete sub items
         householdDocRef.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document().delete().await()
-
         // delete household
         householdsCollectionRef
             .document(householdId)
