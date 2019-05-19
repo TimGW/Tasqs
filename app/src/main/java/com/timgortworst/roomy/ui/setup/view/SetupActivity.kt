@@ -1,80 +1,43 @@
 package com.timgortworst.roomy.ui.setup.view
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.widget.Toast
-import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.setup.presenter.SetupPresenter
-import com.timgortworst.roomy.utils.AndroidUtil.closeKeyboard
-import com.timgortworst.roomy.utils.AndroidUtil.openKeyboard
-import com.timgortworst.roomy.utils.afterTextChanged
+import com.timgortworst.roomy.ui.splash.ui.SplashActivity
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_setup.*
 import javax.inject.Inject
 
 
 class SetupActivity : AppCompatActivity(), SetupView {
-
     @Inject
     lateinit var presenter: SetupPresenter
-    lateinit var householdId: String
+
+    private lateinit var referredHouseholdId: String
 
     companion object {
-        const val householdIdKey = "householdIdKey"
 
-        fun start(context: Context, householdId: String = "") {
+        const val referredHouseholdIdKey = "referredHouseholdIdKey"
+        fun start(context: Context, referredHouseholdId: String = "") {
             val intent = Intent(context, SetupActivity::class.java)
-            intent.putExtra(householdIdKey, householdId)
+            intent.putExtra(referredHouseholdIdKey, referredHouseholdId)
             context.startActivity(intent)
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setup)
 
-        householdId = intent.getStringExtra(householdIdKey)
+        referredHouseholdId = intent.getStringExtra(referredHouseholdIdKey)
 
-        if (householdId.isNotBlank()) {
-            setup_existing_household_code_text.setText(householdId)
-            setup_existing_household_code_text.requestFocus()
-            setup_existing_household_rb.isChecked = true
-            setup_existing_household_code_hint.visibility = View.VISIBLE
-        }
-
-        setup_rb_group.setOnCheckedChangeListener { group, checkedId ->
-            when (checkedId) {
-                R.id.setup_new_household_rb -> {
-                    setup_existing_household_code_hint.visibility = View.INVISIBLE
-                    closeKeyboard(this, setup_existing_household_code_text.windowToken)
-                }
-                R.id.setup_existing_household_rb -> {
-                    setup_existing_household_code_hint.visibility = View.VISIBLE
-                    openKeyboard(this, setup_existing_household_code_text)
-                }
-            }
-        }
-
-        setup_next_button.setOnClickListener {
-            presenter.setupInitialHousehold(
-                setup_new_household_rb.isChecked,
-                setup_existing_household_rb.isChecked,
-                setup_existing_household_code_text.text.toString()
-            )
-        }
-
-        setup_existing_household_code_text.afterTextChanged { text ->
-            setup_existing_household_code_hint.error = null
-        }
-    }
-
-    override fun presentTextValidationError(errorStringResourceId: Int) {
-        setup_existing_household_code_hint.error = getString(errorStringResourceId)
+        presenter.setupHousehold(referredHouseholdId)
     }
 
     override fun presentToastError(error: Int) {
@@ -85,4 +48,22 @@ class SetupActivity : AppCompatActivity(), SetupView {
         MainActivity.start(this)
         finish()
     }
+
+    override fun presentHouseholdOverwriteDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Household overwrite")
+            .setMessage("Your current household will be overwritten. All data will be lost. Are you sure?")
+            .setPositiveButton(android.R.string.yes, DialogInterface.OnClickListener { dialog, which ->
+                presenter.updateHousehold(referredHouseholdId)
+            })
+            .setNegativeButton(android.R.string.no, null)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show()
+    }
+
+    override fun restartApplication() {
+        finishAffinity()
+        SplashActivity.start(this)
+    }
+
 }

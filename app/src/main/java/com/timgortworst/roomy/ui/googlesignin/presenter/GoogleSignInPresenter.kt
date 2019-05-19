@@ -1,26 +1,25 @@
-package com.timgortworst.roomy.ui.signin.presenter
+package com.timgortworst.roomy.ui.googlesignin.presenter
 
 import android.arch.lifecycle.DefaultLifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import android.util.Log
 import com.google.firebase.auth.AuthCredential
 import com.timgortworst.roomy.repository.AuthRepository
-import com.timgortworst.roomy.repository.HouseholdRepository
-import com.timgortworst.roomy.repository.UserRepository
-import com.timgortworst.roomy.ui.signin.view.SignInView
+import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInView
 import com.timgortworst.roomy.utils.await
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 
-class SignInPresenter(
-    private val view: SignInView,
-    private val userRepository: UserRepository,
-    private val householdRepository: HouseholdRepository,
+class GoogleSignInPresenter(
+    private val view: GoogleSignInView,
     private val authRepository: AuthRepository
 ) : CoroutineScope, DefaultLifecycleObserver {
 
-    lateinit var job: Job
+    lateinit var job: Job // todo improve coroutine setup
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
@@ -54,13 +53,6 @@ class SignInPresenter(
         } catch (e: Exception) {
             // todo show error message
             Log.d(TAG, "signInWithCredential:failure ${e.message}")
-        }
-    }
-
-    fun isHouseholdInDb(onComplete: (isHouseholdInDb: Boolean) -> Unit) {
-        userRepository.getUser { user ->
-            val householdId = user?.householdId.orEmpty()
-            householdRepository.isHouseholdInDb(householdId, onComplete)
         }
     }
 }

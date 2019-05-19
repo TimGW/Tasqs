@@ -8,7 +8,6 @@ import com.timgortworst.roomy.ui.setup.view.SetupView
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.InternalCoroutinesApi
 
 @Module
 
@@ -22,9 +21,11 @@ abstract class SetupModule {
 
         @Provides
         @JvmStatic
-        internal fun provideSetupPresenter(setupView: SetupView,
-                                           householdRepository: HouseholdRepository,
-                                           userRepository: UserRepository): SetupPresenter {
+        internal fun provideSetupPresenter(
+            setupView: SetupView,
+            householdRepository: HouseholdRepository,
+            userRepository: UserRepository
+        ): SetupPresenter {
             return SetupPresenter(setupView, householdRepository, userRepository)
         }
     }
