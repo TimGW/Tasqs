@@ -1,48 +1,83 @@
 package com.timgortworst.roomy.ui.setup.presenter
 
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.model.User
+import com.timgortworst.roomy.local.HuishoudGenootSharedPref
+import com.timgortworst.roomy.model.AuthenticationResult
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.setup.view.SetupView
-import kotlinx.coroutines.InternalCoroutinesApi
-
 
 
 class SetupPresenter(
     private val view: SetupView,
     private val householdRepository: HouseholdRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val sharedPref: HuishoudGenootSharedPref
 ) {
 
-    fun setupInitialHousehold(
-        isNewHousehold: Boolean,
-        isExistingHousehold: Boolean,
-        householdCode: String
-    ) {
+    fun setupHousehold(referredHouseholdId: String) {
 
-        // create a new household and add a new user to it
-        if (isNewHousehold) {
-            householdRepository.createNewHouseholdAndUser().addOnSuccessListener {
-                view.goToMainActivity()
-            }.addOnFailureListener {
-                view.presentToastError(R.string.generic_error)
+        if (referredHouseholdId.isNotBlank()) {
+
+            // user has accepted the invite
+            if (isHouseholdActive()) {
+
+                // caution user that household will be overwritten
+                view.presentHouseholdOverwriteDialog()
+            } else {
+
+                // no active household, so update
+                updateHousehold(referredHouseholdId)
             }
-        } else if (isExistingHousehold && householdCode.isBlank()) {
-            view.presentTextValidationError(R.string.setup_referral_code_empty_error)
         } else {
-            // get the users if he exists or create a new one and add him to the householdId
-            userRepository.getOrCreateUser { user ->
-                user.householdId = householdCode
-                user.role = User.Role.USER.name
 
-                userRepository.setUser(user) {
-                    view.goToMainActivity()
-                }
-//                userRepository.updateUser(householdId = householdCode, role = User.Role.USER.name) {
-//                    view.goToMainActivity()
-//                }
+            // user started the application his/her self
+            if (isHouseholdActive()) {
+
+                // user has an active household
+                view.goToMainActivity()
+            } else {
+
+                // user is not invited and has no household (new user)
+                householdRepository.createNewHousehold(
+                    onComplete = { householdID ->
+
+                        // update local household id
+                        sharedPref.setHouseholdId(householdID)
+
+                        // update household id for user remote
+                        userRepository.updateUser(householdId = householdID) {
+                            view.goToMainActivity()
+                        }
+                    },
+                    onFailure = {
+                        view.presentToastError(R.string.generic_error)
+                    })
             }
+        }
+    }
+
+    private fun isHouseholdActive(): Boolean {
+        if (sharedPref.getHouseholdId().isNotBlank()) {
+            return true
+        }
+
+        var isHouseholdActive = false
+        userRepository.getUser { user ->
+            if (user?.householdId?.isNotBlank() == true) {
+                sharedPref.setHouseholdId(user.householdId)
+                isHouseholdActive = true
+            }
+        }
+        return isHouseholdActive
+    }
+
+    fun updateHousehold(referredHouseholdId: String) {
+        // update local household id
+        sharedPref.setHouseholdId(referredHouseholdId)
+
+        userRepository.updateUser(householdId = referredHouseholdId, role = AuthenticationResult.Role.NORMAL.name) {
+            view.restartApplication()
         }
     }
 }

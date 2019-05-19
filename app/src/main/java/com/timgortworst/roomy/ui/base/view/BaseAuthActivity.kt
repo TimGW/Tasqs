@@ -7,9 +7,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.repository.AuthRepository
-import com.timgortworst.roomy.ui.signin.view.SignInActivity
+import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInActivity
 import dagger.android.AndroidInjection
-import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 
@@ -35,7 +34,7 @@ open class BaseAuthActivity : BaseActivity() {
         authRepository.signOut()
         googleSignInClient.signOut().addOnCompleteListener(this) {
             finishAffinity()
-            SignInActivity.start(this)
+            GoogleSignInActivity.start(this)
         }
     }
 

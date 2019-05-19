@@ -13,6 +13,7 @@ import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
+import com.timgortworst.roomy.model.AuthenticationResult
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.users.adapter.UserListAdapter
@@ -83,7 +84,7 @@ class UsersActivity : BaseAuthActivity(), UsersView {
 
     override fun presentUserList(users: MutableList<User>) {
         for (user in users) {
-            addPeopleMenuItem.isVisible = user.role == User.Role.ADMIN.name
+            addPeopleMenuItem.isVisible = user.role == AuthenticationResult.Role.ADMIN.name
         }
         adapter.setUsers(users)
     }

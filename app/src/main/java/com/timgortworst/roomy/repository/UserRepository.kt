@@ -1,9 +1,9 @@
 package com.timgortworst.roomy.repository
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
+import com.timgortworst.roomy.model.AuthenticationResult
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.utils.Constants.USERS_COLLECTION_REF
 import com.timgortworst.roomy.utils.Constants.USER_EMAIL_REF
@@ -11,7 +11,6 @@ import com.timgortworst.roomy.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.utils.Constants.USER_ROLE_REF
 import com.timgortworst.roomy.utils.Constants.USER_TOTALPOINTS_REF
-import kotlinx.coroutines.InternalCoroutinesApi
 
 
 class UserRepository(
@@ -25,7 +24,7 @@ class UserRepository(
         private const val TAG = "TIMTIM"
     }
 
-    fun getOrCreateUser(onComplete: (User) -> Unit) {
+    fun getOrCreateUser(onComplete: (User) -> Unit, onFailure: (AuthenticationResult.FailureReason) -> Unit) {
         val currentUserDocRef = userCollectionRef.document(auth.currentUser?.uid.orEmpty())
         currentUserDocRef.get().addOnSuccessListener { userDoc ->
             if (!userDoc.exists()) {
@@ -34,18 +33,19 @@ class UserRepository(
                 val newUser = User(
                     firebaseUser?.uid ?: "",
                     firebaseUser?.displayName ?: "",
-                    firebaseUser?.email ?: "",
-                    0,
-                    User.Role.USER.name)
+                    firebaseUser?.email ?: ""
+                )
 
                 currentUserDocRef.set(newUser).addOnSuccessListener {
                     onComplete(newUser)
                 }.addOnFailureListener {
-                    Log.e("TIMTIM", it.message) // todo fix permissiosn
+                    onFailure.invoke(AuthenticationResult.FailureReason.FAILED_SET_USER)
                 }
             } else {
                 onComplete(userDoc.toObject(User::class.java)!!)
             }
+        }.addOnFailureListener {
+            onFailure.invoke(AuthenticationResult.FailureReason.FAILED_GET_USER)
         }
     }
 
@@ -56,7 +56,7 @@ class UserRepository(
         }
     }
 
-    fun setUser(user : User, onComplete: () -> Unit){
+    fun setUser(user: User, onComplete: () -> Unit) {
         val currentUserDocRef = userCollectionRef.document(user.userId)
         currentUserDocRef.set(user).addOnSuccessListener { onComplete() }
     }
