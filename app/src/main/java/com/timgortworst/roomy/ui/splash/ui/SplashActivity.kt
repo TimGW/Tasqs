@@ -30,7 +30,7 @@ class SplashActivity : AppCompatActivity(), SplashView {
         setTheme(R.style.AppTheme_Launcher)
         super.onCreate(savedInstanceState)
 
-        FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnCompleteListener { it ->
+        FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnCompleteListener {
             val referredHouseholdId = it.result?.link?.getQueryParameter(Constants.QUERY_PARAM_HOUSEHOLD).orEmpty()
             presenter.userLogin(referredHouseholdId)
         }
