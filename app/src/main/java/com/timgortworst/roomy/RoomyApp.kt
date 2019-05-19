@@ -5,7 +5,6 @@ import android.app.Application
 import android.content.Context
 import com.google.firebase.firestore.FirebaseFirestore
 import com.timgortworst.roomy.di.DaggerAppComponent
-import com.timgortworst.roomy.utils.AndroidUtil
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -31,8 +30,6 @@ class RoomyApp : Application(), HasActivityInjector {
             .context(this)
             .build()
             .inject(this)
-
-        AndroidUtil.init(this)
 
         if (BuildConfig.DEBUG) {
             FirebaseFirestore.setLoggingEnabled(true)

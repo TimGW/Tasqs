@@ -49,15 +49,13 @@ class UserRepository(
         }
     }
 
-    fun setOrUpdateUser(
+    suspend fun setOrUpdateUser(
         userId: String = auth.currentUser?.uid.orEmpty(),
         name: String = "",
         email: String = "",
         totalPoints: Int = 0,
         householdId: String = "",
-        role: String = "",
-        onComplete: () -> Unit,
-        onFailure: () -> Unit
+        role: String = ""
     ) {
         val currentUserDocRef = userCollectionRef.document(userId)
 
@@ -68,17 +66,11 @@ class UserRepository(
         if (householdId.isNotBlank()) userFieldMap[USER_HOUSEHOLDID_REF] = householdId
         if (role.isNotBlank()) userFieldMap[USER_ROLE_REF] = role
 
-        currentUserDocRef.set(userFieldMap, SetOptions.merge())
-            .addOnSuccessListener { onComplete() }
-            .addOnFailureListener { onFailure() }
+        currentUserDocRef.set(userFieldMap, SetOptions.merge()).await()
     }
 
-    fun getUsersForHouseholdId(householdId: String, onComplete: (List<User>) -> Unit, onFailure: () -> Unit) {
+    suspend fun getUsersForHouseholdId(householdId: String) : List<User> {
         val query = userCollectionRef.whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
-        query.get().addOnSuccessListener { snapshot ->
-            onComplete(snapshot.toObjects(User::class.java))
-        }.addOnFailureListener {
-            onFailure()
-        }
+        return query.get().await().toObjects(User::class.java)
     }
 }
