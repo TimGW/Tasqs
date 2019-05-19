@@ -19,11 +19,11 @@ constructor(private val sharedPreferences: SharedPreferences) {
         sharedPreferences.edit().putBoolean(SHARED_PREF_FIRST_LAUNCH, setFirstLaunch).apply()
     }
 
-    fun getHouseholdId(): String {
+    fun getActiveHouseholdId(): String {
         return sharedPreferences.getString(SHARED_PREF_HOUSEHOLD_ID, "").orEmpty()
     }
 
-    fun setHouseholdId(householdId: String) {
+    fun setActiveHouseholdId(householdId: String) {
         sharedPreferences.edit().putString(SHARED_PREF_HOUSEHOLD_ID, householdId).apply()
     }
 }
