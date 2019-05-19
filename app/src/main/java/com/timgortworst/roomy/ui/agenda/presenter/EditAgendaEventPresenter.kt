@@ -36,7 +36,7 @@ class EditAgendaEventPresenter(
         user: User,
         eventMetaData: EventMetaData,
         isDone: Boolean = false
-    ) {
+    ) = scope.launch {
 
         if (eventId.isNotBlank()) {
             agendaRepository.updateAgendaEvent(eventId, category, user, eventMetaData, isDone)
@@ -50,8 +50,9 @@ class EditAgendaEventPresenter(
         view.presentUserList(userList.toMutableList())
     }
 
-    fun fetchEventCategories() {
-        agendaRepository.getCategories { categories -> view.presentCategoryList(categories) }
+    fun fetchEventCategories() = scope.launch {
+        val categories = agendaRepository.getCategories()
+        view.presentCategoryList(categories.toMutableList())
     }
 
     fun formatDate(year: Int, month: Int, dayOfMonth: Int) {
