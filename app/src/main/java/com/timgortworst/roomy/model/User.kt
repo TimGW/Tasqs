@@ -14,14 +14,9 @@ data class User(
     var name: String = "",
     var email: String = "",
     var totalPoints: Int = 0,
-    var role : String = Role.ADMIN.name,
+    var role : String = AuthenticationResult.Role.ADMIN.name,
     var householdId : String = "",
     var color : Int = UserColor.GREEN.ordinal) : Parcelable {
-
-    enum class Role {
-        ADMIN,
-        USER;
-    }
 
     enum class UserColor(color: Int) {
         RED(Color.RED),

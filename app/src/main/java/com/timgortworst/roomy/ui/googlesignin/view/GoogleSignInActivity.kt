@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.signin.view
+package com.timgortworst.roomy.ui.googlesignin.view
 
 import android.content.Context
 import android.content.Intent
@@ -11,20 +11,18 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
-import com.timgortworst.roomy.ui.main.view.MainActivity
+import com.timgortworst.roomy.ui.googlesignin.presenter.GoogleSignInPresenter
 import com.timgortworst.roomy.ui.setup.view.SetupActivity
-import com.timgortworst.roomy.ui.signin.presenter.SignInPresenter
+import com.timgortworst.roomy.ui.splash.ui.SplashActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 
-
-class SignInActivity : BaseAuthActivity(), SignInView {
+class GoogleSignInActivity : BaseAuthActivity(), GoogleSignInView {
 
     @Inject
-    lateinit var presenter: SignInPresenter
+    lateinit var presenter: GoogleSignInPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -59,15 +57,9 @@ class SignInActivity : BaseAuthActivity(), SignInView {
     }
 
     override fun loginSuccessful() {
-        presenter.isHouseholdInDb { isHouseholdInDb ->
-            if (!isHouseholdInDb) {
-                SetupActivity.start(this)
-            } else {
-                MainActivity.start(this) // todo check if user came from referral
-            }
-            hideProgressDialog()
-            finish()
-        }
+        hideProgressDialog()
+        SetupActivity.start(this)
+        finish()
     }
 
     companion object {
@@ -75,7 +67,7 @@ class SignInActivity : BaseAuthActivity(), SignInView {
         private const val RC_SIGN_IN = 9001
 
         fun start(context: Context) {
-            val intent = Intent(context, SignInActivity::class.java)
+            val intent = Intent(context, GoogleSignInActivity::class.java)
             context.startActivity(intent)
         }
     }

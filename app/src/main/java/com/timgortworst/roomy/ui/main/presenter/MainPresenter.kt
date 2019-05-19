@@ -30,4 +30,8 @@ class MainPresenter(
             }
         }
     }
+
+    fun loadHouseHold() {
+
+    }
 }

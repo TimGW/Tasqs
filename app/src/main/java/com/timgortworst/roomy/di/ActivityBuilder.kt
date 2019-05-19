@@ -16,13 +16,12 @@ import com.timgortworst.roomy.ui.profile.module.ProfileModule
 import com.timgortworst.roomy.ui.profile.view.ProfileActivity
 import com.timgortworst.roomy.ui.setup.module.SetupModule
 import com.timgortworst.roomy.ui.setup.view.SetupActivity
-import com.timgortworst.roomy.ui.signin.module.SignInModule
-import com.timgortworst.roomy.ui.signin.view.SignInActivity
+import com.timgortworst.roomy.ui.googlesignin.module.GoogleSignInModule
+import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInActivity
 import com.timgortworst.roomy.ui.splash.module.SplashModule
 import com.timgortworst.roomy.ui.splash.ui.SplashActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import kotlinx.coroutines.InternalCoroutinesApi
 
 /**
  * Module for building the main/global Activities added in @see[AppComponent]
@@ -40,8 +39,8 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = [EditAgendaEventModule::class])
     internal abstract fun bindEditAgendaEventActivity(): EditAgendaEventActivity
 
-    @ContributesAndroidInjector(modules = [SignInModule::class])
-    internal abstract fun bindSignInActivity(): SignInActivity
+    @ContributesAndroidInjector(modules = [GoogleSignInModule::class])
+    internal abstract fun bindSignInActivity(): GoogleSignInActivity
 
     @ContributesAndroidInjector(modules = [ProfileModule::class])
     internal abstract fun bindProfileActivity(): ProfileActivity
