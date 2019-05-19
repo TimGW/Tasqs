@@ -32,7 +32,7 @@ class AgendaRepository(
         val sharedPref: HuishoudGenootSharedPref
 ) {
     val householdCollectionRef = db.collection(HOUSEHOLD_COLLECTION_REF)
-    private lateinit var eventListener: ListenerRegistration
+    private var eventListener: ListenerRegistration? = null
     private lateinit var categoryListener: ListenerRegistration
 
     fun getCategories(onComplete: (MutableList<EventCategory>) -> Unit) {
@@ -181,7 +181,7 @@ class AgendaRepository(
     }
 
     fun detachEventListener() {
-        eventListener.remove()
+        eventListener?.remove()
     }
 
     companion object {
