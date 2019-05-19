@@ -5,6 +5,7 @@ import android.arch.lifecycle.LifecycleOwner
 import android.util.Log
 import com.google.firebase.auth.AuthCredential
 import com.timgortworst.roomy.repository.AuthRepository
+import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInView
 import com.timgortworst.roomy.utils.await
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +17,8 @@ import kotlin.coroutines.CoroutineContext
 
 class GoogleSignInPresenter(
     private val view: GoogleSignInView,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ) : CoroutineScope, DefaultLifecycleObserver {
 
     lateinit var job: Job // todo improve coroutine setup
@@ -37,7 +39,7 @@ class GoogleSignInPresenter(
     override fun onCreate(owner: LifecycleOwner) {
         job = Job()
         if (authRepository.getFirebaseUser() != null) {
-            view.loginSuccessful()
+            loginSuccessful()
         }
     }
 
@@ -49,10 +51,18 @@ class GoogleSignInPresenter(
         try {
             authRepository.signIn(credential).await()
             Log.d(TAG, "signInTask:success")
-            view.loginSuccessful()
+            loginSuccessful()
         } catch (e: Exception) {
             // todo show error message
             Log.d(TAG, "signInWithCredential:failure ${e.message}")
         }
+    }
+
+    private fun loginSuccessful() {
+        userRepository.getOrCreateUser(
+            onComplete = { user ->
+                view.loginSuccessful()
+            },
+            onFailure = { /*todo */ })
     }
 }

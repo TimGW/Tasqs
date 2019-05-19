@@ -49,6 +49,7 @@
     <string name="profile_invite">Vriend uitnodigen</string>
     <string name="profile_help">Help</string>
     <string name="profile_logout_text">Logout</string>
+    <string name="profile_remove_household_text">Remove household</string>
     <string name="profile_notifications">Meldingen</string>
     <string name="event_today">Vandaag</string>
     <string name="planning">Planning</string>

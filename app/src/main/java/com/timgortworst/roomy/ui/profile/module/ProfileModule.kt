@@ -1,5 +1,7 @@
 package com.timgortworst.roomy.ui.profile.module
 
+import com.timgortworst.roomy.local.HuishoudGenootSharedPref
+import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.profile.presenter.ProfilePresenter
 import com.timgortworst.roomy.ui.profile.view.ProfileActivity
@@ -23,9 +25,11 @@ abstract class ProfileModule {
         @JvmStatic
         internal fun provideProfilePresenter(
             profileView: ProfileView,
-            userRepository: UserRepository
+            userRepository: UserRepository,
+            householdRepository: HouseholdRepository,
+            sharedPref: HuishoudGenootSharedPref
         ): ProfilePresenter {
-            return ProfilePresenter(profileView, userRepository)
+            return ProfilePresenter(profileView, userRepository, householdRepository, sharedPref)
         }
     }
 }

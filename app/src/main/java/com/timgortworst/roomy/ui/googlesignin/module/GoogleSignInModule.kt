@@ -1,6 +1,7 @@
 package com.timgortworst.roomy.ui.googlesignin.module
 
 import com.timgortworst.roomy.repository.AuthRepository
+import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.googlesignin.presenter.GoogleSignInPresenter
 import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInActivity
 import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInView
@@ -22,9 +23,10 @@ abstract class GoogleSignInModule {
         @JvmStatic
         internal fun provideSignInPresenter(
             signInView: GoogleSignInView,
-            authRepository: AuthRepository
+            authRepository: AuthRepository,
+            userRepository: UserRepository
         ): GoogleSignInPresenter {
-            return GoogleSignInPresenter(signInView, authRepository)
+            return GoogleSignInPresenter(signInView, authRepository, userRepository)
         }
     }
 }
