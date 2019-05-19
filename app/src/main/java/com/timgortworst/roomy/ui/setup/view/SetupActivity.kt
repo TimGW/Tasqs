@@ -61,17 +61,13 @@ class SetupActivity : BaseActivity(), SetupView {
         AlertDialog.Builder(this)
             .setTitle("Household overwrite")
             .setMessage("Your current household will be overwritten. All data will be lost. Are you sure?")
-            .setPositiveButton(android.R.string.yes, DialogInterface.OnClickListener { dialog, which ->
+            .setPositiveButton(android.R.string.yes) { dialog, which ->
                 presenter.updateHousehold(referredHouseholdId)
-            })
-            .setNegativeButton(android.R.string.no, null)
+            }
+            .setNegativeButton(android.R.string.no) { dialog, which ->
+                goToMainActivity()
+            }
             .setIcon(android.R.drawable.ic_dialog_alert)
             .show()
-    }
-
-    override fun restartApplication() {
-        hideProgressDialog()
-        finishAffinity()
-        SplashActivity.start(this)
     }
 }

@@ -4,5 +4,4 @@ interface SetupView {
     fun goToMainActivity()
     fun presentToastError(error: Int)
     fun presentHouseholdOverwriteDialog()
-    fun restartApplication()
 }

@@ -77,7 +77,7 @@ class SetupPresenter(
         sharedPref.setHouseholdId(referredHouseholdId)
 
         userRepository.updateUser(householdId = referredHouseholdId, role = AuthenticationResult.Role.NORMAL.name) {
-            view.restartApplication()
+            view.goToMainActivity()
         }
     }
 }
