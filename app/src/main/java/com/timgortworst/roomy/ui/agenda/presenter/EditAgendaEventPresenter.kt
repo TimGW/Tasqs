@@ -1,26 +1,29 @@
 package com.timgortworst.roomy.ui.agenda.presenter
 
+import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.EventCategory
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.AgendaRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.agenda.ui.EditAgendaEventView
-import kotlinx.coroutines.InternalCoroutinesApi
 import java.util.*
 
 
 class EditAgendaEventPresenter(
-    val view: EditAgendaEventView,
-    val agendaRepository: AgendaRepository,
-    val userRepository: UserRepository) {
+    private val view: EditAgendaEventView,
+    private val agendaRepository: AgendaRepository,
+    private val userRepository: UserRepository,
+    private val sharedPref: HuishoudGenootSharedPref
+) {
 
     fun insertOrUpdateEvent(
         eventId: String,
         category: EventCategory,
         user: User,
         eventMetaData: EventMetaData,
-        isDone : Boolean = false) {
+        isDone: Boolean = false
+    ) {
 
         if (eventId.isNotBlank()) {
             agendaRepository.updateAgendaEvent(eventId, category, user, eventMetaData, isDone)
@@ -30,11 +33,9 @@ class EditAgendaEventPresenter(
     }
 
     fun fetchUsers() {
-        userRepository.getUsersForHousehold(object : UserRepository.UserListener {
-            override fun provideUserList(users: MutableList<User>) {
-                view.presentUserList(users)
-            }
-        })
+        userRepository.getUsersForHouseholdId(sharedPref.getActiveHouseholdId()) {
+            view.presentUserList(it.toMutableList())
+        }
     }
 
     fun fetchEventCategories() {

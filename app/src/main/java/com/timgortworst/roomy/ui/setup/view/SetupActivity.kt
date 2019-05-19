@@ -1,17 +1,13 @@
 package com.timgortworst.roomy.ui.setup.view
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.setup.presenter.SetupPresenter
-import com.timgortworst.roomy.ui.splash.ui.SplashActivity
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
@@ -62,7 +58,7 @@ class SetupActivity : BaseActivity(), SetupView {
             .setTitle("Household overwrite")
             .setMessage("Your current household will be overwritten. All data will be lost. Are you sure?")
             .setPositiveButton(android.R.string.yes) { dialog, which ->
-                presenter.updateHousehold(referredHouseholdId)
+                presenter.changeUserHousehold(referredHouseholdId)
             }
             .setNegativeButton(android.R.string.no) { dialog, which ->
                 goToMainActivity()

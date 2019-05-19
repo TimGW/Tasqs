@@ -20,19 +20,19 @@ class SetupPresenter(
         if (referredHouseholdId.isNotBlank()) {
 
             // user has accepted the invite
-            if (isHouseholdActive()) {
+            if (userHasActiveHousehold()) {
 
                 // caution user that household will be overwritten
                 view.presentHouseholdOverwriteDialog()
             } else {
 
                 // no active household, so update
-                updateHousehold(referredHouseholdId)
+                changeUserHousehold(referredHouseholdId)
             }
         } else {
 
             // user started the application his/her self
-            if (isHouseholdActive()) {
+            if (userHasActiveHousehold()) {
 
                 // user has an active household
                 view.goToMainActivity()
@@ -43,10 +43,13 @@ class SetupPresenter(
                     onComplete = { householdID ->
 
                         // update local household id
-                        sharedPref.setHouseholdId(householdID)
+                        sharedPref.setActiveHouseholdId(householdID)
 
                         // update household id for user remote
-                        userRepository.updateUser(householdId = householdID) {
+                        userRepository.updateUser(
+                            householdId = householdID,
+                            role = AuthenticationResult.Role.ADMIN.name
+                        ) {
                             view.goToMainActivity()
                         }
                     },
@@ -57,27 +60,40 @@ class SetupPresenter(
         }
     }
 
-    private fun isHouseholdActive(): Boolean {
-        if (sharedPref.getHouseholdId().isNotBlank()) {
+    private fun userHasActiveHousehold(): Boolean {
+        if (sharedPref.getActiveHouseholdId().isNotBlank()) {
             return true
         }
 
         var isHouseholdActive = false
         userRepository.getUser { user ->
             if (user?.householdId?.isNotBlank() == true) {
-                sharedPref.setHouseholdId(user.householdId)
+                sharedPref.setActiveHouseholdId(user.householdId)
                 isHouseholdActive = true
             }
         }
         return isHouseholdActive
     }
 
-    fun updateHousehold(referredHouseholdId: String) {
-        // update local household id
-        sharedPref.setHouseholdId(referredHouseholdId)
+    fun changeUserHousehold(referredHouseholdId: String) {
+        userRepository.updateUser(
+            householdId = referredHouseholdId,
+            role = AuthenticationResult.Role.NORMAL.name,
+            onComplete = {
 
-        userRepository.updateUser(householdId = referredHouseholdId, role = AuthenticationResult.Role.NORMAL.name) {
-            view.goToMainActivity()
-        }
+                // user is updated
+                userRepository.getUsersForHouseholdId(sharedPref.getActiveHouseholdId()) { userList ->
+
+                    if (userList.isEmpty()) {
+                        // remove old household if there are no more users in the household
+                        householdRepository.removeHousehold(sharedPref.getActiveHouseholdId())
+                    }
+
+                    // safe to update local household id
+                    sharedPref.setActiveHouseholdId(referredHouseholdId)
+
+                    view.goToMainActivity()
+                }
+            })
     }
 }

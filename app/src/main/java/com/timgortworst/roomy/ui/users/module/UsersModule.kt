@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.ui.users.module
 
+import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.users.presenter.UsersPresenter
 import com.timgortworst.roomy.ui.users.view.UsersActivity
@@ -23,9 +24,10 @@ abstract class UsersModule {
         @JvmStatic
         internal fun provideInvitePresenter(
                 inviteView: UsersView,
-                userRepository: UserRepository
+                userRepository: UserRepository,
+                sharedPref: HuishoudGenootSharedPref
         ): UsersPresenter {
-            return UsersPresenter(inviteView, userRepository)
+            return UsersPresenter(inviteView, userRepository, sharedPref)
         }
     }
 }

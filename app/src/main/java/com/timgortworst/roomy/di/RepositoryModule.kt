@@ -9,7 +9,6 @@ import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.InternalCoroutinesApi
 
 
 /**
@@ -36,10 +35,9 @@ abstract class RepositoryModule {
         @Provides
         @JvmStatic
         internal fun provideHouseholdRepository(
-            database: FirebaseFirestore,
-            sharedPref: HuishoudGenootSharedPref,
-            auth: FirebaseAuth): HouseholdRepository {
-            return HouseholdRepository(database, sharedPref, auth)
+            database: FirebaseFirestore
+        ): HouseholdRepository {
+            return HouseholdRepository(database)
         }
 
         @Provides
