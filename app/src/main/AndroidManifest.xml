@@ -50,7 +50,8 @@
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".ui.setup.view.SetupActivity"
-                android:windowSoftInputMode="adjustResize"/>
+                android:windowSoftInputMode="adjustResize"
+                android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ui.base.view.BaseAuthActivity"/>
         <activity android:name=".ui.users.view.UsersActivity"/>
     </application>
