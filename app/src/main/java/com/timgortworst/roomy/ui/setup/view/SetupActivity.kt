@@ -34,7 +34,7 @@ class SetupActivity : BaseActivity(), SetupView {
 
         showProgressDialog()
 
-        referredHouseholdId = intent.getStringExtra(referredHouseholdIdKey)
+        referredHouseholdId = intent.getStringExtra(referredHouseholdIdKey) ?: ""
 
         presenter.setupHousehold(referredHouseholdId)
     }

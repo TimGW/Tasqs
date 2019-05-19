@@ -8,10 +8,10 @@ import com.timgortworst.roomy.utils.GenerateData
 
 class HouseholdRepository(db: FirebaseFirestore) {
 
-    val householdsCollectionRef = db.collection(Constants.HOUSEHOLD_COLLECTION_REF)
+    private val householdsCollectionRef = db.collection(Constants.HOUSEHOLD_COLLECTION_REF)
+    private val householdDocRef = householdsCollectionRef.document()
 
     fun createNewHousehold(onComplete: (householdID: String) -> Unit, onFailure: () -> Unit) {
-        val householdDocRef = householdsCollectionRef.document()
         val householdID = householdDocRef.id
 
         val categories = GenerateData.eventCategories()
@@ -31,6 +31,10 @@ class HouseholdRepository(db: FirebaseFirestore) {
     }
 
     fun removeHousehold(householdId: String) {
+        //delete sub items
+        householdDocRef.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document().delete()
+
+        // delte household
         householdsCollectionRef
             .document(householdId)
             .delete()
