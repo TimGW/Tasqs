@@ -14,13 +14,13 @@ import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.googlesignin.presenter.GoogleSignInPresenter
 import com.timgortworst.roomy.ui.setup.view.SetupActivity
 import com.timgortworst.roomy.ui.splash.ui.SplashActivity
+import com.timgortworst.roomy.utils.showToast
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_login.*
 import javax.inject.Inject
 
 
 class GoogleSignInActivity : BaseAuthActivity(), GoogleSignInView {
-
     @Inject
     lateinit var presenter: GoogleSignInPresenter
 
@@ -44,7 +44,8 @@ class GoogleSignInActivity : BaseAuthActivity(), GoogleSignInView {
                 val account = task.getResult(ApiException::class.java) as GoogleSignInAccount
                 firebaseAuthWithGoogle(account)
             } catch (e: ApiException) {
-                Log.w(TAG, "Google sign in failed", e)
+                showToast("Google sign in failed")
+
                 hideProgressDialog()
             }
         }
@@ -60,6 +61,14 @@ class GoogleSignInActivity : BaseAuthActivity(), GoogleSignInView {
         hideProgressDialog()
         SetupActivity.start(this)
         finish()
+    }
+
+    override fun loginFailed() {
+        showToast("login failed")
+    }
+
+    override fun failedInitUser() {
+        showToast("failedInitUser")
     }
 
     companion object {

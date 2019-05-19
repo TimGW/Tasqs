@@ -111,10 +111,12 @@ class AgendaRepository(
     }
 
     fun getAgendaEvents(onComplete: (MutableList<Event>) -> Unit) {
-        householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+        if(sharedPref.getActiveHouseholdId().isNotBlank()){
+            householdCollectionRef.document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENTS_COLLECTION_REF).get().addOnSuccessListener {
                     onComplete(it.toObjects(Event::class.java))
                 }
+        }
     }
 
 

@@ -12,9 +12,11 @@ class UsersPresenter(
 ) {
 
     fun fetchUsers() {
-        userRepository.getUsersForHouseholdId(sharedPref.getActiveHouseholdId()) {
-            view.presentUserList(it.toMutableList())
+        userRepository.getUsersForHouseholdId(sharedPref.getActiveHouseholdId(),
+            onComplete = {
+                view.presentUserList(it.toMutableList())
+            },
+            onFailure = { })
 
-        }
     }
 }

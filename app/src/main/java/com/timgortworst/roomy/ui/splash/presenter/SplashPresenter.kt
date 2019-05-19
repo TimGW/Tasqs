@@ -16,7 +16,7 @@ class SplashPresenter(
         } else {
             // get the user if he exists or create a new one in firebase
             userRepository.getOrCreateUser(
-                onComplete = { user ->
+                onComplete = {
 
                     // user is created or retrieved
                     if (referredHouseholdId.isNotBlank()) {
