@@ -7,11 +7,11 @@ import com.google.firebase.auth.AuthCredential
 import com.timgortworst.roomy.repository.AuthRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInView
-import com.timgortworst.roomy.utils.await
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.CoroutineContext
 
 
@@ -57,9 +57,11 @@ class GoogleSignInPresenter(
         }
     }
 
-    private fun loginSuccessful() {
-        userRepository.getOrCreateUser(
-            onComplete = { view.loginSuccessful() },
-            onFailure = { view.failedInitUser() })
+    private fun loginSuccessful() = launch {
+        if (userRepository.getOrCreateUser() != null) {
+            view.loginSuccessful()
+        } else {
+            view.failedInitUser()
+        }
     }
 }

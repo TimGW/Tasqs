@@ -65,19 +65,6 @@ object AndroidUtil {
     }
 }
 
-suspend fun <T> Task<T>.await(): T = suspendCoroutine { continuation ->
-    addOnCompleteListener { task ->
-        val result = task.result
-        result?.let {
-            if (task.isSuccessful) {
-                continuation.resume(it)
-            } else {
-                continuation.resumeWithException(task.exception ?: RuntimeException("Unknown task exception"))
-            }
-        }
-    }
-}
-
 fun TextInputEditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

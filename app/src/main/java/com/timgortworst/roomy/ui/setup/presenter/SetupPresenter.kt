@@ -1,11 +1,16 @@
 package com.timgortworst.roomy.ui.setup.presenter
 
+import android.arch.lifecycle.DefaultLifecycleObserver
+import android.arch.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.AuthenticationResult
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.setup.view.SetupView
+import com.timgortworst.roomy.utils.CoroutineLifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class SetupPresenter(
@@ -13,9 +18,17 @@ class SetupPresenter(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository,
     private val sharedPref: HuishoudGenootSharedPref
-) {
+) : DefaultLifecycleObserver {
 
-    fun setupHousehold(referredHouseholdId: String) {
+    private val scope = CoroutineLifecycleScope(Dispatchers.Main)
+
+    init {
+        if (view is LifecycleOwner) {
+            view.lifecycle.addObserver(scope)
+        }
+    }
+
+    fun setupHousehold(referredHouseholdId: String) = scope.launch {
         if (referredHouseholdId.isNotBlank()) {
             // user has accepted the invite
             if (userHasActiveHousehold()) {
@@ -49,27 +62,18 @@ class SetupPresenter(
         }
     }
 
-    private fun userHasActiveHousehold(): Boolean {
-        var result = true
-
+    private suspend fun userHasActiveHousehold(): Boolean {
         // check locally
         if (sharedPref.getActiveHouseholdId().isNotBlank()) {
             return true
         }
 
         // check remote fallback when local is blank
-        userRepository.getOrCreateUser(
-            onComplete = { user ->
-                result = if (user.householdId.isNotBlank()) {
-                    sharedPref.setActiveHouseholdId(user.householdId)
-                    true
-                } else {
-                    false
-                }
-            },
-            onFailure = {
-                view.presentToastError(R.string.generic_error)
-            })
+        val user = userRepository.getOrCreateUser()
+
+        // update household id locallt
+        user?.let { sharedPref.setActiveHouseholdId(it.householdId) }
+        return user?.householdId?.isNotBlank() == true
     }
 
     fun changeCurrentUserHousehold(newHouseholdId: String) {
