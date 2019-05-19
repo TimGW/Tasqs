@@ -61,7 +61,6 @@ class SetupActivity : BaseActivity(), SetupView {
             .setNegativeButton(android.R.string.no) { dialog, which ->
                 goToMainActivity()
             }
-            .setIcon(android.R.drawable.ic_dialog_alert)
             .show()
     }
 }
