@@ -99,7 +99,7 @@ class UsersActivity : BaseAuthActivity(), UsersView {
     private fun createShareUri(householdId: String): Uri {
         val builder = Uri.Builder()
         builder.scheme("https")
-            .authority("huishoudgenoot.xyz")
+            .authority("roomy.xyz")
             .appendPath("households")
             .appendQueryParameter(QUERY_PARAM_HOUSEHOLD, householdId)
         return builder.build()
@@ -132,7 +132,7 @@ class UsersActivity : BaseAuthActivity(), UsersView {
     private fun createDynamicUri(myUri: Uri): Uri {
         val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
             .setLink(myUri)
-            .setDomainUriPrefix("https://huishoudgenoot.page.link")
+            .setDomainUriPrefix("https://roomyf3eb1.page.link")
             .setAndroidParameters(
                 DynamicLink.AndroidParameters.Builder()
                     .build()
