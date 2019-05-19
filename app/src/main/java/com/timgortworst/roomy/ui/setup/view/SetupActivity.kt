@@ -7,8 +7,10 @@ import android.support.v7.app.AlertDialog
 import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.setup.presenter.SetupPresenter
+import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.utils.showToast
 import dagger.android.AndroidInjection
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 
