@@ -81,14 +81,10 @@ class UserRepository(
         currentUserDocRef.update(userFieldMap).addOnSuccessListener { onComplete() }
     }
 
-    fun getUsersForHousehold(userListener: UserListener) {
-        val query = userCollectionRef.whereEqualTo(USER_HOUSEHOLDID_REF, sharedPref.getHouseholdId())
+    fun getUsersForHouseholdId(householdId: String, onComplete: (List<User>) -> Unit) {
+        val query = userCollectionRef.whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
         query.get().addOnSuccessListener { snapshot ->
-            userListener.provideUserList(snapshot.toObjects(User::class.java))
+            onComplete(snapshot.toObjects(User::class.java))
         }
-    }
-
-    interface UserListener {
-        fun provideUserList(users: MutableList<User>)
     }
 }

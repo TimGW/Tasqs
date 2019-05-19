@@ -25,7 +25,6 @@ import com.timgortworst.roomy.utils.Constants.EVENT_META_DATA_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_START_DATE_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_USER_REF
 import com.timgortworst.roomy.utils.Constants.HOUSEHOLD_COLLECTION_REF
-import kotlinx.coroutines.InternalCoroutinesApi
 
 
 class AgendaRepository(
@@ -37,7 +36,7 @@ class AgendaRepository(
     private lateinit var categoryListener: ListenerRegistration
 
     fun getCategories(onComplete: (MutableList<EventCategory>) -> Unit) {
-        val document = householdCollectionRef.document(sharedPref.getHouseholdId())
+        val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
 
         document.get().addOnSuccessListener {
@@ -51,7 +50,7 @@ class AgendaRepository(
             description: String = "",
             points: Int = 0) {
 
-        val document = householdCollectionRef.document(sharedPref.getHouseholdId())
+        val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document(categoryId)
 
         val categoryFieldMap = mutableMapOf<String, Any>()
@@ -68,7 +67,7 @@ class AgendaRepository(
             description: String = "",
             points: Int = 0) {
 
-        val document = householdCollectionRef.document(sharedPref.getHouseholdId())
+        val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document()
 
         val categoryFieldMap = mutableMapOf<String, Any>()
@@ -81,12 +80,12 @@ class AgendaRepository(
     }
 
     fun deleteEventCategoryForHousehold(agendaEventCategory: EventCategory): Task<Void> {
-        return householdCollectionRef.document(sharedPref.getHouseholdId())
+        return householdCollectionRef.document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document(agendaEventCategory.categoryId).delete()
     }
 
     fun listenToCategories(taskListener: EventCategoryListener) {
-        categoryListener = householdCollectionRef.document(sharedPref.getHouseholdId())
+        categoryListener = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     if (e != null) {
@@ -112,7 +111,7 @@ class AgendaRepository(
     }
 
     fun getAgendaEvents(onComplete: (MutableList<Event>) -> Unit) {
-        householdCollectionRef.document(sharedPref.getHouseholdId())
+        householdCollectionRef.document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENTS_COLLECTION_REF).get().addOnSuccessListener {
                     onComplete(it.toObjects(Event::class.java))
                 }
@@ -120,14 +119,14 @@ class AgendaRepository(
 
 
     fun insertAgendaEvent(category: EventCategory, user: User, eventMetaData: EventMetaData, isEventDone : Boolean) {
-        val document = householdCollectionRef.document(sharedPref.getHouseholdId())
+        val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENTS_COLLECTION_REF).document()
 
         document.set(Event(document.id, category, user, eventMetaData, isEventDone))
     }
 
     fun updateAgendaEvent(eventId: String, category: EventCategory? = null, user: User? = null, eventMetaData: EventMetaData? = null, isEventDone : Boolean? = null) {
-        val document = householdCollectionRef.document(sharedPref.getHouseholdId())
+        val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENTS_COLLECTION_REF).document(eventId)
 
         val eventMetaDataMap = mutableMapOf<String, Any>()
@@ -145,14 +144,14 @@ class AgendaRepository(
 
     fun removeAgendaEvent(eventId: String) {
         householdCollectionRef
-                .document(sharedPref.getHouseholdId())
+                .document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENTS_COLLECTION_REF)
                 .document(eventId)
                 .delete()
     }
 
     fun listenToEvents(agendaListener: AgendaEventListener) {
-        eventListener = householdCollectionRef.document(sharedPref.getHouseholdId())
+        eventListener = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
                 .collection(AGENDA_EVENTS_COLLECTION_REF)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     if (e != null) {
