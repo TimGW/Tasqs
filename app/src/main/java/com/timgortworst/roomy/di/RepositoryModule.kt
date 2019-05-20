@@ -4,7 +4,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.repository.AgendaRepository
-import com.timgortworst.roomy.repository.AuthRepository
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import dagger.Module
@@ -47,16 +46,6 @@ abstract class RepositoryModule {
             sharedPref: HuishoudGenootSharedPref
         ): AgendaRepository {
             return AgendaRepository(database, sharedPref)
-        }
-
-        @Provides
-        @JvmStatic
-        internal fun provideAuthRepository(
-            database: FirebaseFirestore,
-            sharedPref: HuishoudGenootSharedPref,
-            auth: FirebaseAuth
-        ): AuthRepository {
-            return AuthRepository(database, sharedPref, auth)
         }
     }
 }
