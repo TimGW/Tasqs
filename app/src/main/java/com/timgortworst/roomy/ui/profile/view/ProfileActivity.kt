@@ -11,7 +11,6 @@ import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.customview.CircleTransform
 import com.timgortworst.roomy.ui.profile.presenter.ProfilePresenter
-import com.timgortworst.roomy.ui.splash.ui.SplashActivity
 import com.timgortworst.roomy.ui.users.view.UsersActivity
 import com.timgortworst.roomy.utils.showToast
 import dagger.android.AndroidInjection
@@ -40,10 +39,10 @@ class ProfileActivity : BaseAuthActivity(), ProfileView {
 
         presenter.getCurrentUser()
 
-        profile_task_history.setOnClickListener { Toast.makeText(this, "Show history", Toast.LENGTH_LONG).show() }
-        profile_roommates.setOnClickListener {
-            UsersActivity.start(this)
-        }
+       // profile_task_history.setOnClickListener { Toast.makeText(this, "Show history", Toast.LENGTH_LONG).show() }
+//        profile_roommates.setOnClickListener {
+//            UsersActivity.start(this)
+//        }
         profile_logout_button.setOnClickListener { logout() }
 
         Picasso.get().load(getProfileImage()).transform(CircleTransform()).into(profile_image)
@@ -54,20 +53,20 @@ class ProfileActivity : BaseAuthActivity(), ProfileView {
         this.user = user
 
         profile_name.text = user.name
-        profile_email.text = user.email
-        profile_points.setStatValue(user.totalPoints.toString())
+       // profile_email.text = user.email
+      //  profile_points.setStatValue(user.totalPoints.toString())
 
-        profile_remove_household.setOnClickListener {
-            AlertDialog.Builder(this)
-                .setTitle("Delete household")
-                .setMessage("Your current household will be deleted. All data will be lost. Are you sure?")
-                .setPositiveButton(android.R.string.yes) { _, _ ->
-                    presenter.removeUserFromActiveHousehold()
-                }
-                .setNegativeButton(android.R.string.no) { _, _ -> }
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show()
-        }
+//        profile_remove_household.setOnClickListener {
+//            AlertDialog.Builder(this)
+//                .setTitle("Delete household")
+//                .setMessage("Your current household will be deleted. All data will be lost. Are you sure?")
+//                .setPositiveButton(android.R.string.yes) { _, _ ->
+//                    presenter.removeUserFromActiveHousehold()
+//                }
+//                .setNegativeButton(android.R.string.no) { _, _ -> }
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .show()
+//        }
     }
 
     override fun presentToastError(generic_error: Int) {

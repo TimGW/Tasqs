@@ -15,8 +15,6 @@ class MainPresenter(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository
 ) {
-    private lateinit var currentUser: User
-
     fun handleMenuItemClick(itemId: Int) {
         when (itemId) {
             R.id.home -> {
@@ -29,9 +27,5 @@ class MainPresenter(
                 view.presentProfileActivity()
             }
         }
-    }
-
-    fun loadHouseHold() {
-
     }
 }
