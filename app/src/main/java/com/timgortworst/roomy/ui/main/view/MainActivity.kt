@@ -11,6 +11,7 @@ import com.timgortworst.roomy.ui.agenda.ui.AgendaFragment
 import com.timgortworst.roomy.ui.eventcategory.view.EventCategoryFragment
 import com.timgortworst.roomy.ui.main.presenter.MainPresenter
 import com.timgortworst.roomy.ui.profile.view.ProfileActivity
+import com.timgortworst.roomy.ui.users.view.UsersActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, MainView {
     }
 
     override fun presentProfileActivity() {
-        ProfileActivity.start(this)
+        UsersActivity.start(this)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {

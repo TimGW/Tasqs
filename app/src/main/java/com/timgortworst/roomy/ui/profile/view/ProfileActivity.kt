@@ -43,7 +43,7 @@ class ProfileActivity : BaseAuthActivity(), ProfileView {
 //        profile_roommates.setOnClickListener {
 //            UsersActivity.start(this)
 //        }
-        profile_logout_button.setOnClickListener { logout() }
+//        profile_logout_button.setOnClickListener { logout() }
 
         Picasso.get().load(getProfileImage()).transform(CircleTransform()).into(profile_image)
     }
