@@ -41,8 +41,8 @@ class AgendaRepository(
     suspend fun updateCategory(
         categoryId: String,
         name: String = "",
-        description: String = "",
-        points: Int = 0
+        description: String = ""
+        //,points: Int = 0
     ) {
         val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
             .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document(categoryId)
@@ -51,7 +51,7 @@ class AgendaRepository(
         categoryFieldMap[EVENT_CATEGORY_ID_REF] = document.id
         if (name.isNotBlank()) categoryFieldMap[EVENT_CATEGORY_NAME_REF] = name
         if (description.isNotBlank()) categoryFieldMap[EVENT_CATEGORY_DESC_REF] = description
-        if (points != 0) categoryFieldMap[EVENT_CATEGORY_POINTS_REF] = points
+       // if (points != 0) categoryFieldMap[EVENT_CATEGORY_POINTS_REF] = points
 
         try {
             document.update(categoryFieldMap).await()
@@ -62,8 +62,8 @@ class AgendaRepository(
 
     suspend fun insertCategory(
         name: String = "",
-        description: String = "",
-        points: Int = 0
+        description: String = ""
+        //,points: Int = 0
     ) {
         val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
             .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document()
@@ -72,7 +72,7 @@ class AgendaRepository(
         categoryFieldMap[EVENT_CATEGORY_ID_REF] = document.id
         if (name.isNotBlank()) categoryFieldMap[EVENT_CATEGORY_NAME_REF] = name
         if (description.isNotBlank()) categoryFieldMap[EVENT_CATEGORY_DESC_REF] = description
-        if (points != 0) categoryFieldMap[EVENT_CATEGORY_POINTS_REF] = points
+        //if (points != 0) categoryFieldMap[EVENT_CATEGORY_POINTS_REF] = points
 
         try {
             document.set(categoryFieldMap).await()

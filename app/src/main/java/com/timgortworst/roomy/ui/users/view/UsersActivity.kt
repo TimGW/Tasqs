@@ -9,11 +9,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
-import com.timgortworst.roomy.model.AuthenticationResult
+import com.timgortworst.roomy.model.Role
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.users.adapter.UserListAdapter
@@ -85,10 +86,11 @@ class UsersActivity : BaseAuthActivity(), UsersView {
     }
 
     override fun presentCurrentUser(currentUser: User?) {
-        addPeopleMenuItem.isVisible = currentUser?.role == AuthenticationResult.Role.ADMIN.name
+        addPeopleMenuItem.isVisible = currentUser?.role == Role.ADMIN.name
     }
 
     override fun presentUserList(users: MutableList<User>) {
+        addPeopleMenuItem.isVisible = users.size < 8
         adapter.setUsers(users)
     }
 

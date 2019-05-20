@@ -3,7 +3,6 @@ package com.timgortworst.roomy.repository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.utils.Constants.USERS_COLLECTION_REF
@@ -11,7 +10,6 @@ import com.timgortworst.roomy.utils.Constants.USER_EMAIL_REF
 import com.timgortworst.roomy.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.utils.Constants.USER_ROLE_REF
-import com.timgortworst.roomy.utils.Constants.USER_TOTALPOINTS_REF
 import kotlinx.coroutines.tasks.await
 
 class UserRepository(
@@ -55,7 +53,7 @@ class UserRepository(
         userId: String = auth.currentUser?.uid.orEmpty(),
         name: String = "",
         email: String = "",
-        totalPoints: Int = 0,
+       // totalPoints: Int = 0,
         householdId: String = "",
         role: String = ""
     ) {
@@ -64,7 +62,7 @@ class UserRepository(
         val userFieldMap = mutableMapOf<String, Any>()
         if (name.isNotBlank()) userFieldMap[USER_NAME_REF] = name
         if (email.isNotBlank()) userFieldMap[USER_EMAIL_REF] = email
-        if (totalPoints != 0) userFieldMap[USER_TOTALPOINTS_REF] = totalPoints
+       // if (totalPoints != 0) userFieldMap[USER_TOTALPOINTS_REF] = totalPoints
         if (householdId.isNotBlank()) userFieldMap[USER_HOUSEHOLDID_REF] = householdId
         if (role.isNotBlank()) userFieldMap[USER_ROLE_REF] = role
 

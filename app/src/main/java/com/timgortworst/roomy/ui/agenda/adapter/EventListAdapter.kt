@@ -33,7 +33,7 @@ class EventListAdapter(
         viewHolder.user.text = event.user.name
         viewHolder.dateTime.text = activity.getString(R.string.next_occurance, date.toString())
         viewHolder.description.text = event.eventCategory.name
-        viewHolder.points.text = event.eventCategory.points.toString()
+//        viewHolder.points.text = event.eventCategory.points.toString()
     }
 
     fun setEventList(events: MutableList<Event>) {

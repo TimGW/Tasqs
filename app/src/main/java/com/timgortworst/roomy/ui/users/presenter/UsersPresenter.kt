@@ -3,7 +3,6 @@ package com.timgortworst.roomy.ui.users.presenter
 import android.arch.lifecycle.DefaultLifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
-import com.timgortworst.roomy.model.AuthenticationResult
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.users.view.UsersView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
