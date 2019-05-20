@@ -94,19 +94,15 @@ class AgendaRepository(
     }
 
     suspend fun getAgendaEvents(): MutableList<Event>? {
-        return if (sharedPref.getActiveHouseholdId().isNotBlank()) {
-            try {
-                householdCollectionRef.document(sharedPref.getActiveHouseholdId())
-                    .collection(AGENDA_EVENTS_COLLECTION_REF)
-                    .get()
-                    .await()
-                    .toObjects(Event::class.java)
-            } catch (e: FirebaseFirestoreException) {
-                Log.e("TIMTIM", e.localizedMessage)
-                return null
-            }
-        } else {
-            null
+        return try {
+            householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+                .collection(AGENDA_EVENTS_COLLECTION_REF)
+                .orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)
+                .get()
+                .await()
+                .toObjects(Event::class.java)
+        } catch (e: FirebaseFirestoreException) {
+            throw e
         }
     }
 
@@ -197,6 +193,7 @@ class AgendaRepository(
     fun listenToEvents(agendaListener: AgendaEventListener) {
         eventListener = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
             .collection(AGENDA_EVENTS_COLLECTION_REF)
+            .orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)
             .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                 if (e != null) {
                     Log.w(TAG, "listen:error", e)

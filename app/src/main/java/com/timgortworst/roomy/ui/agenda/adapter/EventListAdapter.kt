@@ -42,6 +42,11 @@ class EventListAdapter(
         notifyDataSetChanged()
     }
 
+    fun addEvent(event : Event){
+        this.events.add(event)
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
         return events.size
     }

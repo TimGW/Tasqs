@@ -56,7 +56,14 @@ class AgendaFragment : Fragment(), AgendaView {
 
         setupEventListAdapter()
 
-        presenter.getEvents()
+        swipe_container.setOnRefreshListener {
+            presenter.getEvents()
+        }
+
+        if (!listeningToEvents) {
+            presenter.listenToEvents()
+            listeningToEvents = true
+        }
     }
 
     private fun setupEventListAdapter() {
@@ -104,17 +111,12 @@ class AgendaFragment : Fragment(), AgendaView {
     }
 
     override fun presentAddedEvent(agendaEvent: Event) {
-        //this.events.add(agendaEvent.toCalendarEvent())
-        //   events_agenda.notifyDatasetChanged()
+        adapter.addEvent(agendaEvent)
     }
 
     override fun presentEvents(events: MutableList<Event>) {
+        swipe_container.isRefreshing = false
         adapter.setEventList(events)
-
-        if (!listeningToEvents) {
-            presenter.listenToEvents()
-            listeningToEvents = true
-        }
     }
 
 
