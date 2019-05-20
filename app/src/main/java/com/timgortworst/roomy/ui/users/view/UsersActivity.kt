@@ -55,10 +55,12 @@ class UsersActivity : BaseAuthActivity(), UsersView {
         adapter = UserListAdapter(this, mutableListOf())
         val layoutManager = LinearLayoutManager(this)
         user_list.layoutManager = layoutManager
-        val dividerItemDecoration = DividerItemDecoration(user_list.context, layoutManager.orientation)
+        val dividerItemDecoration =
+            DividerItemDecoration(user_list.context, layoutManager.orientation)
         user_list.addItemDecoration(dividerItemDecoration)
         user_list.adapter = adapter
 
+        presenter.fetchCurrentUser()
         presenter.fetchUsers()
     }
 
@@ -82,10 +84,11 @@ class UsersActivity : BaseAuthActivity(), UsersView {
         }
     }
 
+    override fun presentCurrentUser(currentUser: User?) {
+        addPeopleMenuItem.isVisible = currentUser?.role == AuthenticationResult.Role.ADMIN.name
+    }
+
     override fun presentUserList(users: MutableList<User>) {
-        for (user in users) {
-            addPeopleMenuItem.isVisible = user.role == AuthenticationResult.Role.ADMIN.name
-        }
         adapter.setUsers(users)
     }
 

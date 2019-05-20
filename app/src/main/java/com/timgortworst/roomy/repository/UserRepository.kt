@@ -3,6 +3,7 @@ package com.timgortworst.roomy.repository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.utils.Constants.USERS_COLLECTION_REF
@@ -71,8 +72,11 @@ class UserRepository(
     }
 
     suspend fun getUsersForHouseholdId(householdId: String): List<User> {
-        val query = userCollectionRef.whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
-        return query.get().await().toObjects(User::class.java)
+        return userCollectionRef
+            .whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
+            .get()
+            .await()
+            .toObjects(User::class.java)
     }
 
     suspend fun deleteUser(user: User) {
