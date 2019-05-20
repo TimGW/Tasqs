@@ -56,7 +56,6 @@ class EditAgendaEventActivity : AppCompatActivity(), EditAgendaEventView, DatePi
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_agenda_item)
-//        ButterKnife.bind(this)
 
         agendaEvent = intent.getParcelableExtra(INTENT_EXTRA_EDIT_HOUSEHOLD_TASK) ?: Event()
 
@@ -85,9 +84,9 @@ class EditAgendaEventActivity : AppCompatActivity(), EditAgendaEventView, DatePi
         agenda_item_date_input.setOnClickListener {
             datePickerDialog.show()
             datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
-                .setTextColor(ContextCompat.getColor(this, R.color.dark_grey))
+                    .setTextColor(ContextCompat.getColor(this, R.color.dark_grey))
             datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
-                .setTextColor(ContextCompat.getColor(this, R.color.dark_grey))
+                    .setTextColor(ContextCompat.getColor(this, R.color.dark_grey))
         }
 
         event_repeat_checkbox.setOnCheckedChangeListener { _: CompoundButton, ischecked: Boolean ->
@@ -100,7 +99,10 @@ class EditAgendaEventActivity : AppCompatActivity(), EditAgendaEventView, DatePi
     }
 
     private fun setupEventCategorySpinner() {
-        spinnerAdapterTasks = SpinnerTaskAdapter(this, android.R.layout.simple_spinner_item, mutableListOf())
+        spinnerAdapterTasks = SpinnerTaskAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                mutableListOf())
         spinner_categories.adapter = spinnerAdapterTasks
         spinner_categories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -115,9 +117,9 @@ class EditAgendaEventActivity : AppCompatActivity(), EditAgendaEventView, DatePi
 
     private fun setupUsersSpinner() {
         spinnerAdapterUsers = SpinnerUserAdapter(
-            this,
-            android.R.layout.simple_spinner_item,
-            mutableListOf()
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                mutableListOf()
         )
         spinner_users.adapter = spinnerAdapterUsers
         spinner_users.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -135,9 +137,9 @@ class EditAgendaEventActivity : AppCompatActivity(), EditAgendaEventView, DatePi
         val intervals = EventMetaData.RepeatingInterval.values()
 
         spinner_repeat.adapter = ArrayAdapter<EventMetaData.RepeatingInterval>(
-            this,
-            android.R.layout.simple_spinner_item,
-            EventMetaData.RepeatingInterval.values()
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                EventMetaData.RepeatingInterval.values()
         )
     }
 
@@ -155,13 +157,13 @@ class EditAgendaEventActivity : AppCompatActivity(), EditAgendaEventView, DatePi
             R.id.action_edit_done -> {
                 val repeatInterval = (spinner_repeat.selectedItem as EventMetaData.RepeatingInterval)
                 val eventMetaData =
-                    EventMetaData(repeatStartDate = calendar.timeInMillis, repeatInterval = repeatInterval)
+                        EventMetaData(repeatStartDate = calendar.timeInMillis, repeatInterval = repeatInterval)
 
                 presenter.insertOrUpdateEvent(
-                    agendaEvent.agendaId,
-                    (spinner_categories.selectedItem as EventCategory),
-                    (spinner_users.selectedItem as User),
-                    eventMetaData
+                        agendaEvent.agendaId,
+                        (spinner_categories.selectedItem as EventCategory),
+                        (spinner_users.selectedItem as User),
+                        eventMetaData
                 )
 
                 finish()
@@ -193,17 +195,17 @@ class EditAgendaEventActivity : AppCompatActivity(), EditAgendaEventView, DatePi
 
     private fun setupCalenderDialog() {
         datePickerDialog = DatePickerDialog(
-            this, this,
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+                this, this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
         )
 
         datePickerDialog.datePicker.minDate = System.currentTimeMillis()
         presenter.formatDate(
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
         )
     }
 
