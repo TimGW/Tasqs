@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, MainView {
             true
         }
 
-        fragmentToReplace(AgendaFragment.newInstance())
+        presentAgendaFragment()
     }
 
     override fun presentText(text: String) {
