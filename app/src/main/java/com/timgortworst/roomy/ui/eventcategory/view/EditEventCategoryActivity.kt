@@ -2,13 +2,11 @@ package com.timgortworst.roomy.ui.eventcategory.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.EventCategory
 import com.timgortworst.roomy.ui.eventcategory.presenter.EditEventCategoryPresenter
@@ -74,7 +72,7 @@ class EditEventCategoryActivity : AppCompatActivity(), EditEventCategoryView { /
             if (it.categoryId.isNotEmpty()) {
                 supportActionBar?.title = "Edit  ${householdTask.name}"
                 task_name_hint.editText?.setText(householdTask.name)
-                task_points_hint.editText?.setText(householdTask.points.toString())
+//                task_points_hint.editText?.setText(householdTask.points.toString())
                 task_description_hint.editText?.setText(householdTask.description)
             }
         }
@@ -95,7 +93,12 @@ class EditEventCategoryActivity : AppCompatActivity(), EditEventCategoryView { /
                 true
             }
             R.id.action_edit_done -> {
-              //  validator.validate()
+                presenter.insertOrUpdateCategory(
+                    householdTask.categoryId,
+                    task_name_hint.editText?.text.toString(),
+                    task_description_hint.editText?.text.toString())
+
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)

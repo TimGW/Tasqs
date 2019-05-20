@@ -11,5 +11,6 @@ import kotlinx.android.parcel.Parcelize
 data class EventCategory(
     var categoryId: String = "",
     var name: String = "",
-    var description: String = "",
-    var points: Int = 0) : Parcelable
+    var description: String = ""
+//    , var points: Int = 0
+) : Parcelable

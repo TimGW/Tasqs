@@ -13,17 +13,18 @@ data class User(
     var userId: String = "",
     var name: String = "",
     var email: String = "",
-    var totalPoints: Int = 0,
-    var role : String = AuthenticationResult.Role.ADMIN.name,
-    var householdId : String = "",
-    var color : Int = UserColor.GREEN.ordinal) : Parcelable {
+   // var totalPoints: Int = 0,
+    var role: String = Role.ADMIN.name,
+    var householdId: String = ""
+//   , var color: Int = UserColor.GREEN.ordinal
+) : Parcelable {
 
-    enum class UserColor(color: Int) {
-        RED(Color.RED),
-        BLACK(Color.BLACK),
-        GREEN(Color.GREEN),
-        BLUE(Color.BLUE),
-        CYAN(Color.CYAN),
-        YELLOW(Color.YELLOW)
-    }
+//    enum class UserColor(color: Int) {
+//        RED(Color.RED),
+//        BLACK(Color.BLACK),
+//        GREEN(Color.GREEN),
+//        BLUE(Color.BLUE),
+//        CYAN(Color.CYAN),
+//        YELLOW(Color.YELLOW)
+//    }
 }

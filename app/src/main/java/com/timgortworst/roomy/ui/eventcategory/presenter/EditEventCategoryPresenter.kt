@@ -25,14 +25,12 @@ class EditEventCategoryPresenter(
     fun insertOrUpdateCategory(
         eventCategoryId: String,
         name: String,
-        description: String,
-        points: Int
-    ) = scope.launch {
+        description: String) = scope.launch {
 
         if (eventCategoryId.isNotBlank()) {
-            repository.updateCategory(eventCategoryId, name, description, points)
+            repository.updateCategory(eventCategoryId, name, description)
         } else {
-            repository.insertCategory(name, description, points)
+            repository.insertCategory(name, description)
         }
     }
 

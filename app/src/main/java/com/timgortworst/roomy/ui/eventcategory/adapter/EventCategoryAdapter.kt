@@ -38,7 +38,7 @@ class EventCategoryAdapter(
         val householdTask = houseHoldTasks[position]
 
         viewHolder.taskTitle.text = householdTask.name
-        viewHolder.taskPoints.text = activity.getString(R.string.householdtask_points, householdTask.points)
+//        viewHolder.taskPoints.text = activity.getString(R.string.householdtask_points, householdTask.points)
         viewHolder.taskDescription.text = householdTask.description
 
         /** logic for handling the clicks to expand an item  */

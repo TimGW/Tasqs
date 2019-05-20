@@ -4,7 +4,7 @@ import android.arch.lifecycle.DefaultLifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
-import com.timgortworst.roomy.model.AuthenticationResult
+import com.timgortworst.roomy.model.Role
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.setup.view.SetupView
@@ -51,7 +51,7 @@ class SetupPresenter(
                     // update household id for user remote
                     userRepository.setOrUpdateUser(
                         householdId = householdID,
-                        role = AuthenticationResult.Role.ADMIN.name
+                        role = Role.ADMIN.name
                     )
                     view.goToMainActivity()
                 } else {
@@ -77,7 +77,7 @@ class SetupPresenter(
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
         userRepository.setOrUpdateUser(
             householdId = newHouseholdId,
-            role = AuthenticationResult.Role.NORMAL.name
+            role = Role.NORMAL.name
         )
         val userList = userRepository.getUsersForHouseholdId(sharedPref.getActiveHouseholdId())
         if (userList.isEmpty()) {
