@@ -33,7 +33,8 @@ class UserRepository(
                 val newUser = User(
                     auth.currentUser?.uid ?: "",
                     auth.currentUser?.displayName ?: "",
-                    auth.currentUser?.email ?: "")
+                    auth.currentUser?.email ?: ""
+                )
 
                 try {
                     currentUserDocRef.set(newUser).await()
@@ -69,8 +70,12 @@ class UserRepository(
         currentUserDocRef.set(userFieldMap, SetOptions.merge()).await()
     }
 
-    suspend fun getUsersForHouseholdId(householdId: String) : List<User> {
+    suspend fun getUsersForHouseholdId(householdId: String): List<User> {
         val query = userCollectionRef.whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
         return query.get().await().toObjects(User::class.java)
+    }
+
+    suspend fun deleteUser(user: User) {
+        userCollectionRef.document(user.userId).delete().await()
     }
 }

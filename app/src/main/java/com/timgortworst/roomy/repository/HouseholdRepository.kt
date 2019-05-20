@@ -8,8 +8,14 @@ import com.timgortworst.roomy.utils.Constants
 import com.timgortworst.roomy.utils.Constants.AGENDA_EVENT_CATEGORIES_COLLECTION_REF
 import com.timgortworst.roomy.utils.GenerateData
 import kotlinx.coroutines.tasks.await
+import com.google.android.gms.tasks.Task
+import android.support.annotation.NonNull
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.firestore.DocumentReference
+import com.timgortworst.roomy.utils.Constants.AGENDA_EVENTS_COLLECTION_REF
 
-class HouseholdRepository(db: FirebaseFirestore, private val sharedPref: HuishoudGenootSharedPref) {
+
+class HouseholdRepository(private val db: FirebaseFirestore, private val sharedPref: HuishoudGenootSharedPref) {
 
     private val householdsCollectionRef = db.collection(Constants.HOUSEHOLD_COLLECTION_REF)
     private val householdDocRef = householdsCollectionRef.document()
@@ -42,8 +48,10 @@ class HouseholdRepository(db: FirebaseFirestore, private val sharedPref: Huishou
     }
 
     suspend fun removeHousehold(householdId: String) {
-        //delete sub items
-        householdDocRef.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document().delete().await()
+        // todo delete sub items
+//        val batch = db.batch()
+//        db.collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).get().result?.forEach { batch.delete(it.reference).commit().await() }
+//        db.collection(AGENDA_EVENTS_COLLECTION_REF).get().result?.forEach { batch.delete(it.reference).commit().await() }
 
         // delete household
         householdsCollectionRef

@@ -77,4 +77,10 @@ class ProfileActivity : BaseAuthActivity(), ProfileView {
     override fun restartApplication() {
         logout()
     }
+
+    override fun revokeUserAccess() {
+        revokeAccess()?.addOnCompleteListener(this) {
+            presenter.cleanupHousehold()
+        }
+    }
 }
