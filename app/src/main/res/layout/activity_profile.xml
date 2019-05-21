@@ -74,7 +74,7 @@
         android:id="@+id/main.toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorAccentDark"
+        android:background="@color/color_accent_dark"
         app:layout_anchor="@id/main.collapsing"
         app:theme="@style/ThemeOverlay.AppCompat.Dark"
         app:title="">

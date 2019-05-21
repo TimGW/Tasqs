@@ -65,8 +65,7 @@ class EventCategoryFragment : Fragment(), EventCategoryFragmentView {
             })
         val layoutManager = LinearLayoutManager(activityContext)
         household_task_list.layoutManager = layoutManager
-        val dividerItemDecoration = DividerItemDecoration(household_task_list.context, layoutManager.orientation)
-        household_task_list.addItemDecoration(dividerItemDecoration)
+        household_task_list.addItemDecoration(DividerItemDecoration(household_task_list.context, layoutManager.orientation))
         household_task_list.addItemDecoration(StickyRecyclerHeadersDecoration(adapter))
         household_task_list.adapter = adapter
     }

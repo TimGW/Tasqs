@@ -1,29 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/white</color>
-    <color name="colorPrimaryDark">@color/light_grey</color>
-    <!--<color name="colorAccent">#3bd972</color>-->
-    <color name="colorAccent">#45ed9c</color>
-    <color name="colorAccentDark">#12ba69</color>
-    <color name="colorAccentLight">#d1fae6</color>
+    <color name="color_primary">@color/white</color>
+    <color name="color_primary_dark">@color/light_grey</color>
+    <color name="background_color">@color/white</color>
+
+    <color name="color_accent">#45ed9c</color>
+    <color name="color_accent_dark">#12ba69</color>
 
     <color name="white">#fff</color>
-    <color name="ultra_light_grey">#f6f6f6</color>
     <color name="light_grey">#FFE4E4E4</color>
-    <color name="error">#E41900</color>
-    <color name="grey">#FF969696</color>
     <color name="dark_grey">#FF2A2A30</color>
-    <color name="dark_grey_translucent">#662A2A30</color>
     <color name="black">#000</color>
-
-    <!-- GRAY Theme -->
-    <color name="primaryColorGray">#9E9E9E</color>
-    <color name="primaryLightColorGray">#F5F5F5</color>
-    <color name="primaryDarkColorGray">#616161</color>
-    <color name="secondaryColorGray">#536DFE</color>
-    <color name="secondaryLightColorGray">#94a5ff</color>
-    <color name="secondaryDarkColorGray">#2c44c9</color>
-    <color name="primaryTextColorGray">#ffffff</color>
-    <color name="secondaryTextColorGray">#000000</color>
-
+    <color name="error">#E41900</color>
 </resources>

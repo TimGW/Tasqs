@@ -29,14 +29,12 @@ class SpinnerUserAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         val label = super.getView(position, convertView, parent) as TextView
-        label.setTextColor(Color.BLACK)
         label.text = userList[position].name
         return label
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View? {
         val label = super.getDropDownView(position, convertView, parent) as TextView
-        label.setTextColor(Color.BLACK)
         label.text = userList[position].name
 
         return label
