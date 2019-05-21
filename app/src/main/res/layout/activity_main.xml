@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:backgroundTint="?android:colorBackground"
+        app:backgroundTint="@color/bottom_app_bar"
         app:fabCradleMargin="0dp"
         app:fabAlignmentMode="center" />
 
