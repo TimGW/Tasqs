@@ -1,11 +1,12 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/primaryColorGray</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColorGray</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:colorBackground">@color/background_color</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -37,7 +38,7 @@
     <style name="Text.Headline" parent="TextAppearance.AppCompat.Headline"></style>
     <style name="Text.Title" parent="TextAppearance.AppCompat.Title"></style>
     <style name="Text.Title.Accent" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/color_accent</item>
     </style>
     <style name="Text.Display1" parent="TextAppearance.AppCompat.Display1"></style>
     <style name="Text.Subhead" parent="TextAppearance.AppCompat.Subhead"></style>

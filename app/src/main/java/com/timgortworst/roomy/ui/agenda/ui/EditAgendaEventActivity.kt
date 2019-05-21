@@ -84,9 +84,7 @@ class EditAgendaEventActivity : AppCompatActivity(), EditAgendaEventView, DatePi
         agenda_item_date_input.setOnClickListener {
             datePickerDialog.show()
             datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
-                    .setTextColor(ContextCompat.getColor(this, R.color.dark_grey))
             datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
-                    .setTextColor(ContextCompat.getColor(this, R.color.dark_grey))
         }
 
         event_repeat_checkbox.setOnCheckedChangeListener { _: CompoundButton, ischecked: Boolean ->

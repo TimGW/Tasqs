@@ -5,11 +5,11 @@
     android:id="@+id/viewgroup_task"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="40dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="8dp"
+    android:paddingStart="40dp"
+    android:paddingEnd="16dp"
     android:clickable="true"
     android:focusable="true"
+    android:background="?attr/selectableItemBackground"
     android:padding="8dp">
 
     <TextView
@@ -17,7 +17,6 @@
         style="@style/Text.Body1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:textSize="18sp"
@@ -26,33 +25,19 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="task" />
 
-    <TextView
-        android:id="@+id/task_points_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_title"
-        tools:text="Punten: 5" />
 
     <TextView
         android:id="@+id/task_description"
         style="@style/Text.Body1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:ellipsize="end"
         android:lineSpacingExtra="5sp"
         android:maxLines="4"
         android:textSize="14sp"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task_points_hint"
+        app:layout_constraintTop_toBottomOf="@+id/task_title"
         tools:text="intro_text intro_textintro_textintro_textintro_textintro_textintro_textintro_textintro_textintro_textintro_textintro_textintro_textintro_textintro_textintro_textintro_textintro_text" />
 
 </android.support.constraint.ConstraintLayout>

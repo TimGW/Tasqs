@@ -21,7 +21,6 @@ class EventCategoryAdapter(
         private var optionsClickListener: EventCategoryAdapter.OnOptionsClickListener
 ) : StickyRecyclerHeadersAdapter<EventCategoryAdapter.HeaderViewHolder>,
         RecyclerView.Adapter<EventCategoryAdapter.ViewHolder>() {
-    private var mExpandedPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.household_tasks_list_row, parent, false)
@@ -87,12 +86,10 @@ class EventCategoryAdapter(
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val taskTitle: TextView
         val taskDescription: TextView
-        val taskPoints: TextView
 
         init {
             this.taskTitle = view.findViewById(R.id.task_title)
             this.taskDescription = view.findViewById(R.id.task_description)
-            this.taskPoints = view.findViewById(R.id.task_points_hint)
         }
     }
 
