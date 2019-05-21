@@ -191,7 +191,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:drawableStart="@drawable/ic_people_outline_accent_24dp"
+                android:drawableStart="@drawable/ic_group"
                 android:drawablePadding="16dp"
                 android:ellipsize="end"
                 android:paddingTop="8dp"

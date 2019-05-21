@@ -3,6 +3,7 @@ package com.timgortworst.roomy
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.support.v7.app.AppCompatDelegate
 import com.google.firebase.firestore.FirebaseFirestore
 import com.timgortworst.roomy.di.DaggerAppComponent
 import dagger.android.AndroidInjector
@@ -21,6 +22,8 @@ class RoomyApp : Application(), HasActivityInjector {
 
     init {
         instance = this
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
     }
 
     override fun onCreate() {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
@@ -82,20 +83,19 @@ class AgendaFragment : Fragment(), AgendaView {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.event_today -> {
-                // events_agenda.floating_action_button.performClick()
-                true
-            }
+//            R.id.event_today -> {
+//                // events_agenda.floating_action_button.performClick()
+//                true
+//            }
             R.id.event_planning -> {
-//                events_agenda.goToToday()
                 true
             }
             R.id.event_three_days -> {
-                //  events_agenda.numberOfVisibleDays = 3
+                activityContext.delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 true
             }
             R.id.event_week -> {
-                //  events_agenda.numberOfVisibleDays = 7
+                activityContext.delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -22,8 +22,7 @@
             android:layout_height="match_parent"
             android:imeOptions="actionNext"
             android:inputType="textCapSentences"
-            android:singleLine="true"
-            android:theme="@style/MyTheme.EditText" />
+            android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -47,8 +46,7 @@
             android:layout_height="match_parent"
             android:imeOptions="actionNext"
             android:inputType="number"
-            android:maxLength="2"
-            android:theme="@style/MyTheme.EditText" />
+            android:maxLength="2"/>
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -68,8 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:imeOptions="actionDone"
-            android:inputType="textCapSentences|textMultiLine"
-            android:theme="@style/MyTheme.EditText" />
+            android:inputType="textCapSentences|textMultiLine" />
     </android.support.design.widget.TextInputLayout>
 
 

@@ -3,6 +3,7 @@ package com.timgortworst.roomy.ui.eventcategory.view
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -62,21 +63,23 @@ class EventCategoryFragment : Fragment(), EventCategoryFragmentView {
                     showContextMenuFor(householdTask)
                 }
             })
-        householdTasks.layoutManager = LinearLayoutManager(activityContext)
-
-        householdTasks.addItemDecoration(StickyRecyclerHeadersDecoration(adapter))
-        householdTasks.adapter = adapter
+        val layoutManager = LinearLayoutManager(activityContext)
+        household_task_list.layoutManager = layoutManager
+        val dividerItemDecoration = DividerItemDecoration(household_task_list.context, layoutManager.orientation)
+        household_task_list.addItemDecoration(dividerItemDecoration)
+        household_task_list.addItemDecoration(StickyRecyclerHeadersDecoration(adapter))
+        household_task_list.adapter = adapter
     }
 
     fun showContextMenuFor(householdTask: EventCategory) {
         var bottomSheetMenu: BottomSheetMenu? = null
 
         val items = arrayListOf(
-            BottomMenuItem(R.drawable.pencil, "Edit") {
+            BottomMenuItem(R.drawable.ic_edit, "Edit") {
                 EditEventCategoryActivity.start(activityContext, householdTask)
                 bottomSheetMenu?.dismiss()
             },
-            BottomMenuItem(R.drawable.delete_outline, "Delete") {
+            BottomMenuItem(R.drawable.ic_delete, "Delete") {
                 presenter.deleteEventCategory(householdTask)
                 bottomSheetMenu?.dismiss()
             }

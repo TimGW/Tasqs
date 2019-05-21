@@ -2,11 +2,9 @@ package com.timgortworst.roomy.ui.main.presenter
 
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
-import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.main.view.MainView
-import kotlinx.coroutines.InternalCoroutinesApi
 
 
 class MainPresenter(
@@ -20,7 +18,7 @@ class MainPresenter(
             R.id.home -> {
                 view.presentAgendaFragment()
             }
-            R.id.householdTasks -> {
+            R.id.household_task_list -> {
                 view.presentTasksFragment()
             }
             R.id.profile -> {

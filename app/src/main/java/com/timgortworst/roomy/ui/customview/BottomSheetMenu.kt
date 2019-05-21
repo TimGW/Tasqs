@@ -2,6 +2,7 @@ package com.timgortworst.roomy.ui.customview
 
 import android.content.Context
 import android.support.design.widget.BottomSheetDialog
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
