@@ -5,32 +5,30 @@
     android:id="@+id/card_view_event"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:background="@color/white">
+    android:layout_margin="8dp">
 
     <TextView
         android:id="@+id/user_title"
+        style="@style/Text.Body1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
-        tools:text="user"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:textColor="@color/dark_grey"
-        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/admin_label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="user" />
 
     <TextView
         android:id="@+id/admin_label"
+        style="@style/Text.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="Opperbaas"
-        android:textColor="@color/dark_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

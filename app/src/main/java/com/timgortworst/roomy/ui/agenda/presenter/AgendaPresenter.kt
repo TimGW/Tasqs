@@ -49,6 +49,7 @@ class AgendaPresenter(
         val events = repository.getAgendaEvents() ?: return@launch
 
         events.forEach {
+
             if (it.isDone) {
                 // event is gemarkeerd als klaar
                 if (it.eventMetaData.repeatStartDate.isTimeStampInPast()) {

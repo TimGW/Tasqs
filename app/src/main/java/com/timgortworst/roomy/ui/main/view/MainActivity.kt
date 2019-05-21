@@ -10,7 +10,6 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.agenda.ui.AgendaFragment
 import com.timgortworst.roomy.ui.eventcategory.view.EventCategoryFragment
 import com.timgortworst.roomy.ui.main.presenter.MainPresenter
-import com.timgortworst.roomy.ui.profile.view.ProfileActivity
 import com.timgortworst.roomy.ui.users.view.UsersActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector

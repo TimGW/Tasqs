@@ -40,7 +40,7 @@
         <activity android:name=".ui.base.view.BaseActivity"/>
         <activity
                 android:name=".ui.googlesignin.view.GoogleSignInActivity"
-                android:theme="@style/AppTheme.Login"/>
+                android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".ui.eventcategory.view.EditEventCategoryActivity"
                 android:windowSoftInputMode="stateVisible|adjustResize"/>

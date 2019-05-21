@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="8dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <TextView
         android:id="@+id/bottom_sheet_title"
+        style="@style/Text.Title.Accent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="title"
         android:padding="16dp"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="title" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/bottom_sheet_recycler"
