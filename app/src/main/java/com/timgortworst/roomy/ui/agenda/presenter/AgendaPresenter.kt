@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.repository.AgendaRepository
-import com.timgortworst.roomy.ui.agenda.ui.AgendaView
+import com.timgortworst.roomy.ui.agenda.view.AgendaView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.utils.isTimeStampInPast
 import kotlinx.coroutines.Dispatchers

@@ -91,4 +91,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     </string>
     <string name="admin_label">Opperbaas</string>
     <string name="settings">Settings</string>
+    <string name="preferences_display_header">Weergave</string>
+    <string name="preferences_display_dark_mode">Donker thema</string>
+    <string name="title_activity_settings">Settings</string>
+
 </resources>

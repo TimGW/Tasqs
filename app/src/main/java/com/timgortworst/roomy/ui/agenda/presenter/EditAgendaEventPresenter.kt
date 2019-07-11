@@ -8,7 +8,7 @@ import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.AgendaRepository
 import com.timgortworst.roomy.repository.UserRepository
-import com.timgortworst.roomy.ui.agenda.ui.EditAgendaEventView
+import com.timgortworst.roomy.ui.agenda.view.EditAgendaEventView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

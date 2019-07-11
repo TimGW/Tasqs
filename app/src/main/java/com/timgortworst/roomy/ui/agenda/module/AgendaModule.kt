@@ -2,12 +2,11 @@ package com.timgortworst.roomy.ui.agenda.module
 
 import com.timgortworst.roomy.repository.AgendaRepository
 import com.timgortworst.roomy.ui.agenda.presenter.AgendaPresenter
-import com.timgortworst.roomy.ui.agenda.ui.AgendaFragment
-import com.timgortworst.roomy.ui.agenda.ui.AgendaView
+import com.timgortworst.roomy.ui.agenda.view.AgendaFragment
+import com.timgortworst.roomy.ui.agenda.view.AgendaView
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.InternalCoroutinesApi
 
 @Module
 

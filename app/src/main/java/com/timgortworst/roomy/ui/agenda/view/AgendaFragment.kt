@@ -1,18 +1,16 @@
-package com.timgortworst.roomy.ui.agenda.ui
+package com.timgortworst.roomy.ui.agenda.view
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.*
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.ui.agenda.adapter.EventListAdapter
 import com.timgortworst.roomy.ui.agenda.presenter.AgendaPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
+import com.timgortworst.roomy.ui.settings.view.SettingsActivity
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_agenda.*
@@ -43,7 +41,7 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        activityContext = (activity as MainActivity)
+        activityContext = (activity as? MainActivity) ?: return
 
         setHasOptionsMenu(true)
     }
@@ -92,11 +90,12 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
                 true
             }
             R.id.event_three_days -> {
-                activityContext.delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+              //  activityContext.delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 true
             }
             R.id.toolbar_menu_settings -> {
-                activityContext.delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                //activityContext.delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                SettingsActivity.start(activityContext)
                 true
             }
             else -> super.onOptionsItemSelected(item)

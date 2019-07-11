@@ -4,8 +4,10 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.timgortworst.roomy.di.DaggerAppComponent
+import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -20,10 +22,11 @@ class RoomyApp : Application(), HasActivityInjector {
     @Inject
     internal lateinit var activityInjector: DispatchingAndroidInjector<Activity>
 
+    @Inject
+    lateinit var sharedPref: HuishoudGenootSharedPref
+
     init {
         instance = this
-
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
     }
 
     override fun onCreate() {
@@ -37,6 +40,13 @@ class RoomyApp : Application(), HasActivityInjector {
         if (BuildConfig.DEBUG) {
             FirebaseFirestore.setLoggingEnabled(true)
         }
+
+        AppCompatDelegate.setDefaultNightMode(
+            if (sharedPref.isDisplayModeDark())
+                AppCompatDelegate.MODE_NIGHT_YES
+            else
+                AppCompatDelegate.MODE_NIGHT_NO
+        )
     }
 
     override fun activityInjector(): AndroidInjector<Activity>? {

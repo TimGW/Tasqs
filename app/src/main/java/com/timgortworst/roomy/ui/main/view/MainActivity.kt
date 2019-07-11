@@ -3,11 +3,11 @@ package com.timgortworst.roomy.ui.main.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.ui.agenda.ui.AgendaFragment
+import com.timgortworst.roomy.local.HuishoudGenootSharedPref
+import com.timgortworst.roomy.ui.agenda.view.AgendaFragment
 import com.timgortworst.roomy.ui.eventcategory.view.EventCategoryFragment
 import com.timgortworst.roomy.ui.main.presenter.MainPresenter
 import com.timgortworst.roomy.ui.users.view.UsersActivity
