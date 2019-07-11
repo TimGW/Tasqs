@@ -1,12 +1,11 @@
 package com.timgortworst.roomy.ui.main.module
 
 import com.timgortworst.roomy.ui.agenda.module.AgendaModule
-import com.timgortworst.roomy.ui.agenda.ui.AgendaFragment
+import com.timgortworst.roomy.ui.agenda.view.AgendaFragment
 import com.timgortworst.roomy.ui.eventcategory.module.EventCategoryModule
 import com.timgortworst.roomy.ui.eventcategory.view.EventCategoryFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import kotlinx.coroutines.InternalCoroutinesApi
 
 @Module
 

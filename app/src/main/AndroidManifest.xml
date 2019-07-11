@@ -12,7 +12,14 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-
+        <activity
+                android:name=".ui.settings.view.SettingsActivity"
+                android:label="@string/title_activity_settings"
+                android:parentActivityName=".ui.main.view.MainActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.timgortworst.roomy.ui.main.view.MainActivity"/>
+        </activity>
         <!-- Main activities -->
         <activity
                 android:name=".ui.splash.ui.SplashActivity"
@@ -20,6 +27,7 @@
                 android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
@@ -44,14 +52,14 @@
         <activity
                 android:name=".ui.eventcategory.view.EditEventCategoryActivity"
                 android:windowSoftInputMode="stateVisible|adjustResize"/>
-        <activity android:name=".ui.agenda.ui.EditAgendaEventActivity"/>
+        <activity android:name=".ui.agenda.view.EditAgendaEventActivity"/>
         <activity
                 android:name=".ui.profile.view.ProfileActivity"
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".ui.setup.view.SetupActivity"
-                android:windowSoftInputMode="adjustResize"
-                android:theme="@style/AppTheme.NoActionBar"/>
+                android:theme="@style/AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ui.base.view.BaseAuthActivity"/>
         <activity android:name=".ui.users.view.UsersActivity"/>
     </application>

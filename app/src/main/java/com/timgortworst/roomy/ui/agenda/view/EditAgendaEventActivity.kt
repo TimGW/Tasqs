@@ -1,9 +1,8 @@
-package com.timgortworst.roomy.ui.agenda.ui
+package com.timgortworst.roomy.ui.agenda.view
 
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem

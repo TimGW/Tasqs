@@ -4,12 +4,11 @@ import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.repository.AgendaRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.agenda.presenter.EditAgendaEventPresenter
-import com.timgortworst.roomy.ui.agenda.ui.EditAgendaEventActivity
-import com.timgortworst.roomy.ui.agenda.ui.EditAgendaEventView
+import com.timgortworst.roomy.ui.agenda.view.EditAgendaEventActivity
+import com.timgortworst.roomy.ui.agenda.view.EditAgendaEventView
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.InternalCoroutinesApi
 
 @Module
 

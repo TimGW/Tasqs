@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.agenda.ui
+package com.timgortworst.roomy.ui.agenda.view
 
 import com.timgortworst.roomy.model.EventCategory
 import com.timgortworst.roomy.model.User

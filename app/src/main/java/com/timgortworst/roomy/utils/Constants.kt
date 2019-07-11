@@ -3,6 +3,7 @@ package com.timgortworst.roomy.utils
 object Constants {
     const val SHARED_PREF_FIRST_LAUNCH = "SHARED_PREF_FIRST_LAUNCH"
     const val SHARED_PREF_HOUSEHOLD_ID = "SHARED_PREF_HOUSEHOLD_ID"
+    const val SHARED_PREF_DARK_MODE = "SHARED_PREF_DARK_MODE"
     const val SHARED_PREF_USER_ID = "SHARED_PREF_USER_ID"
 
     const val QUERY_PARAM_HOUSEHOLD = "QUERY_PARAM_HOUSEHOLD"
