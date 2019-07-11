@@ -2,11 +2,11 @@ package com.timgortworst.roomy.ui.agenda.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.*
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_agenda.*
 import javax.inject.Inject
 
 
-class AgendaFragment : Fragment(), AgendaView {
+class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
     private lateinit var activityContext: AppCompatActivity
     private var listeningToEvents: Boolean = false
     private lateinit var adapter: EventListAdapter
@@ -69,9 +69,10 @@ class AgendaFragment : Fragment(), AgendaView {
 
     private fun setupEventListAdapter() {
         adapter = EventListAdapter(activityContext, mutableListOf())
-        val layoutManager = LinearLayoutManager(activityContext)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activityContext)
         events_agenda.layoutManager = layoutManager
-        val dividerItemDecoration = DividerItemDecoration(events_agenda.context, layoutManager.orientation)
+        val dividerItemDecoration =
+            androidx.recyclerview.widget.DividerItemDecoration(events_agenda.context, layoutManager.orientation)
         events_agenda.addItemDecoration(dividerItemDecoration)
         events_agenda.adapter = adapter
     }
@@ -94,7 +95,7 @@ class AgendaFragment : Fragment(), AgendaView {
                 activityContext.delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 true
             }
-            R.id.event_week -> {
+            R.id.toolbar_menu_settings -> {
                 activityContext.delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 true
             }

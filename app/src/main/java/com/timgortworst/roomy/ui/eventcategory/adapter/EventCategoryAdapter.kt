@@ -1,7 +1,7 @@
 package com.timgortworst.roomy.ui.eventcategory.adapter
 
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +20,7 @@ class EventCategoryAdapter(
         private var houseHoldTasks: MutableList<EventCategory>,
         private var optionsClickListener: EventCategoryAdapter.OnOptionsClickListener
 ) : StickyRecyclerHeadersAdapter<EventCategoryAdapter.HeaderViewHolder>,
-        RecyclerView.Adapter<EventCategoryAdapter.ViewHolder>() {
+        androidx.recyclerview.widget.RecyclerView.Adapter<EventCategoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.household_tasks_list_row, parent, false)
@@ -83,7 +83,7 @@ class EventCategoryAdapter(
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         val taskTitle: TextView
         val taskDescription: TextView
 
@@ -93,7 +93,7 @@ class EventCategoryAdapter(
         }
     }
 
-    inner class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class HeaderViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         val firstLetter: TextView
 
         init {

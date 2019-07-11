@@ -8,11 +8,6 @@ import com.timgortworst.roomy.utils.Constants
 import com.timgortworst.roomy.utils.Constants.AGENDA_EVENT_CATEGORIES_COLLECTION_REF
 import com.timgortworst.roomy.utils.GenerateData
 import kotlinx.coroutines.tasks.await
-import com.google.android.gms.tasks.Task
-import android.support.annotation.NonNull
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.firestore.DocumentReference
-import com.timgortworst.roomy.utils.Constants.AGENDA_EVENTS_COLLECTION_REF
 
 
 class HouseholdRepository(private val db: FirebaseFirestore, private val sharedPref: HuishoudGenootSharedPref) {

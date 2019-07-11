@@ -3,7 +3,7 @@ package com.timgortworst.roomy
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.support.v7.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.firestore.FirebaseFirestore
 import com.timgortworst.roomy.di.DaggerAppComponent
 import dagger.android.AndroidInjector

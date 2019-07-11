@@ -1,7 +1,7 @@
 package com.timgortworst.roomy.ui.agenda.presenter
 
-import android.arch.lifecycle.DefaultLifecycleObserver
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.repository.AgendaRepository

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -54,10 +54,10 @@ class UsersActivity : BaseAuthActivity(), UsersView {
         }
 
         adapter = UserListAdapter(this, mutableListOf())
-        val layoutManager = LinearLayoutManager(this)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         user_list.layoutManager = layoutManager
         val dividerItemDecoration =
-            DividerItemDecoration(user_list.context, layoutManager.orientation)
+            androidx.recyclerview.widget.DividerItemDecoration(user_list.context, layoutManager.orientation)
         user_list.addItemDecoration(dividerItemDecoration)
         user_list.adapter = adapter
 

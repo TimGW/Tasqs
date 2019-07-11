@@ -2,9 +2,9 @@ package com.timgortworst.roomy.ui.eventcategory.view
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_household_tasks.*
 import javax.inject.Inject
 
 
-class EventCategoryFragment : Fragment(), EventCategoryFragmentView {
+class EventCategoryFragment : androidx.fragment.app.Fragment(), EventCategoryFragmentView {
     private lateinit var activityContext: MainActivity
     private lateinit var adapter: EventCategoryAdapter
 
@@ -63,9 +63,14 @@ class EventCategoryFragment : Fragment(), EventCategoryFragmentView {
                     showContextMenuFor(householdTask)
                 }
             })
-        val layoutManager = LinearLayoutManager(activityContext)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activityContext)
         household_task_list.layoutManager = layoutManager
-        household_task_list.addItemDecoration(DividerItemDecoration(household_task_list.context, layoutManager.orientation))
+        household_task_list.addItemDecoration(
+            androidx.recyclerview.widget.DividerItemDecoration(
+                household_task_list.context,
+                layoutManager.orientation
+            )
+        )
         household_task_list.addItemDecoration(StickyRecyclerHeadersDecoration(adapter))
         household_task_list.adapter = adapter
     }
