@@ -16,8 +16,8 @@
         android:title="@string/three_days"
         app:showAsAction="never" />
     <item
-        android:id="@+id/event_week"
-        android:title="@string/week"
+        android:id="@+id/toolbar_menu_settings"
+        android:title="@string/settings"
         app:showAsAction="never" />
 </menu>
 

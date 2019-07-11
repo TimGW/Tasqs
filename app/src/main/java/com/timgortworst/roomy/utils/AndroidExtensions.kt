@@ -2,7 +2,7 @@ package com.timgortworst.roomy.utils
 
 import android.content.Context
 import android.os.IBinder
-import android.support.design.widget.TextInputEditText
+import com.google.android.material.textfield.TextInputEditText
 import android.util.Log
 import android.util.Log.d
 import android.util.Log.e

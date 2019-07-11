@@ -3,8 +3,8 @@ package com.timgortworst.roomy.ui.main.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.agenda.ui.AgendaFragment
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, MainView {
     lateinit var presenter: MainPresenter
 
     @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<androidx.fragment.app.Fragment>
 
     companion object {
         fun start(context: Context) {
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, MainView {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 
-    private fun fragmentToReplace(fragment: Fragment) {
+    private fun fragmentToReplace(fragment: androidx.fragment.app.Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit()
     }
 
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, MainView {
         UsersActivity.start(this)
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+    override fun supportFragmentInjector(): AndroidInjector<androidx.fragment.app.Fragment> {
         return dispatchingAndroidInjector
     }
 }

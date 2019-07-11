@@ -3,7 +3,7 @@ package com.timgortworst.roomy.ui.profile.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.timgortworst.roomy.R

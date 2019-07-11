@@ -1,7 +1,7 @@
 package com.timgortworst.roomy.ui.agenda.adapter
 
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +18,7 @@ import java.util.*
 class EventListAdapter(
     private var activity: AppCompatActivity,
     private var events: MutableList<Event>
-) : RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.household_event_list_row, parent, false)
@@ -51,7 +51,7 @@ class EventListAdapter(
         return events.size
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         val user: TextView
         val dateTime: TextView
         val description: TextView

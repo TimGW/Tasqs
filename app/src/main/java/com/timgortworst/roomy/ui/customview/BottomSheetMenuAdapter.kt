@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.ui.customview
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import com.timgortworst.roomy.model.BottomMenuItem
 import kotlinx.android.synthetic.main.item_bottom_sheet_menu.view.*
 
 class BottomSheetMenuAdapter(private val items: List<BottomMenuItem>) :
-    RecyclerView.Adapter<BottomSheetMenuAdapter.BottomSheetMenuViewHolder>() {
+    androidx.recyclerview.widget.RecyclerView.Adapter<BottomSheetMenuAdapter.BottomSheetMenuViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottomSheetMenuViewHolder {
         return BottomSheetMenuViewHolder(
@@ -27,7 +27,7 @@ class BottomSheetMenuAdapter(private val items: List<BottomMenuItem>) :
         holder.bind(items[position])
     }
 
-    class BottomSheetMenuViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class BottomSheetMenuViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
 
         fun bind(item: BottomMenuItem) {
             with(view) {

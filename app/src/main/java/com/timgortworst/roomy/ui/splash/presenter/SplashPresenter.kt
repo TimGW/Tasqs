@@ -1,7 +1,7 @@
 package com.timgortworst.roomy.ui.splash.presenter
 
-import android.arch.lifecycle.DefaultLifecycleObserver
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.splash.ui.SplashView
