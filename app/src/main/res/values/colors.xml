@@ -2,7 +2,6 @@
 <resources>
     <color name="color_primary">@color/white</color>
     <color name="color_primary_dark">@color/light_grey</color>
-    <color name="background_color">@color/white</color>
     <color name="bottom_app_bar">@color/white</color>
 
     <color name="color_accent">#45ed9c</color>
