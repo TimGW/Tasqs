@@ -52,6 +52,8 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        swipe_container.isEnabled = false
+
         setupEventListAdapter()
 
         if (!listeningToEvents) {

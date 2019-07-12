@@ -3,5 +3,4 @@
     <color name="color_primary">@color/color_accent</color>
     <color name="color_primary_dark">@color/color_accent_dark</color>
     <color name="bottom_app_bar">@color/dark_grey</color>
-
 </resources>
