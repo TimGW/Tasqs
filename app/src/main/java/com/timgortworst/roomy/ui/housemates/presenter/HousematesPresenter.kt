@@ -3,6 +3,7 @@ package com.timgortworst.roomy.ui.housemates.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
+import com.timgortworst.roomy.model.Role
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.housemates.view.HousenmatesView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
@@ -25,8 +26,12 @@ class HousematesPresenter(
     }
 
     fun fetchUsers() = scope.launch {
-        val userList = userRepository.getUsersForHouseholdId(sharedPref.getActiveHouseholdId())
-        view.presentUserList(userList.toMutableList())
+        val userList = userRepository
+            .getUsersForHouseholdId(sharedPref.getActiveHouseholdId())
+            .sortedByDescending { it.role == Role.ADMIN.name }
+            .toMutableList()
+
+        view.presentUserList(userList)
     }
 
     fun fetchCurrentUser() = scope.launch {
