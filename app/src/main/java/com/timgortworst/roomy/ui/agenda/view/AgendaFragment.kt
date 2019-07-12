@@ -102,14 +102,14 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
                     }
                     override fun onIndependentViewClicked(independentViewID: Int, position: Int) { }
                 })
-                .setSwipeOptionViews(R.id.delete_task, R.id.edit_task)
+                .setSwipeOptionViews(R.id.task_done)
                 .setSwipeable(R.id.rowFG, R.id.rowBG) { viewID, position ->
                     when (viewID) {
-                        R.id.delete_task -> {
-                            adapter.removeEvent(position)
-                        }
-                        R.id.edit_task -> {
-                            // todo
+//                        R.id.delete_task -> {
+//                            adapter.removeEvent(position)
+//                        }
+                        R.id.task_done -> {
+                            presenter.markEventAsCompleted(adapter.getEvent(position))
                         }
                     }
                 }

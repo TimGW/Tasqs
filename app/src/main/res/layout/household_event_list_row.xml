@@ -14,56 +14,16 @@
         android:background="@color/color_alpha_10"
         android:gravity="end"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="20dp">
 
-        <RelativeLayout
-            android:id="@+id/edit_task"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/task_done"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
             android:clickable="true"
             android:focusable="true"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/img_edit"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_edit" />
-            </LinearLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/delete_task"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/img_delete"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_delete" />
-            </LinearLayout>
-        </RelativeLayout>
-
+            android:src="@drawable/ic_check" />
     </LinearLayout>
 
     <LinearLayout

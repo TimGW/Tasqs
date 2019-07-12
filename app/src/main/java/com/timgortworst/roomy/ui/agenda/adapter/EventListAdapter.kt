@@ -65,6 +65,8 @@ class EventListAdapter(
         notifyItemRemoved(position)
     }
 
+    fun getEvent(position: Int) = this.filteredEvents[position]
+
     fun addEvent(event: Event) {
         this.filteredEvents.add(event)
         notifyDataSetChanged()
