@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.users.adapter
+package com.timgortworst.roomy.ui.housemates.adapter
 
 import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -15,10 +15,10 @@ import com.timgortworst.roomy.model.User
  *
  * Handles clicks by expanding items to show a more detailed description of the HouseholdTask
  */
-class UserListAdapter(
+class HousematesAdapter(
     private var activity: AppCompatActivity,
     private var users: MutableList<User>
-) : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<HousematesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.household_user_list_row, parent, false)

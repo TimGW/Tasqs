@@ -7,8 +7,6 @@ import com.timgortworst.roomy.ui.agenda.view.EditAgendaEventActivity
 import com.timgortworst.roomy.ui.base.module.BaseAuthModule
 import com.timgortworst.roomy.ui.eventcategory.module.EditEventCategoryModule
 import com.timgortworst.roomy.ui.eventcategory.view.EditEventCategoryActivity
-import com.timgortworst.roomy.ui.users.module.UsersModule
-import com.timgortworst.roomy.ui.users.view.UsersActivity
 import com.timgortworst.roomy.ui.main.module.MainActivityFragmentProvider
 import com.timgortworst.roomy.ui.main.module.MainActivityModule
 import com.timgortworst.roomy.ui.main.view.MainActivity
@@ -55,9 +53,6 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = [BaseAuthModule::class])
     internal abstract fun bindBaseAuthActivity(): BaseAuthActivity
-
-    @ContributesAndroidInjector(modules = [UsersModule::class])
-    internal abstract fun bindInviteActivity(): UsersActivity
 
     @ContributesAndroidInjector(modules = [SettingsActivityFragmentProvider::class])
     internal abstract fun bindSettingsActivity(): SettingsActivity
