@@ -49,20 +49,14 @@ class HousematesFragment : Fragment(), HousenmatesView {
         super.onAttach(context)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        activityContext.supportActionBar?.title = getString(R.string.roommates)
-        activityContext.fab.setOnClickListener { share(sharedPref.getActiveHouseholdId()) }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityContext = (activity as MainActivity)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        inflater.inflate(R.layout.fragment_housemates, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) : View? {
+        return inflater.inflate(R.layout.fragment_housemates, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,7 +64,7 @@ class HousematesFragment : Fragment(), HousenmatesView {
         adapter = HousematesAdapter(activityContext, mutableListOf())
         val layoutManager = LinearLayoutManager(activityContext)
         user_list.layoutManager = layoutManager
-        val dividerItemDecoration = DividerItemDecoration(user_list.context, layoutManager.orientation)
+        val dividerItemDecoration = DividerItemDecoration(activityContext, layoutManager.orientation)
         user_list.addItemDecoration(dividerItemDecoration)
         user_list.adapter = adapter
 
@@ -78,9 +72,15 @@ class HousematesFragment : Fragment(), HousenmatesView {
         presenter.fetchUsers()
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        activityContext.fab.setOnClickListener { null }
+    override fun onResume() {
+        super.onResume()
+        activityContext.supportActionBar?.title = getString(R.string.roommates)
+        activityContext.fab.setOnClickListener { share(sharedPref.getActiveHouseholdId()) }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activityContext.fab.setOnClickListener(null)
     }
 
     override fun presentCurrentUser(currentUser: User?) {

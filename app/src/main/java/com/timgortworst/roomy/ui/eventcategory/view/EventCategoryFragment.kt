@@ -63,16 +63,31 @@ class EventCategoryFragment : androidx.fragment.app.Fragment(), EventCategoryFra
                     showContextMenuFor(householdTask)
                 }
             })
-        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activityContext)
+        val layoutManager = LinearLayoutManager(activityContext)
         household_task_list.layoutManager = layoutManager
-        household_task_list.addItemDecoration(
-            androidx.recyclerview.widget.DividerItemDecoration(
-                household_task_list.context,
-                layoutManager.orientation
-            )
-        )
         household_task_list.addItemDecoration(StickyRecyclerHeadersDecoration(adapter))
+        household_task_list.addItemDecoration(
+            DividerItemDecoration(activityContext, layoutManager.orientation)
+        )
         household_task_list.adapter = adapter
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activityContext.supportActionBar?.title = getString(R.string.householdtasks_toolbar_title)
+        activityContext.fab.setOnClickListener {
+            EditEventCategoryActivity.start(activityContext)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activityContext.fab.setOnClickListener(null)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        presenter.detachTaskListener()
     }
 
     fun showContextMenuFor(householdTask: EventCategory) {
@@ -90,19 +105,6 @@ class EventCategoryFragment : androidx.fragment.app.Fragment(), EventCategoryFra
         )
         bottomSheetMenu = BottomSheetMenu(activityContext, householdTask.name, items)
         bottomSheetMenu.show()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        activityContext.supportActionBar?.title = getString(R.string.householdtasks_toolbar_title)
-        activityContext.fab.setOnClickListener { EditEventCategoryActivity.start(activityContext) }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        presenter.detachTaskListener()
-        activityContext.fab.setOnClickListener { null }
     }
 
     override fun presentNewCategory(householdTask: EventCategory) {

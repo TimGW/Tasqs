@@ -62,6 +62,17 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        activityContext.supportActionBar?.title = getString(R.string.schema_toolbar_title)
+        activityContext.fab.setOnClickListener { EditAgendaEventActivity.start(activityContext) }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activityContext.fab.setOnClickListener(null)
+    }
+
     private fun setupEventListAdapter() {
         adapter = EventListAdapter(activityContext, mutableListOf())
         val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activityContext)
@@ -95,14 +106,6 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        activityContext.supportActionBar?.title = getString(R.string.schema_toolbar_title)
-        activityContext.fab.setOnClickListener { EditAgendaEventActivity.start(activityContext) }
-
-    }
-
     override fun presentAddedEvent(agendaEvent: Event) {
         adapter.addEvent(agendaEvent)
     }
@@ -119,6 +122,5 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
         super.onDetach()
         listeningToEvents = false
         presenter.detachEventListener()
-        activityContext.fab.setOnClickListener { null }
     }
 }
