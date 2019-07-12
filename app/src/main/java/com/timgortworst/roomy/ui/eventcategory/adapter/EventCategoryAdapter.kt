@@ -18,9 +18,9 @@ import com.timgortworst.roomy.model.EventCategory
 class EventCategoryAdapter(
         private var activity: AppCompatActivity,
         private var houseHoldTasks: MutableList<EventCategory>,
-        private var optionsClickListener: EventCategoryAdapter.OnOptionsClickListener
+        private var optionsClickListener: OnOptionsClickListener
 ) : StickyRecyclerHeadersAdapter<EventCategoryAdapter.HeaderViewHolder>,
-        androidx.recyclerview.widget.RecyclerView.Adapter<EventCategoryAdapter.ViewHolder>() {
+        RecyclerView.Adapter<EventCategoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.household_tasks_list_row, parent, false)
@@ -93,7 +93,7 @@ class EventCategoryAdapter(
         }
     }
 
-    inner class HeaderViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    inner class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val firstLetter: TextView
 
         init {
