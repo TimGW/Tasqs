@@ -1,8 +1,13 @@
 package com.timgortworst.roomy.repository
 
 import android.util.Log
-import com.google.firebase.firestore.*
 import com.google.firebase.firestore.DocumentChange.Type.*
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventCategory
@@ -191,52 +196,6 @@ class AgendaRepository(
                 }
             })
     }
-
-//    fun getEvents() = scope.launch {
-//        val events = agendaRepository.getAgendaEvents() ?: return@launch
-//
-//        events.forEach {
-//
-//            if (it.isDone) {
-//                // event is gemarkeerd als klaar
-//                if (it.eventMetaData.repeatStartDate.isTimeStampInPast()) {
-//                    // event is in het verleden
-//                    if (it.eventMetaData.repeatInterval == EventMetaData.RepeatingInterval.SINGLE_EVENT) {
-//                        // event is Single event dus verwijder
-//                        events.remove(it)
-//                        agendaRepository.removeAgendaEvent(it.agendaId)
-//                    } else {
-//                        // event is repeating dus update het met de nieuwe tijden
-//                        updateEventMetaData(it)
-//                    }
-//                } else {
-//                    // event is klaar en in de toekomst,  update next occurance
-//                    updateEventMetaData(it)
-//                }
-//            } else {
-//                // event is nog niet klaar
-//                if (it.eventMetaData.repeatStartDate.isTimeStampInPast()) {
-//                    // event is in het verleden
-//                    // todo send reminder
-//                }
-//            }
-//        }
-//
-//        view.presentEvents(events)
-//    }
-
-//    suspend fun updateEventMetaData(event: Event) {
-//        val nextDate = event.eventMetaData.repeatStartDate + (event.eventMetaData.repeatInterval.interval * 1000)
-//        val eventMetaData = EventMetaData(
-//            repeatStartDate = nextDate,
-//            repeatInterval = event.eventMetaData.repeatInterval
-//        )
-//
-//        event.eventMetaData = eventMetaData
-//
-//        // reset done to false
-//        agendaRepository.updateAgendaEvent(event.agendaId, eventMetaData = eventMetaData, isEventDone = false)
-//    }
 
     fun listenToEvents(agendaListener: AgendaEventListener) {
         val query = householdCollectionRef
