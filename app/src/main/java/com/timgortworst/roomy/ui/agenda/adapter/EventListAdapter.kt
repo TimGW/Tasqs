@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
+import com.timgortworst.roomy.model.EventMetaData
 import java.util.*
 
 /**
@@ -52,6 +54,12 @@ class EventListAdapter(
 
         viewHolder.user.text = event.user.name
         viewHolder.description.text = event.eventCategory.name
+
+        if (event.eventMetaData.repeatInterval != EventMetaData.RepeatingInterval.SINGLE_EVENT) {
+            viewHolder.repeatLabel.visibility = View.VISIBLE
+        } else {
+            viewHolder.repeatLabel.visibility = View.GONE
+        }
     }
 
     fun setEventList(events: MutableList<Event>) {
@@ -114,11 +122,13 @@ class EventListAdapter(
         val user: TextView
         val dateTime: TextView
         val description: TextView
+        val repeatLabel: ImageView
 
         init {
             this.user = view.findViewById(R.id.event_user)
             this.dateTime = view.findViewById(R.id.event_date_time)
             this.description = view.findViewById(R.id.event_name)
+            this.repeatLabel = view.findViewById(R.id.event_repeat_label)
         }
     }
 }
