@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.ui.agenda.adapter
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
@@ -36,9 +38,19 @@ class EventListAdapter(
         val event = filteredEvents[position]
 
         val date = Date(event.eventMetaData.repeatStartDate)
+        val oldColors = viewHolder.dateTime.textColors
+
+        viewHolder.dateTime.text = if (date < Date()) {
+            viewHolder.dateTime.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.error))
+            viewHolder.dateTime.setTypeface(null, Typeface.BOLD);
+            activity.getString(R.string.overdue_occurance, date.toString())
+        } else {
+            viewHolder.dateTime.setTextColor(oldColors)
+            viewHolder.dateTime.setTypeface(null, Typeface.NORMAL);
+            activity.getString(R.string.next_occurance, date.toString())
+        }
 
         viewHolder.user.text = event.user.name
-        viewHolder.dateTime.text = activity.getString(R.string.next_occurance, date.toString())
         viewHolder.description.text = event.eventCategory.name
     }
 

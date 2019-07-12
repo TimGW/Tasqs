@@ -76,7 +76,7 @@
     <string name="repeating_interval_monthly_event">Monthly</string>
     <string name="repeating_interval_annually_event">Annually</string>
     <string name="next_occurance">Next occurrence: %1$s</string>
-
+    <string name="overdue_occurance">OVERDUE: %1$s</string>
 
     <string name="tequila_name">Tequila</string>
     <string name="tequila_tagline">Is an alcoholic beverage</string>
