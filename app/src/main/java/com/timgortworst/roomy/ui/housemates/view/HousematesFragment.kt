@@ -68,7 +68,6 @@ class HousematesFragment : Fragment(), HousenmatesView {
         user_list.addItemDecoration(dividerItemDecoration)
         user_list.adapter = adapter
 
-        presenter.fetchCurrentUser()
         presenter.fetchUsers()
     }
 
@@ -81,14 +80,10 @@ class HousematesFragment : Fragment(), HousenmatesView {
     override fun onPause() {
         super.onPause()
         activityContext.fab.setOnClickListener(null)
-    }
-
-    override fun presentCurrentUser(currentUser: User?) {
-        showOrHideFab(currentUser?.role == Role.ADMIN.name)
+        activityContext.fab.show()
     }
 
     override fun presentUserList(users: MutableList<User>) {
-        showOrHideFab(users.size < 8)
         adapter.setUsers(users)
     }
 
@@ -144,5 +139,5 @@ class HousematesFragment : Fragment(), HousenmatesView {
         return dynamicLink.uri
     }
 
-    fun showOrHideFab(condition: Boolean) = if(condition) activityContext.fab.show() else activityContext.fab.hide()
+    override fun showOrHideFab(condition: Boolean) = if(condition) activityContext.fab.show() else activityContext.fab.hide()
 }
