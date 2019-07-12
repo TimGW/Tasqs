@@ -3,4 +3,5 @@
     <color name="color_primary">@color/color_accent</color>
     <color name="color_primary_dark">@color/color_accent_dark</color>
     <color name="color_list_header">@null</color>
+    <color name="color_8dp_elevation">#1FFFFFFF</color>
 </resources>

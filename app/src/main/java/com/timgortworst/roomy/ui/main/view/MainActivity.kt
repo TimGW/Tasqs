@@ -11,6 +11,7 @@ import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.eventcategory.view.EventCategoryFragment
 import com.timgortworst.roomy.ui.housemates.view.HousematesFragment
 import com.timgortworst.roomy.ui.main.presenter.MainPresenter
+import com.timgortworst.roomy.ui.settings.view.SettingsActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -38,14 +39,15 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bottom_appbar.replaceMenu(R.menu.bottom_appbar_menu)
-
-        bottom_appbar.setOnMenuItemClickListener { item ->
-            presenter.handleMenuItemClick(item.itemId)
-            true
-        }
-
+        setupClickListeners()
         presentAgendaFragment()
+    }
+
+    private fun setupClickListeners() {
+        main_agenda.setOnClickListener { presentAgendaFragment() }
+        main_categories.setOnClickListener { presentTasksFragment() }
+        main_housemates.setOnClickListener { presentHousematesFragment() }
+        main_settings.setOnClickListener { SettingsActivity.start(this) }
     }
 
     override fun presentText(text: String) {

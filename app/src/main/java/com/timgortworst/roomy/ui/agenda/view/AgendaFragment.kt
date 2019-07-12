@@ -98,10 +98,10 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
                 presenter.filterMe(adapter.filter)
                 true
             }
-            R.id.toolbar_menu_settings -> {
-                SettingsActivity.start(activityContext)
-                true
-            }
+//            R.id.toolbar_menu_settings -> {
+//                SettingsActivity.start(activityContext)
+//                true
+//            }
             else -> super.onOptionsItemSelected(item)
         }
     }

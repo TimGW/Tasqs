@@ -13,17 +13,5 @@ class MainPresenter(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository
 ) {
-    fun handleMenuItemClick(itemId: Int) {
-        when (itemId) {
-            R.id.home -> {
-                view.presentAgendaFragment()
-            }
-            R.id.household_task_list -> {
-                view.presentTasksFragment()
-            }
-            R.id.profile -> {
-                view.presentHousematesFragment()
-            }
-        }
-    }
+
 }
