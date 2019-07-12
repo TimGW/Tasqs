@@ -73,11 +73,21 @@ class EventListAdapter(
         notifyItemRemoved(position)
     }
 
+    fun removeEvent(event: Event) {
+        val pos = this.filteredEvents.indexOf(event)
+        removeEvent(pos)
+    }
+
     fun getEvent(position: Int) = this.filteredEvents[position]
 
     fun addEvent(event: Event) {
         this.filteredEvents.add(event)
         notifyDataSetChanged()
+    }
+
+    fun updateEvent(event: Event) {
+        val pos = this.filteredEvents.indexOf(event)
+        notifyItemChanged(pos)
     }
 
     fun getEventList() = this.filteredEvents
@@ -116,7 +126,6 @@ class EventListAdapter(
             notifyDataSetChanged()
         }
     }
-
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val user: TextView
