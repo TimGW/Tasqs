@@ -3,14 +3,14 @@ package com.timgortworst.roomy.ui.main.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.agenda.view.AgendaFragment
 import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.eventcategory.view.EventCategoryFragment
-import com.timgortworst.roomy.ui.main.presenter.MainPresenter
 import com.timgortworst.roomy.ui.housemates.view.HousematesFragment
+import com.timgortworst.roomy.ui.main.presenter.MainPresenter
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -24,7 +24,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     lateinit var presenter: MainPresenter
 
     @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<androidx.fragment.app.Fragment>
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     companion object {
         fun start(context: Context) {
@@ -52,12 +52,16 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 
-    private fun fragmentToReplace(fragment: androidx.fragment.app.Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-            .replace(R.id.content_frame, fragment)
-            .commit()
+    private fun fragmentToReplace(newFragment: Fragment) {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.content_frame)
+        if (newFragment::class.java.toString() != currentFragment?.tag){
+            supportFragmentManager
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                    .replace(R.id.content_frame, newFragment, newFragment::class.java.toString())
+                    .commit()
+        }
+
     }
 
     override fun presentAgendaFragment() {
@@ -72,7 +76,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         fragmentToReplace(HousematesFragment.newInstance())
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<androidx.fragment.app.Fragment> {
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return dispatchingAndroidInjector
     }
 }
