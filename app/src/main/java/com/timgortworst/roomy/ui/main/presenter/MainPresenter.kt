@@ -22,7 +22,7 @@ class MainPresenter(
                 view.presentTasksFragment()
             }
             R.id.profile -> {
-                view.presentProfileActivity()
+                view.presentHousematesFragment()
             }
         }
     }

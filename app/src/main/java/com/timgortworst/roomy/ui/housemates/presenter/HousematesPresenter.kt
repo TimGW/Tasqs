@@ -1,17 +1,17 @@
-package com.timgortworst.roomy.ui.users.presenter
+package com.timgortworst.roomy.ui.housemates.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.repository.UserRepository
-import com.timgortworst.roomy.ui.users.view.UsersView
+import com.timgortworst.roomy.ui.housemates.view.HousenmatesView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class UsersPresenter(
-    private val view: UsersView,
+class HousematesPresenter(
+    private val view: HousenmatesView,
     private val userRepository: UserRepository,
     private val sharedPref: HuishoudGenootSharedPref
 ) : DefaultLifecycleObserver {

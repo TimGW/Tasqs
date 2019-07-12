@@ -6,11 +6,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.ui.agenda.view.AgendaFragment
+import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.eventcategory.view.EventCategoryFragment
 import com.timgortworst.roomy.ui.main.presenter.MainPresenter
-import com.timgortworst.roomy.ui.users.view.UsersActivity
+import com.timgortworst.roomy.ui.housemates.view.HousematesFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, MainView {
+class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     @Inject
     lateinit var presenter: MainPresenter
 
@@ -64,8 +64,8 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector, MainView {
         fragmentToReplace(EventCategoryFragment.newInstance())
     }
 
-    override fun presentProfileActivity() {
-        UsersActivity.start(this)
+    override fun presentHousematesFragment() {
+        fragmentToReplace(HousematesFragment.newInstance())
     }
 
     override fun supportFragmentInjector(): AndroidInjector<androidx.fragment.app.Fragment> {

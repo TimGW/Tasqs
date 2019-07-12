@@ -3,15 +3,12 @@ package com.timgortworst.roomy.ui.profile.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.customview.CircleTransform
 import com.timgortworst.roomy.ui.profile.presenter.ProfilePresenter
-import com.timgortworst.roomy.ui.users.view.UsersActivity
 import com.timgortworst.roomy.utils.showToast
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_profile.*

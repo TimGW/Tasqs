@@ -1,8 +1,8 @@
-package com.timgortworst.roomy.ui.users.view
+package com.timgortworst.roomy.ui.housemates.view
 
 import com.timgortworst.roomy.model.User
 
-interface UsersView {
+interface HousenmatesView {
     fun presentUserList(users: MutableList<User>)
     fun presentCurrentUser(currentUser: User?)
 

@@ -61,7 +61,7 @@
                 android:theme="@style/AppTheme.NoActionBar"
                 android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ui.base.view.BaseAuthActivity"/>
-        <activity android:name=".ui.users.view.UsersActivity"/>
+        <activity android:name=".ui.housemates.view.HousematesFragment"/>
     </application>
 
 </manifest>
