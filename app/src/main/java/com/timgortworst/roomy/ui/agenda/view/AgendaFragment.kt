@@ -143,11 +143,11 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
     }
 
     override fun presentEditedEvent(agendaEvent: Event) {
-
+        adapter.updateEvent(agendaEvent)
     }
 
     override fun presentDeletedEvent(agendaEvent: Event) {
-
+        adapter.removeEvent(agendaEvent)
     }
 
     override fun onDetach() {
