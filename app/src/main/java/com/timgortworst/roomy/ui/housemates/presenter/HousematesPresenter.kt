@@ -28,7 +28,8 @@ class HousematesPresenter(
     fun fetchUsers() = scope.launch {
         val userList = userRepository
             .getUsersForHouseholdId(sharedPref.getActiveHouseholdId())
-            .sortedByDescending { it.role == Role.ADMIN.name }
+            .sortedWith(compareBy({ it.role == Role.ADMIN.name }, { it.name }))
+            .reversed()
             .toMutableList()
 
         view.presentUserList(userList)
