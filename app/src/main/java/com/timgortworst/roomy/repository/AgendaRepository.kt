@@ -24,8 +24,8 @@ import kotlinx.coroutines.tasks.await
 
 
 class AgendaRepository(
-        db: FirebaseFirestore,
-        val sharedPref: HuishoudGenootSharedPref
+    db: FirebaseFirestore,
+    val sharedPref: HuishoudGenootSharedPref
 ) {
     val householdCollectionRef = db.collection(HOUSEHOLD_COLLECTION_REF)
     private var eventListener: ListenerRegistration? = null
@@ -33,18 +33,18 @@ class AgendaRepository(
 
     suspend fun getCategories(): List<EventCategory> {
         val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
-                .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
+            .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
         return document.get().await().toObjects(EventCategory::class.java)
     }
 
     suspend fun updateCategory(
-            categoryId: String,
-            name: String = "",
-            description: String = ""
-            //,points: Int = 0
+        categoryId: String,
+        name: String = "",
+        description: String = ""
+        //,points: Int = 0
     ) {
         val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
-                .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document(categoryId)
+            .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document(categoryId)
 
         val categoryFieldMap = mutableMapOf<String, Any>()
         categoryFieldMap[EVENT_CATEGORY_ID_REF] = document.id
@@ -60,12 +60,12 @@ class AgendaRepository(
     }
 
     suspend fun insertCategory(
-            name: String = "",
-            description: String = ""
-            //,points: Int = 0
+        name: String = "",
+        description: String = ""
+        //,points: Int = 0
     ) {
         val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
-                .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document()
+            .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document()
 
         val categoryFieldMap = mutableMapOf<String, Any>()
         categoryFieldMap[EVENT_CATEGORY_ID_REF] = document.id
@@ -83,25 +83,26 @@ class AgendaRepository(
     suspend fun deleteEventCategoryForHousehold(agendaEventCategory: EventCategory) {
         try {
             householdCollectionRef.document(sharedPref.getActiveHouseholdId())
-                    .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
-                    .document(agendaEventCategory.categoryId)
-                    .delete()
-                    .await()
+                .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
+                .document(agendaEventCategory.categoryId)
+                .delete()
+                .await()
         } catch (e: FirebaseFirestoreException) {
             Log.e("TIMTIM", e.localizedMessage)
         }
     }
 
-    suspend fun getAgendaEvents(): MutableList<Event>? {
+    suspend fun getAgendaEvents(userIdFilter: String? = null): MutableList<Event>? {
+        val query = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+            .collection(AGENDA_EVENTS_COLLECTION_REF)
+
+        if (userIdFilter != null && userIdFilter.isNotEmpty()) {
+            query.whereEqualTo("user.userId", userIdFilter)
+        }
+
+        query.orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)
         return try {
-            householdCollectionRef.document(sharedPref.getActiveHouseholdId())
-                    .collection(AGENDA_EVENTS_COLLECTION_REF)
-//                    .whereEqualTo("done", false)
-//                    .whereGreaterThan("eventMetaData.repeatStartDate", System.currentTimeMillis())
-                    .orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)
-                    .get()
-                    .await()
-                    .toObjects(Event::class.java)
+            query.get().await().toObjects(Event::class.java)
         } catch (e: FirebaseFirestoreException) {
             throw e
         }
@@ -109,14 +110,14 @@ class AgendaRepository(
 
 
     suspend fun insertAgendaEvent(
-            category: EventCategory,
-            user: User,
-            eventMetaData: EventMetaData,
-            isEventDone: Boolean
+        category: EventCategory,
+        user: User,
+        eventMetaData: EventMetaData,
+        isEventDone: Boolean
     ) {
         val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
-                .collection(AGENDA_EVENTS_COLLECTION_REF)
-                .document()
+            .collection(AGENDA_EVENTS_COLLECTION_REF)
+            .document()
 
         try {
             document.set(Event(document.id, category, user, eventMetaData, isEventDone)).await()
@@ -126,14 +127,14 @@ class AgendaRepository(
     }
 
     suspend fun updateAgendaEvent(
-            eventId: String,
-            category: EventCategory? = null,
-            user: User? = null,
-            eventMetaData: EventMetaData? = null,
-            isEventDone: Boolean? = null
+        eventId: String,
+        category: EventCategory? = null,
+        user: User? = null,
+        eventMetaData: EventMetaData? = null,
+        isEventDone: Boolean? = null
     ) {
         val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
-                .collection(AGENDA_EVENTS_COLLECTION_REF).document(eventId)
+            .collection(AGENDA_EVENTS_COLLECTION_REF).document(eventId)
 
         val eventMetaDataMap = mutableMapOf<String, Any>()
         if (eventMetaData != null) eventMetaDataMap[EVENT_START_DATE_REF] = eventMetaData.repeatStartDate
@@ -155,11 +156,11 @@ class AgendaRepository(
     suspend fun removeAgendaEvent(eventId: String) {
         try {
             householdCollectionRef
-                    .document(sharedPref.getActiveHouseholdId())
-                    .collection(AGENDA_EVENTS_COLLECTION_REF)
-                    .document(eventId)
-                    .delete()
-                    .await()
+                .document(sharedPref.getActiveHouseholdId())
+                .collection(AGENDA_EVENTS_COLLECTION_REF)
+                .document(eventId)
+                .delete()
+                .await()
         } catch (e: FirebaseFirestoreException) {
             Log.e("TIMTIM", e.localizedMessage)
         }
@@ -167,57 +168,104 @@ class AgendaRepository(
 
     fun listenToCategories(taskListener: EventCategoryListener) {
         categoryListener = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
-                .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
-                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-                    if (e != null) {
-                        Log.w(TAG, "listen:error", e)
-                        return@EventListener
-                    }
+            .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
+            .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                if (e != null) {
+                    Log.w(TAG, "listen:error", e)
+                    return@EventListener
+                }
 
-                    for (dc in snapshots!!.documentChanges) {
-                        val eventCategory = dc.document.toObject(EventCategory::class.java)
-                        when (dc.type) {
-                            ADDED -> {
-                                taskListener.categoryAdded(eventCategory)
-                            }
-                            MODIFIED -> {
-                                taskListener.categoryModified(eventCategory)
-                            }
-                            REMOVED -> {
-                                taskListener.categoryDeleted(eventCategory)
-                            }
+                for (dc in snapshots!!.documentChanges) {
+                    val eventCategory = dc.document.toObject(EventCategory::class.java)
+                    when (dc.type) {
+                        ADDED -> {
+                            taskListener.categoryAdded(eventCategory)
+                        }
+                        MODIFIED -> {
+                            taskListener.categoryModified(eventCategory)
+                        }
+                        REMOVED -> {
+                            taskListener.categoryDeleted(eventCategory)
                         }
                     }
-                })
+                }
+            })
     }
 
-    fun listenToEvents(agendaListener: AgendaEventListener) {
-        eventListener = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
-                .collection(AGENDA_EVENTS_COLLECTION_REF)
-//                .whereEqualTo("done", false)
-//                .whereGreaterThan("eventMetaData.repeatStartDate", System.currentTimeMillis())
-                .orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)
-                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-                    if (e != null) {
-                        Log.w(TAG, "listen:error", e)
-                        return@EventListener
-                    }
+//    fun getEvents() = scope.launch {
+//        val events = agendaRepository.getAgendaEvents() ?: return@launch
+//
+//        events.forEach {
+//
+//            if (it.isDone) {
+//                // event is gemarkeerd als klaar
+//                if (it.eventMetaData.repeatStartDate.isTimeStampInPast()) {
+//                    // event is in het verleden
+//                    if (it.eventMetaData.repeatInterval == EventMetaData.RepeatingInterval.SINGLE_EVENT) {
+//                        // event is Single event dus verwijder
+//                        events.remove(it)
+//                        agendaRepository.removeAgendaEvent(it.agendaId)
+//                    } else {
+//                        // event is repeating dus update het met de nieuwe tijden
+//                        updateEventMetaData(it)
+//                    }
+//                } else {
+//                    // event is klaar en in de toekomst,  update next occurance
+//                    updateEventMetaData(it)
+//                }
+//            } else {
+//                // event is nog niet klaar
+//                if (it.eventMetaData.repeatStartDate.isTimeStampInPast()) {
+//                    // event is in het verleden
+//                    // todo send reminder
+//                }
+//            }
+//        }
+//
+//        view.presentEvents(events)
+//    }
 
-                    for (dc in snapshots!!.documentChanges) {
-                        val agendaEvent = dc.document.toObject(Event::class.java)
-                        when (dc.type) {
-                            ADDED -> {
-                                agendaListener.eventAdded(agendaEvent)
-                            }
-                            MODIFIED -> {
-                                agendaListener.eventModified(agendaEvent)
-                            }
-                            REMOVED -> {
-                                agendaListener.eventDeleted(agendaEvent)
-                            }
-                        }
+//    suspend fun updateEventMetaData(event: Event) {
+//        val nextDate = event.eventMetaData.repeatStartDate + (event.eventMetaData.repeatInterval.interval * 1000)
+//        val eventMetaData = EventMetaData(
+//            repeatStartDate = nextDate,
+//            repeatInterval = event.eventMetaData.repeatInterval
+//        )
+//
+//        event.eventMetaData = eventMetaData
+//
+//        // reset done to false
+//        agendaRepository.updateAgendaEvent(event.agendaId, eventMetaData = eventMetaData, isEventDone = false)
+//    }
+
+    fun listenToEvents(agendaListener: AgendaEventListener) {
+        val query = householdCollectionRef
+            .document(sharedPref.getActiveHouseholdId())
+            .collection(AGENDA_EVENTS_COLLECTION_REF)
+
+        query.orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)
+
+        eventListener = query.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+            if (e != null && snapshots == null) {
+                Log.w(TAG, "listen:error", e)
+                return@EventListener
+            }
+
+            for (dc in snapshots!!.documentChanges) {
+                val agendaEvent = dc.document.toObject(Event::class.java)
+                when (dc.type) {
+                    ADDED -> {
+                        agendaListener.eventAdded(agendaEvent)
                     }
-                })
+                    MODIFIED -> {
+                        agendaListener.eventModified(agendaEvent)
+                    }
+                    REMOVED -> {
+                        agendaListener.eventDeleted(agendaEvent)
+                    }
+                }
+            }
+        })
     }
 
     fun detachTaskListener() {

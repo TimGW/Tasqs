@@ -3,7 +3,6 @@ package com.timgortworst.roomy.ui.agenda.view
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import android.view.*
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
@@ -55,10 +54,6 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
 
         setupEventListAdapter()
 
-        swipe_container.setOnRefreshListener {
-            presenter.getEvents()
-        }
-
         if (!listeningToEvents) {
             presenter.listenToEvents()
             listeningToEvents = true
@@ -82,19 +77,15 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-//            R.id.event_today -> {
-//                // events_agenda.floating_action_button.performClick()
-//                true
-//            }
-            R.id.event_planning -> {
+            R.id.filter_all -> {
+                adapter.clearFilter()
                 true
             }
-            R.id.event_three_days -> {
-              //  activityContext.delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            R.id.filter_me -> {
+                presenter.filterMe(adapter.filter)
                 true
             }
             R.id.toolbar_menu_settings -> {
-                //activityContext.delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 SettingsActivity.start(activityContext)
                 true
             }
@@ -114,22 +105,13 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
         adapter.addEvent(agendaEvent)
     }
 
-    override fun presentEvents(events: MutableList<Event>) {
-        swipe_container.isRefreshing = false
-        adapter.setEventList(events)
-    }
-
-
     override fun presentEditedEvent(agendaEvent: Event) {
-//        this.events.re(agendaEvent.toCalendarEvent())
-//        events_agenda.notifyDatasetChanged()
+
     }
 
     override fun presentDeletedEvent(agendaEvent: Event) {
-//        this.events.re(agendaEvent.toCalendarEvent())
-//        events_agenda.notifyDatasetChanged()
-    }
 
+    }
 
     override fun onDetach() {
         super.onDetach()

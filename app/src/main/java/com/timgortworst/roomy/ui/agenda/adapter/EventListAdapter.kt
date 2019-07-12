@@ -1,11 +1,13 @@
 package com.timgortworst.roomy.ui.agenda.adapter
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
 import java.util.*
@@ -18,7 +20,12 @@ import java.util.*
 class EventListAdapter(
     private var activity: AppCompatActivity,
     private var events: MutableList<Event>
-) : androidx.recyclerview.widget.RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<EventListAdapter.ViewHolder>(), Filterable {
+    private var filteredEvents: MutableList<Event>
+
+    init {
+        filteredEvents = events
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.household_event_list_row, parent, false)
@@ -26,32 +33,63 @@ class EventListAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val event = events[position]
+        val event = filteredEvents[position]
 
         val date = Date(event.eventMetaData.repeatStartDate)
 
         viewHolder.user.text = event.user.name
         viewHolder.dateTime.text = activity.getString(R.string.next_occurance, date.toString())
         viewHolder.description.text = event.eventCategory.name
-//        viewHolder.points.text = event.eventCategory.points.toString()
     }
 
     fun setEventList(events: MutableList<Event>) {
-        this.events.clear()
-        this.events.addAll(events)
+        this.filteredEvents.clear()
+        this.filteredEvents.addAll(events)
         notifyDataSetChanged()
     }
 
-    fun addEvent(event : Event){
-        this.events.add(event)
+    fun addEvent(event: Event) {
+        this.filteredEvents.add(event)
         notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
-        return events.size
+        return filteredEvents.size
     }
 
-    inner class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    fun clearFilter() {
+        this.filteredEvents = events
+        notifyDataSetChanged()
+    }
+
+    override fun getFilter() = object : Filter() {
+        override fun performFiltering(constraint: CharSequence): FilterResults {
+            val pattern = constraint.toString()
+            filteredEvents = if (pattern.isEmpty()) {
+                events
+            } else {
+                val filteredList = mutableListOf<Event>()
+                for (event in events) {
+                    if (event.user.userId.contains(pattern)) {
+                        filteredList.add(event)
+                    }
+                }
+                filteredList
+            }
+
+            val filterResults = FilterResults()
+            filterResults.values = filteredEvents
+            return filterResults
+        }
+
+        override fun publishResults(constraint: CharSequence, results: FilterResults) {
+            filteredEvents = results.values as MutableList<Event>
+            notifyDataSetChanged()
+        }
+    }
+
+
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val user: TextView
         val dateTime: TextView
         val description: TextView
