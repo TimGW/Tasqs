@@ -53,7 +53,11 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     }
 
     private fun fragmentToReplace(fragment: androidx.fragment.app.Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit()
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+            .replace(R.id.content_frame, fragment)
+            .commit()
     }
 
     override fun presentAgendaFragment() {
