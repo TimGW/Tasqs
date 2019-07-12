@@ -3,6 +3,7 @@
     <color name="color_primary">@color/white</color>
     <color name="color_primary_dark">@color/light_grey</color>
     <color name="color_list_header">@color/ultra_light_grey</color>
+    <color name="color_8dp_elevation">#1F000000</color>
 
     <color name="color_accent">#45ed9c</color>
     <color name="color_accent_dark">#12ba69</color>

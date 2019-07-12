@@ -15,8 +15,8 @@
         </menu>
     </item>
 
-    <item android:id="@+id/toolbar_menu_settings"
-          android:title="@string/settings"
-          app:showAsAction="never"/>
+    <!--<item android:id="@+id/toolbar_menu_settings"-->
+          <!--android:title="@string/settings"-->
+          <!--app:showAsAction="never"/>-->
 </menu>
 
