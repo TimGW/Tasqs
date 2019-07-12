@@ -2,12 +2,13 @@
 <resources>
     <color name="color_primary">@color/white</color>
     <color name="color_primary_dark">@color/light_grey</color>
-    <color name="bottom_app_bar">@color/white</color>
+    <color name="color_list_header">@color/ultra_light_grey</color>
 
     <color name="color_accent">#45ed9c</color>
     <color name="color_accent_dark">#12ba69</color>
 
     <color name="white">#fff</color>
+    <color name="ultra_light_grey">#F5F5F5</color>
     <color name="light_grey">#FFE4E4E4</color>
     <color name="dark_grey">#FF2A2A30</color>
     <color name="black">#000</color>

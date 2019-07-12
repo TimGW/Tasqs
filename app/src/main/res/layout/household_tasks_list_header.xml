@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="0dp"
+    android:backgroundTint="@color/color_list_header"
     app:cardCornerRadius="0dp">
 
     <TextView
