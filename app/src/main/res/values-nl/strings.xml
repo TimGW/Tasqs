@@ -97,5 +97,6 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="title_activity_settings">Settings</string>
     <string name="filter_show_all">Show all</string>
     <string name="filter_just_me">Show just me</string>
+    <string name="invite_title">Share invite link</string>
 
 </resources>
