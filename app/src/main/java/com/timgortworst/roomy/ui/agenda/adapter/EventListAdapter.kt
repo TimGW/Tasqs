@@ -42,11 +42,11 @@ class EventListAdapter(
 
         viewHolder.dateTime.text = if (date < Date()) {
             viewHolder.dateTime.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.error))
-            viewHolder.dateTime.setTypeface(null, Typeface.BOLD);
+            viewHolder.dateTime.setTypeface(null, Typeface.BOLD)
             activity.getString(R.string.overdue_occurance, date.toString())
         } else {
             viewHolder.dateTime.setTextColor(oldColors)
-            viewHolder.dateTime.setTypeface(null, Typeface.NORMAL);
+            viewHolder.dateTime.setTypeface(null, Typeface.NORMAL)
             activity.getString(R.string.next_occurance, date.toString())
         }
 
@@ -60,10 +60,17 @@ class EventListAdapter(
         notifyDataSetChanged()
     }
 
+    fun removeEvent(position: Int){
+        this.filteredEvents.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
     fun addEvent(event: Event) {
         this.filteredEvents.add(event)
         notifyDataSetChanged()
     }
+
+    fun getEventList() = this.filteredEvents
 
     override fun getItemCount(): Int {
         return filteredEvents.size
@@ -105,13 +112,11 @@ class EventListAdapter(
         val user: TextView
         val dateTime: TextView
         val description: TextView
-        val points: TextView
 
         init {
             this.user = view.findViewById(R.id.event_user)
             this.dateTime = view.findViewById(R.id.event_date_time)
             this.description = view.findViewById(R.id.event_name)
-            this.points = view.findViewById(R.id.points_label)
         }
     }
 }
