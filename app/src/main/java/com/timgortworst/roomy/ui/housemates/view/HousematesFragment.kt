@@ -117,7 +117,7 @@ class HousematesFragment : Fragment(), HousenmatesView {
                     sendIntent.type = "text/plain"
 
                     if (sendIntent.resolveActivity(activityContext.packageManager) != null)
-                        startActivity(Intent.createChooser(sendIntent, "Share"))
+                        startActivity(Intent.createChooser(sendIntent, getString(R.string.invite_title)))
                     else
                         startActivity(sendIntent)
                 } else {
