@@ -32,11 +32,8 @@ class HousematesPresenter(
             .reversed()
             .toMutableList()
 
+        val currentUser = userList.find { it.userId == userRepository.getCurrentUserId() }
+        view.showOrHideFab(userList.size < 8 && currentUser?.role == Role.ADMIN.name)
         view.presentUserList(userList)
-    }
-
-    fun fetchCurrentUser() = scope.launch {
-        val currentUser = userRepository.getOrCreateUser()
-        view.presentCurrentUser(currentUser)
     }
 }
