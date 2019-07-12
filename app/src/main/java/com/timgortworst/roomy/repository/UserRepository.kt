@@ -22,6 +22,8 @@ class UserRepository(
         private const val TAG = "TIMTIM"
     }
 
+    fun getCurrentUserId() = auth.currentUser?.uid
+
     suspend fun getOrCreateUser(): User? {
         val currentUserDocRef = userCollectionRef.document(auth.currentUser?.uid.orEmpty())
 

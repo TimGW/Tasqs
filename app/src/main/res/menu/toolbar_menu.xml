@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <!--<item-->
-        <!--android:id="@+id/event_today"-->
-        <!--android:icon="@drawable/ic_event_black_24dp"-->
-        <!--android:title="@string/event_today"-->
-        <!--app:showAsAction="ifRoom" />-->
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/event_planning"
-        android:title="@string/planning"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/event_three_days"
-        android:title="@string/three_days"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/toolbar_menu_settings"
-        android:title="@string/settings"
-        app:showAsAction="never" />
+    <item android:id="@+id/overflow"
+          android:orderInCategory="100"
+          app:showAsAction="ifRoom"
+          android:icon="@drawable/filter_variant"
+          android:title="">
+        <menu>
+            <item android:id="@+id/filter_all"
+                  android:title="@string/filter_show_all"/>
+            <item android:id="@+id/filter_me"
+                  android:title="@string/filter_just_me"/>
+        </menu>
+    </item>
+
+    <item android:id="@+id/toolbar_menu_settings"
+          android:title="@string/settings"
+          app:showAsAction="never"/>
 </menu>
 
