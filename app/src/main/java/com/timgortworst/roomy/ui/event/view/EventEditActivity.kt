@@ -120,14 +120,6 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
             mutableListOf()
         )
         spinner_users.adapter = spinnerAdapterUsers
-        spinner_users.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            }
-        }
-
         presenter.fetchUsers()
     }
 
