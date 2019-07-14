@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.agenda.presenter
+package com.timgortworst.roomy.ui.event.presenter
 
 import android.widget.Filter
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -7,14 +7,14 @@ import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.repository.AgendaRepository
 import com.timgortworst.roomy.repository.UserRepository
-import com.timgortworst.roomy.ui.agenda.view.AgendaView
+import com.timgortworst.roomy.ui.event.view.EventListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.utils.isTimeStampInPast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AgendaPresenter(
-        val view: AgendaView,
+class EventListPresenter(
+        val view: EventListView,
         val agendaRepository: AgendaRepository,
         val userRepository: UserRepository
 ) : AgendaRepository.AgendaEventListener, DefaultLifecycleObserver {

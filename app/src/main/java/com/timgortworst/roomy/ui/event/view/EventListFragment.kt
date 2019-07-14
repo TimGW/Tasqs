@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.agenda.view
+package com.timgortworst.roomy.ui.event.view
 
 import android.content.Context
 import android.os.Bundle
@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
-import com.timgortworst.roomy.ui.agenda.adapter.EventListAdapter
-import com.timgortworst.roomy.ui.agenda.presenter.AgendaPresenter
+import com.timgortworst.roomy.ui.event.adapter.EventListAdapter
+import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.utils.RecyclerTouchListener
 import dagger.android.support.AndroidSupportInjection
@@ -23,18 +23,18 @@ import kotlinx.android.synthetic.main.fragment_agenda.*
 import javax.inject.Inject
 
 
-class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
+class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     private lateinit var touchListener: RecyclerTouchListener
     private lateinit var activityContext: AppCompatActivity
     private var listeningToEvents: Boolean = false
     private lateinit var adapter: EventListAdapter
 
     @Inject
-    lateinit var presenter: AgendaPresenter
+    lateinit var presenter: EventListPresenter
 
     companion object {
-        fun newInstance(): AgendaFragment {
-            return AgendaFragment()
+        fun newInstance(): EventListFragment {
+            return EventListFragment()
         }
     }
 
@@ -72,7 +72,7 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
     override fun onResume() {
         super.onResume()
         activityContext.supportActionBar?.title = getString(R.string.schema_toolbar_title)
-        activityContext.fab.setOnClickListener { EditAgendaEventActivity.start(activityContext) }
+        activityContext.fab.setOnClickListener { EventEditActivity.start(activityContext) }
         events_agenda.addOnItemTouchListener(touchListener)
     }
 

@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.agenda.presenter
+package com.timgortworst.roomy.ui.event.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -8,18 +8,18 @@ import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.AgendaRepository
 import com.timgortworst.roomy.repository.UserRepository
-import com.timgortworst.roomy.ui.agenda.view.EditAgendaEventView
+import com.timgortworst.roomy.ui.event.view.EventEditView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
 
-class EditAgendaEventPresenter(
-    private val view: EditAgendaEventView,
-    private val agendaRepository: AgendaRepository,
-    private val userRepository: UserRepository,
-    private val sharedPref: HuishoudGenootSharedPref
+class EventEditPresenter(
+        private val view: EventEditView,
+        private val agendaRepository: AgendaRepository,
+        private val userRepository: UserRepository,
+        private val sharedPref: HuishoudGenootSharedPref
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.ui.agenda.view.AgendaFragment
+import com.timgortworst.roomy.ui.event.view.EventListFragment
 import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
 import com.timgortworst.roomy.ui.housemates.view.HousematesFragment
@@ -67,7 +67,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     }
 
     override fun presentAgendaFragment() {
-        fragmentToReplace(AgendaFragment.newInstance())
+        fragmentToReplace(EventListFragment.newInstance())
     }
 
     override fun presentTasksFragment() {

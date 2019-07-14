@@ -1,8 +1,8 @@
-package com.timgortworst.roomy.ui.agenda.view
+package com.timgortworst.roomy.ui.event.view
 
 import com.timgortworst.roomy.model.Event
 
-interface AgendaView {
+interface EventListView {
     fun presentAddedEvent(agendaEvent: Event)
     fun presentEditedEvent(agendaEvent: Event)
     fun presentDeletedEvent(agendaEvent: Event)
