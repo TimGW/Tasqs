@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.eventcategory.adapter
+package com.timgortworst.roomy.ui.category.adapter
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -15,12 +15,12 @@ import com.timgortworst.roomy.model.EventCategory
  *
  * Handles clicks by expanding items to show a more detailed description of the HouseholdTask
  */
-class EventCategoryAdapter(
+class CategoryListAdapter(
         private var activity: AppCompatActivity,
         private var houseHoldTasks: MutableList<EventCategory>,
         private var optionsClickListener: OnOptionsClickListener
-) : StickyRecyclerHeadersAdapter<EventCategoryAdapter.HeaderViewHolder>,
-        RecyclerView.Adapter<EventCategoryAdapter.ViewHolder>() {
+) : StickyRecyclerHeadersAdapter<CategoryListAdapter.HeaderViewHolder>,
+        RecyclerView.Adapter<CategoryListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.household_tasks_list_row, parent, false)

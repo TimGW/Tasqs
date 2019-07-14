@@ -50,7 +50,7 @@
                 android:name=".ui.googlesignin.view.GoogleSignInActivity"
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-                android:name=".ui.eventcategory.view.EditEventCategoryActivity"
+                android:name=".ui.category.view.CategoryEditActivity"
                 android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity android:name=".ui.agenda.view.EditAgendaEventActivity"/>
         <activity
