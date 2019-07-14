@@ -31,16 +31,20 @@ class SetupPresenter(
     fun setupHousehold(referredHouseholdId: String) = scope.launch {
         if (referredHouseholdId.isNotBlank()) {
             // user has accepted the invite
-            if (userHasActiveHousehold()) {
-                // caution user that household will be overwritten
-                view.presentHouseholdOverwriteDialog()
+            if (isHouseholdActive()) {
+                if(isIdSimilarToActiveId(referredHouseholdId)){
+                    view.presentAlreadyInHouseholdDialog()
+                } else {
+                    // caution user that household will be overwritten
+                    view.presentHouseholdOverwriteDialog()
+                }
             } else {
                 // no active household, so update
                 changeCurrentUserHousehold(referredHouseholdId)
             }
         } else {
             // user is not invited
-            if (userHasActiveHousehold()) {
+            if (isHouseholdActive()) {
                 // user has an active household
                 view.goToMainActivity()
             } else {
@@ -56,13 +60,15 @@ class SetupPresenter(
                     view.goToMainActivity()
                 } else {
                     view.presentToastError(R.string.generic_error)
-
                 }
             }
         }
     }
 
-    private suspend fun userHasActiveHousehold(): Boolean {
+    private fun isIdSimilarToActiveId(referredHouseholdId: String) =
+            referredHouseholdId == sharedPref.getActiveHouseholdId()
+
+    private suspend fun isHouseholdActive(): Boolean {
         // check locally
         if (sharedPref.getActiveHouseholdId().isNotBlank()) {
             return true
