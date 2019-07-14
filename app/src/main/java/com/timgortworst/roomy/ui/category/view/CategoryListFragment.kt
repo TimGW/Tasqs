@@ -56,8 +56,7 @@ class CategoryListFragment : androidx.fragment.app.Fragment(), CategoryListView 
 
         presenter.listenToTasks()
 
-        adapter = CategoryListAdapter(activityContext, mutableListOf(),
-            object : CategoryListAdapter.OnOptionsClickListener {
+        adapter = CategoryListAdapter(object : CategoryListAdapter.OnOptionsClickListener {
                 override fun onOptionsClick(householdTask: EventCategory) {
                     showContextMenuFor(householdTask)
                 }

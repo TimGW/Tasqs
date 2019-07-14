@@ -1,11 +1,10 @@
 package com.timgortworst.roomy.ui.category.adapter
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.EventCategory
@@ -16,11 +15,10 @@ import com.timgortworst.roomy.model.EventCategory
  * Handles clicks by expanding items to show a more detailed description of the HouseholdTask
  */
 class CategoryListAdapter(
-        private var activity: AppCompatActivity,
-        private var houseHoldTasks: MutableList<EventCategory>,
         private var optionsClickListener: OnOptionsClickListener
 ) : StickyRecyclerHeadersAdapter<CategoryListAdapter.HeaderViewHolder>,
         RecyclerView.Adapter<CategoryListAdapter.ViewHolder>() {
+    private val houseHoldTasks: MutableList<EventCategory> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.household_tasks_list_row, parent, false)
@@ -77,13 +75,13 @@ class CategoryListAdapter(
     }
 
     fun editItem(householdTask: EventCategory) {
-        val indexToUpdate = houseHoldTasks.indexOfFirst { it -> it.categoryId == householdTask.categoryId }
+        val indexToUpdate = houseHoldTasks.indexOfFirst { it.categoryId == householdTask.categoryId }
         houseHoldTasks[indexToUpdate] = householdTask
         houseHoldTasks.sortBy { it.name }
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val taskTitle: TextView
         val taskDescription: TextView
 

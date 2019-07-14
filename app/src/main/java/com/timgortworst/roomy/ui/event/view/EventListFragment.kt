@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.Event
+import com.timgortworst.roomy.ui.customview.BottomSheetMenu
 import com.timgortworst.roomy.ui.event.adapter.EventListAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
@@ -81,8 +83,14 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
         activityContext.fab.setOnClickListener(null)
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        listeningToEvents = false
+        presenter.detachEventListener()
+    }
+
     private fun setupEventListAdapter() {
-        adapter = EventListAdapter(activityContext, mutableListOf())
+        adapter = EventListAdapter(activityContext)
         val layoutManager = LinearLayoutManager(activityContext)
         events_agenda.layoutManager = layoutManager
         val dividerItemDecoration =
@@ -94,6 +102,7 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     private fun setupRecyclerContextMenu() {
         touchListener = RecyclerTouchListener(activityContext, events_agenda)
         touchListener
+                .setLongClickable(false) { showContextMenuFor(adapter.getEvent(it)) }
                 .setClickable(object : RecyclerTouchListener.OnRowClickListener {
                     override fun onRowClicked(position: Int) {
                         touchListener.openSwipeOptions(position)
@@ -129,6 +138,23 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
         }
     }
 
+    private fun showContextMenuFor(event: Event) {
+        var bottomSheetMenu: BottomSheetMenu? = null
+
+        val items = arrayListOf(
+                BottomMenuItem(R.drawable.ic_edit, "Edit") {
+                    EventEditActivity.start(activityContext, event)
+                    bottomSheetMenu?.dismiss()
+                },
+                BottomMenuItem(R.drawable.ic_delete, "Delete") {
+                    presenter.deleteEvent(event)
+                    bottomSheetMenu?.dismiss()
+                }
+        )
+        bottomSheetMenu = BottomSheetMenu(activityContext, event.eventCategory.name, items)
+        bottomSheetMenu.show()
+    }
+
     override fun presentAddedEvent(agendaEvent: Event) {
         adapter.addEvent(agendaEvent)
     }
@@ -139,11 +165,5 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
 
     override fun presentDeletedEvent(agendaEvent: Event) {
         adapter.removeEvent(agendaEvent)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listeningToEvents = false
-        presenter.detachEventListener()
     }
 }
