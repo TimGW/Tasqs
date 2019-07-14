@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import android.widget.DatePicker
@@ -71,8 +70,8 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
             }
         }
 
-        setupEventCategorySpinner()
-        setupUsersSpinner()
+        presenter.fetchEventCategories()
+        presenter.fetchUsers()
         setupEventRepeatSpinner()
         setupCalenderDialog()
 
@@ -93,34 +92,6 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
                 event_repeat_view.visibility = View.GONE
             }
         }
-    }
-
-    private fun setupEventCategorySpinner() {
-        spinnerAdapterTasks = SpinnerTaskAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            mutableListOf()
-        )
-        spinner_categories.adapter = spinnerAdapterTasks
-        spinner_categories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            }
-        }
-
-        presenter.fetchEventCategories()
-    }
-
-    private fun setupUsersSpinner() {
-        spinnerAdapterUsers = SpinnerUserAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            mutableListOf()
-        )
-        spinner_users.adapter = spinnerAdapterUsers
-        presenter.fetchUsers()
     }
 
     private fun setupEventRepeatSpinner() {
@@ -168,17 +139,21 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
     }
 
     override fun presentUserList(users: MutableList<User>) {
-        for (user in users) {
-            spinnerAdapterUsers.add(user)
-        }
-        spinnerAdapterUsers.notifyDataSetChanged()
+        spinnerAdapterUsers = SpinnerUserAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            users
+        )
+        spinner_users.adapter = spinnerAdapterUsers
     }
 
     override fun presentCategoryList(tasks: MutableList<EventCategory>) {
-        for (task in tasks) {
-            spinnerAdapterTasks.add(task)
-        }
-        spinnerAdapterTasks.notifyDataSetChanged()
+        spinnerAdapterTasks = SpinnerTaskAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            tasks
+        )
+        spinner_categories.adapter = spinnerAdapterTasks
     }
 
     private fun setupCalenderDialog() {
