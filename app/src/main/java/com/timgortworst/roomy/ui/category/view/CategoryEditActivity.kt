@@ -17,23 +17,11 @@ import kotlinx.android.synthetic.main.activity_edit_task.*
 import javax.inject.Inject
 
 
-class CategoryEditActivity : BaseAuthActivity(), CategoryEditView { //, Validator.ValidationListener {
+class CategoryEditActivity : BaseAuthActivity(), CategoryEditView {
     private lateinit var householdTask: EventCategory
-//    private lateinit var validator: Validator
 
     @Inject
     lateinit var presenter: CategoryEditPresenter
-
-//    @NotEmpty(trim = true, message = "You have to enter a name")
-//    @BindView(R.id.task_name_hint)
-//    lateinit var task_name_hint: TextInputLayout
-//
-//    @NotEmpty(message = "You have to enter points")
-//    @BindView(R.id.task_points_hint)
-//    lateinit var task_points_hint: TextInputLayout
-//
-//    @BindView(R.id.task_description_hint)
-//    lateinit var task_description_hint: TextInputLayout
 
     companion object {
         fun start(context: AppCompatActivity) {
@@ -53,13 +41,7 @@ class CategoryEditActivity : BaseAuthActivity(), CategoryEditView { //, Validato
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-
-//        validator = Validator(this)
-//        validator.registerAdapter(TextInputLayout::class.java) { view -> view.editText?.text.toString() }
-//        validator.setValidationListener(this)
-
         setContentView(R.layout.activity_edit_task)
-       // ButterKnife.bind(this)
 
         householdTask = intent.getParcelableExtra(INTENT_EXTRA_EDIT_HOUSEHOLD_TASK) ?: EventCategory()
 
@@ -73,7 +55,6 @@ class CategoryEditActivity : BaseAuthActivity(), CategoryEditView { //, Validato
             if (it.categoryId.isNotEmpty()) {
                 supportActionBar?.title = "Edit  ${householdTask.name}"
                 task_name_hint.editText?.setText(householdTask.name)
-//                task_points_hint.editText?.setText(householdTask.points.toString())
                 task_description_hint.editText?.setText(householdTask.description)
             }
         }
@@ -128,28 +109,4 @@ class CategoryEditActivity : BaseAuthActivity(), CategoryEditView { //, Validato
             }
         })
     }
-
-//    override fun onValidationFailed(errors: MutableList<ValidationError>) {
-//        for (error in errors) {
-//            val view = error.view
-//            val message = error.getCollatedErrorMessage(this)
-//
-//            if (view is TextInputLayout) {
-//                view.error = message
-//            } else {
-//                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-//            }
-//        }
-//    }
-//
-//    override fun onValidationSucceeded() {
-//        presenter.insertOrUpdateCategory(
-//            householdTask.categoryId,
-//            task_name_hint.editText?.text.toString(),
-//            task_description_hint.editText?.text.toString(),
-//            task_points_hint.editText?.text.toString().toInt()
-//        )
-//
-//        finish()
-//    }
 }
