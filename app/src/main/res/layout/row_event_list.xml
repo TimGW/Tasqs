@@ -86,7 +86,7 @@
                     tools:text="Stofzuigen" app:layout_constraintTop_toBottomOf="@+id/event_date_time"
                     app:layout_constraintHorizontal_bias="0.5"/>
 
-            <com.timgortworst.roomy.ui.customview.RepeatIcon
+            <com.timgortworst.roomy.customview.RepeatIcon
                     android:id="@+id/event_repeat_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

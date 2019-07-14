@@ -17,21 +17,21 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.ui.customview.BottomSheetMenu
-import com.timgortworst.roomy.ui.housemates.adapter.HousematesAdapter
-import com.timgortworst.roomy.ui.housemates.presenter.HousematesPresenter
+import com.timgortworst.roomy.customview.BottomSheetMenu
+import com.timgortworst.roomy.ui.housemates.adapter.UserListAdapter
+import com.timgortworst.roomy.ui.housemates.presenter.UserListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.utils.Constants.QUERY_PARAM_HOUSEHOLD
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_housemates.*
+import kotlinx.android.synthetic.main.fragment_user_list.*
 import javax.inject.Inject
 
 
-class HousematesFragment : Fragment(), HousenmatesView {
+class UserListFragment : Fragment(), UserListView {
     @Inject
-    lateinit var presenter: HousematesPresenter
-    private lateinit var adapter: HousematesAdapter
+    lateinit var presenter: UserListPresenter
+    private lateinit var adapter: UserListAdapter
     private lateinit var activityContext: MainActivity
 
     @Inject
@@ -39,8 +39,8 @@ class HousematesFragment : Fragment(), HousenmatesView {
 
     companion object {
 
-        fun newInstance(): HousematesFragment {
-            return HousematesFragment()
+        fun newInstance(): UserListFragment {
+            return UserListFragment()
         }
     }
 
@@ -55,13 +55,13 @@ class HousematesFragment : Fragment(), HousenmatesView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_housemates, container, false)
+        return inflater.inflate(R.layout.fragment_user_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = HousematesAdapter(object : HousematesAdapter.OnUserLongClickListener {
+        adapter = UserListAdapter(object : UserListAdapter.OnUserLongClickListener {
             override fun onUserClick(user: User) {
                 presenter.showContextMenuIfUserHasPermission(user)
             }

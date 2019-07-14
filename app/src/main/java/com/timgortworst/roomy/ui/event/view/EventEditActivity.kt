@@ -21,7 +21,7 @@ import com.timgortworst.roomy.ui.event.adapter.SpinnerUserAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventEditPresenter
 import com.timgortworst.roomy.utils.Constants.INTENT_EXTRA_EDIT_HOUSEHOLD_TASK
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_edit_agenda_item.*
+import kotlinx.android.synthetic.main.activity_edit_event.*
 import java.util.*
 import javax.inject.Inject
 
@@ -54,7 +54,7 @@ class EventEditActivity : BaseAuthActivity(), EventEditView, DatePickerDialog.On
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_agenda_item)
+        setContentView(R.layout.activity_edit_event)
 
         agendaEvent = intent.getParcelableExtra(INTENT_EXTRA_EDIT_HOUSEHOLD_TASK) ?: Event()
 

@@ -13,11 +13,11 @@ import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.EventCategory
 import com.timgortworst.roomy.ui.category.adapter.CategoryListAdapter
 import com.timgortworst.roomy.ui.category.presenter.CategoryListPresenter
-import com.timgortworst.roomy.ui.customview.BottomSheetMenu
+import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_household_tasks.*
+import kotlinx.android.synthetic.main.fragment_category_list.*
 import javax.inject.Inject
 
 
@@ -48,7 +48,7 @@ class CategoryListFragment : androidx.fragment.app.Fragment(), CategoryListView 
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_household_tasks, container, false)
+        return inflater.inflate(R.layout.fragment_category_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

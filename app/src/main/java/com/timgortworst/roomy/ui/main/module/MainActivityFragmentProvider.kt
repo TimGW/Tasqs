@@ -4,8 +4,8 @@ import com.timgortworst.roomy.ui.event.module.EventListModule
 import com.timgortworst.roomy.ui.event.view.EventListFragment
 import com.timgortworst.roomy.ui.category.module.CategoryListModule
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
-import com.timgortworst.roomy.ui.housemates.module.HousematesModule
-import com.timgortworst.roomy.ui.housemates.view.HousematesFragment
+import com.timgortworst.roomy.ui.housemates.module.UserListModule
+import com.timgortworst.roomy.ui.housemates.view.UserListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -18,6 +18,6 @@ abstract class MainActivityFragmentProvider {
     @ContributesAndroidInjector(modules = [(EventListModule::class)])
     internal abstract fun provideAgendaFragment(): EventListFragment
 
-    @ContributesAndroidInjector(modules = [(HousematesModule::class)])
-    internal abstract fun provideHouseMatesFragment(): HousematesFragment
+    @ContributesAndroidInjector(modules = [(UserListModule::class)])
+    internal abstract fun provideHouseMatesFragment(): UserListFragment
 }

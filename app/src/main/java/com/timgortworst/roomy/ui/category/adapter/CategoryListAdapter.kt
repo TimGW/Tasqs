@@ -21,12 +21,12 @@ class CategoryListAdapter(
     private val houseHoldTasks: MutableList<EventCategory> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.household_tasks_list_row, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_category_list, parent, false)
         return ViewHolder(view)
     }
 
     override fun onCreateHeaderViewHolder(parent: ViewGroup): HeaderViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.household_tasks_list_header, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.row_category_list_header, parent, false)
         return HeaderViewHolder(v)
     }
 

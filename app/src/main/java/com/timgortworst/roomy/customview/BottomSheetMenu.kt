@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.customview
+package com.timgortworst.roomy.customview
 
 import android.content.Context
 import android.view.LayoutInflater
