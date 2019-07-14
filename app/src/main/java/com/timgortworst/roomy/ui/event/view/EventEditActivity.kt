@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.agenda.view
+package com.timgortworst.roomy.ui.event.view
 
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -16,9 +16,9 @@ import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventCategory
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.ui.agenda.adapter.SpinnerTaskAdapter
-import com.timgortworst.roomy.ui.agenda.adapter.SpinnerUserAdapter
-import com.timgortworst.roomy.ui.agenda.presenter.EditAgendaEventPresenter
+import com.timgortworst.roomy.ui.event.adapter.SpinnerTaskAdapter
+import com.timgortworst.roomy.ui.event.adapter.SpinnerUserAdapter
+import com.timgortworst.roomy.ui.event.presenter.EventEditPresenter
 import com.timgortworst.roomy.utils.Constants.INTENT_EXTRA_EDIT_HOUSEHOLD_TASK
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_agenda_item.*
@@ -26,7 +26,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class EditAgendaEventActivity : AppCompatActivity(), EditAgendaEventView, DatePickerDialog.OnDateSetListener {
+class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
     private lateinit var agendaEvent: Event
     private lateinit var spinnerAdapterTasks: SpinnerTaskAdapter
     private lateinit var spinnerAdapterUsers: SpinnerUserAdapter
@@ -34,17 +34,17 @@ class EditAgendaEventActivity : AppCompatActivity(), EditAgendaEventView, DatePi
     private var calendar = Calendar.getInstance()
 
     @Inject
-    lateinit var presenter: EditAgendaEventPresenter
+    lateinit var presenter: EventEditPresenter
 
     companion object {
         fun start(context: AppCompatActivity) {
-            val intent = Intent(context, EditAgendaEventActivity::class.java)
+            val intent = Intent(context, EventEditActivity::class.java)
             context.startActivity(intent)
             context.overridePendingTransition(R.anim.slide_up, R.anim.stay)
         }
 
         fun start(context: AppCompatActivity, agendaEvent: Event) {
-            val intent = Intent(context, EditAgendaEventActivity::class.java)
+            val intent = Intent(context, EventEditActivity::class.java)
             intent.putExtra(INTENT_EXTRA_EDIT_HOUSEHOLD_TASK, agendaEvent)
             context.startActivity(intent)
             context.overridePendingTransition(R.anim.slide_up, R.anim.stay)

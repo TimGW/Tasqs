@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.agenda.adapter
+package com.timgortworst.roomy.ui.event.adapter
 
 import android.graphics.Typeface
 import android.view.LayoutInflater
