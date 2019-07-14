@@ -118,6 +118,10 @@
     <string name="filter_show_all">Show all</string>
     <string name="filter_just_me">Show just me</string>
     <string name="invite_title">Share invite link</string>
+    <string name="dialog_household_overwrite_text">Your current household will be overwritten. All data will be lost. Are you sure?</string>
+    <string name="dialog_household_overwrite_title">Household overwrite</string>
+    <string name="dialog_household_similar_title">Same household!</string>
+    <string name="dialog_household_similar_text">You\'re already in this household. Press \'OK\' to continue</string>
 
     <!--&lt;!&ndash; Preference Titles &ndash;&gt;-->
     <!--<string name="messages_header">Messages</string>-->

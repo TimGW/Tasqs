@@ -4,13 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.setup.presenter.SetupPresenter
-import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.utils.showToast
 import dagger.android.AndroidInjection
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 
@@ -53,8 +52,8 @@ class SetupActivity : BaseActivity(), SetupView {
         hideProgressDialog()
 
         AlertDialog.Builder(this)
-            .setTitle("Household overwrite")
-            .setMessage("Your current household will be overwritten. All data will be lost. Are you sure?")
+            .setTitle(getString(R.string.dialog_household_overwrite_title))
+            .setMessage(getString(R.string.dialog_household_overwrite_text))
             .setPositiveButton(android.R.string.yes) { dialog, which ->
                 presenter.changeCurrentUserHousehold(referredHouseholdId)
             }
@@ -63,4 +62,17 @@ class SetupActivity : BaseActivity(), SetupView {
             }
             .show()
     }
+
+    override fun presentAlreadyInHouseholdDialog() {
+        hideProgressDialog()
+
+        AlertDialog.Builder(this)
+                .setTitle(getString(R.string.dialog_household_similar_title))
+                .setMessage(getString(R.string.dialog_household_similar_text))
+                .setNeutralButton(android.R.string.yes) { dialog, which ->
+                    goToMainActivity()
+                }
+                .show()
+    }
+
 }
