@@ -1,17 +1,17 @@
-package com.timgortworst.roomy.ui.eventcategory.presenter
+package com.timgortworst.roomy.ui.category.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.repository.AgendaRepository
-import com.timgortworst.roomy.ui.eventcategory.view.EditEventCategoryView
+import com.timgortworst.roomy.ui.category.view.CategoryEditView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class EditEventCategoryPresenter(
-    val view: EditEventCategoryView,
-    val repository: AgendaRepository
+class CategoryEditPresenter(
+        val view: CategoryEditView,
+        val repository: AgendaRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)

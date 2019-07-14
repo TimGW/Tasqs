@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.eventcategory.view
+package com.timgortworst.roomy.ui.category.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,19 +9,19 @@ import android.view.Menu
 import android.view.MenuItem
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.EventCategory
-import com.timgortworst.roomy.ui.eventcategory.presenter.EditEventCategoryPresenter
+import com.timgortworst.roomy.ui.category.presenter.CategoryEditPresenter
 import com.timgortworst.roomy.utils.Constants.INTENT_EXTRA_EDIT_HOUSEHOLD_TASK
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_task.*
 import javax.inject.Inject
 
 
-class EditEventCategoryActivity : AppCompatActivity(), EditEventCategoryView { //, Validator.ValidationListener {
+class CategoryEditActivity : AppCompatActivity(), CategoryEditView { //, Validator.ValidationListener {
     private lateinit var householdTask: EventCategory
 //    private lateinit var validator: Validator
 
     @Inject
-    lateinit var presenter: EditEventCategoryPresenter
+    lateinit var presenter: CategoryEditPresenter
 
 //    @NotEmpty(trim = true, message = "You have to enter a name")
 //    @BindView(R.id.task_name_hint)
@@ -36,13 +36,13 @@ class EditEventCategoryActivity : AppCompatActivity(), EditEventCategoryView { /
 
     companion object {
         fun start(context: AppCompatActivity) {
-            val intent = Intent(context, EditEventCategoryActivity::class.java)
+            val intent = Intent(context, CategoryEditActivity::class.java)
             context.startActivity(intent)
             context.overridePendingTransition(R.anim.slide_up, R.anim.stay)
         }
 
         fun start(context: AppCompatActivity, householdTask: EventCategory) {
-            val intent = Intent(context, EditEventCategoryActivity::class.java)
+            val intent = Intent(context, CategoryEditActivity::class.java)
             intent.putExtra(INTENT_EXTRA_EDIT_HOUSEHOLD_TASK, householdTask)
             context.startActivity(intent)
             context.overridePendingTransition(R.anim.slide_up, R.anim.stay)
