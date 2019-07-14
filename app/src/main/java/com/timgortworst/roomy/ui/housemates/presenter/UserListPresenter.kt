@@ -6,14 +6,14 @@ import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.Role
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.UserRepository
-import com.timgortworst.roomy.ui.housemates.view.HousenmatesView
+import com.timgortworst.roomy.ui.housemates.view.UserListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class HousematesPresenter(
-    private val view: HousenmatesView,
+class UserListPresenter(
+    private val view: UserListView,
     private val userRepository: UserRepository,
     private val sharedPref: HuishoudGenootSharedPref
 ) : DefaultLifecycleObserver {

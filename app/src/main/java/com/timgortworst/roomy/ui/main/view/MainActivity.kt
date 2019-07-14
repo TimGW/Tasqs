@@ -9,7 +9,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
 import com.timgortworst.roomy.ui.event.view.EventListFragment
-import com.timgortworst.roomy.ui.housemates.view.HousematesFragment
+import com.timgortworst.roomy.ui.housemates.view.UserListFragment
 import com.timgortworst.roomy.ui.main.presenter.MainPresenter
 import com.timgortworst.roomy.ui.settings.view.SettingsActivity
 import dagger.android.AndroidInjection
@@ -75,7 +75,7 @@ class MainActivity : BaseAuthActivity(), HasSupportFragmentInjector, MainView {
     }
 
     override fun presentHousematesFragment() {
-        fragmentToReplace(HousematesFragment.newInstance())
+        fragmentToReplace(UserListFragment.newInstance())
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {

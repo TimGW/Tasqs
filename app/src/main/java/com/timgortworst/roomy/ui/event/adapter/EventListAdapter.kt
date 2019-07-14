@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
-import com.timgortworst.roomy.ui.customview.RepeatIcon
+import com.timgortworst.roomy.customview.RepeatIcon
 import com.timgortworst.roomy.utils.isTimeStampInPast
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,7 +35,7 @@ class EventListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.household_event_list_row, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_event_list, parent, false)
         return ViewHolder(view)
     }
 

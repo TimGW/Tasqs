@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.Event
-import com.timgortworst.roomy.ui.customview.BottomSheetMenu
+import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.ui.event.adapter.EventListAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.utils.RecyclerTouchListener
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_agenda.*
+import kotlinx.android.synthetic.main.fragment_event_list.*
 import javax.inject.Inject
 
 
@@ -49,7 +49,7 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_agenda, container, false)
+        return inflater.inflate(R.layout.fragment_event_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -150,7 +150,8 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
             }
         )
 
-        bottomSheetMenu = BottomSheetMenu(activityContext, event.eventCategory.name, items)
+        bottomSheetMenu =
+            BottomSheetMenu(activityContext, event.eventCategory.name, items)
         bottomSheetMenu.show()
     }
 

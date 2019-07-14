@@ -13,7 +13,7 @@ import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.category.presenter.CategoryEditPresenter
 import com.timgortworst.roomy.utils.Constants.INTENT_EXTRA_EDIT_HOUSEHOLD_TASK
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_edit_task.*
+import kotlinx.android.synthetic.main.activity_edit_category.*
 import javax.inject.Inject
 
 
@@ -41,7 +41,7 @@ class CategoryEditActivity : BaseAuthActivity(), CategoryEditView {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_task)
+        setContentView(R.layout.activity_edit_category)
 
         householdTask = intent.getParcelableExtra(INTENT_EXTRA_EDIT_HOUSEHOLD_TASK) ?: EventCategory()
 
