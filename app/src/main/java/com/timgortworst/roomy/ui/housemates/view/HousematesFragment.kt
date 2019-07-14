@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -16,8 +15,9 @@ import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
-import com.timgortworst.roomy.model.Role
+import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.User
+import com.timgortworst.roomy.ui.customview.BottomSheetMenu
 import com.timgortworst.roomy.ui.housemates.adapter.HousematesAdapter
 import com.timgortworst.roomy.ui.housemates.presenter.HousematesPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
@@ -54,14 +54,18 @@ class HousematesFragment : Fragment(), HousenmatesView {
         activityContext = (activity as MainActivity)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) : View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_housemates, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = HousematesAdapter(activityContext, mutableListOf())
+        adapter = HousematesAdapter(object : HousematesAdapter.OnUserLongClickListener {
+            override fun onUserClick(user: User) {
+                presenter.showContextMenuIfUserHasPermission(user)
+            }
+        })
         val layoutManager = LinearLayoutManager(activityContext)
         user_list.layoutManager = layoutManager
         val dividerItemDecoration = DividerItemDecoration(activityContext, layoutManager.orientation)
@@ -139,5 +143,23 @@ class HousematesFragment : Fragment(), HousenmatesView {
         return dynamicLink.uri
     }
 
-    override fun showOrHideFab(condition: Boolean) = if(condition) activityContext.fab.show() else activityContext.fab.hide()
+    override fun showOrHideFab(condition: Boolean) =
+        if (condition) activityContext.fab.show() else activityContext.fab.hide()
+
+    override fun showContextMenuFor(user: User) {
+        var bottomSheetMenu: BottomSheetMenu? = null
+
+        val items = arrayListOf(
+            BottomMenuItem(R.drawable.ic_delete, "Delete") {
+                presenter.deleteUser(user)
+                bottomSheetMenu?.dismiss()
+            }
+        )
+        bottomSheetMenu = BottomSheetMenu(activityContext, user.name, items)
+        bottomSheetMenu.show()
+    }
+
+    override fun refreshView(user: User) {
+        adapter.remove(user)
+    }
 }

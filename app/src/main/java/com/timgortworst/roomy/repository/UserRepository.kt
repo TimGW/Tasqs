@@ -55,7 +55,6 @@ class UserRepository(
         userId: String = auth.currentUser?.uid.orEmpty(),
         name: String = "",
         email: String = "",
-       // totalPoints: Int = 0,
         householdId: String = "",
         role: String = ""
     ) {
@@ -64,7 +63,6 @@ class UserRepository(
         val userFieldMap = mutableMapOf<String, Any>()
         if (name.isNotBlank()) userFieldMap[USER_NAME_REF] = name
         if (email.isNotBlank()) userFieldMap[USER_EMAIL_REF] = email
-       // if (totalPoints != 0) userFieldMap[USER_TOTALPOINTS_REF] = totalPoints
         if (householdId.isNotBlank()) userFieldMap[USER_HOUSEHOLDID_REF] = householdId
         if (role.isNotBlank()) userFieldMap[USER_ROLE_REF] = role
 
@@ -80,6 +78,6 @@ class UserRepository(
     }
 
     suspend fun deleteUser(user: User) {
-        userCollectionRef.document(user.userId).delete().await()
+        userCollectionRef.document(user.userId).update(USER_HOUSEHOLDID_REF, "").await()
     }
 }
