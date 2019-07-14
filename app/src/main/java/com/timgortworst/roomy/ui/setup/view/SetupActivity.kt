@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.ui.base.view.BaseActivity
+import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.setup.presenter.SetupPresenter
 import com.timgortworst.roomy.utils.showToast
@@ -13,7 +13,7 @@ import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 
-class SetupActivity : BaseActivity(), SetupView {
+class SetupActivity : BaseAuthActivity(), SetupView {
     @Inject
     lateinit var presenter: SetupPresenter
 

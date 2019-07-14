@@ -54,9 +54,6 @@
                 android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity android:name=".ui.event.view.EventEditActivity"/>
         <activity
-                android:name=".ui.profile.view.ProfileActivity"
-                android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
                 android:name=".ui.setup.view.SetupActivity"
                 android:theme="@style/AppTheme.NoActionBar"
                 android:windowSoftInputMode="adjustResize"/>

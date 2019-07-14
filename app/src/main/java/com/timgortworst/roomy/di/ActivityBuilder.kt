@@ -10,8 +10,6 @@ import com.timgortworst.roomy.ui.category.view.CategoryEditActivity
 import com.timgortworst.roomy.ui.main.module.MainActivityFragmentProvider
 import com.timgortworst.roomy.ui.main.module.MainActivityModule
 import com.timgortworst.roomy.ui.main.view.MainActivity
-import com.timgortworst.roomy.ui.profile.module.ProfileModule
-import com.timgortworst.roomy.ui.profile.view.ProfileActivity
 import com.timgortworst.roomy.ui.setup.module.SetupModule
 import com.timgortworst.roomy.ui.setup.view.SetupActivity
 import com.timgortworst.roomy.ui.googlesignin.module.GoogleSignInModule
@@ -41,9 +39,6 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = [GoogleSignInModule::class])
     internal abstract fun bindSignInActivity(): GoogleSignInActivity
-
-    @ContributesAndroidInjector(modules = [ProfileModule::class])
-    internal abstract fun bindProfileActivity(): ProfileActivity
 
     @ContributesAndroidInjector(modules = [SetupModule::class])
     internal abstract fun bindSetupActivity(): SetupActivity

@@ -18,6 +18,7 @@ open class BaseAuthActivity : BaseActivity() {
     lateinit var firebaseAuth: FirebaseAuth
 
     lateinit var googleSignInClient: GoogleSignInClient
+//    private var authStateListener: FirebaseAuth.AuthStateListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -29,7 +30,30 @@ open class BaseAuthActivity : BaseActivity() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+
+/*        This method gets invoked in the UI thread on changes in the authentication state:
+          - Right after the listener has been registered
+          - When a user is signed in
+          - When the current user is signed out
+          - When the current user changes
+*/
+//        authStateListener = FirebaseAuth.AuthStateListener {
+//            if (it.currentUser == null) {
+//                finishAffinity()
+//            }
+//        }
     }
+//
+//    override fun onStart() {
+//        super.onStart()
+//        authStateListener?.let { firebaseAuth.addAuthStateListener(it) }
+//    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        authStateListener?.let { firebaseAuth.removeAuthStateListener(it) }
+//    }
 
     fun logout() {
         firebaseAuth.signOut()

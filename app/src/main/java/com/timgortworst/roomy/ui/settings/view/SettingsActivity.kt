@@ -3,17 +3,17 @@ package com.timgortworst.roomy.ui.settings.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
+import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-class SettingsActivity : AppCompatActivity(), HasSupportFragmentInjector {
+class SettingsActivity : BaseAuthActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var sharedPref: HuishoudGenootSharedPref
