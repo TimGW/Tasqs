@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.timgortworst.roomy.R
-import kotlinx.android.parcel.IgnoredOnParcel
+import com.timgortworst.roomy.RoomyApp
 import kotlinx.android.parcel.Parcelize
 
 
@@ -21,17 +21,10 @@ data class EventMetaData(
         DAILY(R.string.repeating_interval_daily_event, 86400L),
         WEEKLY(R.string.repeating_interval_weekly_event, 604800L),
         MONTHLY(R.string.repeating_interval_monthly_event, 2628000L),
-        ANNUALLY(R.string.repeating_interval_annually_event, 31536000L)
+        ANNUALLY(R.string.repeating_interval_annually_event, 31536000L);
+
+        override fun toString(): String {
+            return RoomyApp.applicationContext().getString(title)
+        }
     }
-//
-//    @IgnoredOnParcel
-//    var repeatInterval: RepeatingInterval = RepeatingInterval.SingleEvent() // number of seconds between intervals
-//
-//    sealed class RepeatingInterval {
-//        class SingleEvent(val title: Int = R.string.repeating_interval_single_event, val interval: Long = 1L) : RepeatingInterval()
-//        class Daily(val title: Int = R.string.repeating_interval_daily_event, val interval: Long = 86400L) : RepeatingInterval()
-//        class Weekly(val title: Int = R.string.repeating_interval_weekly_event, val interval: Long = 604800L) : RepeatingInterval()
-//        class Monthly(val title: Int = R.string.repeating_interval_monthly_event, val interval: Long = 2628000L) : RepeatingInterval()
-//        class Annually(val title: Int = R.string.repeating_interval_annually_event, val interval: Long = 31536000L) : RepeatingInterval()
-//    }
 }
