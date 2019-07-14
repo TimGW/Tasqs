@@ -11,10 +11,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
+import com.timgortworst.roomy.utils.isTimeStampInPast
+import java.text.SimpleDateFormat
 import java.util.*
+
+
+
 
 /**
  * Recyclerview adapter for handling the list items in the task overview
@@ -32,24 +36,24 @@ class EventListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.household_event_list_row, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(com.timgortworst.roomy.R.layout.household_event_list_row, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val event = filteredEvents[position]
 
-        val date = Date(event.eventMetaData.repeatStartDate)
-        val oldColors = viewHolder.dateTime.textColors
+        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val formattedDate = formatter.format(Date(event.eventMetaData.repeatStartDate))
 
-        viewHolder.dateTime.text = if (date < Date()) {
-            viewHolder.dateTime.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.error))
+        viewHolder.dateTime.text = if (event.eventMetaData.repeatStartDate.isTimeStampInPast()) {
+            viewHolder.dateTime.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, com.timgortworst.roomy.R.color.error))
             viewHolder.dateTime.setTypeface(null, Typeface.BOLD)
-            activity.getString(R.string.overdue_occurance, date.toString())
+            activity.getString(com.timgortworst.roomy.R.string.overdue_occurance, formattedDate)
         } else {
-            viewHolder.dateTime.setTextColor(oldColors)
+            viewHolder.dateTime.setTextColor(viewHolder.description.currentTextColor)
             viewHolder.dateTime.setTypeface(null, Typeface.NORMAL)
-            activity.getString(R.string.next_occurance, date.toString())
+            activity.getString(com.timgortworst.roomy.R.string.next_occurance, formattedDate)
         }
 
         viewHolder.user.text = event.user.name
@@ -62,42 +66,49 @@ class EventListAdapter(
         }
     }
 
-    fun setEventList(events: MutableList<Event>) {
-        this.filteredEvents.clear()
-        this.filteredEvents.addAll(events)
-        notifyDataSetChanged()
-    }
-
     fun removeEvent(position: Int){
-        this.filteredEvents.removeAt(position)
+        filteredEvents.removeAt(position)
         notifyItemRemoved(position)
     }
 
     fun removeEvent(event: Event) {
-        val pos = this.filteredEvents.indexOf(event)
+        val pos = filteredEvents.indexOf(event)
         removeEvent(pos)
     }
 
-    fun getEvent(position: Int) = this.filteredEvents[position]
+    fun getEvent(position: Int) = filteredEvents[position]
 
     fun addEvent(event: Event) {
-        this.filteredEvents.add(event)
-        notifyDataSetChanged()
+        val newAddIndex = filteredEvents.indexOfLast {
+            it.eventMetaData.repeatStartDate <= event.eventMetaData.repeatStartDate
+        } + 1
+        filteredEvents.add(newAddIndex, event)
+        notifyItemInserted(newAddIndex)
     }
 
     fun updateEvent(event: Event) {
-        val pos = this.filteredEvents.indexOf(event)
-        notifyItemChanged(pos)
-    }
+        val fromPosition = filteredEvents.indexOf(event)
+        notifyItemChanged(fromPosition)
 
-    fun getEventList() = this.filteredEvents
+        val toPosition = filteredEvents.indexOfLast { it.eventMetaData.repeatStartDate < event.eventMetaData.repeatStartDate }
+
+        // update data array
+        if(toPosition != RecyclerView.NO_POSITION){
+            val item = filteredEvents[fromPosition]
+            filteredEvents.removeAt(fromPosition)
+            filteredEvents.add(toPosition, item)
+
+            // notify adapter
+            notifyItemMoved(fromPosition, toPosition)
+        }
+    }
 
     override fun getItemCount(): Int {
         return filteredEvents.size
     }
 
     fun clearFilter() {
-        this.filteredEvents = events
+        filteredEvents = events
         notifyDataSetChanged()
     }
 
@@ -134,10 +145,10 @@ class EventListAdapter(
         val repeatLabel: ImageView
 
         init {
-            this.user = view.findViewById(R.id.event_user)
-            this.dateTime = view.findViewById(R.id.event_date_time)
-            this.description = view.findViewById(R.id.event_name)
-            this.repeatLabel = view.findViewById(R.id.event_repeat_label)
+            this.user = view.findViewById(com.timgortworst.roomy.R.id.event_user)
+            this.dateTime = view.findViewById(com.timgortworst.roomy.R.id.event_date_time)
+            this.description = view.findViewById(com.timgortworst.roomy.R.id.event_name)
+            this.repeatLabel = view.findViewById(com.timgortworst.roomy.R.id.event_repeat_label)
         }
     }
 }
