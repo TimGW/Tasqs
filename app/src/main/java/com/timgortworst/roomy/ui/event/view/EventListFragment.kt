@@ -2,12 +2,7 @@ package com.timgortworst.roomy.ui.event.view
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -94,7 +89,7 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
         val layoutManager = LinearLayoutManager(activityContext)
         events_agenda.layoutManager = layoutManager
         val dividerItemDecoration =
-                DividerItemDecoration(events_agenda.context, layoutManager.orientation)
+            DividerItemDecoration(events_agenda.context, layoutManager.orientation)
         events_agenda.addItemDecoration(dividerItemDecoration)
         events_agenda.adapter = adapter
     }
@@ -102,21 +97,24 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     private fun setupRecyclerContextMenu() {
         touchListener = RecyclerTouchListener(activityContext, events_agenda)
         touchListener
-                .setLongClickable(false) { showContextMenuFor(adapter.getEvent(it)) }
-                .setClickable(object : RecyclerTouchListener.OnRowClickListener {
-                    override fun onRowClicked(position: Int) {
-                        touchListener.openSwipeOptions(position)
-                    }
-                    override fun onIndependentViewClicked(independentViewID: Int, position: Int) {}
-                })
-                .setSwipeOptionViews(R.id.task_done)
-                .setSwipeable(R.id.rowFG, R.id.rowBG) { viewID, position ->
-                    when (viewID) {
-                        R.id.task_done -> {
-                            presenter.markEventAsCompleted(adapter.getEvent(position))
-                        }
+            .setLongClickable(false) {
+                showContextMenuFor(adapter.getEvent(it))
+            }
+            .setClickable(object : RecyclerTouchListener.OnRowClickListener {
+                override fun onRowClicked(position: Int) {
+                    touchListener.openSwipeOptions(position)
+                }
+
+                override fun onIndependentViewClicked(independentViewID: Int, position: Int) {}
+            })
+            .setSwipeOptionViews(R.id.task_done)
+            .setSwipeable(R.id.rowFG, R.id.rowBG) { viewID, position ->
+                when (viewID) {
+                    R.id.task_done -> {
+                        presenter.markEventAsCompleted(adapter.getEvent(position))
                     }
                 }
+            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -142,15 +140,16 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
         var bottomSheetMenu: BottomSheetMenu? = null
 
         val items = arrayListOf(
-                BottomMenuItem(R.drawable.ic_edit, "Edit") {
-                    EventEditActivity.start(activityContext, event)
-                    bottomSheetMenu?.dismiss()
-                },
-                BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                    presenter.deleteEvent(event)
-                    bottomSheetMenu?.dismiss()
-                }
+            BottomMenuItem(R.drawable.ic_edit, "Edit") {
+                EventEditActivity.start(activityContext, event)
+                bottomSheetMenu?.dismiss()
+            },
+            BottomMenuItem(R.drawable.ic_delete, "Delete") {
+                presenter.deleteEvent(event)
+                bottomSheetMenu?.dismiss()
+            }
         )
+
         bottomSheetMenu = BottomSheetMenu(activityContext, event.eventCategory.name, items)
         bottomSheetMenu.show()
     }
