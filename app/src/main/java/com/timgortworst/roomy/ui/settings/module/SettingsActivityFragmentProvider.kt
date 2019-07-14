@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.ui.settings.module
 
-import com.timgortworst.roomy.ui.settings.view.SettingsActivity
+import com.timgortworst.roomy.ui.settings.view.SettingsFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -9,5 +9,5 @@ import dagger.android.ContributesAndroidInjector
 abstract class SettingsActivityFragmentProvider {
 
     @ContributesAndroidInjector
-    internal abstract fun provideSettingsFragment(): SettingsActivity.SettingsFragment
+    internal abstract fun provideSettingsFragment(): SettingsFragment
 }
