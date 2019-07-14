@@ -98,7 +98,7 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
         spinner_repeat.adapter = ArrayAdapter<EventMetaData.RepeatingInterval>(
             this,
             android.R.layout.simple_spinner_dropdown_item,
-            EventMetaData.RepeatingInterval.values()
+            EventMetaData.RepeatingInterval.values().dropWhile { it == EventMetaData.RepeatingInterval.SINGLE_EVENT }
         )
     }
 
@@ -114,9 +114,12 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
                 true
             }
             R.id.action_edit_done -> {
-                val repeatInterval = (spinner_repeat.selectedItem as EventMetaData.RepeatingInterval)
-                val eventMetaData =
+                val eventMetaData = if (event_repeat_checkbox.isChecked) {
+                    val repeatInterval = (spinner_repeat.selectedItem as EventMetaData.RepeatingInterval)
                     EventMetaData(repeatStartDate = calendar.timeInMillis, repeatInterval = repeatInterval)
+                } else {
+                    EventMetaData(repeatStartDate = calendar.timeInMillis, repeatInterval = EventMetaData.RepeatingInterval.SINGLE_EVENT)
+                }
 
                 presenter.insertOrUpdateEvent(
                     agendaEvent.agendaId,
