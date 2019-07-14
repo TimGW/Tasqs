@@ -8,7 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -97,17 +96,13 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
         touchListener
                 .setClickable(object : RecyclerTouchListener.OnRowClickListener {
                     override fun onRowClicked(position: Int) {
-                        Toast.makeText(activityContext, adapter.getEventList()[position].user.name, Toast.LENGTH_SHORT)
-                                .show()
+                        touchListener.openSwipeOptions(position)
                     }
-                    override fun onIndependentViewClicked(independentViewID: Int, position: Int) { }
+                    override fun onIndependentViewClicked(independentViewID: Int, position: Int) {}
                 })
                 .setSwipeOptionViews(R.id.task_done)
                 .setSwipeable(R.id.rowFG, R.id.rowBG) { viewID, position ->
                     when (viewID) {
-//                        R.id.delete_task -> {
-//                            adapter.removeEvent(position)
-//                        }
                         R.id.task_done -> {
                             presenter.markEventAsCompleted(adapter.getEvent(position))
                         }
@@ -130,10 +125,6 @@ class AgendaFragment : androidx.fragment.app.Fragment(), AgendaView {
                 presenter.filterMe(adapter.filter)
                 true
             }
-//            R.id.toolbar_menu_settings -> {
-//                SettingsActivity.start(activityContext)
-//                true
-//            }
             else -> super.onOptionsItemSelected(item)
         }
     }
