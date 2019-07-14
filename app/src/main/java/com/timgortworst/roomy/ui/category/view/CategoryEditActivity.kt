@@ -2,13 +2,14 @@ package com.timgortworst.roomy.ui.category.view
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.EventCategory
+import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.category.presenter.CategoryEditPresenter
 import com.timgortworst.roomy.utils.Constants.INTENT_EXTRA_EDIT_HOUSEHOLD_TASK
 import dagger.android.AndroidInjection
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_edit_task.*
 import javax.inject.Inject
 
 
-class CategoryEditActivity : AppCompatActivity(), CategoryEditView { //, Validator.ValidationListener {
+class CategoryEditActivity : BaseAuthActivity(), CategoryEditView { //, Validator.ValidationListener {
     private lateinit var householdTask: EventCategory
 //    private lateinit var validator: Validator
 

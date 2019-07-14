@@ -15,6 +15,7 @@ import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventCategory
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.model.User
+import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.event.adapter.SpinnerTaskAdapter
 import com.timgortworst.roomy.ui.event.adapter.SpinnerUserAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventEditPresenter
@@ -25,7 +26,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
+class EventEditActivity : BaseAuthActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
     private lateinit var agendaEvent: Event
     private lateinit var spinnerAdapterTasks: SpinnerTaskAdapter
     private lateinit var spinnerAdapterUsers: SpinnerUserAdapter

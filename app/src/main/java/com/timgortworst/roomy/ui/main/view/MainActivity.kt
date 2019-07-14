@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.ui.event.view.EventListFragment
-import com.timgortworst.roomy.ui.base.view.BaseActivity
+import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
+import com.timgortworst.roomy.ui.event.view.EventListFragment
 import com.timgortworst.roomy.ui.housemates.view.HousematesFragment
 import com.timgortworst.roomy.ui.main.presenter.MainPresenter
 import com.timgortworst.roomy.ui.settings.view.SettingsActivity
@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
+class MainActivity : BaseAuthActivity(), HasSupportFragmentInjector, MainView {
     @Inject
     lateinit var presenter: MainPresenter
 
