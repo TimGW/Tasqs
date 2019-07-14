@@ -1,11 +1,10 @@
 package com.timgortworst.roomy.ui.customview
 
 import android.content.Context
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import androidx.appcompat.app.AppCompatDelegate
+import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.BottomMenuItem
 import kotlinx.android.synthetic.main.bottom_sheet_menu.view.*
@@ -25,9 +24,9 @@ class BottomSheetMenu(
 
         with(view) {
             bottom_sheet_title.text = title
-            bottom_sheet_recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            bottom_sheet_recycler.layoutManager = LinearLayoutManager(
                 context,
-                androidx.recyclerview.widget.RecyclerView.VERTICAL,
+                RecyclerView.VERTICAL,
                 false
             )
             bottom_sheet_recycler.adapter = BottomSheetMenuAdapter(items)
