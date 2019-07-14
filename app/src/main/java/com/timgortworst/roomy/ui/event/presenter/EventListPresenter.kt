@@ -84,4 +84,8 @@ class EventListPresenter(
         // reset done to false
         agendaRepository.updateAgendaEvent(event.agendaId, eventMetaData = eventMetaData, isEventDone = false)
     }
+
+    fun deleteEvent(event: Event) = scope.launch {
+        agendaRepository.removeAgendaEvent(event.agendaId)
+    }
 }

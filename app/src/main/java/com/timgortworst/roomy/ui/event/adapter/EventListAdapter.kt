@@ -11,13 +11,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.utils.isTimeStampInPast
 import java.text.SimpleDateFormat
 import java.util.*
-
-
 
 
 /**
@@ -26,17 +25,17 @@ import java.util.*
  * Handles clicks by expanding items to show a more detailed description of the HouseholdTask
  */
 class EventListAdapter(
-    private var activity: AppCompatActivity,
-    private var events: MutableList<Event>
+        private var activity: AppCompatActivity
 ) : RecyclerView.Adapter<EventListAdapter.ViewHolder>(), Filterable {
     private var filteredEvents: MutableList<Event>
+    private var events: MutableList<Event> = mutableListOf()
 
     init {
         filteredEvents = events
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(com.timgortworst.roomy.R.layout.household_event_list_row, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.household_event_list_row, parent, false)
         return ViewHolder(view)
     }
 
@@ -47,13 +46,13 @@ class EventListAdapter(
         val formattedDate = formatter.format(Date(event.eventMetaData.repeatStartDate))
 
         viewHolder.dateTime.text = if (event.eventMetaData.repeatStartDate.isTimeStampInPast()) {
-            viewHolder.dateTime.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, com.timgortworst.roomy.R.color.error))
+            viewHolder.dateTime.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.error))
             viewHolder.dateTime.setTypeface(null, Typeface.BOLD)
-            activity.getString(com.timgortworst.roomy.R.string.overdue_occurance, formattedDate)
+            activity.getString(R.string.overdue_occurance, formattedDate)
         } else {
             viewHolder.dateTime.setTextColor(viewHolder.description.currentTextColor)
             viewHolder.dateTime.setTypeface(null, Typeface.NORMAL)
-            activity.getString(com.timgortworst.roomy.R.string.next_occurance, formattedDate)
+            activity.getString(R.string.next_occurance, formattedDate)
         }
 
         viewHolder.user.text = event.user.name
@@ -66,7 +65,7 @@ class EventListAdapter(
         }
     }
 
-    fun removeEvent(position: Int){
+    fun removeEvent(position: Int) {
         filteredEvents.removeAt(position)
         notifyItemRemoved(position)
     }
@@ -90,10 +89,13 @@ class EventListAdapter(
         val fromPosition = filteredEvents.indexOf(event)
         notifyItemChanged(fromPosition)
 
-        val toPosition = filteredEvents.indexOfLast { it.eventMetaData.repeatStartDate < event.eventMetaData.repeatStartDate }
+        val toPosition = filteredEvents.indexOfLast { event.eventMetaData.repeatStartDate > it.eventMetaData.repeatStartDate }
 
-        // update data array
-        if(toPosition != RecyclerView.NO_POSITION){
+        // update data array if item is not on first or last position
+        if (toPosition != RecyclerView.NO_POSITION &&
+                filteredEvents.lastIndex != fromPosition &&
+                toPosition > fromPosition
+        ) {
             val item = filteredEvents[fromPosition]
             filteredEvents.removeAt(fromPosition)
             filteredEvents.add(toPosition, item)
@@ -145,10 +147,10 @@ class EventListAdapter(
         val repeatLabel: ImageView
 
         init {
-            this.user = view.findViewById(com.timgortworst.roomy.R.id.event_user)
-            this.dateTime = view.findViewById(com.timgortworst.roomy.R.id.event_date_time)
-            this.description = view.findViewById(com.timgortworst.roomy.R.id.event_name)
-            this.repeatLabel = view.findViewById(com.timgortworst.roomy.R.id.event_repeat_label)
+            this.user = view.findViewById(R.id.event_user)
+            this.dateTime = view.findViewById(R.id.event_date_time)
+            this.description = view.findViewById(R.id.event_name)
+            this.repeatLabel = view.findViewById(R.id.event_repeat_label)
         }
     }
 }
