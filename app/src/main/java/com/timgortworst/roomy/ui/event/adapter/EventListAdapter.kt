@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
+import com.timgortworst.roomy.ui.customview.RepeatIcon
 import com.timgortworst.roomy.utils.isTimeStampInPast
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,10 +58,11 @@ class EventListAdapter(
         viewHolder.user.text = event.user.name
         viewHolder.description.text = event.eventCategory.name
 
+        viewHolder.repeatIcon.setRepeatLabelText(event.eventMetaData.repeatInterval)
         if (event.eventMetaData.repeatInterval != EventMetaData.RepeatingInterval.SINGLE_EVENT) {
-            viewHolder.repeatLabel.visibility = View.VISIBLE
+            viewHolder.repeatIcon.visibility = View.VISIBLE
         } else {
-            viewHolder.repeatLabel.visibility = View.GONE
+            viewHolder.repeatIcon.visibility = View.GONE
         }
     }
 
@@ -144,13 +145,13 @@ class EventListAdapter(
         val user: TextView
         val dateTime: TextView
         val description: TextView
-        val repeatLabel: ImageView
+        val repeatIcon: RepeatIcon
 
         init {
             this.user = view.findViewById(R.id.event_user)
             this.dateTime = view.findViewById(R.id.event_date_time)
             this.description = view.findViewById(R.id.event_name)
-            this.repeatLabel = view.findViewById(R.id.event_repeat_label)
+            this.repeatIcon = view.findViewById(R.id.event_repeat_label)
         }
     }
 }
