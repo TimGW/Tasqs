@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.ui.housemates.adapter
 
-import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +15,9 @@ import com.timgortworst.roomy.model.User
  * Handles clicks by expanding items to show a more detailed description of the HouseholdTask
  */
 class HousematesAdapter(
-    private var activity: AppCompatActivity,
-    private var users: MutableList<User>
+    private val onUserLongClickListener: OnUserLongClickListener
 ) : RecyclerView.Adapter<HousematesAdapter.ViewHolder>() {
+    private var users: MutableList<User> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.household_user_list_row, parent, false)
@@ -35,6 +34,11 @@ class HousematesAdapter(
         } else {
             viewHolder.adminLabel.visibility = View.GONE
         }
+
+        viewHolder.itemView.setOnLongClickListener {
+            onUserLongClickListener.onUserClick(user)
+            true
+        }
     }
 
     fun setUsers(users: MutableList<User>) {
@@ -47,6 +51,11 @@ class HousematesAdapter(
         return users.size
     }
 
+    fun remove(user: User) {
+        val index = users.indexOf(user)
+        users.removeAt(index)
+        notifyItemRemoved(index)
+    }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val userTitle: TextView
@@ -56,5 +65,9 @@ class HousematesAdapter(
             this.userTitle = view.findViewById(R.id.user_title)
             this.adminLabel = view.findViewById(R.id.admin_label)
         }
+    }
+
+    interface OnUserLongClickListener {
+        fun onUserClick(user: User)
     }
 }
