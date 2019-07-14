@@ -3,7 +3,6 @@ package com.timgortworst.roomy.ui.event.view
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import android.widget.DatePicker
+import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventCategory
@@ -97,9 +97,10 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
 
     private fun setupEventCategorySpinner() {
         spinnerAdapterTasks = SpinnerTaskAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                mutableListOf())
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            mutableListOf()
+        )
         spinner_categories.adapter = spinnerAdapterTasks
         spinner_categories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -114,9 +115,9 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
 
     private fun setupUsersSpinner() {
         spinnerAdapterUsers = SpinnerUserAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                mutableListOf()
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            mutableListOf()
         )
         spinner_users.adapter = spinnerAdapterUsers
         spinner_users.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -131,12 +132,10 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
     }
 
     private fun setupEventRepeatSpinner() {
-        val intervals = EventMetaData.RepeatingInterval.values()
-
         spinner_repeat.adapter = ArrayAdapter<EventMetaData.RepeatingInterval>(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                EventMetaData.RepeatingInterval.values()
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            EventMetaData.RepeatingInterval.values()
         )
     }
 
@@ -154,13 +153,13 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
             R.id.action_edit_done -> {
                 val repeatInterval = (spinner_repeat.selectedItem as EventMetaData.RepeatingInterval)
                 val eventMetaData =
-                        EventMetaData(repeatStartDate = calendar.timeInMillis, repeatInterval = repeatInterval)
+                    EventMetaData(repeatStartDate = calendar.timeInMillis, repeatInterval = repeatInterval)
 
                 presenter.insertOrUpdateEvent(
-                        agendaEvent.agendaId,
-                        (spinner_categories.selectedItem as EventCategory),
-                        (spinner_users.selectedItem as User),
-                        eventMetaData
+                    agendaEvent.agendaId,
+                    (spinner_categories.selectedItem as EventCategory),
+                    (spinner_users.selectedItem as User),
+                    eventMetaData
                 )
 
                 finish()
@@ -192,17 +191,17 @@ class EventEditActivity : AppCompatActivity(), EventEditView, DatePickerDialog.O
 
     private fun setupCalenderDialog() {
         datePickerDialog = DatePickerDialog(
-                this, this,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
+            this, this,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
         )
 
         datePickerDialog.datePicker.minDate = System.currentTimeMillis()
         presenter.formatDate(
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
         )
     }
 
