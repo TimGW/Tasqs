@@ -55,7 +55,7 @@ class EventListAdapter(
             activity.getString(R.string.next_occurance, formattedDate)
         }
 
-        viewHolder.user.text = event.user.name
+        viewHolder.user.text = event.user.name.capitalize()
         viewHolder.description.text = event.eventCategory.name
 
         viewHolder.repeatIcon.setRepeatLabelText(event.eventMetaData.repeatInterval)
