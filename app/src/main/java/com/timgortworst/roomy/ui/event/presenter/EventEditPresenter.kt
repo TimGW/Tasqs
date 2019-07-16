@@ -2,7 +2,6 @@ package com.timgortworst.roomy.ui.event.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.EventCategory
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.model.User
@@ -18,8 +17,7 @@ import java.util.*
 class EventEditPresenter(
         private val view: EventEditView,
         private val agendaRepository: AgendaRepository,
-        private val userRepository: UserRepository,
-        private val sharedPref: HuishoudGenootSharedPref
+        private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -46,7 +44,7 @@ class EventEditPresenter(
     }
 
     fun fetchUsers() = scope.launch {
-        val userList = userRepository.getUsersForHouseholdId(sharedPref.getActiveHouseholdId())
+        val userList = userRepository.getUsersForHouseholdId(userRepository.getHouseholdIdForCurrentUser())
         view.presentUserList(userList.toMutableList())
     }
 

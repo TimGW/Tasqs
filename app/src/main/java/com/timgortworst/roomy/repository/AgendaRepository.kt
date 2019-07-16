@@ -1,14 +1,8 @@
 package com.timgortworst.roomy.repository
 
 import android.util.Log
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.DocumentChange.Type.*
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
-import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventCategory
 import com.timgortworst.roomy.model.EventMetaData
@@ -30,14 +24,14 @@ import kotlinx.coroutines.tasks.await
 
 class AgendaRepository(
     db: FirebaseFirestore,
-    val sharedPref: HuishoudGenootSharedPref
+    val userRepository: UserRepository
 ) {
     val householdCollectionRef = db.collection(HOUSEHOLD_COLLECTION_REF)
     private var eventListener: ListenerRegistration? = null
     private lateinit var categoryListener: ListenerRegistration
 
     suspend fun getCategories(): List<EventCategory> {
-        val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+        val document = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
         return document.get().await().toObjects(EventCategory::class.java)
     }
@@ -48,7 +42,7 @@ class AgendaRepository(
         description: String = ""
         //,points: Int = 0
     ) {
-        val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+        val document = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document(categoryId)
 
         val categoryFieldMap = mutableMapOf<String, Any>()
@@ -69,7 +63,7 @@ class AgendaRepository(
         description: String = ""
         //,points: Int = 0
     ) {
-        val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+        val document = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF).document()
 
         val categoryFieldMap = mutableMapOf<String, Any>()
@@ -87,7 +81,7 @@ class AgendaRepository(
 
     suspend fun deleteEventCategoryForHousehold(agendaEventCategory: EventCategory) {
         try {
-            householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+            householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
                 .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
                 .document(agendaEventCategory.categoryId)
                 .delete()
@@ -98,7 +92,7 @@ class AgendaRepository(
     }
 
     suspend fun getAgendaEvents(userIdFilter: String? = null): MutableList<Event>? {
-        val query = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+        val query = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(AGENDA_EVENTS_COLLECTION_REF)
 
         if (userIdFilter != null && userIdFilter.isNotEmpty()) {
@@ -120,7 +114,7 @@ class AgendaRepository(
         eventMetaData: EventMetaData,
         isEventDone: Boolean
     ) {
-        val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+        val document = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(AGENDA_EVENTS_COLLECTION_REF)
             .document()
 
@@ -138,7 +132,7 @@ class AgendaRepository(
         eventMetaData: EventMetaData? = null,
         isEventDone: Boolean? = null
     ) {
-        val document = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+        val document = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(AGENDA_EVENTS_COLLECTION_REF).document(eventId)
 
         val eventMetaDataMap = mutableMapOf<String, Any>()
@@ -161,7 +155,7 @@ class AgendaRepository(
     suspend fun removeAgendaEvent(eventId: String) {
         try {
             householdCollectionRef
-                .document(sharedPref.getActiveHouseholdId())
+                .document(userRepository.getHouseholdIdForCurrentUser())
                 .collection(AGENDA_EVENTS_COLLECTION_REF)
                 .document(eventId)
                 .delete()
@@ -171,8 +165,8 @@ class AgendaRepository(
         }
     }
 
-    fun listenToCategories(taskListener: EventCategoryListener) {
-        categoryListener = householdCollectionRef.document(sharedPref.getActiveHouseholdId())
+    suspend fun listenToCategories(taskListener: EventCategoryListener) {
+        categoryListener = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(AGENDA_EVENT_CATEGORIES_COLLECTION_REF)
             .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                 if (e != null) {
@@ -197,9 +191,9 @@ class AgendaRepository(
             })
     }
 
-    fun listenToEvents(agendaListener: AgendaEventListener) {
+    suspend fun listenToEvents(agendaListener: AgendaEventListener) {
         val query = householdCollectionRef
-            .document(sharedPref.getActiveHouseholdId())
+            .document(userRepository.getHouseholdIdForCurrentUser())
             .collection(AGENDA_EVENTS_COLLECTION_REF)
 
         query.orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)

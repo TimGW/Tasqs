@@ -18,9 +18,6 @@ class HouseholdRepository(private val db: FirebaseFirestore, private val sharedP
     suspend fun createNewHousehold(): String? {
         val householdID = householdDocRef.id
 
-        // update local household id
-        sharedPref.setActiveHouseholdId(householdID)
-
         val categories = GenerateData.eventCategories()
         for (category in categories) {
             val householdSubEventCategories =

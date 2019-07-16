@@ -2,7 +2,6 @@ package com.timgortworst.roomy.ui.housemates.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.Role
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.UserRepository
@@ -11,11 +10,9 @@ import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 class UserListPresenter(
     private val view: UserListView,
-    private val userRepository: UserRepository,
-    private val sharedPref: HuishoudGenootSharedPref
+    private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -28,7 +25,7 @@ class UserListPresenter(
 
     fun fetchUsers() = scope.launch {
         val userList = userRepository
-            .getUsersForHouseholdId(sharedPref.getActiveHouseholdId())
+            .getUsersForHouseholdId(userRepository.getHouseholdIdForCurrentUser())
             .sortedWith(compareBy({ it.role == Role.ADMIN.name }, { it.name }))
             .reversed()
             .toMutableList()
@@ -51,5 +48,9 @@ class UserListPresenter(
         ) {
             view.showContextMenuFor(user)
         }
+    }
+
+    fun inviteUser() = scope.launch {
+        view.share(userRepository.getHouseholdIdForCurrentUser())
     }
 }

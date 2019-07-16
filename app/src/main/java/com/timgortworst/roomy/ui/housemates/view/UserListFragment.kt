@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.ui.housemates.adapter.UserListAdapter
 import com.timgortworst.roomy.ui.housemates.presenter.UserListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
@@ -78,7 +78,10 @@ class UserListFragment : Fragment(), UserListView {
     override fun onResume() {
         super.onResume()
         activityContext.supportActionBar?.title = getString(R.string.roommates)
-        activityContext.fab.setOnClickListener { share(sharedPref.getActiveHouseholdId()) }
+        activityContext.fab.setOnClickListener {
+            activityContext.showProgressDialog()
+            presenter.inviteUser()
+        }
     }
 
     override fun onPause() {
@@ -91,9 +94,8 @@ class UserListFragment : Fragment(), UserListView {
         adapter.setUsers(users)
     }
 
-    private fun share(id: String) {
-        activityContext.showProgressDialog()
-        val myUri = createShareUri(id)
+    override fun share(householdId: String) {
+        val myUri = createShareUri(householdId)
         val dynamicLinkUri = createDynamicUri(myUri)
         shortenLink(dynamicLinkUri)
     }
@@ -151,7 +153,7 @@ class UserListFragment : Fragment(), UserListView {
 
         val items = arrayListOf(
             BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                presenter.deleteUser(user)
+                presenter.deleteUser(user) // todo
                 bottomSheetMenu?.dismiss()
             }
         )

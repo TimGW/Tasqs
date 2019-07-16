@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.ui.setup.module
 
-import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.setup.presenter.SetupPresenter
@@ -25,10 +24,9 @@ abstract class SetupModule {
         internal fun provideSetupPresenter(
             setupView: SetupView,
             householdRepository: HouseholdRepository,
-            userRepository: UserRepository,
-            sharedPref: HuishoudGenootSharedPref
+            userRepository: UserRepository
         ): SetupPresenter {
-            return SetupPresenter(setupView, householdRepository, userRepository, sharedPref)
+            return SetupPresenter(setupView, householdRepository, userRepository)
         }
     }
 }

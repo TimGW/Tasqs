@@ -23,8 +23,8 @@ class CategoryListPresenter(
         }
     }
 
-    fun listenToTasks() {
-        repository.listenToCategories(this)
+    fun listenToTasks() = scope.launch {
+        repository.listenToCategories(this@CategoryListPresenter)
     }
 
     fun detachTaskListener() {
