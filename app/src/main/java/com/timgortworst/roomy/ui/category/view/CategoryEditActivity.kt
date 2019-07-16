@@ -9,7 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.EventCategory
-import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
+import com.timgortworst.roomy.ui.BaseActivity
 import com.timgortworst.roomy.ui.category.presenter.CategoryEditPresenter
 import com.timgortworst.roomy.utils.Constants.INTENT_EXTRA_EDIT_HOUSEHOLD_TASK
 import dagger.android.AndroidInjection
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_edit_category.*
 import javax.inject.Inject
 
 
-class CategoryEditActivity : BaseAuthActivity(), CategoryEditView {
+class CategoryEditActivity : BaseActivity(), CategoryEditView {
     private lateinit var householdTask: EventCategory
 
     @Inject

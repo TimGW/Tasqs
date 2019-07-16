@@ -78,8 +78,9 @@ class UserRepository(
     }
 
     suspend fun deleteUser(user: User) {
-//        userCollectionRef.document(user.userId).delete().await()
+        userCollectionRef.document(user.userId).delete().await()
 //        userCollectionRef.document(user.userId).update(USER_HOUSEHOLDID_REF, "").await()
+        // todo remove agenda events where userId is assigned
     }
 
     suspend fun getHouseholdIdForCurrentUser(): String {

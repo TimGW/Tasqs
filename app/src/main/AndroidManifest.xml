@@ -45,7 +45,7 @@
         <activity
                 android:name=".ui.main.view.MainActivity"
                 android:screenOrientation="portrait"/>
-        <activity android:name=".ui.base.view.BaseActivity"/>
+        <activity android:name=".ui.BaseActivity"/>
         <activity
                 android:name=".ui.googlesignin.view.GoogleSignInActivity"
                 android:theme="@style/AppTheme.NoActionBar"/>
@@ -57,7 +57,6 @@
                 android:name=".ui.setup.view.SetupActivity"
                 android:theme="@style/AppTheme.NoActionBar"
                 android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".ui.base.view.BaseAuthActivity"/>
     </application>
 
 </manifest>
