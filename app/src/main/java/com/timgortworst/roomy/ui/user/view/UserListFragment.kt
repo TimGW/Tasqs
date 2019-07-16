@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.housemates.view
+package com.timgortworst.roomy.ui.user.view
 
 import android.content.Context
 import android.content.Intent
@@ -18,9 +18,9 @@ import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.ui.housemates.adapter.UserListAdapter
-import com.timgortworst.roomy.ui.housemates.presenter.UserListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
+import com.timgortworst.roomy.ui.user.adapter.UserListAdapter
+import com.timgortworst.roomy.ui.user.presenter.UserListPresenter
 import com.timgortworst.roomy.utils.Constants.QUERY_PARAM_HOUSEHOLD
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*

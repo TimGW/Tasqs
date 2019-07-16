@@ -1,11 +1,11 @@
-package com.timgortworst.roomy.ui.housemates.presenter
+package com.timgortworst.roomy.ui.user.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.model.Role
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.UserRepository
-import com.timgortworst.roomy.ui.housemates.view.UserListView
+import com.timgortworst.roomy.ui.user.view.UserListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +36,7 @@ class UserListPresenter(
     }
 
     fun deleteUser(user: User) = scope.launch {
-        userRepository.deleteUser(user)
+//        userRepository.deleteUser(user)
         view.refreshView(user)
     }
 

@@ -2,7 +2,6 @@ package com.timgortworst.roomy.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.Household
 import com.timgortworst.roomy.utils.Constants
 import com.timgortworst.roomy.utils.Constants.AGENDA_EVENT_CATEGORIES_COLLECTION_REF
@@ -10,9 +9,8 @@ import com.timgortworst.roomy.utils.GenerateData
 import kotlinx.coroutines.tasks.await
 
 
-class HouseholdRepository(private val db: FirebaseFirestore, private val sharedPref: HuishoudGenootSharedPref) {
-
-    private val householdsCollectionRef = db.collection(Constants.HOUSEHOLD_COLLECTION_REF)
+class HouseholdRepository {
+    private val householdsCollectionRef = FirebaseFirestore.getInstance().collection(Constants.HOUSEHOLD_COLLECTION_REF)
     private val householdDocRef = householdsCollectionRef.document()
 
     suspend fun createNewHousehold(): String? {

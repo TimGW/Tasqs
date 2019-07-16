@@ -126,6 +126,7 @@
     <string name="repeat_label_interval_text_day">D</string>
     <string name="repeat_label_interval_text_week">W</string>
     <string name="repeat_label_interval_text_month">M</string>
+    <string name="dangerous_settings_header">Dangerous settings</string>
 
     <!--&lt;!&ndash; Preference Titles &ndash;&gt;-->
     <!--<string name="messages_header">Messages</string>-->

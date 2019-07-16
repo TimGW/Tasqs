@@ -1,8 +1,13 @@
 package com.timgortworst.roomy.repository
 
 import android.util.Log
-import com.google.firebase.firestore.*
 import com.google.firebase.firestore.DocumentChange.Type.*
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventCategory
 import com.timgortworst.roomy.model.EventMetaData
@@ -22,11 +27,8 @@ import com.timgortworst.roomy.utils.Constants.HOUSEHOLD_COLLECTION_REF
 import kotlinx.coroutines.tasks.await
 
 
-class AgendaRepository(
-    db: FirebaseFirestore,
-    val userRepository: UserRepository
-) {
-    val householdCollectionRef = db.collection(HOUSEHOLD_COLLECTION_REF)
+class AgendaRepository(val userRepository: UserRepository) {
+    val householdCollectionRef = FirebaseFirestore.getInstance().collection(HOUSEHOLD_COLLECTION_REF)
     private var eventListener: ListenerRegistration? = null
     private lateinit var categoryListener: ListenerRegistration
 

@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.housemates.adapter
+package com.timgortworst.roomy.ui.user.adapter
 
 import android.view.LayoutInflater
 import android.view.View

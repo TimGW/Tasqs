@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.ui.splash.module
 
-import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.splash.presenter.SplashPresenter
 import com.timgortworst.roomy.ui.splash.ui.SplashActivity
@@ -23,10 +22,9 @@ abstract class SplashModule {
         @JvmStatic
         internal fun provideSplashPresenter(
             splashView: SplashView,
-            userRepository: UserRepository,
-            auth: FirebaseAuth
+            userRepository: UserRepository
         ): SplashPresenter {
-            return SplashPresenter(splashView, userRepository, auth)
+            return SplashPresenter(splashView, userRepository)
         }
     }
 }

@@ -11,8 +11,7 @@ import kotlinx.coroutines.launch
 
 class SplashPresenter(
     private val view: SplashView,
-    private val userRepository: UserRepository,
-    private val auth: FirebaseAuth
+    private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -24,7 +23,8 @@ class SplashPresenter(
     }
 
     fun userLogin(referredHouseholdId: String) = scope.launch {
-        if (auth.currentUser == null) {
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            // user will be created in the googleSignInActivity
             view.goToGoogleSignInActivity()
         } else {
             // get the user if he exists or create a new one in firebase
@@ -41,7 +41,6 @@ class SplashPresenter(
                 }
             } else {
                 view.userInvalid()
-
             }
         }
     }
