@@ -1,8 +1,8 @@
 package com.timgortworst.roomy.ui.googlesignin.presenter
 
+import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import android.util.Log
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.repository.UserRepository
@@ -15,7 +15,6 @@ import kotlinx.coroutines.tasks.await
 
 class GoogleSignInPresenter(
     private val view: GoogleSignInView,
-    private val firebaseAuth: FirebaseAuth,
     private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {
 
@@ -32,14 +31,14 @@ class GoogleSignInPresenter(
     }
 
     override fun onCreate(owner: LifecycleOwner) {
-        if (firebaseAuth.currentUser != null) {
+        if (FirebaseAuth.getInstance().currentUser != null) {
             loginSuccessful()
         }
     }
 
     fun signInWithCredential(credential: AuthCredential) = scope.launch {
         try {
-            firebaseAuth.signInWithCredential(credential).await()
+            FirebaseAuth.getInstance().signInWithCredential(credential).await()
             Log.d(TAG, "signInTask:success")
             loginSuccessful()
         } catch (e: Exception) {

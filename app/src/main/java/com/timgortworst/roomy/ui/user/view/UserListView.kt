@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.housemates.view
+package com.timgortworst.roomy.ui.user.view
 
 import com.timgortworst.roomy.model.User
 

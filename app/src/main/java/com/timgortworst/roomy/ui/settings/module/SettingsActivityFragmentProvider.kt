@@ -8,6 +8,6 @@ import dagger.android.ContributesAndroidInjector
 
 abstract class SettingsActivityFragmentProvider {
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = [SettingsModule::class])
     internal abstract fun provideSettingsFragment(): SettingsFragment
 }

@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.di
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.repository.AgendaRepository
@@ -23,29 +22,22 @@ abstract class RepositoryModule {
     companion object {
         @Provides
         @JvmStatic
-        internal fun provideSignInRepository(
-            database: FirebaseFirestore,
-            auth: FirebaseAuth
-        ): UserRepository {
-            return UserRepository(database, auth)
+        internal fun provideSignInRepository(): UserRepository {
+            return UserRepository()
         }
 
         @Provides
         @JvmStatic
-        internal fun provideHouseholdRepository(
-            database: FirebaseFirestore,
-            sharedPref: HuishoudGenootSharedPref
-        ): HouseholdRepository {
-            return HouseholdRepository(database, sharedPref)
+        internal fun provideHouseholdRepository(): HouseholdRepository {
+            return HouseholdRepository()
         }
 
         @Provides
         @JvmStatic
         internal fun provideTaskRepository(
-            database: FirebaseFirestore,
             userRepository: UserRepository
         ): AgendaRepository {
-            return AgendaRepository(database, userRepository)
+            return AgendaRepository(userRepository)
         }
     }
 }

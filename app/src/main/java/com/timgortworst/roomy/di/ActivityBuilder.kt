@@ -8,7 +8,6 @@ import com.timgortworst.roomy.ui.event.view.EventEditActivity
 import com.timgortworst.roomy.ui.googlesignin.module.GoogleSignInModule
 import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInActivity
 import com.timgortworst.roomy.ui.main.module.MainActivityFragmentProvider
-import com.timgortworst.roomy.ui.main.module.MainActivityModule
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.settings.module.SettingsActivityFragmentProvider
 import com.timgortworst.roomy.ui.settings.view.SettingsActivity
@@ -26,7 +25,7 @@ import dagger.android.ContributesAndroidInjector
 
 abstract class ActivityBuilder {
 
-    @ContributesAndroidInjector(modules = [(MainActivityModule::class), MainActivityFragmentProvider::class])
+    @ContributesAndroidInjector(modules = [MainActivityFragmentProvider::class])
     internal abstract fun bindMainActivity(): MainActivity
 
     @ContributesAndroidInjector(modules = [CategoryEditModule::class])

@@ -3,15 +3,13 @@ package com.timgortworst.roomy.ui.main.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.BaseActivity
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
 import com.timgortworst.roomy.ui.event.view.EventListFragment
-import com.timgortworst.roomy.ui.housemates.view.UserListFragment
-import com.timgortworst.roomy.ui.main.presenter.MainPresenter
 import com.timgortworst.roomy.ui.settings.view.SettingsActivity
+import com.timgortworst.roomy.ui.user.view.UserListFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -20,10 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
-    @Inject
-    lateinit var presenter: MainPresenter
-
+class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
@@ -50,10 +45,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         main_settings.setOnClickListener { SettingsActivity.start(this) }
     }
 
-    override fun presentText(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-    }
-
     private fun fragmentToReplace(newFragment: Fragment) {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.content_frame)
         if (newFragment::class.java.toString() != currentFragment?.tag){
@@ -66,15 +57,15 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
 
     }
 
-    override fun presentAgendaFragment() {
+    fun presentAgendaFragment() {
         fragmentToReplace(EventListFragment.newInstance())
     }
 
-    override fun presentTasksFragment() {
+    fun presentTasksFragment() {
         fragmentToReplace(CategoryListFragment.newInstance())
     }
 
-    override fun presentHousematesFragment() {
+    fun presentHousematesFragment() {
         fragmentToReplace(UserListFragment.newInstance())
     }
 

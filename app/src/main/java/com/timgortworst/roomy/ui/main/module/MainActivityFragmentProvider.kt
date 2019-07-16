@@ -1,11 +1,11 @@
 package com.timgortworst.roomy.ui.main.module
 
-import com.timgortworst.roomy.ui.event.module.EventListModule
-import com.timgortworst.roomy.ui.event.view.EventListFragment
 import com.timgortworst.roomy.ui.category.module.CategoryListModule
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
-import com.timgortworst.roomy.ui.housemates.module.UserListModule
-import com.timgortworst.roomy.ui.housemates.view.UserListFragment
+import com.timgortworst.roomy.ui.event.module.EventListModule
+import com.timgortworst.roomy.ui.event.view.EventListFragment
+import com.timgortworst.roomy.ui.user.module.UserListModule
+import com.timgortworst.roomy.ui.user.view.UserListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

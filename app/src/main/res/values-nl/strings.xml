@@ -106,5 +106,6 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="repeat_label_interval_text_day">D</string>
     <string name="repeat_label_interval_text_week">W</string>
     <string name="repeat_label_interval_text_month">M</string>
+    <string name="dangerous_settings_header">Dangerous settings</string>
 
 </resources>

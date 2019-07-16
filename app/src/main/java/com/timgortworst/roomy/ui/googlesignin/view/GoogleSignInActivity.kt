@@ -9,7 +9,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.BaseActivity
@@ -22,9 +21,6 @@ import javax.inject.Inject
 
 
 class GoogleSignInActivity : BaseActivity(), GoogleSignInView {
-    @Inject
-    lateinit var firebaseAuth: FirebaseAuth
-
     @Inject
     lateinit var presenter: GoogleSignInPresenter
 

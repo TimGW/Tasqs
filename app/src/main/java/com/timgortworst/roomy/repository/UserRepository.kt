@@ -12,29 +12,26 @@ import com.timgortworst.roomy.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.utils.Constants.USER_ROLE_REF
 import kotlinx.coroutines.tasks.await
 
-class UserRepository(
-    db: FirebaseFirestore,
-    private val auth: FirebaseAuth
-) {
-    val userCollectionRef = db.collection(USERS_COLLECTION_REF)
+class UserRepository {
+    val userCollectionRef = FirebaseFirestore.getInstance().collection(USERS_COLLECTION_REF)
 
     companion object {
         private const val TAG = "TIMTIM"
     }
 
-    fun getCurrentUserId() = auth.currentUser?.uid
+    fun getCurrentUserId() = FirebaseAuth.getInstance().currentUser?.uid
 
     suspend fun getOrCreateUser(): User? {
-        val currentUserDocRef = userCollectionRef.document(auth.currentUser?.uid.orEmpty())
+        val currentUserDocRef = userCollectionRef.document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
 
         return try {
             val userDoc = currentUserDocRef.get().await()
 
             return if (!userDoc.exists()) {
                 val newUser = User(
-                    auth.currentUser?.uid ?: "",
-                    auth.currentUser?.displayName ?: "",
-                    auth.currentUser?.email ?: ""
+                    FirebaseAuth.getInstance().currentUser?.uid ?: "",
+                    FirebaseAuth.getInstance().currentUser?.displayName ?: "",
+                    FirebaseAuth.getInstance().currentUser?.email ?: ""
                 )
 
                 try {
@@ -52,7 +49,7 @@ class UserRepository(
     }
 
     suspend fun setOrUpdateUser(
-        userId: String = auth.currentUser?.uid.orEmpty(),
+        userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
         name: String = "",
         email: String = "",
         householdId: String = "",
@@ -84,7 +81,7 @@ class UserRepository(
     }
 
     suspend fun getHouseholdIdForCurrentUser(): String {
-        val currentUserDocRef = userCollectionRef.document(auth.currentUser?.uid.orEmpty())
+        val currentUserDocRef = userCollectionRef.document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
         val userDoc = currentUserDocRef.get().await()
         val user = userDoc.toObject(User::class.java) as User
         return user.householdId

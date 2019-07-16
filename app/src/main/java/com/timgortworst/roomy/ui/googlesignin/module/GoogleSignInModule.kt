@@ -23,10 +23,9 @@ abstract class GoogleSignInModule {
         @JvmStatic
         internal fun provideSignInPresenter(
             signInView: GoogleSignInView,
-            firebaseAuth: FirebaseAuth,
             userRepository: UserRepository
         ): GoogleSignInPresenter {
-            return GoogleSignInPresenter(signInView, firebaseAuth, userRepository)
+            return GoogleSignInPresenter(signInView, userRepository)
         }
     }
 }
