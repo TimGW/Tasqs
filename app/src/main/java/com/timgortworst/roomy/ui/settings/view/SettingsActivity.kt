@@ -6,14 +6,14 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
-import com.timgortworst.roomy.ui.base.view.BaseAuthActivity
+import com.timgortworst.roomy.ui.BaseActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-class SettingsActivity : BaseAuthActivity(), HasSupportFragmentInjector {
+class SettingsActivity : BaseActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var sharedPref: HuishoudGenootSharedPref
