@@ -78,7 +78,14 @@ class UserRepository(
     }
 
     suspend fun deleteUser(user: User) {
-        userCollectionRef.document(user.userId).delete().await()
+//        userCollectionRef.document(user.userId).delete().await()
 //        userCollectionRef.document(user.userId).update(USER_HOUSEHOLDID_REF, "").await()
+    }
+
+    suspend fun getHouseholdIdForCurrentUser(): String {
+        val currentUserDocRef = userCollectionRef.document(auth.currentUser?.uid.orEmpty())
+        val userDoc = currentUserDocRef.get().await()
+        val user = userDoc.toObject(User::class.java) as User
+        return user.householdId
     }
 }

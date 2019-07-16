@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.ui.event.module
 
-import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.repository.AgendaRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.event.presenter.EventEditPresenter
@@ -25,10 +24,9 @@ abstract class EventEditModule {
         internal fun provideEditAgendaEventPresenter(
                 view: EventEditView,
                 agendaRepository: AgendaRepository,
-                userRepository: UserRepository,
-                sharedPref: HuishoudGenootSharedPref
+                userRepository: UserRepository
         ): EventEditPresenter {
-            return EventEditPresenter(view, agendaRepository, userRepository, sharedPref)
+            return EventEditPresenter(view, agendaRepository, userRepository)
         }
     }
 }

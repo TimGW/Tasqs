@@ -7,4 +7,5 @@ interface UserListView {
     fun showOrHideFab(condition: Boolean)
     fun refreshView(user: User)
     fun showContextMenuFor(user: User)
+    fun share(householdId: String)
 }

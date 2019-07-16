@@ -47,8 +47,8 @@ class EventListPresenter(
         agendaRepository.detachEventListener()
     }
 
-    fun listenToEvents() {
-        agendaRepository.listenToEvents(this)
+    fun listenToEvents() = scope.launch {
+        agendaRepository.listenToEvents(this@EventListPresenter)
     }
 
     fun filterMe(filter: Filter) {

@@ -43,9 +43,9 @@ abstract class RepositoryModule {
         @JvmStatic
         internal fun provideTaskRepository(
             database: FirebaseFirestore,
-            sharedPref: HuishoudGenootSharedPref
+            userRepository: UserRepository
         ): AgendaRepository {
-            return AgendaRepository(database, sharedPref)
+            return AgendaRepository(database, userRepository)
         }
     }
 }

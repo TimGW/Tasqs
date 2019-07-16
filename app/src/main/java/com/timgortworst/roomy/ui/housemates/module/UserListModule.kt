@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.ui.housemates.module
 
-import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.housemates.presenter.UserListPresenter
 import com.timgortworst.roomy.ui.housemates.view.UserListFragment
@@ -23,10 +22,8 @@ abstract class UserListModule {
         @JvmStatic
         internal fun provideInvitePresenter(
             inviteView: UserListView,
-            userRepository: UserRepository,
-            sharedPref: HuishoudGenootSharedPref
-        ): UserListPresenter {
-            return UserListPresenter(inviteView, userRepository, sharedPref)
+            userRepository: UserRepository): UserListPresenter {
+            return UserListPresenter(inviteView, userRepository)
         }
     }
 }

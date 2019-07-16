@@ -3,7 +3,6 @@ package com.timgortworst.roomy.ui.setup.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.Role
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
@@ -16,8 +15,7 @@ import kotlinx.coroutines.launch
 class SetupPresenter(
     private val view: SetupView,
     private val householdRepository: HouseholdRepository,
-    private val userRepository: UserRepository,
-    private val sharedPref: HuishoudGenootSharedPref
+    private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -65,19 +63,12 @@ class SetupPresenter(
         }
     }
 
-    private fun isIdSimilarToActiveId(referredHouseholdId: String) =
-            referredHouseholdId == sharedPref.getActiveHouseholdId()
+    private suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
+        return referredHouseholdId == userRepository.getHouseholdIdForCurrentUser()
+    }
 
     private suspend fun isHouseholdActive(): Boolean {
-        // check locally
-        if (sharedPref.getActiveHouseholdId().isNotBlank()) {
-            return true
-        }
-        // check remote fallback when local is blank
-        val user = userRepository.getOrCreateUser()
-        // update household id locally
-        user?.let { sharedPref.setActiveHouseholdId(it.householdId) }
-        return user?.householdId?.isNotBlank() == true
+        return userRepository.getHouseholdIdForCurrentUser().isNotBlank()
     }
 
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
@@ -85,13 +76,11 @@ class SetupPresenter(
             householdId = newHouseholdId,
             role = Role.NORMAL.name
         )
-        val userList = userRepository.getUsersForHouseholdId(sharedPref.getActiveHouseholdId())
+        val userList = userRepository.getUsersForHouseholdId(userRepository.getHouseholdIdForCurrentUser())
         if (userList.isEmpty()) {
             // remove old household if there are no more users in the household
-            householdRepository.removeHousehold(sharedPref.getActiveHouseholdId())
+            householdRepository.removeHousehold(userRepository.getHouseholdIdForCurrentUser())
         }
-        // safe to update local household id
-        sharedPref.setActiveHouseholdId(newHouseholdId)
         view.goToMainActivity()
     }
 }
