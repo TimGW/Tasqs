@@ -23,6 +23,8 @@ class SettingsPresenter(
 
     fun deleteUser(uid: String) {
 
+
+
         val user = FirebaseAuth.getInstance().currentUser
 
         user?.delete()

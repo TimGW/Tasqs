@@ -41,9 +41,9 @@ class UserListPresenter(
     }
 
     fun showContextMenuIfUserHasPermission(user: User) = scope.launch {
-        val currentUser = userRepository.getOrCreateUser()
+        val currentUser = userRepository.getCurrentUser()
         if (user.role != Role.ADMIN.name &&
-            currentUser?.role == Role.ADMIN.name &&
+            currentUser.role == Role.ADMIN.name &&
             currentUser.userId != user.userId
         ) {
             view.showContextMenuFor(user)

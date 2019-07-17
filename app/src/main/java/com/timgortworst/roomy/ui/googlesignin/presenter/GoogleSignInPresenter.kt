@@ -14,8 +14,8 @@ import kotlinx.coroutines.tasks.await
 
 
 class GoogleSignInPresenter(
-    private val view: GoogleSignInView,
-    private val userRepository: UserRepository
+        private val view: GoogleSignInView,
+        private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -47,10 +47,7 @@ class GoogleSignInPresenter(
     }
 
     private fun loginSuccessful() = scope.launch {
-        if (userRepository.getOrCreateUser() != null) {
-            view.loginSuccessful()
-        } else {
-            view.failedInitUser()
-        }
+        userRepository.createNewUser()
+        view.loginSuccessful()
     }
 }
