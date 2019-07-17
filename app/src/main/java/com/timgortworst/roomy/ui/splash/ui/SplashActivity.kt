@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.ui.splash.ui
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -19,6 +20,8 @@ class SplashActivity : AppCompatActivity(), SplashView {
     lateinit var presenter: SplashPresenter
 
     companion object {
+        private const val RESULT_CODE = 1234
+
         fun start(context: Context) {
             val intent = Intent(context, SetupActivity::class.java)
             context.startActivity(intent)
@@ -37,8 +40,7 @@ class SplashActivity : AppCompatActivity(), SplashView {
     }
 
     override fun goToGoogleSignInActivity() {
-        GoogleSignInActivity.start(this)
-        finish()
+        GoogleSignInActivity.startForResult(this, RESULT_CODE)
     }
 
     override fun goToSetupActivity(referredHouseholdId: String) {
@@ -52,5 +54,13 @@ class SplashActivity : AppCompatActivity(), SplashView {
 
     override fun userInvalid() {
         finish()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RESULT_CODE && resultCode == Activity.RESULT_OK) {
+            presenter.userLogin()
+        }
     }
 }

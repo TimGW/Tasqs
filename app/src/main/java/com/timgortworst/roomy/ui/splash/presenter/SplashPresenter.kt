@@ -22,7 +22,7 @@ class SplashPresenter(
         }
     }
 
-    fun userLogin(referredHouseholdId: String) = scope.launch {
+    fun userLogin(referredHouseholdId: String = "") = scope.launch {
         if (FirebaseAuth.getInstance().currentUser == null) {
             // user will be created in the googleSignInActivity
             view.goToGoogleSignInActivity()
