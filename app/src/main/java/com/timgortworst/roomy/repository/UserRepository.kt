@@ -12,12 +12,13 @@ import com.timgortworst.roomy.utils.Constants.USER_ROLE_REF
 import kotlinx.coroutines.tasks.await
 
 class UserRepository {
-    private val userCollectionRef = FirebaseFirestore.getInstance().collection(USERS_COLLECTION_REF)
-    private val currentUserDocRef = userCollectionRef.document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
+    private val db = FirebaseFirestore.getInstance()
+    private val userCollectionRef = db.collection(USERS_COLLECTION_REF)
 
     fun getCurrentUserId() = FirebaseAuth.getInstance().currentUser?.uid
 
     suspend fun createNewUser() {
+        val currentUserDocRef = userCollectionRef.document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
         val userDoc = currentUserDocRef.get().await()
         if (!userDoc.exists()) {
             val newUser = User(
@@ -28,7 +29,10 @@ class UserRepository {
         }
     }
 
-    suspend fun getCurrentUser() = currentUserDocRef.get().await().toObject(User::class.java) as User
+    suspend fun getCurrentUser(): User {
+        val currentUserDocRef = userCollectionRef.document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
+        return currentUserDocRef.get().await().toObject(User::class.java) as User
+    }
 
     suspend fun updateUser(
             userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
@@ -62,8 +66,8 @@ class UserRepository {
     }
 
     suspend fun getHouseholdIdForCurrentUser(): String {
-        val userDoc = currentUserDocRef.get().await()
-        val user = userDoc.toObject(User::class.java) as User
+        val currentUserDocRef = userCollectionRef.document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
+        val user = currentUserDocRef.get().await().toObject(User::class.java) as User
         return user.householdId
     }
 }
