@@ -89,10 +89,9 @@ class GoogleSignInActivity : BaseActivity(), GoogleSignInView {
 //    }
 //
 //    fun revokeAccess(): Task<Void>? {
-//        firebaseAuth.signOut()
+//        FirebaseAuth.getInstance().signOut()
 //        return googleSignInClient.revokeAccess().addOnCompleteListener {
 //            finishAffinity()
-//            GoogleSignInActivity.start(this)
 //        }
 //    }
 

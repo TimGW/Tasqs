@@ -51,7 +51,7 @@ class SetupPresenter(
 
                 if (householdID != null) {
                     // update household id for user remote
-                    userRepository.setOrUpdateUser(
+                    userRepository.updateUser(
                         householdId = householdID,
                         role = Role.ADMIN.name
                     )
@@ -72,7 +72,7 @@ class SetupPresenter(
     }
 
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
-        userRepository.setOrUpdateUser(
+        userRepository.updateUser(
             householdId = newHouseholdId,
             role = Role.NORMAL.name
         )

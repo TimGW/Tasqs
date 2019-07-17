@@ -10,8 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SplashPresenter(
-    private val view: SplashView,
-    private val userRepository: UserRepository
+        private val view: SplashView,
+        private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -27,20 +27,16 @@ class SplashPresenter(
             // user will be created in the googleSignInActivity
             view.goToGoogleSignInActivity()
         } else {
-            // get the user if he exists or create a new one in firebase
-            val user = userRepository.getOrCreateUser()
+            // create a new unique user in firebase
+            userRepository.createNewUser()
 
-            if (user != null) {
-                // user is created or retrieved
-                if (referredHouseholdId.isNotBlank()) {
+            // user is created or retrieved
+            if (referredHouseholdId.isNotBlank()) {
 
-                    // user accepted invite link
-                    view.goToSetupActivity(referredHouseholdId)
-                } else {
-                    view.goToSetupActivity()
-                }
+                // user accepted invite link
+                view.goToSetupActivity(referredHouseholdId)
             } else {
-                view.userInvalid()
+                view.goToSetupActivity()
             }
         }
     }
