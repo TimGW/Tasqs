@@ -26,7 +26,7 @@ class SpinnerUserAdapter(
         return position.toLong()
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val label = super.getView(position, convertView, parent) as TextView
         label.text = userList[position].name
         return label
