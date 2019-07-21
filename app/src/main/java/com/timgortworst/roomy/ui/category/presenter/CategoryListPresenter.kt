@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class CategoryListPresenter(
         val view: CategoryListView,
         val repository: EventRepository
-) : EventRepository.EventCategoryListener, DefaultLifecycleObserver {
+) : EventRepository.CategoryListener, DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
@@ -28,22 +28,22 @@ class CategoryListPresenter(
     }
 
     fun detachTaskListener() {
-        repository.detachTaskListener()
+        repository.detachCategoryListener()
     }
 
     fun deleteEventCategory(agendaEventCategory: Category) = scope.launch {
         repository.deleteCategoryForHousehold(agendaEventCategory)
     }
 
-    override fun categoryAdded(agendaEventCategory: Category) {
-        view.presentNewCategory(agendaEventCategory)
+    override fun categoryAdded(category: Category) {
+        view.presentNewCategory(category)
     }
 
-    override fun categoryModified(agendaEventCategory: Category) {
-        view.presentEditedCategory(agendaEventCategory)
+    override fun categoryModified(category: Category) {
+        view.presentEditedCategory(category)
     }
 
-    override fun categoryDeleted(agendaEventCategory: Category) {
-        view.presentDeletedCategory(agendaEventCategory)
+    override fun categoryDeleted(category: Category) {
+        view.presentDeletedCategory(category)
     }
 }

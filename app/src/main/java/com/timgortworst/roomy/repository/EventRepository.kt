@@ -101,7 +101,7 @@ class EventRepository(val userRepository: UserRepository) {
     }
 
 
-    suspend fun insertAgendaEvent(
+    suspend fun insertEvent(
         category: Category,
         user: User,
         eventMetaData: EventMetaData,
@@ -118,7 +118,7 @@ class EventRepository(val userRepository: UserRepository) {
         }
     }
 
-    suspend fun updateAgendaEvent(
+    suspend fun updateEvent(
         eventId: String,
         category: Category? = null,
         user: User? = null,
@@ -145,7 +145,7 @@ class EventRepository(val userRepository: UserRepository) {
         }
     }
 
-    suspend fun removeAgendaEvent(eventId: String) {
+    suspend fun removeEvent(eventId: String) {
         try {
             householdCollectionRef
                 .document(userRepository.getHouseholdIdForCurrentUser())
@@ -158,7 +158,7 @@ class EventRepository(val userRepository: UserRepository) {
         }
     }
 
-    suspend fun listenToCategories(taskListener: EventCategoryListener) {
+    suspend fun listenToCategories(taskListener: CategoryListener) {
         categoryListener = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(CATEGORIES_COLLECTION_REF)
             .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
@@ -184,7 +184,7 @@ class EventRepository(val userRepository: UserRepository) {
             })
     }
 
-    suspend fun listenToEvents(agendaListener: AgendaEventListener) {
+    suspend fun listenToEvents(agendaListener: EventListener) {
         val query = householdCollectionRef
             .document(userRepository.getHouseholdIdForCurrentUser())
             .collection(EVENT_COLLECTION_REF)
@@ -214,7 +214,7 @@ class EventRepository(val userRepository: UserRepository) {
         })
     }
 
-    fun detachTaskListener() {
+    fun detachCategoryListener() {
         categoryListener.remove()
     }
 
@@ -223,18 +223,18 @@ class EventRepository(val userRepository: UserRepository) {
     }
 
     companion object {
-        private const val TAG = "EventCategoryRepository"
+        private const val TAG = "EventRepository"
     }
 
-    interface AgendaEventListener {
-        fun eventAdded(agendaEvent: Event)
-        fun eventModified(agendaEvent: Event)
-        fun eventDeleted(agendaEvent: Event)
+    interface EventListener {
+        fun eventAdded(event: Event)
+        fun eventModified(event: Event)
+        fun eventDeleted(event: Event)
     }
 
-    interface EventCategoryListener {
-        fun categoryAdded(agendaEventCategory: Category)
-        fun categoryModified(agendaEventCategory: Category)
-        fun categoryDeleted(agendaEventCategory: Category)
+    interface CategoryListener {
+        fun categoryAdded(category: Category)
+        fun categoryModified(category: Category)
+        fun categoryDeleted(category: Category)
     }
 }
