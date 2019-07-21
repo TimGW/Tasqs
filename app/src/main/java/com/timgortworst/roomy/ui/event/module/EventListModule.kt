@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.ui.event.module
 
-import com.timgortworst.roomy.repository.AgendaRepository
+import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
 import com.timgortworst.roomy.ui.event.view.EventListFragment
@@ -22,9 +22,9 @@ abstract class EventListModule {
         @Provides
         @JvmStatic
         internal fun provideMainAgendaPresenter(
-                mainAgendaFragmentView: EventListView,
-                agendaRepository: AgendaRepository,
-                userRepository: UserRepository
+            mainAgendaFragmentView: EventListView,
+            agendaRepository: EventRepository,
+            userRepository: UserRepository
         ): EventListPresenter {
             return EventListPresenter(mainAgendaFragmentView, agendaRepository, userRepository)
         }

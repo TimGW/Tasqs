@@ -8,9 +8,8 @@ import kotlinx.android.parcel.Parcelize
 @IgnoreExtraProperties
 @SuppressLint("ParcelCreator")
 @Parcelize
-data class EventCategory(
+data class Category(
     var categoryId: String = "",
     var name: String = "",
     var description: String = ""
-//    , var points: Int = 0
 ) : Parcelable

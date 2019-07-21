@@ -8,31 +8,31 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.model.EventCategory
+import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.ui.BaseActivity
 import com.timgortworst.roomy.ui.category.presenter.CategoryEditPresenter
-import com.timgortworst.roomy.utils.Constants.INTENT_EXTRA_EDIT_HOUSEHOLD_TASK
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_category.*
 import javax.inject.Inject
 
-
 class CategoryEditActivity : BaseActivity(), CategoryEditView {
-    private lateinit var householdTask: EventCategory
+    private lateinit var householdTask: Category
 
     @Inject
     lateinit var presenter: CategoryEditPresenter
 
     companion object {
+        const val INTENT_EXTRA_EDIT_CATEGORY = "INTENT_EXTRA_EDIT_CATEGORY"
+
         fun start(context: AppCompatActivity) {
             val intent = Intent(context, CategoryEditActivity::class.java)
             context.startActivity(intent)
             context.overridePendingTransition(R.anim.slide_up, R.anim.stay)
         }
 
-        fun start(context: AppCompatActivity, householdTask: EventCategory) {
+        fun start(context: AppCompatActivity, householdTask: Category) {
             val intent = Intent(context, CategoryEditActivity::class.java)
-            intent.putExtra(INTENT_EXTRA_EDIT_HOUSEHOLD_TASK, householdTask)
+            intent.putExtra(INTENT_EXTRA_EDIT_CATEGORY, householdTask)
             context.startActivity(intent)
             context.overridePendingTransition(R.anim.slide_up, R.anim.stay)
         }
@@ -43,7 +43,7 @@ class CategoryEditActivity : BaseActivity(), CategoryEditView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_category)
 
-        householdTask = intent.getParcelableExtra(INTENT_EXTRA_EDIT_HOUSEHOLD_TASK) ?: EventCategory()
+        householdTask = intent.getParcelableExtra(INTENT_EXTRA_EDIT_CATEGORY) ?: Category()
 
         supportActionBar?.apply {
             title = "Nieuwe taak"

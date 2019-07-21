@@ -5,7 +5,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
-import com.timgortworst.roomy.repository.AgendaRepository
+import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.event.view.EventListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
@@ -14,10 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class EventListPresenter(
-        val view: EventListView,
-        val agendaRepository: AgendaRepository,
-        val userRepository: UserRepository
-) : AgendaRepository.AgendaEventListener, DefaultLifecycleObserver {
+    val view: EventListView,
+    val agendaRepository: EventRepository,
+    val userRepository: UserRepository
+) : EventRepository.AgendaEventListener, DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 

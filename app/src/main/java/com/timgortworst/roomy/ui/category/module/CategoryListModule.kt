@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.ui.category.module
 
-import com.timgortworst.roomy.repository.AgendaRepository
+import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.ui.category.presenter.CategoryListPresenter
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
 import com.timgortworst.roomy.ui.category.view.CategoryListView
@@ -22,7 +22,7 @@ abstract class CategoryListModule {
         @JvmStatic
         internal fun provideMainTasksPresenter(
                 mainTasksFragmentView: CategoryListView,
-                taskRepository: AgendaRepository
+                taskRepository: EventRepository
         ): CategoryListPresenter {
             return CategoryListPresenter(mainTasksFragmentView, taskRepository)
         }

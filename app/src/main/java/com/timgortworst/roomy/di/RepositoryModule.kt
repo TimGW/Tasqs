@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.di
 
-import com.timgortworst.roomy.repository.AgendaRepository
+import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import dagger.Module
@@ -32,8 +32,8 @@ abstract class RepositoryModule {
 
         @Provides
         @JvmStatic
-        fun provideTaskRepository(userRepository: UserRepository): AgendaRepository {
-            return AgendaRepository(userRepository)
+        fun provideTaskRepository(userRepository: UserRepository): EventRepository {
+            return EventRepository(userRepository)
         }
     }
 }
