@@ -2,7 +2,7 @@ package com.timgortworst.roomy.ui.category.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.timgortworst.roomy.repository.EventRepository
+import com.timgortworst.roomy.repository.CategoryRepository
 import com.timgortworst.roomy.ui.category.view.CategoryEditView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 
 
 class CategoryEditPresenter(
-        val view: CategoryEditView,
-        val repository: EventRepository
+    val view: CategoryEditView,
+    private val categoryRepository: CategoryRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -28,13 +28,13 @@ class CategoryEditPresenter(
         description: String) = scope.launch {
 
         if (eventCategoryId.isNotBlank()) {
-            repository.updateCategory(eventCategoryId, name, description)
+            categoryRepository.updateCategory(eventCategoryId, name, description)
         } else {
-            repository.insertCategory(name, description)
+            categoryRepository.insertCategory(name, description)
         }
     }
 
     companion object {
-        private const val TAG = "EditTaskPresenter"
+        private const val TAG = "CategoryEditPresenter"
     }
 }

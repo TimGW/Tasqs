@@ -5,6 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.model.User
+import com.timgortworst.roomy.repository.CategoryRepository
 import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.event.view.EventEditView
@@ -17,7 +18,8 @@ import java.util.*
 class EventEditPresenter(
     private val view: EventEditView,
     private val agendaRepository: EventRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val categoryRepository: CategoryRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -49,7 +51,7 @@ class EventEditPresenter(
     }
 
     fun fetchCategories() = scope.launch {
-        val categories = agendaRepository.getCategories()
+        val categories = categoryRepository.getCategories()
         view.presentCategoryList(categories.toMutableList())
     }
 

@@ -3,7 +3,7 @@ package com.timgortworst.roomy.ui.category.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.model.Category
-import com.timgortworst.roomy.repository.EventRepository
+import com.timgortworst.roomy.repository.CategoryRepository
 import com.timgortworst.roomy.ui.category.view.CategoryListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 
 class CategoryListPresenter(
         val view: CategoryListView,
-        val repository: EventRepository
-) : EventRepository.CategoryListener, DefaultLifecycleObserver {
+        private val categoryRepository: CategoryRepository
+) : CategoryRepository.CategoryListener, DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
@@ -24,15 +24,15 @@ class CategoryListPresenter(
     }
 
     fun listenToTasks() = scope.launch {
-        repository.listenToCategories(this@CategoryListPresenter)
+        categoryRepository.listenToCategories(this@CategoryListPresenter)
     }
 
     fun detachTaskListener() {
-        repository.detachCategoryListener()
+        categoryRepository.detachCategoryListener()
     }
 
     fun deleteEventCategory(agendaEventCategory: Category) = scope.launch {
-        repository.deleteCategoryForHousehold(agendaEventCategory)
+        categoryRepository.deleteCategoryForHousehold(agendaEventCategory)
     }
 
     override fun categoryAdded(category: Category) {
