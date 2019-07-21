@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.di
 
+import com.timgortworst.roomy.repository.CategoryRepository
 import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
@@ -28,6 +29,12 @@ abstract class RepositoryModule {
         @JvmStatic
         fun provideHouseholdRepository(): HouseholdRepository {
             return HouseholdRepository()
+        }
+
+        @Provides
+        @JvmStatic
+        fun provideCategoryRepository(userRepository: UserRepository): CategoryRepository {
+            return CategoryRepository(userRepository)
         }
 
         @Provides

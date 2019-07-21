@@ -14,14 +14,14 @@ import dagger.Provides
 abstract class EventListModule {
 
     @Binds
-    internal abstract fun provideMainAgendaView(mainAgendaFragment: EventListFragment): EventListView
+    internal abstract fun provideEventListView(mainAgendaFragment: EventListFragment): EventListView
 
     @Module
     companion object {
 
         @Provides
         @JvmStatic
-        internal fun provideMainAgendaPresenter(
+        internal fun provideEventListPresenter(
             mainAgendaFragmentView: EventListView,
             agendaRepository: EventRepository,
             userRepository: UserRepository

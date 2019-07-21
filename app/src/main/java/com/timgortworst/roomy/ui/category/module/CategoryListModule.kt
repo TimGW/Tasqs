@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.ui.category.module
 
-import com.timgortworst.roomy.repository.EventRepository
+import com.timgortworst.roomy.repository.CategoryRepository
 import com.timgortworst.roomy.ui.category.presenter.CategoryListPresenter
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
 import com.timgortworst.roomy.ui.category.view.CategoryListView
@@ -13,18 +13,18 @@ import dagger.Provides
 abstract class CategoryListModule {
 
     @Binds
-    internal abstract fun provideMainTasksFragmentView(mainTasksFragment: CategoryListFragment): CategoryListView
+    internal abstract fun provideCategoryListView(mainTasksFragment: CategoryListFragment): CategoryListView
 
     @Module
     companion object {
 
         @Provides
         @JvmStatic
-        internal fun provideMainTasksPresenter(
-                mainTasksFragmentView: CategoryListView,
-                taskRepository: EventRepository
+        internal fun provideCategoryListPresenter(
+            categoryListView: CategoryListView,
+            categoryRepository: CategoryRepository
         ): CategoryListPresenter {
-            return CategoryListPresenter(mainTasksFragmentView, taskRepository)
+            return CategoryListPresenter(categoryListView, categoryRepository)
         }
     }
 }

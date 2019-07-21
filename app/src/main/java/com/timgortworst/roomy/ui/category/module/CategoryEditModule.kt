@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.ui.category.module
 
-import com.timgortworst.roomy.repository.EventRepository
+import com.timgortworst.roomy.repository.CategoryRepository
 import com.timgortworst.roomy.ui.category.presenter.CategoryEditPresenter
 import com.timgortworst.roomy.ui.category.view.CategoryEditActivity
 import com.timgortworst.roomy.ui.category.view.CategoryEditView
@@ -13,17 +13,17 @@ import dagger.Provides
 abstract class CategoryEditModule {
 
     @Binds
-    internal abstract fun provideEditTaskView(editTaskActivity: CategoryEditActivity): CategoryEditView
+    internal abstract fun provideCategoryEditView(editTaskActivity: CategoryEditActivity): CategoryEditView
 
     @Module
     companion object {
         @Provides
         @JvmStatic
-        internal fun provideMainTasksPresenter(
-                editTaskView: CategoryEditView,
-                taskRepository: EventRepository
+        internal fun provideCategoryEditPresenter(
+            editTaskView: CategoryEditView,
+            categoryRepository: CategoryRepository
         ): CategoryEditPresenter {
-            return CategoryEditPresenter(editTaskView, taskRepository)
+            return CategoryEditPresenter(editTaskView, categoryRepository)
         }
     }
 }
