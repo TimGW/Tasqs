@@ -18,7 +18,7 @@ class CategoryRepository(val userRepository: UserRepository) {
     suspend fun getCategories(): List<Category> {
         val document = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(CATEGORIES_COLLECTION_REF)
-        return document.get().await().toObjects(Category::class.java)
+        return document.get(Source.CACHE).await().toObjects(Category::class.java)
     }
 
     suspend fun updateCategory(

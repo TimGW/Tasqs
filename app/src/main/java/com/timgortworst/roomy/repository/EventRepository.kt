@@ -21,22 +21,6 @@ class EventRepository(val userRepository: UserRepository) {
     private val householdCollectionRef = FirebaseFirestore.getInstance().collection(HOUSEHOLD_COLLECTION_REF)
     private var eventListener: ListenerRegistration? = null
 
-    suspend fun getEvents(userIdFilter: String? = null): MutableList<Event>? {
-        val query = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
-            .collection(EVENT_COLLECTION_REF)
-
-        if (userIdFilter != null && userIdFilter.isNotEmpty()) {
-            query.whereEqualTo("user.userId", userIdFilter)
-        }
-
-        query.orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)
-        return try {
-            query.get().await().toObjects(Event::class.java)
-        } catch (e: FirebaseFirestoreException) {
-            throw e
-        }
-    }
-
     suspend fun insertEvent(
         category: Category,
         user: User,
@@ -50,7 +34,7 @@ class EventRepository(val userRepository: UserRepository) {
         try {
             document.set(Event(document.id, category, user, eventMetaData, isEventDone)).await()
         } catch (e: FirebaseFirestoreException) {
-            Log.e("TIMTIM", e.localizedMessage)
+            Log.e("TIMTIM", e.localizedMessage!!)
         }
     }
 
@@ -77,7 +61,7 @@ class EventRepository(val userRepository: UserRepository) {
         try {
             document.update(eventFieldMap).await()
         } catch (e: FirebaseFirestoreException) {
-            Log.e("TIMTIM", e.localizedMessage)
+            Log.e("TIMTIM", e.localizedMessage!!)
         }
     }
 
@@ -90,7 +74,7 @@ class EventRepository(val userRepository: UserRepository) {
                 .delete()
                 .await()
         } catch (e: FirebaseFirestoreException) {
-            Log.e("TIMTIM", e.localizedMessage)
+            Log.e("TIMTIM", e.localizedMessage!!)
         }
     }
 
@@ -110,15 +94,9 @@ class EventRepository(val userRepository: UserRepository) {
             for (dc in snapshots!!.documentChanges) {
                 val agendaEvent = dc.document.toObject(Event::class.java)
                 when (dc.type) {
-                    ADDED -> {
-                        agendaListener.eventAdded(agendaEvent)
-                    }
-                    MODIFIED -> {
-                        agendaListener.eventModified(agendaEvent)
-                    }
-                    REMOVED -> {
-                        agendaListener.eventDeleted(agendaEvent)
-                    }
+                    ADDED -> agendaListener.eventAdded(agendaEvent)
+                    MODIFIED -> agendaListener.eventModified(agendaEvent)
+                    REMOVED -> agendaListener.eventDeleted(agendaEvent)
                 }
             }
         })
