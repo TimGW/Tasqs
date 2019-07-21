@@ -37,9 +37,9 @@ class EventEditPresenter(
     ) = scope.launch {
 
         if (eventId.isNotBlank()) {
-            agendaRepository.updateAgendaEvent(eventId, category, user, eventMetaData, isDone)
+            agendaRepository.updateEvent(eventId, category, user, eventMetaData, isDone)
         } else {
-            agendaRepository.insertAgendaEvent(category, user, eventMetaData, isDone)
+            agendaRepository.insertEvent(category, user, eventMetaData, isDone)
         }
     }
 

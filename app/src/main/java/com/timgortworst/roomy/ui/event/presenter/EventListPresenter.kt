@@ -17,7 +17,7 @@ class EventListPresenter(
     val view: EventListView,
     val agendaRepository: EventRepository,
     val userRepository: UserRepository
-) : EventRepository.AgendaEventListener, DefaultLifecycleObserver {
+) : EventRepository.EventListener, DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
@@ -27,20 +27,20 @@ class EventListPresenter(
         }
     }
 
-    override fun eventAdded(agendaEvent: Event) {
-        if (agendaEvent.eventMetaData.repeatStartDate.isTimeStampInPast()) {
+    override fun eventAdded(event: Event) {
+        if (event.eventMetaData.repeatStartDate.isTimeStampInPast()) {
             // event is in het verleden
             // todo send reminder
         }
-        view.presentAddedEvent(agendaEvent)
+        view.presentAddedEvent(event)
     }
 
-    override fun eventModified(agendaEvent: Event) {
-        view.presentEditedEvent(agendaEvent)
+    override fun eventModified(event: Event) {
+        view.presentEditedEvent(event)
     }
 
-    override fun eventDeleted(agendaEvent: Event) {
-        view.presentDeletedEvent(agendaEvent)
+    override fun eventDeleted(event: Event) {
+        view.presentDeletedEvent(event)
     }
 
     fun detachEventListener() {
@@ -57,7 +57,7 @@ class EventListPresenter(
 
     fun markEventAsCompleted(event: Event) = scope.launch {
         if (event.eventMetaData.repeatInterval == EventMetaData.RepeatingInterval.SINGLE_EVENT) {
-            agendaRepository.removeAgendaEvent(event.agendaId)
+            agendaRepository.removeEvent(event.agendaId)
             return@launch
         }
 
@@ -82,10 +82,10 @@ class EventListPresenter(
         event.eventMetaData = eventMetaData
 
         // reset done to false
-        agendaRepository.updateAgendaEvent(event.agendaId, eventMetaData = eventMetaData, isEventDone = false)
+        agendaRepository.updateEvent(event.agendaId, eventMetaData = eventMetaData, isEventDone = false)
     }
 
     fun deleteEvent(event: Event) = scope.launch {
-        agendaRepository.removeAgendaEvent(event.agendaId)
+        agendaRepository.removeEvent(event.agendaId)
     }
 }
