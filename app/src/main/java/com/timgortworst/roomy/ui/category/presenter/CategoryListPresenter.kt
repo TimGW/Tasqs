@@ -23,15 +23,15 @@ class CategoryListPresenter(
         }
     }
 
-    fun listenToTasks() = scope.launch {
+    fun listenToCategories() = scope.launch {
         categoryRepository.listenToCategories(this@CategoryListPresenter)
     }
 
-    fun detachTaskListener() {
+    fun detachCategoryListener() {
         categoryRepository.detachCategoryListener()
     }
 
-    fun deleteEventCategory(agendaEventCategory: Category) = scope.launch {
+    fun deleteCategory(agendaEventCategory: Category) = scope.launch {
         categoryRepository.deleteCategoryForHousehold(agendaEventCategory)
     }
 
