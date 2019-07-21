@@ -13,6 +13,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.Category
+import com.timgortworst.roomy.model.UIState
 import com.timgortworst.roomy.ui.category.adapter.CategoryListAdapter
 import com.timgortworst.roomy.ui.category.presenter.CategoryListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
@@ -122,7 +123,17 @@ class CategoryListFragment : Fragment(), CategoryListView {
         categoryListAdapter.removeItem(householdTask)
     }
 
-    override fun showLoadingState(isLoading: Boolean) {
-        swipe_container.isRefreshing = isLoading
+    override fun setUIState(uiState: UIState) {
+        when(uiState) {
+            UIState.LOADING -> {
+                swipe_container.isRefreshing = true
+            }
+            UIState.ERROR -> {
+                swipe_container.isRefreshing = false
+            }
+            UIState.SUCCESS -> {
+                swipe_container.isRefreshing = false
+            }
+        }
     }
 }

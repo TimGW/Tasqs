@@ -61,6 +61,8 @@
     <string name="setup_referral_code_empty_error">Please provide a referral code</string>
     <string name="button_next">Volgende</string>
     <string name="generic_error">Something went wrong</string>
+    <string name="connection_error">Please check your internet connection.</string>
+    <string name="server_error">A Server Error occurred.</string>
     <string name="punten">Punten</string>
     <string name="beschrijving">Beschrijving</string>
     <string name="taak">Taak</string>

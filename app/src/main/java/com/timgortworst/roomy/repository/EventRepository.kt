@@ -1,11 +1,17 @@
 package com.timgortworst.roomy.repository
 
 import android.util.Log
-import com.google.firebase.firestore.*
 import com.google.firebase.firestore.DocumentChange.Type.*
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
+import com.timgortworst.roomy.model.UIState
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_COLLECTION_REF
@@ -79,6 +85,8 @@ class EventRepository(val userRepository: UserRepository) {
     }
 
     suspend fun listenToEvents(agendaListener: EventListener) {
+        agendaListener.setUIState(UIState.LOADING)
+
         val query = householdCollectionRef
             .document(userRepository.getHouseholdIdForCurrentUser())
             .collection(EVENT_COLLECTION_REF)
@@ -87,6 +95,7 @@ class EventRepository(val userRepository: UserRepository) {
 
         eventListener = query.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
             if (e != null && snapshots == null) {
+                agendaListener.setUIState(UIState.ERROR)
                 Log.w(TAG, "listen:error", e)
                 return@EventListener
             }
@@ -99,6 +108,7 @@ class EventRepository(val userRepository: UserRepository) {
                     REMOVED -> agendaListener.eventDeleted(agendaEvent)
                 }
             }
+            agendaListener.setUIState(UIState.SUCCESS)
         })
     }
 
@@ -110,7 +120,7 @@ class EventRepository(val userRepository: UserRepository) {
         private const val TAG = "EventRepository"
     }
 
-    interface EventListener {
+    interface EventListener : ObjectStateListener {
         fun eventAdded(event: Event)
         fun eventModified(event: Event)
         fun eventDeleted(event: Event)

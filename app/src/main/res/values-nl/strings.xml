@@ -107,5 +107,6 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="repeat_label_interval_text_week">W</string>
     <string name="repeat_label_interval_text_month">M</string>
     <string name="dangerous_settings_header">Dangerous settings</string>
-
+    <string name="connection_error">Please check your internet connection.</string>
+    <string name="server_error">A Server Error occurred.</string>
 </resources>

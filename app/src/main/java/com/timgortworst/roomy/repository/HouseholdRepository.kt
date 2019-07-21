@@ -50,6 +50,6 @@ class HouseholdRepository {
     }
 
     companion object {
-        private const val TAG = "TIMTIM"
+        private const val TAG = "HouseholdRepository"
     }
 }
