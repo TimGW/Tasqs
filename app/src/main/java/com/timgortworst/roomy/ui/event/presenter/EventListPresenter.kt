@@ -5,6 +5,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
+import com.timgortworst.roomy.model.UIState
 import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.event.view.EventListView
@@ -41,6 +42,10 @@ class EventListPresenter(
 
     override fun eventDeleted(event: Event) {
         view.presentDeletedEvent(event)
+    }
+
+    override fun setUIState(uiState: UIState) {
+        view.setUIState(uiState)
     }
 
     fun detachEventListener() {

@@ -15,6 +15,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.Event
+import com.timgortworst.roomy.model.UIState
 import com.timgortworst.roomy.ui.event.adapter.EventListAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
@@ -60,8 +61,8 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
 
         swipe_container.isEnabled = false
 
-        setupEventListAdapter()
         setupRecyclerContextMenu()
+        setupEventListAdapter()
 
         presenter.listenToEvents()
     }
@@ -168,5 +169,19 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
 
     override fun presentDeletedEvent(agendaEvent: Event) {
         eventListAdapter.removeEvent(agendaEvent)
+    }
+
+    override fun setUIState(uiState: UIState) {
+        when(uiState) {
+            UIState.LOADING -> {
+                swipe_container.isRefreshing = true
+            }
+            UIState.ERROR -> {
+                swipe_container.isRefreshing = false
+            }
+            UIState.SUCCESS -> {
+                swipe_container.isRefreshing = false
+            }
+        }
     }
 }
