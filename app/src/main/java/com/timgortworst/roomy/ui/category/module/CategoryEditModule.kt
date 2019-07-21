@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.ui.category.module
 
-import com.timgortworst.roomy.repository.AgendaRepository
+import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.ui.category.presenter.CategoryEditPresenter
 import com.timgortworst.roomy.ui.category.view.CategoryEditActivity
 import com.timgortworst.roomy.ui.category.view.CategoryEditView
@@ -21,7 +21,7 @@ abstract class CategoryEditModule {
         @JvmStatic
         internal fun provideMainTasksPresenter(
                 editTaskView: CategoryEditView,
-                taskRepository: AgendaRepository
+                taskRepository: EventRepository
         ): CategoryEditPresenter {
             return CategoryEditPresenter(editTaskView, taskRepository)
         }

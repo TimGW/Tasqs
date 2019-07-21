@@ -5,20 +5,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.timgortworst.roomy.model.EventCategory
+import com.timgortworst.roomy.model.Category
 
 
 class SpinnerTaskAdapter(
     private val ctx: Context,
     private val textViewResourceId: Int,
-    private val userList: MutableList<EventCategory>
-) : ArrayAdapter<EventCategory>(ctx, textViewResourceId, userList) {
+    private val userList: MutableList<Category>
+) : ArrayAdapter<Category>(ctx, textViewResourceId, userList) {
 
     override fun getCount(): Int {
         return userList.size
     }
 
-    override fun getItem(position: Int): EventCategory? {
+    override fun getItem(position: Int): Category? {
         return userList[position]
     }
 

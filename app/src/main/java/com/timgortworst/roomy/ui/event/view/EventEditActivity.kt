@@ -11,15 +11,14 @@ import android.widget.CompoundButton
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
-import com.timgortworst.roomy.model.EventCategory
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.ui.BaseActivity
 import com.timgortworst.roomy.ui.event.adapter.SpinnerTaskAdapter
 import com.timgortworst.roomy.ui.event.adapter.SpinnerUserAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventEditPresenter
-import com.timgortworst.roomy.utils.Constants.INTENT_EXTRA_EDIT_HOUSEHOLD_TASK
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_event.*
 import java.util.*
@@ -37,6 +36,8 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     lateinit var presenter: EventEditPresenter
 
     companion object {
+        const val INTENT_EXTRA_EDIT_EVENT = "INTENT_EXTRA_EDIT_EVENT"
+
         fun start(context: AppCompatActivity) {
             val intent = Intent(context, EventEditActivity::class.java)
             context.startActivity(intent)
@@ -45,7 +46,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
         fun start(context: AppCompatActivity, agendaEvent: Event) {
             val intent = Intent(context, EventEditActivity::class.java)
-            intent.putExtra(INTENT_EXTRA_EDIT_HOUSEHOLD_TASK, agendaEvent)
+            intent.putExtra(INTENT_EXTRA_EDIT_EVENT, agendaEvent)
             context.startActivity(intent)
             context.overridePendingTransition(R.anim.slide_up, R.anim.stay)
         }
@@ -56,7 +57,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_event)
 
-        agendaEvent = intent.getParcelableExtra(INTENT_EXTRA_EDIT_HOUSEHOLD_TASK) ?: Event()
+        agendaEvent = intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) ?: Event()
 
         supportActionBar?.apply {
             title = "Nieuw agenda item"
@@ -71,7 +72,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             }
         }
 
-        presenter.fetchEventCategories()
+        presenter.fetchCategories()
         presenter.fetchUsers()
         setupEventRepeatSpinner()
         setupCalenderDialog()
@@ -124,7 +125,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
                 presenter.insertOrUpdateEvent(
                     agendaEvent.agendaId,
-                    (spinner_categories.selectedItem as EventCategory),
+                    (spinner_categories.selectedItem as Category),
                     (spinner_users.selectedItem as User),
                     eventMetaData
                 )
@@ -151,7 +152,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         spinner_users.adapter = spinnerAdapterUsers
     }
 
-    override fun presentCategoryList(tasks: MutableList<EventCategory>) {
+    override fun presentCategoryList(tasks: MutableList<Category>) {
         spinnerAdapterTasks = SpinnerTaskAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,

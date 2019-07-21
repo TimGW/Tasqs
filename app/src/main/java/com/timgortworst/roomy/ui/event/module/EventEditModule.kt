@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.ui.event.module
 
-import com.timgortworst.roomy.repository.AgendaRepository
+import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.event.presenter.EventEditPresenter
 import com.timgortworst.roomy.ui.event.view.EventEditActivity
@@ -22,9 +22,9 @@ abstract class EventEditModule {
         @Provides
         @JvmStatic
         internal fun provideEditAgendaEventPresenter(
-                view: EventEditView,
-                agendaRepository: AgendaRepository,
-                userRepository: UserRepository
+            view: EventEditView,
+            agendaRepository: EventRepository,
+            userRepository: UserRepository
         ): EventEditPresenter {
             return EventEditPresenter(view, agendaRepository, userRepository)
         }

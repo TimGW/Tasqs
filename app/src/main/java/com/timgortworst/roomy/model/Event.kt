@@ -11,7 +11,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Event(
     var agendaId: String = "",
-    var eventCategory: EventCategory = EventCategory(),
+    var eventCategory: Category = Category(),
     var user: User = User(),
     var eventMetaData: EventMetaData = EventMetaData(),
     var isDone: Boolean = false

@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.model.EventCategory
+import com.timgortworst.roomy.model.Category
 
 /**
  * Recyclerview adapter for handling the list items in the task overview
@@ -18,7 +18,7 @@ class CategoryListAdapter(
         private var optionsClickListener: OnOptionsClickListener
 ) : StickyRecyclerHeadersAdapter<CategoryListAdapter.HeaderViewHolder>,
         RecyclerView.Adapter<CategoryListAdapter.ViewHolder>() {
-    private val houseHoldTasks: MutableList<EventCategory> = mutableListOf()
+    private val houseHoldTasks: MutableList<Category> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.row_category_list, parent, false)
@@ -61,20 +61,20 @@ class CategoryListAdapter(
         return houseHoldTasks[position].name[0].toLong()
     }
 
-    fun removeItem(householdTask: EventCategory) {
+    fun removeItem(householdTask: Category) {
         val indexToRemove = houseHoldTasks.indexOf(householdTask)
         houseHoldTasks.removeAt(indexToRemove)
         houseHoldTasks.sortBy { it.name }
         notifyItemRemoved(indexToRemove)
     }
 
-    fun insertItem(task: EventCategory) {
+    fun insertItem(task: Category) {
         houseHoldTasks.add(task)
         houseHoldTasks.sortBy { it.name }
         notifyDataSetChanged()
     }
 
-    fun editItem(householdTask: EventCategory) {
+    fun editItem(householdTask: Category) {
         val indexToUpdate = houseHoldTasks.indexOfFirst { it.categoryId == householdTask.categoryId }
         houseHoldTasks[indexToUpdate] = householdTask
         houseHoldTasks.sortBy { it.name }
@@ -100,6 +100,6 @@ class CategoryListAdapter(
     }
 
     interface OnOptionsClickListener {
-        fun onOptionsClick(householdTask: EventCategory)
+        fun onOptionsClick(householdTask: Category)
     }
 }

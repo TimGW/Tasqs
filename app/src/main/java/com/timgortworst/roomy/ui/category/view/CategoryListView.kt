@@ -1,9 +1,9 @@
 package com.timgortworst.roomy.ui.category.view
 
-import com.timgortworst.roomy.model.EventCategory
+import com.timgortworst.roomy.model.Category
 
 interface CategoryListView {
-    fun presentNewCategory(householdTask: EventCategory)
-    fun presentEditedCategory(householdTask: EventCategory)
-    fun presentDeletedCategory(householdTask: EventCategory)
+    fun presentNewCategory(householdTask: Category)
+    fun presentEditedCategory(householdTask: Category)
+    fun presentDeletedCategory(householdTask: Category)
 }

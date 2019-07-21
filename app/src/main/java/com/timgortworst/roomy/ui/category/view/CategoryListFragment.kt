@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.BottomMenuItem
-import com.timgortworst.roomy.model.EventCategory
+import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.ui.category.adapter.CategoryListAdapter
 import com.timgortworst.roomy.ui.category.presenter.CategoryListPresenter
 import com.timgortworst.roomy.customview.BottomSheetMenu
@@ -57,7 +57,7 @@ class CategoryListFragment : androidx.fragment.app.Fragment(), CategoryListView 
         presenter.listenToTasks()
 
         adapter = CategoryListAdapter(object : CategoryListAdapter.OnOptionsClickListener {
-                override fun onOptionsClick(householdTask: EventCategory) {
+                override fun onOptionsClick(householdTask: Category) {
                     showContextMenuFor(householdTask)
                 }
             })
@@ -88,7 +88,7 @@ class CategoryListFragment : androidx.fragment.app.Fragment(), CategoryListView 
         presenter.detachTaskListener()
     }
 
-    fun showContextMenuFor(householdTask: EventCategory) {
+    fun showContextMenuFor(householdTask: Category) {
         var bottomSheetMenu: BottomSheetMenu? = null
 
         val items = arrayListOf(
@@ -105,15 +105,15 @@ class CategoryListFragment : androidx.fragment.app.Fragment(), CategoryListView 
         bottomSheetMenu.show()
     }
 
-    override fun presentNewCategory(householdTask: EventCategory) {
+    override fun presentNewCategory(householdTask: Category) {
         adapter.insertItem(householdTask)
     }
 
-    override fun presentEditedCategory(householdTask: EventCategory) {
+    override fun presentEditedCategory(householdTask: Category) {
         adapter.editItem(householdTask)
     }
 
-    override fun presentDeletedCategory(householdTask: EventCategory) {
+    override fun presentDeletedCategory(householdTask: Category) {
         adapter.removeItem(householdTask)
     }
 }
