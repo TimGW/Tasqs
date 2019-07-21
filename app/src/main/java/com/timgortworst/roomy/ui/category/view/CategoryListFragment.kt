@@ -50,8 +50,6 @@ class CategoryListFragment : Fragment(), CategoryListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.listenToTasks()
-
         adapter = CategoryListAdapter(object : CategoryListAdapter.OnOptionsClickListener {
                 override fun onOptionsClick(householdTask: Category) {
                     showContextMenuFor(householdTask)
@@ -60,14 +58,13 @@ class CategoryListFragment : Fragment(), CategoryListView {
         val layoutManager = LinearLayoutManager(activityContext)
         household_task_list.layoutManager = layoutManager
         household_task_list.addItemDecoration(StickyRecyclerHeadersDecoration(adapter))
-        household_task_list.addItemDecoration(
-            DividerItemDecoration(activityContext, layoutManager.orientation)
-        )
+        household_task_list.addItemDecoration(DividerItemDecoration(activityContext, layoutManager.orientation))
         household_task_list.adapter = adapter
     }
 
     override fun onResume() {
         super.onResume()
+        presenter.listenToCategories()
         activityContext.supportActionBar?.title = getString(R.string.householdtasks_toolbar_title)
         activityContext.fab.setOnClickListener {
             CategoryEditActivity.start(activityContext)
@@ -77,11 +74,7 @@ class CategoryListFragment : Fragment(), CategoryListView {
     override fun onPause() {
         super.onPause()
         activityContext.fab.setOnClickListener(null)
-    }
-
-    override fun onDetach() {
-        presenter.detachTaskListener()
-        super.onDetach()
+        presenter.detachCategoryListener()
     }
 
     fun showContextMenuFor(householdTask: Category) {
@@ -93,7 +86,7 @@ class CategoryListFragment : Fragment(), CategoryListView {
                 bottomSheetMenu?.dismiss()
             },
             BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                presenter.deleteEventCategory(householdTask)
+                presenter.deleteCategory(householdTask)
                 bottomSheetMenu?.dismiss()
             }
         )

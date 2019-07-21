@@ -57,12 +57,11 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
 
         setupEventListAdapter()
         setupRecyclerContextMenu()
-
-        presenter.listenToEvents()
     }
 
     override fun onResume() {
         super.onResume()
+        presenter.listenToEvents()
         activityContext.supportActionBar?.title = getString(R.string.schema_toolbar_title)
         activityContext.fab.setOnClickListener { EventEditActivity.start(activityContext) }
         events_agenda.addOnItemTouchListener(touchListener)
@@ -71,11 +70,7 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     override fun onPause() {
         super.onPause()
         activityContext.fab.setOnClickListener(null)
-    }
-
-    override fun onDetach() {
         presenter.detachEventListener()
-        super.onDetach()
     }
 
     private fun setupEventListAdapter() {
