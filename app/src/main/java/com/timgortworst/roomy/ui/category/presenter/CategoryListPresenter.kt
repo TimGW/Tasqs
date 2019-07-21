@@ -3,7 +3,6 @@ package com.timgortworst.roomy.ui.category.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.model.Category
-import com.timgortworst.roomy.model.UIState
 import com.timgortworst.roomy.repository.CategoryRepository
 import com.timgortworst.roomy.ui.category.view.CategoryListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
@@ -48,7 +47,7 @@ class CategoryListPresenter(
         view.presentDeletedCategory(category)
     }
 
-    override fun setUIState(uiState: UIState) {
-        view.setUIState(uiState)
+    override fun setLoading(isLoading: Boolean) {
+        view.setLoading(isLoading)
     }
 }

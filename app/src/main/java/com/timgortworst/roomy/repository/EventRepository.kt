@@ -11,7 +11,6 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
-import com.timgortworst.roomy.model.UIState
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_COLLECTION_REF
@@ -25,7 +24,7 @@ import kotlinx.coroutines.tasks.await
 
 class EventRepository(val userRepository: UserRepository) {
     private val householdCollectionRef = FirebaseFirestore.getInstance().collection(HOUSEHOLD_COLLECTION_REF)
-    private var eventListener: ListenerRegistration? = null
+    private var registration: ListenerRegistration? = null
 
     suspend fun insertEvent(
         category: Category,
@@ -84,8 +83,8 @@ class EventRepository(val userRepository: UserRepository) {
         }
     }
 
-    suspend fun listenToEvents(agendaListener: EventListener) {
-        agendaListener.setUIState(UIState.LOADING)
+    suspend fun listenToEvents(eventListener: EventListener) {
+        eventListener.setLoading(true)
 
         val query = householdCollectionRef
             .document(userRepository.getHouseholdIdForCurrentUser())
@@ -93,9 +92,9 @@ class EventRepository(val userRepository: UserRepository) {
 
         query.orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)
 
-        eventListener = query.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+        registration = query.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
             if (e != null && snapshots == null) {
-                agendaListener.setUIState(UIState.ERROR)
+                eventListener.setLoading(false)
                 Log.w(TAG, "listen:error", e)
                 return@EventListener
             }
@@ -103,17 +102,17 @@ class EventRepository(val userRepository: UserRepository) {
             for (dc in snapshots!!.documentChanges) {
                 val agendaEvent = dc.document.toObject(Event::class.java)
                 when (dc.type) {
-                    ADDED -> agendaListener.eventAdded(agendaEvent)
-                    MODIFIED -> agendaListener.eventModified(agendaEvent)
-                    REMOVED -> agendaListener.eventDeleted(agendaEvent)
+                    ADDED -> eventListener.eventAdded(agendaEvent)
+                    MODIFIED -> eventListener.eventModified(agendaEvent)
+                    REMOVED -> eventListener.eventDeleted(agendaEvent)
                 }
             }
-            agendaListener.setUIState(UIState.SUCCESS)
+            eventListener.setLoading(false)
         })
     }
 
     fun detachEventListener() {
-        eventListener?.remove()
+        registration?.remove()
     }
 
     companion object {
