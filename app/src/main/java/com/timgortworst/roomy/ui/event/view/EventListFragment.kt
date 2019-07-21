@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.Event
-import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.ui.event.adapter.EventListAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
@@ -23,7 +23,6 @@ import javax.inject.Inject
 class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     private lateinit var touchListener: RecyclerTouchListener
     private lateinit var activityContext: AppCompatActivity
-    private var listeningToEvents: Boolean = false
     private lateinit var adapter: EventListAdapter
 
     @Inject
@@ -38,12 +37,11 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
+        activityContext = (activity as? MainActivity) ?: return
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        activityContext = (activity as? MainActivity) ?: return
 
         setHasOptionsMenu(true)
     }
@@ -60,10 +58,7 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
         setupEventListAdapter()
         setupRecyclerContextMenu()
 
-        if (!listeningToEvents) {
-            presenter.listenToEvents()
-            listeningToEvents = true
-        }
+        presenter.listenToEvents()
     }
 
     override fun onResume() {
@@ -79,9 +74,8 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     }
 
     override fun onDetach() {
-        super.onDetach()
-        listeningToEvents = false
         presenter.detachEventListener()
+        super.onDetach()
     }
 
     private fun setupEventListAdapter() {
@@ -150,8 +144,7 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
             }
         )
 
-        bottomSheetMenu =
-            BottomSheetMenu(activityContext, event.eventCategory.name, items)
+        bottomSheetMenu = BottomSheetMenu(activityContext, event.eventCategory.name, items)
         bottomSheetMenu.show()
     }
 

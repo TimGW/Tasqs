@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.ui.category.adapter.CategoryListAdapter
 import com.timgortworst.roomy.ui.category.presenter.CategoryListPresenter
-import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_category_list.*
 import javax.inject.Inject
 
 
-class CategoryListFragment : androidx.fragment.app.Fragment(), CategoryListView {
+class CategoryListFragment : Fragment(), CategoryListView {
     private lateinit var activityContext: MainActivity
     private lateinit var adapter: CategoryListAdapter
 
@@ -29,7 +30,7 @@ class CategoryListFragment : androidx.fragment.app.Fragment(), CategoryListView 
     lateinit var presenter: CategoryListPresenter
 
     companion object {
-        private val TAG = CategoryListFragment::class.java.simpleName
+        private val TAG = "CategoryListFragment"
 
         fun newInstance(): CategoryListFragment {
             return CategoryListFragment()
@@ -39,11 +40,6 @@ class CategoryListFragment : androidx.fragment.app.Fragment(), CategoryListView 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         activityContext = (activity as MainActivity)
     }
 
@@ -84,8 +80,8 @@ class CategoryListFragment : androidx.fragment.app.Fragment(), CategoryListView 
     }
 
     override fun onDetach() {
-        super.onDetach()
         presenter.detachTaskListener()
+        super.onDetach()
     }
 
     fun showContextMenuFor(householdTask: Category) {
