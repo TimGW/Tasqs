@@ -15,7 +15,6 @@ import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.customview.BottomSheetMenu
-import com.timgortworst.roomy.local.HuishoudGenootSharedPref
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.ui.main.view.MainActivity
@@ -24,21 +23,17 @@ import com.timgortworst.roomy.ui.user.presenter.UserListPresenter
 import com.timgortworst.roomy.utils.Constants.QUERY_PARAM_HOUSEHOLD
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_user_list.*
+import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import javax.inject.Inject
 
 
 class UserListFragment : Fragment(), UserListView {
     @Inject
     lateinit var presenter: UserListPresenter
-    private lateinit var adapter: UserListAdapter
+    private lateinit var userListAdapter: UserListAdapter
     private lateinit var activityContext: MainActivity
 
-    @Inject
-    lateinit var sharedPref: HuishoudGenootSharedPref
-
     companion object {
-
         fun newInstance(): UserListFragment {
             return UserListFragment()
         }
@@ -47,32 +42,39 @@ class UserListFragment : Fragment(), UserListView {
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         activityContext = (activity as MainActivity)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_user_list, container, false)
+        return inflater.inflate(R.layout.fragment_recycler_view, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = UserListAdapter(object : UserListAdapter.OnUserLongClickListener {
+        setupUserList()
+
+        presenter.fetchUsers()
+    }
+
+    private fun setupUserList() {
+        userListAdapter = UserListAdapter(object : UserListAdapter.OnUserLongClickListener {
             override fun onUserClick(user: User) {
                 presenter.showContextMenuIfUserHasPermission(user)
             }
         })
-        val layoutManager = LinearLayoutManager(activityContext)
-        user_list.layoutManager = layoutManager
-        val dividerItemDecoration = DividerItemDecoration(activityContext, layoutManager.orientation)
-        user_list.addItemDecoration(dividerItemDecoration)
-        user_list.adapter = adapter
 
-        presenter.fetchUsers()
+        val recyclerView = recycler_view
+        recyclerView.apply {
+            val linearLayoutManager = LinearLayoutManager(activityContext)
+            val dividerItemDecoration = DividerItemDecoration(activityContext, linearLayoutManager.orientation)
+
+            layoutManager = linearLayoutManager
+            adapter = userListAdapter
+
+            addItemDecoration(dividerItemDecoration)
+        }
     }
 
     override fun onResume() {
@@ -91,7 +93,7 @@ class UserListFragment : Fragment(), UserListView {
     }
 
     override fun presentUserList(users: MutableList<User>) {
-        adapter.setUsers(users)
+        userListAdapter.setUsers(users)
     }
 
     override fun share(householdId: String) {
@@ -162,6 +164,6 @@ class UserListFragment : Fragment(), UserListView {
     }
 
     override fun refreshView(user: User) {
-        adapter.remove(user)
+        userListAdapter.remove(user)
     }
 }

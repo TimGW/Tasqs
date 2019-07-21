@@ -2,7 +2,12 @@ package com.timgortworst.roomy.ui.event.view
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,14 +21,14 @@ import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.utils.RecyclerTouchListener
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_event_list.*
+import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import javax.inject.Inject
 
 
 class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     private lateinit var touchListener: RecyclerTouchListener
     private lateinit var activityContext: AppCompatActivity
-    private lateinit var adapter: EventListAdapter
+    private lateinit var eventListAdapter: EventListAdapter
 
     @Inject
     lateinit var presenter: EventListPresenter
@@ -47,24 +52,24 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_event_list, container, false)
+        return inflater.inflate(R.layout.fragment_recycler_view, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.listenToEvents()
 
         swipe_container.isEnabled = false
 
         setupEventListAdapter()
         setupRecyclerContextMenu()
+
+        presenter.listenToEvents()
     }
 
     override fun onResume() {
         super.onResume()
         activityContext.supportActionBar?.title = getString(R.string.schema_toolbar_title)
         activityContext.fab.setOnClickListener { EventEditActivity.start(activityContext) }
-        events_agenda.addOnItemTouchListener(touchListener)
     }
 
     override fun onPause() {
@@ -79,20 +84,25 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     }
 
     private fun setupEventListAdapter() {
-        adapter = EventListAdapter(activityContext)
-        val layoutManager = LinearLayoutManager(activityContext)
-        events_agenda.layoutManager = layoutManager
-        val dividerItemDecoration =
-            DividerItemDecoration(events_agenda.context, layoutManager.orientation)
-        events_agenda.addItemDecoration(dividerItemDecoration)
-        events_agenda.adapter = adapter
+        eventListAdapter = EventListAdapter(activityContext)
+
+        val recyclerView = recycler_view
+        recyclerView.apply {
+            val linearLayoutManager = LinearLayoutManager(activityContext)
+
+            layoutManager = linearLayoutManager
+            adapter = eventListAdapter
+
+            addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
+            addOnItemTouchListener(touchListener)
+        }
     }
 
     private fun setupRecyclerContextMenu() {
-        touchListener = RecyclerTouchListener(activityContext, events_agenda)
+        touchListener = RecyclerTouchListener(activityContext, recycler_view)
         touchListener
             .setLongClickable(false) {
-                showContextMenuFor(adapter.getEvent(it))
+                showContextMenuFor(eventListAdapter.getEvent(it))
             }
             .setClickable(object : RecyclerTouchListener.OnRowClickListener {
                 override fun onRowClicked(position: Int) {
@@ -105,7 +115,7 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
             .setSwipeable(R.id.rowFG, R.id.rowBG) { viewID, position ->
                 when (viewID) {
                     R.id.task_done -> {
-                        presenter.markEventAsCompleted(adapter.getEvent(position))
+                        presenter.markEventAsCompleted(eventListAdapter.getEvent(position))
                     }
                 }
             }
@@ -119,11 +129,11 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filter_all -> {
-                adapter.clearFilter()
+                eventListAdapter.clearFilter()
                 true
             }
             R.id.filter_me -> {
-                presenter.filterMe(adapter.filter)
+                presenter.filterMe(eventListAdapter.filter)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -149,14 +159,14 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
     }
 
     override fun presentAddedEvent(agendaEvent: Event) {
-        adapter.addEvent(agendaEvent)
+        eventListAdapter.addEvent(agendaEvent)
     }
 
     override fun presentEditedEvent(agendaEvent: Event) {
-        adapter.updateEvent(agendaEvent)
+        eventListAdapter.updateEvent(agendaEvent)
     }
 
     override fun presentDeletedEvent(agendaEvent: Event) {
-        adapter.removeEvent(agendaEvent)
+        eventListAdapter.removeEvent(agendaEvent)
     }
 }
