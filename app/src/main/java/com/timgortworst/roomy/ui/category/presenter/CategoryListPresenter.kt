@@ -46,4 +46,8 @@ class CategoryListPresenter(
     override fun categoryDeleted(category: Category) {
         view.presentDeletedCategory(category)
     }
+
+    override fun categoryLoading(isLoading: Boolean) {
+        view.showLoadingState(isLoading)
+    }
 }

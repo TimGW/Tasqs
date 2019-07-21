@@ -54,18 +54,17 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
                     .replace(R.id.content_frame, newFragment, newFragment::class.java.toString())
                     .commit()
         }
-
     }
 
-    fun presentAgendaFragment() {
+    private fun presentAgendaFragment() {
         fragmentToReplace(EventListFragment.newInstance())
     }
 
-    fun presentTasksFragment() {
+    private fun presentTasksFragment() {
         fragmentToReplace(CategoryListFragment.newInstance())
     }
 
-    fun presentHousematesFragment() {
+    private fun presentHousematesFragment() {
         fragmentToReplace(UserListFragment.newInstance())
     }
 

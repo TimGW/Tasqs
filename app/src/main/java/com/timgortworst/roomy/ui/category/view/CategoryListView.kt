@@ -6,4 +6,5 @@ interface CategoryListView {
     fun presentNewCategory(householdTask: Category)
     fun presentEditedCategory(householdTask: Category)
     fun presentDeletedCategory(householdTask: Category)
+    fun showLoadingState(isLoading: Boolean)
 }

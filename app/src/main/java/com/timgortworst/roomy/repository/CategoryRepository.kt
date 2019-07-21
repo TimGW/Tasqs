@@ -1,8 +1,13 @@
 package com.timgortworst.roomy.repository
 
 import android.util.Log
-import com.google.firebase.firestore.*
 import com.google.firebase.firestore.DocumentChange.Type.*
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.utils.Constants.CATEGORIES_COLLECTION_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_DESC_REF
@@ -73,6 +78,7 @@ class CategoryRepository(val userRepository: UserRepository) {
     }
 
     suspend fun listenToCategories(taskListener: CategoryListener) {
+        taskListener.categoryLoading(true)
         categoryListener = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(CATEGORIES_COLLECTION_REF)
             .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
@@ -89,6 +95,7 @@ class CategoryRepository(val userRepository: UserRepository) {
                         REMOVED -> taskListener.categoryDeleted(eventCategory)
                     }
                 }
+                taskListener.categoryLoading(false)
             })
     }
 
@@ -104,5 +111,6 @@ class CategoryRepository(val userRepository: UserRepository) {
         fun categoryAdded(category: Category)
         fun categoryModified(category: Category)
         fun categoryDeleted(category: Category)
+        fun categoryLoading(isLoading: Boolean)
     }
 }
