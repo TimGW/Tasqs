@@ -49,6 +49,7 @@ class CategoryListFragment : Fragment(), CategoryListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.listenToCategories()
 
         adapter = CategoryListAdapter(object : CategoryListAdapter.OnOptionsClickListener {
                 override fun onOptionsClick(householdTask: Category) {
@@ -64,7 +65,6 @@ class CategoryListFragment : Fragment(), CategoryListView {
 
     override fun onResume() {
         super.onResume()
-        presenter.listenToCategories()
         activityContext.supportActionBar?.title = getString(R.string.householdtasks_toolbar_title)
         activityContext.fab.setOnClickListener {
             CategoryEditActivity.start(activityContext)
@@ -74,6 +74,10 @@ class CategoryListFragment : Fragment(), CategoryListView {
     override fun onPause() {
         super.onPause()
         activityContext.fab.setOnClickListener(null)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         presenter.detachCategoryListener()
     }
 
