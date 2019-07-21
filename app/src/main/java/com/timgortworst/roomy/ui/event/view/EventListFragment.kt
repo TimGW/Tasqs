@@ -52,6 +52,7 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.listenToEvents()
 
         swipe_container.isEnabled = false
 
@@ -61,7 +62,6 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
 
     override fun onResume() {
         super.onResume()
-        presenter.listenToEvents()
         activityContext.supportActionBar?.title = getString(R.string.schema_toolbar_title)
         activityContext.fab.setOnClickListener { EventEditActivity.start(activityContext) }
         events_agenda.addOnItemTouchListener(touchListener)
@@ -71,6 +71,11 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
         super.onPause()
         activityContext.fab.setOnClickListener(null)
         presenter.detachEventListener()
+    }
+
+    override fun onDestroy() {
+        presenter.detachEventListener()
+        super.onDestroy()
     }
 
     private fun setupEventListAdapter() {
