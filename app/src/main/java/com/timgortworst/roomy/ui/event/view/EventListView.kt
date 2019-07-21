@@ -1,7 +1,6 @@
 package com.timgortworst.roomy.ui.event.view
 
 import com.timgortworst.roomy.model.Event
-import com.timgortworst.roomy.model.UIState
 import com.timgortworst.roomy.repository.ObjectStateListener
 
 interface EventListView : ObjectStateListener {

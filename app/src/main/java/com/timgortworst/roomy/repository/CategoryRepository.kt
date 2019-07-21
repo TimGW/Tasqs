@@ -9,7 +9,6 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.model.Category
-import com.timgortworst.roomy.model.UIState
 import com.timgortworst.roomy.utils.Constants.CATEGORIES_COLLECTION_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_DESC_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_ID_REF
@@ -79,13 +78,13 @@ class CategoryRepository(val userRepository: UserRepository) {
     }
 
     suspend fun listenToCategories(taskListener: CategoryListener) {
-        taskListener.setUIState(UIState.LOADING)
+        taskListener.setLoading(true)
 
         categoryListener = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
             .collection(CATEGORIES_COLLECTION_REF)
             .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                 if (e != null) {
-                    taskListener.setUIState(UIState.ERROR)
+                    taskListener.setLoading(false)
                     Log.w(TAG, "listen:error", e)
                     return@EventListener
                 }
@@ -98,7 +97,7 @@ class CategoryRepository(val userRepository: UserRepository) {
                         REMOVED -> taskListener.categoryDeleted(eventCategory)
                     }
                 }
-                taskListener.setUIState(UIState.SUCCESS)
+                taskListener.setLoading(false)
             })
     }
 

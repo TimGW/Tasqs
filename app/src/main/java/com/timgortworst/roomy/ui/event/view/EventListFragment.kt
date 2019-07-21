@@ -9,13 +9,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.Event
-import com.timgortworst.roomy.model.UIState
 import com.timgortworst.roomy.ui.event.adapter.EventListAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import javax.inject.Inject
 
 
-class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
+class EventListFragment : Fragment(), EventListView {
     private lateinit var touchListener: RecyclerTouchListener
     private lateinit var activityContext: AppCompatActivity
     private lateinit var eventListAdapter: EventListAdapter
@@ -171,17 +171,7 @@ class EventListFragment : androidx.fragment.app.Fragment(), EventListView {
         eventListAdapter.removeEvent(agendaEvent)
     }
 
-    override fun setUIState(uiState: UIState) {
-        when(uiState) {
-            UIState.LOADING -> {
-                swipe_container.isRefreshing = true
-            }
-            UIState.ERROR -> {
-                swipe_container.isRefreshing = false
-            }
-            UIState.SUCCESS -> {
-                swipe_container.isRefreshing = false
-            }
-        }
+    override fun setLoading(isLoading: Boolean) {
+        swipe_container.isRefreshing = isLoading
     }
 }
