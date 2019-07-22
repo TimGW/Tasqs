@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.customview.BottomSheetMenu
@@ -19,6 +20,7 @@ import com.timgortworst.roomy.ui.main.view.MainActivity
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
+import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
 import javax.inject.Inject
 
 
@@ -28,6 +30,8 @@ class CategoryListFragment : Fragment(), CategoryListView {
 
     @Inject
     lateinit var presenter: CategoryListPresenter
+
+    private var recyclerView: RecyclerView? = null
 
     companion object {
         private val TAG = "CategoryListFragment"
@@ -44,17 +48,31 @@ class CategoryListFragment : Fragment(), CategoryListView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_recycler_view, container, false)
+        val view = inflater.inflate(R.layout.fragment_recycler_view, container, false)
+        categoryListAdapter = CategoryListAdapter(object : CategoryListAdapter.OnOptionsClickListener {
+            override fun onOptionsClick(householdTask: Category) {
+                showContextMenuFor(householdTask)
+            }
+        })
+        recyclerView = view.recycler_view
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        swipe_container.isEnabled = false
-
-        setupCategoryList()
-
         presenter.listenToCategories()
+
+        swipe_container?.isEnabled = false
+
+        recyclerView?.apply {
+            val linearLayoutManager = LinearLayoutManager(activityContext)
+
+            layoutManager = linearLayoutManager
+            adapter = categoryListAdapter
+
+            addItemDecoration(StickyRecyclerHeadersDecoration(categoryListAdapter))
+            addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
+        }
     }
 
     override fun onResume() {
@@ -75,36 +93,18 @@ class CategoryListFragment : Fragment(), CategoryListView {
         presenter.detachCategoryListener()
     }
 
-    private fun setupCategoryList() {
-        categoryListAdapter = CategoryListAdapter(object : CategoryListAdapter.OnOptionsClickListener {
-            override fun onOptionsClick(householdTask: Category) {
-                showContextMenuFor(householdTask)
-            }
-        })
-        val recyclerView = recycler_view
-        recyclerView.apply {
-            val linearLayoutManager = LinearLayoutManager(activityContext)
-
-            layoutManager = linearLayoutManager
-            adapter = categoryListAdapter
-
-            addItemDecoration(StickyRecyclerHeadersDecoration(categoryListAdapter))
-            addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
-        }
-    }
-
     fun showContextMenuFor(householdTask: Category) {
         var bottomSheetMenu: BottomSheetMenu? = null
 
         val items = arrayListOf(
-                BottomMenuItem(R.drawable.ic_edit, "Edit") {
-                    CategoryEditActivity.start(activityContext, householdTask)
-                    bottomSheetMenu?.dismiss()
-                },
-                BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                    presenter.deleteCategory(householdTask)
-                    bottomSheetMenu?.dismiss()
-                }
+            BottomMenuItem(R.drawable.ic_edit, "Edit") {
+                CategoryEditActivity.start(activityContext, householdTask)
+                bottomSheetMenu?.dismiss()
+            },
+            BottomMenuItem(R.drawable.ic_delete, "Delete") {
+                presenter.deleteCategory(householdTask)
+                bottomSheetMenu?.dismiss()
+            }
         )
         bottomSheetMenu = BottomSheetMenu(activityContext, householdTask.name, items)
         bottomSheetMenu.show()
