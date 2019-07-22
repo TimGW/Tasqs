@@ -1,13 +1,8 @@
 package com.timgortworst.roomy.repository
 
 import android.util.Log
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.DocumentChange.Type.*
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.utils.Constants.CATEGORIES_COLLECTION_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_DESC_REF
@@ -15,8 +10,12 @@ import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_ID_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_NAME_REF
 import com.timgortworst.roomy.utils.Constants.HOUSEHOLD_COLLECTION_REF
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CategoryRepository(val userRepository: UserRepository) {
+@Singleton
+class CategoryRepository @Inject constructor(private val userRepository: UserRepository) {
+
     private val householdCollectionRef = FirebaseFirestore.getInstance().collection(HOUSEHOLD_COLLECTION_REF)
     private var categoryListener: ListenerRegistration? = null
 

@@ -123,6 +123,6 @@ class CategoryListFragment : Fragment(), CategoryListView {
     }
 
     override fun setLoading(isLoading: Boolean) {
-        swipe_container.isRefreshing = isLoading
+        swipe_container?.isRefreshing = isLoading
     }
 }

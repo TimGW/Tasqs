@@ -8,4 +8,7 @@ import kotlinx.android.parcel.Parcelize
 @IgnoreExtraProperties
 @SuppressLint("ParcelCreator")
 @Parcelize
-data class Household (var householdId : String = "") : Parcelable
+data class Household(
+        var householdId: String = "",
+        var blackList: MutableList<String> = mutableListOf()
+) : Parcelable

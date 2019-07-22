@@ -11,11 +11,9 @@ import javax.inject.Singleton
  * Main Dagger AppComponent which is used in @see [RoomyApp]
  */
 @Singleton
-
 @Component(
     modules = [(AppModule::class),
         (ActivityBuilder::class),
-        (RepositoryModule::class),
         (AndroidInjectionModule::class)]
 )
 interface AppComponent {

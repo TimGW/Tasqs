@@ -36,8 +36,8 @@ class UserListPresenter(
     }
 
     fun deleteUser(user: User) = scope.launch {
-//        userRepository.deleteUser(user)
-        view.refreshView(user)
+        userRepository.deleteUser(user)
+        view.removeUserFromCurrentUI(user)
     }
 
     fun showContextMenuIfUserHasPermission(user: User) = scope.launch {
