@@ -8,11 +8,12 @@ import com.timgortworst.roomy.ui.category.view.CategoryListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class CategoryListPresenter(
-        val view: CategoryListView,
-        private val categoryRepository: CategoryRepository
+class CategoryListPresenter @Inject constructor(
+    val view: CategoryListView,
+    private val categoryRepository: CategoryRepository
 ) : CategoryRepository.CategoryListener, DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)

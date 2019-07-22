@@ -7,9 +7,10 @@ import com.timgortworst.roomy.ui.category.view.CategoryEditView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class CategoryEditPresenter(
+class CategoryEditPresenter @Inject constructor(
     val view: CategoryEditView,
     private val categoryRepository: CategoryRepository
 ) : DefaultLifecycleObserver {

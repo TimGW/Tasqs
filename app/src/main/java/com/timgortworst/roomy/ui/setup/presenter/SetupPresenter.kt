@@ -10,9 +10,10 @@ import com.timgortworst.roomy.ui.setup.view.SetupView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class SetupPresenter(
+class SetupPresenter @Inject constructor(
     private val view: SetupView,
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository

@@ -7,10 +7,11 @@ import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.settings.view.SettingsView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Inject
 
-class SettingsPresenter(
-        val view: SettingsView,
-        val userRepository: UserRepository
+class SettingsPresenter @Inject constructor(
+    view: SettingsView,
+    private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -23,15 +24,13 @@ class SettingsPresenter(
 
     fun deleteUser(uid: String) {
 
-
-
         val user = FirebaseAuth.getInstance().currentUser
 
         user?.delete()
-                ?.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                       // activity!!.showToast("User account deleted.")
-                    }
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // activity!!.showToast("User account deleted.")
                 }
+            }
     }
 }

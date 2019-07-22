@@ -8,10 +8,11 @@ import com.timgortworst.roomy.ui.splash.ui.SplashView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SplashPresenter(
-        private val view: SplashView,
-        private val userRepository: UserRepository
+class SplashPresenter @Inject constructor(
+    private val view: SplashView,
+    private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)

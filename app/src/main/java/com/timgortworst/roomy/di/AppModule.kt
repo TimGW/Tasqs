@@ -12,9 +12,7 @@ import dagger.Module
  * Module for creating global complex objects required throughout the app added in @see[AppComponent]
  */
 @Module
-
 abstract class AppModule {
-
     @Binds
     internal abstract fun provideContext(application: Application): Context
 }
