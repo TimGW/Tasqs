@@ -3,16 +3,22 @@ package com.timgortworst.roomy.repository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.timgortworst.roomy.model.Household
 import com.timgortworst.roomy.model.User
+import com.timgortworst.roomy.utils.Constants
 import com.timgortworst.roomy.utils.Constants.USERS_COLLECTION_REF
 import com.timgortworst.roomy.utils.Constants.USER_EMAIL_REF
 import com.timgortworst.roomy.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.utils.Constants.USER_ROLE_REF
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserRepository {
+@Singleton
+class UserRepository @Inject constructor(private val householdRepository: HouseholdRepository) {
     private val db = FirebaseFirestore.getInstance()
+    private val householdsCollectionRef = FirebaseFirestore.getInstance().collection(Constants.HOUSEHOLD_COLLECTION_REF)
     private val userCollectionRef = db.collection(USERS_COLLECTION_REF)
 
     fun getCurrentUserId() = FirebaseAuth.getInstance().currentUser?.uid
@@ -61,8 +67,43 @@ class UserRepository {
     }
 
     suspend fun deleteUser(user: User) {
+        // set user on blacklist
+        addUserToBlackList(user.userId)
+
+        // remove id from user document
         userCollectionRef.document(user.userId).update(USER_HOUSEHOLDID_REF, "").await()
-        // todo remove agenda events where userId is assigned
+
+        // remove all events for that user
+        removeEventsForUser(user.userId)
+
+        // todo return error state or success
+    }
+
+    private suspend fun addUserToBlackList(userId: String) {
+        val householdRef = householdsCollectionRef.document(getHouseholdIdForUser(userId))
+        val household = householdRef.get().await().toObject(Household::class.java) as Household
+        household.blackList.add(userId)
+        householdRepository.updateHousehold(household.householdId, household.blackList)
+    }
+
+    private suspend fun removeEventsForUser(userId: String) {
+//        try { todo
+//            householdCollectionRef
+//                .document(userRepository.getHouseholdIdForCurrentUser())
+//                .collection(EVENT_COLLECTION_REF)
+//                    .document()
+//                    .whereEqualTo(EVENT_USER_REF, userId)
+//                .delete()
+//                .await()
+//        } catch (e: FirebaseFirestoreException) {
+//            Log.e("TIMTIM", e.localizedMessage!!)
+//        }
+    }
+
+    suspend fun getHouseholdIdForUser(userId: String): String {
+        val currentUserDocRef = userCollectionRef.document(userId)
+        val user = currentUserDocRef.get().await().toObject(User::class.java) as User
+        return user.householdId
     }
 
     suspend fun getHouseholdIdForCurrentUser(): String {

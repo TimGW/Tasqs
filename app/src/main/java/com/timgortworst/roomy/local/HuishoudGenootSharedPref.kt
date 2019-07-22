@@ -1,14 +1,19 @@
 package com.timgortworst.roomy.local
 
-import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
+import com.timgortworst.roomy.RoomyApp
 import com.timgortworst.roomy.utils.Constants.SHARED_PREF_DARK_MODE
 import com.timgortworst.roomy.utils.Constants.SHARED_PREF_FIRST_LAUNCH
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by tim.gortworst on 07/03/2018.
  */
+@Singleton
 class HuishoudGenootSharedPref
-constructor(private val sharedPreferences: SharedPreferences) {
+@Inject constructor() {
+    private val sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(RoomyApp.applicationContext())
 
     fun isFirstLaunch(): Boolean {
         return getBoolValue(SHARED_PREF_FIRST_LAUNCH, true)

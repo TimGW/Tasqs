@@ -11,6 +11,9 @@ object Constants {
     const val EVENT_COLLECTION_REF = "agendaEvents"
     const val USERS_COLLECTION_REF = "users"
 
+    const val HOUSEHOLD_ID_REF = "householdId"
+    const val HOUSEHOLD_BLACKLIST_REF = "blackList"
+
     const val USER_NAME_REF = "name"
     const val USER_EMAIL_REF = "email"
     const val USER_ROLE_REF = "role"

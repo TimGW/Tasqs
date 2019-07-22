@@ -79,6 +79,7 @@ class SetupPresenter(
         val userList = userRepository.getUsersForHouseholdId(userRepository.getHouseholdIdForCurrentUser())
         if (userList.isEmpty()) {
             // remove old household if there are no more users in the household
+            // todo remove nested objects
             householdRepository.removeHousehold(userRepository.getHouseholdIdForCurrentUser())
         }
         view.goToMainActivity()

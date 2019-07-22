@@ -155,7 +155,7 @@ class UserListFragment : Fragment(), UserListView {
 
         val items = arrayListOf(
             BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                presenter.deleteUser(user) // todo
+                presenter.deleteUser(user)
                 bottomSheetMenu?.dismiss()
             }
         )
@@ -163,7 +163,7 @@ class UserListFragment : Fragment(), UserListView {
         bottomSheetMenu.show()
     }
 
-    override fun refreshView(user: User) {
+    override fun removeUserFromCurrentUI(user: User) {
         userListAdapter.remove(user)
     }
 }
