@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
@@ -23,7 +24,7 @@ import com.timgortworst.roomy.ui.user.presenter.UserListPresenter
 import com.timgortworst.roomy.utils.Constants.QUERY_PARAM_HOUSEHOLD
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_recycler_view.*
+import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
 import javax.inject.Inject
 
 
@@ -32,6 +33,7 @@ class UserListFragment : Fragment(), UserListView {
     lateinit var presenter: UserListPresenter
     private lateinit var userListAdapter: UserListAdapter
     private lateinit var activityContext: MainActivity
+    private var recyclerView: RecyclerView? = null
 
     companion object {
         fun newInstance(): UserListFragment {
@@ -42,31 +44,25 @@ class UserListFragment : Fragment(), UserListView {
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
-
         activityContext = (activity as MainActivity)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_recycler_view, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupUserList()
-
-        presenter.fetchUsers()
-    }
-
-    private fun setupUserList() {
+        val view = inflater.inflate(R.layout.fragment_recycler_view, container, false)
         userListAdapter = UserListAdapter(object : UserListAdapter.OnUserLongClickListener {
             override fun onUserClick(user: User) {
                 presenter.showContextMenuIfUserHasPermission(user)
             }
         })
+        recyclerView = view.recycler_view
+        return view
+    }
 
-        val recyclerView = recycler_view
-        recyclerView.apply {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.fetchUsers()
+
+        recyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(activityContext)
             val dividerItemDecoration = DividerItemDecoration(activityContext, linearLayoutManager.orientation)
 
