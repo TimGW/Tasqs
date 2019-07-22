@@ -9,8 +9,9 @@ import com.timgortworst.roomy.ui.user.view.UserListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserListPresenter(
+class UserListPresenter @Inject constructor(
     private val view: UserListView,
     private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {

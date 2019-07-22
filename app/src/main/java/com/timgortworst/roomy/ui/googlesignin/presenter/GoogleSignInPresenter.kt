@@ -9,9 +9,9 @@ import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-
-class GoogleSignInPresenter(private val view: GoogleSignInView) : DefaultLifecycleObserver {
+class GoogleSignInPresenter @Inject constructor(private val view: GoogleSignInView) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 

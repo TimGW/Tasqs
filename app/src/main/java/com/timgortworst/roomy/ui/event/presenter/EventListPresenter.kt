@@ -12,11 +12,12 @@ import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.utils.isTimeStampInPast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EventListPresenter(
-    val view: EventListView,
-    val agendaRepository: EventRepository,
-    val userRepository: UserRepository
+class EventListPresenter @Inject constructor(
+    private val view: EventListView,
+    private val agendaRepository: EventRepository,
+    private val userRepository: UserRepository
 ) : EventRepository.EventListener, DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)

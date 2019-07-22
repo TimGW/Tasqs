@@ -13,9 +13,10 @@ import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
 
-class EventEditPresenter(
+class EventEditPresenter @Inject constructor(
     private val view: EventEditView,
     private val agendaRepository: EventRepository,
     private val userRepository: UserRepository,
