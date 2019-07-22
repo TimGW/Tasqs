@@ -2,12 +2,7 @@ package com.timgortworst.roomy.ui.event.view
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -76,7 +71,6 @@ class EventListFragment : Fragment(), EventListView {
     override fun onPause() {
         super.onPause()
         activityContext.fab.setOnClickListener(null)
-        presenter.detachEventListener()
     }
 
     override fun onDestroy() {
