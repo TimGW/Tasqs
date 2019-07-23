@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.PreferenceManager
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.firestore.FirebaseFirestore
 import com.timgortworst.roomy.di.DaggerAppComponent
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
@@ -12,6 +12,8 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import javax.inject.Inject
+
+
 
 
 /**
@@ -47,6 +49,8 @@ class RoomyApp : Application(), HasActivityInjector {
             else
                 AppCompatDelegate.MODE_NIGHT_NO
         )
+
+        MobileAds.initialize(this, getString(R.string.ad_app_id))
     }
 
     override fun activityInjector(): AndroidInjector<Activity>? {
