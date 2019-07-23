@@ -3,8 +3,11 @@ package com.timgortworst.roomy.ui.main.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.timgortworst.roomy.R
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
 import com.timgortworst.roomy.ui.BaseActivity
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
 import com.timgortworst.roomy.ui.event.view.EventListFragment
@@ -22,6 +25,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
+    private var adRequest: AdRequest? = null
+
     companion object {
         fun start(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
@@ -32,10 +37,45 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(com.timgortworst.roomy.R.layout.activity_main)
 
+        setupAdMob()
         setupClickListeners()
+
         presentAgendaFragment()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadAdMob()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        clearAdMob()
+    }
+
+    private fun setupAdMob() {
+        adRequest = AdRequest.Builder().build()
+        adView?.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                adView_container?.visibility = View.VISIBLE
+            }
+
+            override fun onAdFailedToLoad(errorCode: Int) {
+                adView_container?.visibility = View.GONE
+                Toast.makeText(this@MainActivity, getString(com.timgortworst.roomy.R.string.connection_error), Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun loadAdMob() {
+        adView?.loadAd(adRequest)
+    }
+
+    private fun clearAdMob() {
+        adView?.removeAllViews()
+        adView?.destroy()
     }
 
     private fun setupClickListeners() {
@@ -46,12 +86,12 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
     }
 
     private fun fragmentToReplace(newFragment: Fragment) {
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.content_frame)
-        if (newFragment::class.java.toString() != currentFragment?.tag){
+        val currentFragment = supportFragmentManager.findFragmentById(com.timgortworst.roomy.R.id.content_frame)
+        if (newFragment::class.java.toString() != currentFragment?.tag) {
             supportFragmentManager
                     .beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.content_frame, newFragment, newFragment::class.java.toString())
+                    .setCustomAnimations(com.timgortworst.roomy.R.anim.fade_in, com.timgortworst.roomy.R.anim.fade_out)
+                    .replace(com.timgortworst.roomy.R.id.content_frame, newFragment, newFragment::class.java.toString())
                     .commit()
         }
     }

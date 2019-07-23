@@ -57,6 +57,10 @@
                 android:name=".ui.setup.view.SetupActivity"
                 android:theme="@style/AppTheme.NoActionBar"
                 android:windowSoftInputMode="adjustResize"/>
+
+        <meta-data
+                android:name="com.google.android.gms.ads.APPLICATION_ID"
+                android:value="@string/ad_app_id"/>
     </application>
 
 </manifest>
