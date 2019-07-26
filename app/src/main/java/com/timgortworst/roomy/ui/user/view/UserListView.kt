@@ -9,4 +9,5 @@ interface UserListView {
     fun presentEditedUser(user: User)
     fun presentDeletedUser(user: User)
     fun presentAddedUser(user: User)
+    fun setLoading(loading: Boolean)
 }

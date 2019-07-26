@@ -14,6 +14,7 @@ import com.timgortworst.roomy.utils.Constants.USER_EMAIL_REF
 import com.timgortworst.roomy.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.utils.Constants.USER_ROLE_REF
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -117,7 +118,7 @@ class UserRepository @Inject constructor() {
     }
 
     interface UserListener : ObjectStateListener {
-        fun userAdded(user: User)
+        fun userAdded(user: User): Job
         fun userModified(user: User)
         fun userDeleted(user: User)
     }

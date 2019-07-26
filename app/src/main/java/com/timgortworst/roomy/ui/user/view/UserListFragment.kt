@@ -24,6 +24,7 @@ import com.timgortworst.roomy.ui.user.presenter.UserListPresenter
 import com.timgortworst.roomy.utils.Constants.QUERY_PARAM_HOUSEHOLD
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
 import javax.inject.Inject
 
@@ -61,9 +62,9 @@ class UserListFragment : Fragment(), UserListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.listenToUsers()
+        swipe_container?.isEnabled = false
 
-//        view.showOrHideFab(userList.size < 8 && currentUser?.role == Role.ADMIN.name)
+        presenter.listenToUsers()
 
         recyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(activityContext)
@@ -173,5 +174,9 @@ class UserListFragment : Fragment(), UserListView {
 
     override fun presentAddedUser(user: User) {
         userListAdapter.addUser(user)
+    }
+
+    override fun setLoading(loading: Boolean) {
+        swipe_container?.isRefreshing = loading
     }
 }
