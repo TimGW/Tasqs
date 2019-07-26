@@ -14,18 +14,18 @@ import javax.inject.Singleton
 
 @Singleton
 class HouseholdRepository @Inject constructor() {
-    private val householdsCollectionRef = FirebaseFirestore.getInstance().collection(Constants.HOUSEHOLD_COLLECTION_REF)
-    private val householdDocRef = householdsCollectionRef.document()
+    val householdsCollectionRef = FirebaseFirestore.getInstance().collection(Constants.HOUSEHOLD_COLLECTION_REF)
 
     suspend fun createNewHousehold(): String? {
-        val householdID = householdDocRef.id
+        val householdID = householdsCollectionRef.document().id
 
         val categories = GenerateData.eventCategories()
         for (category in categories) {
-            val householdSubEventCategories = householdDocRef.collection(CATEGORIES_COLLECTION_REF).document()
+            val householdSubEventCategories = householdsCollectionRef.document().collection(CATEGORIES_COLLECTION_REF).document()
             category.categoryId = householdSubEventCategories.id
 
             try {
+                // todo batched writes
                 householdSubEventCategories.set(category).await() // todo coroutine async and join for multithreading
             } catch (e: FirebaseFirestoreException) {
                 return null
@@ -33,7 +33,7 @@ class HouseholdRepository @Inject constructor() {
         }
 
         return try {
-            householdDocRef.set(Household(householdId = householdID)).await()
+            householdsCollectionRef.document().set(Household(householdId = householdID)).await()
             householdID
         } catch (e: FirebaseFirestoreException) {
             null
