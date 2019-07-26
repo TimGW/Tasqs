@@ -39,23 +39,10 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(com.timgortworst.roomy.R.layout.activity_main)
 
-        setupAdMob()
         setupClickListeners()
 
         presentAgendaFragment()
-    }
 
-    override fun onResume() {
-        super.onResume()
-        loadAdMob()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        clearAdMob()
-    }
-
-    private fun setupAdMob() {
         adRequest = AdRequest.Builder().build()
         adView?.adListener = object : AdListener() {
             override fun onAdLoaded() {
@@ -67,13 +54,11 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
                 Toast.makeText(this@MainActivity, getString(com.timgortworst.roomy.R.string.connection_error), Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    private fun loadAdMob() {
         adView?.loadAd(adRequest)
     }
 
-    private fun clearAdMob() {
+    override fun onDestroy() {
+        super.onDestroy()
         adView?.removeAllViews()
         adView?.destroy()
     }

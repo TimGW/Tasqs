@@ -4,5 +4,4 @@
     <color name="color_primary_dark">@color/color_accent_dark</color>
     <color name="color_list_header">@null</color>
     <color name="color_alpha_10">#1AFFFFFF</color>
-    <color name="color_banner_background">#FF404040</color>
 </resources>
