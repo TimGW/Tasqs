@@ -1,7 +1,7 @@
 package com.timgortworst.roomy.repository
 
 import android.util.Log
-import com.google.firebase.firestore.DocumentChange.Type.*
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -9,99 +9,98 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.model.Category
-import com.timgortworst.roomy.utils.Constants.CATEGORIES_COLLECTION_REF
-import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_DESC_REF
-import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_ID_REF
-import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_NAME_REF
-import com.timgortworst.roomy.utils.Constants.HOUSEHOLD_COLLECTION_REF
+import com.timgortworst.roomy.utils.Constants.CATEGORY_COLLECTION_REF
+import com.timgortworst.roomy.utils.Constants.CATEGORY_DESCRIPTION_REF
+import com.timgortworst.roomy.utils.Constants.CATEGORY_HOUSEHOLDID_REF
+import com.timgortworst.roomy.utils.Constants.CATEGORY_ID_REF
+import com.timgortworst.roomy.utils.Constants.CATEGORY_NAME_REF
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CategoryRepository @Inject constructor(private val userRepository: UserRepository) {
-    private val householdCollectionRef = FirebaseFirestore.getInstance().collection(HOUSEHOLD_COLLECTION_REF)
+class CategoryRepository @Inject constructor() {
+    var categoryCollectionRef = FirebaseFirestore.getInstance().collection(CATEGORY_COLLECTION_REF)
+        private set
+
     private var categoryListener: ListenerRegistration? = null
 
     suspend fun createCategory(
-            name: String = "",
-            description: String = ""
+            name: String,
+            description: String,
+            householdId: String
     ) {
-        val document = householdCollectionRef.document(userRepository.readHouseholdIdForCurrentUser())
-                .collection(CATEGORIES_COLLECTION_REF).document()
+        val document = categoryCollectionRef.document()
 
         val categoryFieldMap = mutableMapOf<String, Any>()
-        categoryFieldMap[EVENT_CATEGORY_ID_REF] = document.id
-        if (name.isNotBlank()) categoryFieldMap[EVENT_CATEGORY_NAME_REF] = name
-        if (description.isNotBlank()) categoryFieldMap[EVENT_CATEGORY_DESC_REF] = description
+        categoryFieldMap[CATEGORY_ID_REF] = document.id
+        if (name.isNotBlank()) categoryFieldMap[CATEGORY_NAME_REF] = name
+        if (description.isNotBlank()) categoryFieldMap[CATEGORY_DESCRIPTION_REF] = description
+        if (householdId.isNotBlank()) categoryFieldMap[CATEGORY_HOUSEHOLDID_REF] = householdId
 
         try {
             document.set(categoryFieldMap).await()
         } catch (e: FirebaseFirestoreException) {
-            Log.e("TIMTIM", e.localizedMessage!!)
+            Log.e(TAG, e.localizedMessage.orEmpty())
         }
     }
 
-    suspend fun readCategories(): List<Category> {
-        val document = householdCollectionRef.document(userRepository.readHouseholdIdForCurrentUser())
-                .collection(CATEGORIES_COLLECTION_REF)
-        return document.get(Source.CACHE).await().toObjects(Category::class.java)
+    suspend fun getCategories(): List<Category> {
+        return categoryCollectionRef.get(Source.CACHE).await().toObjects(Category::class.java)
+    }
+
+    fun listenToCategories(taskListener: CategoryListener) {
+        taskListener.setLoading(true)
+
+        categoryListener = categoryCollectionRef.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+            if (e != null) {
+                taskListener.setLoading(false)
+                Log.w(TAG, "listen:error", e)
+                return@EventListener
+            }
+
+            for (dc in snapshots!!.documentChanges) {
+                val eventCategory = dc.document.toObject(Category::class.java)
+                when (dc.type) {
+                    DocumentChange.Type.ADDED -> taskListener.categoryAdded(eventCategory)
+                    DocumentChange.Type.MODIFIED -> taskListener.categoryModified(eventCategory)
+                    DocumentChange.Type.REMOVED -> taskListener.categoryDeleted(eventCategory)
+                }
+            }
+            taskListener.setLoading(false)
+        })
     }
 
     suspend fun updateCategory(
             categoryId: String,
             name: String = "",
-            description: String = ""
+            description: String = "",
+            householdId: String = ""
     ) {
-        val document = householdCollectionRef.document(userRepository.readHouseholdIdForCurrentUser())
-                .collection(CATEGORIES_COLLECTION_REF).document(categoryId)
+        val document = categoryCollectionRef.document(categoryId)
 
         val categoryFieldMap = mutableMapOf<String, Any>()
-        categoryFieldMap[EVENT_CATEGORY_ID_REF] = document.id
-        if (name.isNotBlank()) categoryFieldMap[EVENT_CATEGORY_NAME_REF] = name
-        if (description.isNotBlank()) categoryFieldMap[EVENT_CATEGORY_DESC_REF] = description
+        categoryFieldMap[CATEGORY_ID_REF] = document.id
+        if (name.isNotBlank()) categoryFieldMap[CATEGORY_NAME_REF] = name
+        if (description.isNotBlank()) categoryFieldMap[CATEGORY_DESCRIPTION_REF] = description
+        if (householdId.isNotBlank()) categoryFieldMap[CATEGORY_HOUSEHOLDID_REF] = description
 
         try {
             document.update(categoryFieldMap).await()
         } catch (e: FirebaseFirestoreException) {
-            Log.e("TIMTIM", e.localizedMessage!!)
+            Log.e(TAG, e.localizedMessage.orEmpty())
         }
     }
 
     suspend fun deleteCategory(category: Category) {
         try {
-            householdCollectionRef.document(userRepository.readHouseholdIdForCurrentUser())
-                    .collection(CATEGORIES_COLLECTION_REF)
+            categoryCollectionRef
                     .document(category.categoryId)
                     .delete()
                     .await()
         } catch (e: FirebaseFirestoreException) {
-            Log.e("TIMTIM", e.localizedMessage!!)
+            Log.e(TAG, e.localizedMessage.orEmpty())
         }
-    }
-
-    suspend fun listenToCategories(taskListener: CategoryListener) {
-        taskListener.setLoading(true)
-
-        categoryListener = householdCollectionRef.document(userRepository.readHouseholdIdForCurrentUser())
-                .collection(CATEGORIES_COLLECTION_REF)
-                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-                    if (e != null) {
-                        taskListener.setLoading(false)
-                        Log.w(TAG, "listen:error", e)
-                        return@EventListener
-                    }
-
-                    for (dc in snapshots!!.documentChanges) {
-                        val eventCategory = dc.document.toObject(Category::class.java)
-                        when (dc.type) {
-                            ADDED -> taskListener.categoryAdded(eventCategory)
-                            MODIFIED -> taskListener.categoryModified(eventCategory)
-                            REMOVED -> taskListener.categoryDeleted(eventCategory)
-                        }
-                    }
-                    taskListener.setLoading(false)
-                })
     }
 
     fun detachCategoryListener() {

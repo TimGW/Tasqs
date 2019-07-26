@@ -52,9 +52,7 @@ class EventListPresenter @Inject constructor(
         agendaRepository.detachEventListener()
     }
 
-    fun listenToEvents() = scope.launch {
-        agendaRepository.listenToEvents(this@EventListPresenter)
-    }
+    fun listenToEvents() = agendaRepository.listenToEvents(this@EventListPresenter)
 
     fun filterMe(filter: Filter) {
         filter.filter(userRepository.getCurrentUserId())
@@ -62,7 +60,7 @@ class EventListPresenter @Inject constructor(
 
     fun markEventAsCompleted(event: Event) = scope.launch {
         if (event.eventMetaData.repeatInterval == EventMetaData.RepeatingInterval.SINGLE_EVENT) {
-            agendaRepository.deleteEvent(event.agendaId)
+            agendaRepository.deleteEvent(event.eventId)
             return@launch
         }
 
@@ -78,19 +76,19 @@ class EventListPresenter @Inject constructor(
         }
     }
 
-    suspend fun updateEventMetaData(event: Event, nextOccurance: Long) {
+    private suspend fun updateEventMetaData(event: Event, nextOccurrence: Long) {
         val eventMetaData = EventMetaData(
-                repeatStartDate = nextOccurance,
+                repeatStartDate = nextOccurrence,
                 repeatInterval = event.eventMetaData.repeatInterval
         )
 
         event.eventMetaData = eventMetaData
 
         // reset done to false
-        agendaRepository.updateEvent(event.agendaId, eventMetaData = eventMetaData, isEventDone = false)
+        agendaRepository.updateEvent(event.eventId, eventMetaData = eventMetaData)
     }
 
     fun deleteEvent(event: Event) = scope.launch {
-        agendaRepository.deleteEvent(event.agendaId)
+        agendaRepository.deleteEvent(event.eventId)
     }
 }

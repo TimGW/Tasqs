@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.utils.Constants.USERS_COLLECTION_REF
+import com.timgortworst.roomy.utils.Constants.USER_COLLECTION_REF
 import com.timgortworst.roomy.utils.Constants.USER_EMAIL_REF
 import com.timgortworst.roomy.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.utils.Constants.USER_NAME_REF
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor() {
-    val userCollectionRef = FirebaseFirestore.getInstance().collection(USERS_COLLECTION_REF)
+    val userCollectionRef = FirebaseFirestore.getInstance().collection(USER_COLLECTION_REF)
 
     fun getCurrentUserId() = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -32,14 +32,16 @@ class UserRepository @Inject constructor() {
         }
     }
 
-    suspend fun readCurrentUser(userId: String?): User? {
+    suspend fun getUser(userId: String? = getCurrentUserId()): User? {
         if (userId.isNullOrEmpty()) return null
 
         val currentUserDocRef = userCollectionRef.document(userId)
         return currentUserDocRef.get().await().toObject(User::class.java) as User
     }
 
-    suspend fun readUsersForHouseholdId(householdId: String): List<User> {
+    suspend fun getUserListForHousehold(householdId: String?): List<User>? {
+        if (householdId.isNullOrEmpty()) return null
+
         return userCollectionRef
                 .whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
                 .get()
@@ -47,15 +49,11 @@ class UserRepository @Inject constructor() {
                 .toObjects(User::class.java)
     }
 
-    suspend fun readHouseholdIdForUser(userId: String): String {
+    suspend fun getHouseholdIdForUser(userId: String? = getCurrentUserId()): String {
+        if (userId.isNullOrEmpty()) return ""
+
         val userDocRef = userCollectionRef.document(userId)
         val user = userDocRef.get().await().toObject(User::class.java) as User
-        return user.householdId
-    }
-
-    suspend fun readHouseholdIdForCurrentUser(): String {
-        val currentUserDocRef = userCollectionRef.document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
-        val user = currentUserDocRef.get().await().toObject(User::class.java) as User
         return user.householdId
     }
 

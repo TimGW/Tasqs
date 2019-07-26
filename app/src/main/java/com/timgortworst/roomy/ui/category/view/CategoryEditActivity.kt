@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_edit_category.*
 import javax.inject.Inject
 
 class CategoryEditActivity : BaseActivity(), CategoryEditView {
-    private lateinit var householdTask: Category
+    private var category: Category? =null
 
     @Inject
     lateinit var presenter: CategoryEditPresenter
@@ -43,7 +43,7 @@ class CategoryEditActivity : BaseActivity(), CategoryEditView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_category)
 
-        householdTask = intent.getParcelableExtra(INTENT_EXTRA_EDIT_CATEGORY) ?: Category()
+        category = intent.getParcelableExtra(INTENT_EXTRA_EDIT_CATEGORY)
 
         supportActionBar?.apply {
             title = "Nieuwe taak"
@@ -51,12 +51,10 @@ class CategoryEditActivity : BaseActivity(), CategoryEditView {
             setDisplayShowHomeEnabled(true)
         }
 
-        householdTask.let {
-            if (it.categoryId.isNotEmpty()) {
-                supportActionBar?.title = "Edit  ${householdTask.name}"
-                task_name_hint.editText?.setText(householdTask.name)
-                task_description_hint.editText?.setText(householdTask.description)
-            }
+        category?.let {
+            supportActionBar?.title = "Edit  ${it.name}"
+            task_name_hint.editText?.setText(it.name)
+            task_description_hint.editText?.setText(it.description)
         }
 
         setupTextWachters()
@@ -76,9 +74,9 @@ class CategoryEditActivity : BaseActivity(), CategoryEditView {
             }
             R.id.action_edit_done -> {
                 presenter.insertOrUpdateCategory(
-                    householdTask.categoryId,
-                    task_name_hint.editText?.text.toString(),
-                    task_description_hint.editText?.text.toString())
+                        category?.categoryId,
+                        task_name_hint.editText?.text.toString(),
+                        task_description_hint.editText?.text.toString())
 
                 finish()
                 true

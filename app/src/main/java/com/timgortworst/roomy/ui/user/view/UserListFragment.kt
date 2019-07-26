@@ -60,7 +60,7 @@ class UserListFragment : Fragment(), UserListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.fetchUsers()
+        presenter.getUsers()
 
         recyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(activityContext)
