@@ -15,9 +15,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EventListPresenter @Inject constructor(
-    private val view: EventListView,
-    private val agendaRepository: EventRepository,
-    private val userRepository: UserRepository
+        private val view: EventListView,
+        private val agendaRepository: EventRepository,
+        private val userRepository: UserRepository
 ) : EventRepository.EventListener, DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -52,7 +52,11 @@ class EventListPresenter @Inject constructor(
         agendaRepository.detachEventListener()
     }
 
-    fun listenToEvents() = agendaRepository.listenToEvents(this@EventListPresenter)
+    fun listenToEvents() = scope.launch {
+        agendaRepository.listenToEventsForHousehold(
+                userRepository.getHouseholdIdForUser(),
+                this@EventListPresenter)
+    }
 
     fun filterMe(filter: Filter) {
         filter.filter(userRepository.getCurrentUserId())

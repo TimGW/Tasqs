@@ -6,7 +6,6 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
@@ -48,28 +47,28 @@ class EventRepository @Inject constructor() {
         return eventCollectionRef.whereEqualTo("user.userId", userId).get().await().toObjects(Event::class.java)
     }
 
-    fun listenToEvents(eventListener: EventListener) {
+    fun listenToEventsForHousehold(householdId: String, eventListener: EventListener) {
         eventListener.setLoading(true)
 
-        eventCollectionRef.orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)
+        registration = eventCollectionRef
+                .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)
+                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                    if (e != null && snapshots == null) {
+                        eventListener.setLoading(false)
+                        Log.w(TAG, "listen:error", e)
+                        return@EventListener
+                    }
 
-        registration = eventCollectionRef.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-            if (e != null && snapshots == null) {
-                eventListener.setLoading(false)
-                Log.w(TAG, "listen:error", e)
-                return@EventListener
-            }
-
-            for (dc in snapshots!!.documentChanges) {
-                val event = dc.document.toObject(Event::class.java)
-                when (dc.type) {
-                    ADDED -> eventListener.eventAdded(event)
-                    MODIFIED -> eventListener.eventModified(event)
-                    REMOVED -> eventListener.eventDeleted(event)
-                }
-            }
-            eventListener.setLoading(false)
-        })
+                    for (dc in snapshots!!.documentChanges) {
+                        val event = dc.document.toObject(Event::class.java)
+                        when (dc.type) {
+                            ADDED -> eventListener.eventAdded(event)
+                            MODIFIED -> eventListener.eventModified(event)
+                            REMOVED -> eventListener.eventDeleted(event)
+                        }
+                    }
+                    eventListener.setLoading(false)
+                })
     }
 
     suspend fun updateEvent(
