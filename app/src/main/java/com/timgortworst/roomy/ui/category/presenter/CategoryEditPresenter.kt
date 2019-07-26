@@ -31,7 +31,7 @@ class CategoryEditPresenter @Inject constructor(
         if (eventCategoryId.isNotBlank()) {
             categoryRepository.updateCategory(eventCategoryId, name, description)
         } else {
-            categoryRepository.insertCategory(name, description)
+            categoryRepository.createCategory(name, description)
         }
     }
 

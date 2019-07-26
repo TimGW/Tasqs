@@ -33,7 +33,7 @@ class CategoryListPresenter @Inject constructor(
     }
 
     fun deleteCategory(agendaEventCategory: Category) = scope.launch {
-        categoryRepository.deleteCategoryForHousehold(agendaEventCategory)
+        categoryRepository.deleteCategory(agendaEventCategory)
     }
 
     override fun categoryAdded(category: Category) {

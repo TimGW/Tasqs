@@ -1,8 +1,13 @@
 package com.timgortworst.roomy.repository
 
 import android.util.Log
-import com.google.firebase.firestore.*
 import com.google.firebase.firestore.DocumentChange.Type.*
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
@@ -21,18 +26,18 @@ import javax.inject.Singleton
 
 @Singleton
 class EventRepository @Inject constructor(private val userRepository: UserRepository) {
-    private val householdCollectionRef = FirebaseFirestore.getInstance().collection(HOUSEHOLD_COLLECTION_REF)
+    val householdCollectionRef = FirebaseFirestore.getInstance().collection(HOUSEHOLD_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 
-    suspend fun insertEvent(
-        category: Category,
-        user: User,
-        eventMetaData: EventMetaData,
-        isEventDone: Boolean
+    suspend fun createEvent(
+            category: Category,
+            user: User,
+            eventMetaData: EventMetaData,
+            isEventDone: Boolean
     ) {
-        val document = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
-            .collection(EVENT_COLLECTION_REF)
-            .document()
+        val document = householdCollectionRef.document(userRepository.readHouseholdIdForCurrentUser())
+                .collection(EVENT_COLLECTION_REF)
+                .document()
 
         try {
             document.set(Event(document.id, category, user, eventMetaData, isEventDone)).await()
@@ -42,14 +47,14 @@ class EventRepository @Inject constructor(private val userRepository: UserReposi
     }
 
     suspend fun updateEvent(
-        eventId: String,
-        category: Category? = null,
-        user: User? = null,
-        eventMetaData: EventMetaData? = null,
-        isEventDone: Boolean? = null
+            eventId: String,
+            category: Category? = null,
+            user: User? = null,
+            eventMetaData: EventMetaData? = null,
+            isEventDone: Boolean? = null
     ) {
-        val document = householdCollectionRef.document(userRepository.getHouseholdIdForCurrentUser())
-            .collection(EVENT_COLLECTION_REF).document(eventId)
+        val document = householdCollectionRef.document(userRepository.readHouseholdIdForCurrentUser())
+                .collection(EVENT_COLLECTION_REF).document(eventId)
 
         val eventMetaDataMap = mutableMapOf<String, Any>()
         if (eventMetaData != null) eventMetaDataMap[EVENT_START_DATE_REF] = eventMetaData.repeatStartDate
@@ -68,14 +73,14 @@ class EventRepository @Inject constructor(private val userRepository: UserReposi
         }
     }
 
-    suspend fun removeEvent(eventId: String) {
+    suspend fun deleteEvent(eventId: String) {
         try {
             householdCollectionRef
-                .document(userRepository.getHouseholdIdForCurrentUser())
-                .collection(EVENT_COLLECTION_REF)
-                .document(eventId)
-                .delete()
-                .await()
+                    .document(userRepository.readHouseholdIdForCurrentUser())
+                    .collection(EVENT_COLLECTION_REF)
+                    .document(eventId)
+                    .delete()
+                    .await()
         } catch (e: FirebaseFirestoreException) {
             Log.e("TIMTIM", e.localizedMessage!!)
         }
@@ -85,8 +90,8 @@ class EventRepository @Inject constructor(private val userRepository: UserReposi
         eventListener.setLoading(true)
 
         val query = householdCollectionRef
-            .document(userRepository.getHouseholdIdForCurrentUser())
-            .collection(EVENT_COLLECTION_REF)
+                .document(userRepository.readHouseholdIdForCurrentUser())
+                .collection(EVENT_COLLECTION_REF)
 
         query.orderBy("eventMetaData.repeatStartDate", Query.Direction.ASCENDING)
 

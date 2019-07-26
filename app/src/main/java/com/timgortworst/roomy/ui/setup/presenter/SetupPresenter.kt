@@ -48,7 +48,7 @@ class SetupPresenter @Inject constructor(
                 view.goToMainActivity()
             } else {
                 // user is not invited and has no household (new user)
-                val householdID = householdRepository.createNewHousehold()
+                val householdID = householdRepository.createHousehold()
 
                 if (householdID != null) {
                     // update household id for user remote
@@ -65,11 +65,11 @@ class SetupPresenter @Inject constructor(
     }
 
     private suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
-        return referredHouseholdId == userRepository.getHouseholdIdForCurrentUser()
+        return referredHouseholdId == userRepository.readHouseholdIdForCurrentUser()
     }
 
     private suspend fun isHouseholdActive(): Boolean {
-        return userRepository.getHouseholdIdForCurrentUser().isNotBlank()
+        return userRepository.readHouseholdIdForCurrentUser().isNotBlank()
     }
 
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
@@ -77,11 +77,11 @@ class SetupPresenter @Inject constructor(
             householdId = newHouseholdId,
             role = Role.NORMAL.name
         )
-        val userList = userRepository.getUsersForHouseholdId(userRepository.getHouseholdIdForCurrentUser())
+        val userList = userRepository.readUsersForHouseholdId(userRepository.readHouseholdIdForCurrentUser())
         if (userList.isEmpty()) {
             // remove old household if there are no more users in the household
             // todo remove nested objects
-            householdRepository.removeHousehold(userRepository.getHouseholdIdForCurrentUser())
+            householdRepository.deleteHousehold(userRepository.readHouseholdIdForCurrentUser())
         }
         view.goToMainActivity()
     }
