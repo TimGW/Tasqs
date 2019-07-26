@@ -41,30 +41,14 @@ class UserListAdapter(
         }
     }
 
-    fun setUsers(users: MutableList<User>) {
-        this.users.clear()
-        this.users = users
-        notifyItemRangeInserted(0, this.users.size)
-    }
-
     override fun getItemCount(): Int {
         return users.size
     }
 
-    fun remove(user: User) {
+    fun removeUser(user: User) {
         val index = users.indexOf(user)
         users.removeAt(index)
         notifyItemRemoved(index)
-    }
-
-    private fun removeUser(position: Int) {
-        users.removeAt(position)
-        notifyItemRemoved(position)
-    }
-
-    fun removeUser(user: User) {
-        val pos = users.indexOf(user)
-        removeUser(pos)
     }
 
     fun addUser(user: User) {
