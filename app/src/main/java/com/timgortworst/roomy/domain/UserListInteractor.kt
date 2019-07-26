@@ -15,7 +15,7 @@ constructor(private val householdRepository: HouseholdRepository,
             private val userRepository: UserRepository,
             private val eventRepository: EventRepository) {
 
-    suspend fun getCurrentUser() = userRepository.readCurrentUser()
+    suspend fun getCurrentUser() = userRepository.readCurrentUser(userRepository.getCurrentUserId())
 
     fun getCurrentUserId() = userRepository.getCurrentUserId()
 

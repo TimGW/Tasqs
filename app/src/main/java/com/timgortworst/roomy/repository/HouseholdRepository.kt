@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.repository
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.SetOptions
@@ -65,12 +64,12 @@ class HouseholdRepository @Inject constructor() {
 //            .delete().await()
     }
 
-
-    suspend fun isUserBanned(householdId: String): Boolean {
-        val housholdRef = householdsCollectionRef.document(householdId)
-        val household = housholdRef.get().await().toObject(Household::class.java) as Household
-        return household.blackList.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
-    }
+//
+//    suspend fun isUserBanned(householdId: String): Boolean {
+//        val housholdRef = householdsCollectionRef.document(householdId)
+//        val household = housholdRef.get().await().toObject(Household::class.java) as Household
+//        return household.blackList.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
+//    }
 
     companion object {
         private const val TAG = "HouseholdRepository"

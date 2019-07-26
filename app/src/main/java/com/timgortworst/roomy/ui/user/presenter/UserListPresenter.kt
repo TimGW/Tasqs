@@ -42,7 +42,8 @@ class UserListPresenter @Inject constructor(
     }
 
     fun showContextMenuIfUserHasPermission(user: User) = scope.launch {
-        val currentUser = userListInteractor.getCurrentUser()
+        val currentUser = userListInteractor.getCurrentUser() ?: return@launch
+
         if (user.role != Role.ADMIN.name &&
             currentUser.role == Role.ADMIN.name &&
             currentUser.userId != user.userId

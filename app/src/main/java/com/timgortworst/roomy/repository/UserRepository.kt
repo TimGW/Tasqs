@@ -19,7 +19,7 @@ class UserRepository @Inject constructor() {
 
     fun getCurrentUserId() = FirebaseAuth.getInstance().currentUser?.uid
 
-    suspend fun createNewUser() {
+    suspend fun createUser() {
         val currentUserDocRef = userCollectionRef.document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
         val userDoc = currentUserDocRef.get().await()
         if (!userDoc.exists()) {
@@ -32,8 +32,10 @@ class UserRepository @Inject constructor() {
         }
     }
 
-    suspend fun readCurrentUser(): User {
-        val currentUserDocRef = userCollectionRef.document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
+    suspend fun readCurrentUser(userId: String?): User? {
+        if (userId.isNullOrEmpty()) return null
+
+        val currentUserDocRef = userCollectionRef.document(userId)
         return currentUserDocRef.get().await().toObject(User::class.java) as User
     }
 
