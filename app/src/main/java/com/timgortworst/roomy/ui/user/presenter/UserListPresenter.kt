@@ -5,6 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.domain.UserListInteractor
 import com.timgortworst.roomy.model.Role
 import com.timgortworst.roomy.model.User
+import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.user.view.UserListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -12,9 +13,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class UserListPresenter @Inject constructor(
-    private val view: UserListView,
-    private val userListInteractor: UserListInteractor
-) : DefaultLifecycleObserver {
+        private val view: UserListView,
+        private val userListInteractor: UserListInteractor
+) : UserRepository.UserListener, DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
@@ -24,29 +25,40 @@ class UserListPresenter @Inject constructor(
         }
     }
 
-    fun getUsers() = scope.launch {
-        val userList = userListInteractor
-            .getUsersForHouseholdId(userListInteractor.getHouseholdIdForCurrentUser())
-            ?.sortedWith(compareBy({ it.role == Role.ADMIN.name }, { it.name }))
-            ?.reversed()
-            ?.toMutableList() ?: mutableListOf()
+    override fun userAdded(user: User) {
+        view.presentAddedUser(user)
+    }
 
-        val currentUser = userList.find { it.userId == userListInteractor.getCurrentUserId() }
-        view.showOrHideFab(userList.size < 8 && currentUser?.role == Role.ADMIN.name)
-        view.presentUserList(userList) // todo emptylist state
+    override fun userModified(user: User) {
+        view.presentEditedUser(user)
+    }
+
+    override fun userDeleted(user: User) {
+        view.presentDeletedUser(user)
+    }
+
+    override fun setLoading(isLoading: Boolean) {
+        //view.setLoading(isLoading)
+    }
+
+    fun detachUserListener() {
+        userListInteractor.detachUserListener()
+    }
+
+    fun listenToUsers() = scope.launch {
+        userListInteractor.listenToUsers(this@UserListPresenter)
     }
 
     fun deleteUser(user: User) = scope.launch {
         userListInteractor.deleteAndBanUser(user)
-        view.removeUserFromCurrentUI(user)
     }
 
     fun showContextMenuIfUserHasPermission(user: User) = scope.launch {
         val currentUser = userListInteractor.getCurrentUser() ?: return@launch
 
         if (user.role != Role.ADMIN.name &&
-            currentUser.role == Role.ADMIN.name &&
-            currentUser.userId != user.userId
+                currentUser.role == Role.ADMIN.name &&
+                currentUser.userId != user.userId
         ) {
             view.showContextMenuFor(user)
         }

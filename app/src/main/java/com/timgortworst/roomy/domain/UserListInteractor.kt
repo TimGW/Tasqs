@@ -6,6 +6,7 @@ import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
+import com.timgortworst.roomy.ui.user.presenter.UserListPresenter
 import com.timgortworst.roomy.utils.Constants.USER_HOUSEHOLDID_REF
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -18,11 +19,7 @@ constructor(private val householdRepository: HouseholdRepository,
 
     suspend fun getCurrentUser() = userRepository.getUser()
 
-    fun getCurrentUserId() = userRepository.getCurrentUserId()
-
     suspend fun getHouseholdIdForCurrentUser() = userRepository.getHouseholdIdForUser()
-
-    suspend fun getUsersForHouseholdId(householdId: String?) = userRepository.getUserListForHousehold(householdId)
 
     suspend fun deleteAndBanUser(user: User) {
         addUserToBlackList(user.userId)
@@ -58,5 +55,13 @@ constructor(private val householdRepository: HouseholdRepository,
         val housholdRef = householdRepository.householdsCollectionRef.document(householdId)
         val household = housholdRef.get().await().toObject(Household::class.java) as Household
         return household.blackList.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
+    }
+
+    fun detachUserListener() {
+        userRepository.detachUserListener()
+    }
+
+    suspend fun listenToUsers(userListPresenter: UserListPresenter) {
+        userRepository.listenToUsersForHousehold(userRepository.getHouseholdIdForUser(), userListPresenter)
     }
 }

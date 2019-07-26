@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.customview.RepeatIcon
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
-import com.timgortworst.roomy.customview.RepeatIcon
 import com.timgortworst.roomy.utils.isTimeStampInPast
 import java.text.SimpleDateFormat
 import java.util.*
@@ -66,7 +66,7 @@ class EventListAdapter(
         }
     }
 
-    fun removeEvent(position: Int) {
+    private fun removeEvent(position: Int) {
         filteredEvents.removeAt(position)
         notifyItemRemoved(position)
     }
