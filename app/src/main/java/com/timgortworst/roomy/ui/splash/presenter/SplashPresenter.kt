@@ -29,7 +29,7 @@ class SplashPresenter @Inject constructor(
             view.goToGoogleSignInActivity()
         } else {
             // create a new unique user in firebase
-            userRepository.createNewUser()
+            userRepository.createUser()
 
             // user is created or retrieved
             if (referredHouseholdId.isNotBlank()) {
