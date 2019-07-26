@@ -4,6 +4,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.repository.CategoryRepository
+import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.category.view.CategoryListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -12,8 +13,9 @@ import javax.inject.Inject
 
 
 class CategoryListPresenter @Inject constructor(
-    val view: CategoryListView,
-    private val categoryRepository: CategoryRepository
+        val view: CategoryListView,
+        private val categoryRepository: CategoryRepository,
+        private val userRepository: UserRepository
 ) : CategoryRepository.CategoryListener, DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -24,7 +26,9 @@ class CategoryListPresenter @Inject constructor(
         }
     }
 
-    fun listenToCategories() = categoryRepository.listenToCategories(this@CategoryListPresenter)
+    fun listenToCategories() = scope.launch {
+        categoryRepository.listenToCategoriesForHousehold(userRepository.getHouseholdIdForUser(), this@CategoryListPresenter)
+    }
 
     fun detachCategoryListener() {
         categoryRepository.detachCategoryListener()

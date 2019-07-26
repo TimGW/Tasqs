@@ -23,7 +23,7 @@ class CategoryRepository @Inject constructor() {
     var categoryCollectionRef = FirebaseFirestore.getInstance().collection(CATEGORY_COLLECTION_REF)
         private set
 
-    private var categoryListener: ListenerRegistration? = null
+    private var registration: ListenerRegistration? = null
 
     suspend fun createCategory(
             name: String,
@@ -49,12 +49,14 @@ class CategoryRepository @Inject constructor() {
         return categoryCollectionRef.get(Source.CACHE).await().toObjects(Category::class.java)
     }
 
-    fun listenToCategories(taskListener: CategoryListener) {
-        taskListener.setLoading(true)
+    fun listenToCategoriesForHousehold(householdId: String, categoryListener: CategoryListener) {
+        categoryListener.setLoading(true)
 
-        categoryListener = categoryCollectionRef.addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+        registration =  categoryCollectionRef
+                .whereEqualTo(CATEGORY_HOUSEHOLDID_REF, householdId)
+                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
             if (e != null) {
-                taskListener.setLoading(false)
+                categoryListener.setLoading(false)
                 Log.w(TAG, "listen:error", e)
                 return@EventListener
             }
@@ -62,12 +64,12 @@ class CategoryRepository @Inject constructor() {
             for (dc in snapshots!!.documentChanges) {
                 val eventCategory = dc.document.toObject(Category::class.java)
                 when (dc.type) {
-                    DocumentChange.Type.ADDED -> taskListener.categoryAdded(eventCategory)
-                    DocumentChange.Type.MODIFIED -> taskListener.categoryModified(eventCategory)
-                    DocumentChange.Type.REMOVED -> taskListener.categoryDeleted(eventCategory)
+                    DocumentChange.Type.ADDED -> categoryListener.categoryAdded(eventCategory)
+                    DocumentChange.Type.MODIFIED -> categoryListener.categoryModified(eventCategory)
+                    DocumentChange.Type.REMOVED -> categoryListener.categoryDeleted(eventCategory)
                 }
             }
-            taskListener.setLoading(false)
+            categoryListener.setLoading(false)
         })
     }
 
@@ -104,7 +106,7 @@ class CategoryRepository @Inject constructor() {
     }
 
     fun detachCategoryListener() {
-        categoryListener?.remove()
+        registration?.remove()
     }
 
     companion object {
