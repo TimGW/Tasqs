@@ -31,28 +31,27 @@ class EventEditPresenter @Inject constructor(
         }
     }
 
-    fun insertOrUpdateEvent(
-        eventId: String,
+    fun createOrUpdateEvent(
+        eventId: String?,
         category: Category,
         user: User,
-        eventMetaData: EventMetaData,
-        isDone: Boolean = false
+        eventMetaData: EventMetaData
     ) = scope.launch {
 
-        if (eventId.isNotBlank()) {
-            agendaRepository.updateEvent(eventId, category, user, eventMetaData, isDone)
+        if (!eventId.isNullOrEmpty()) {
+            agendaRepository.updateEvent(eventId, eventMetaData, category, user)
         } else {
-            agendaRepository.createEvent(category, user, eventMetaData, isDone)
+            agendaRepository.createEvent(eventMetaData, category, user, userRepository.getHouseholdIdForUser())
         }
     }
 
-    fun fetchUsers() = scope.launch {
-        val userList = userRepository.readUsersForHouseholdId(userRepository.readHouseholdIdForCurrentUser())
-        view.presentUserList(userList.toMutableList())
+    fun getUsers() = scope.launch {
+        val userList = userRepository.getUserListForHousehold(userRepository.getHouseholdIdForUser())
+        view.presentUserList(userList?.toMutableList() ?: mutableListOf())
     }
 
-    fun fetchCategories() = scope.launch {
-        val categories = categoryRepository.readCategories()
+    fun getCategories() = scope.launch {
+        val categories = categoryRepository.getCategories()
         view.presentCategoryList(categories.toMutableList())
     }
 
@@ -71,6 +70,6 @@ class EventEditPresenter @Inject constructor(
 
 
     companion object {
-        private const val TAG = "EditAgendaEventPresenter"
+        private const val TAG = "EventEditPresenter"
     }
 }

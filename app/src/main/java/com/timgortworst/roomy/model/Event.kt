@@ -10,10 +10,9 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class Event(
-    var agendaId: String = "",
-    var eventCategory: Category = Category(),
-    var user: User = User(),
-    var eventMetaData: EventMetaData = EventMetaData(),
-    var isDone: Boolean = false
-) : Parcelable {
-}
+        var eventId: String = "",
+        var eventMetaData: EventMetaData = EventMetaData(),
+        var eventCategory: Category = Category(),
+        var user: User = User(),
+        var householdId: String = ""
+) : Parcelable

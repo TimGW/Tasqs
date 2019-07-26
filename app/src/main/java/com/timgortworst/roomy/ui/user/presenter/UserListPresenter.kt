@@ -24,16 +24,16 @@ class UserListPresenter @Inject constructor(
         }
     }
 
-    fun fetchUsers() = scope.launch {
+    fun getUsers() = scope.launch {
         val userList = userListInteractor
             .getUsersForHouseholdId(userListInteractor.getHouseholdIdForCurrentUser())
-            .sortedWith(compareBy({ it.role == Role.ADMIN.name }, { it.name }))
-            .reversed()
-            .toMutableList()
+            ?.sortedWith(compareBy({ it.role == Role.ADMIN.name }, { it.name }))
+            ?.reversed()
+            ?.toMutableList() ?: mutableListOf()
 
         val currentUser = userList.find { it.userId == userListInteractor.getCurrentUserId() }
         view.showOrHideFab(userList.size < 8 && currentUser?.role == Role.ADMIN.name)
-        view.presentUserList(userList)
+        view.presentUserList(userList) // todo emptylist state
     }
 
     fun deleteUser(user: User) = scope.launch {

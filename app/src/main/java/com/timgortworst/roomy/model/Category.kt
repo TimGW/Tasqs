@@ -11,5 +11,6 @@ import kotlinx.android.parcel.Parcelize
 data class Category(
     var categoryId: String = "",
     var name: String = "",
-    var description: String = ""
+    var description: String = "",
+    var householdId: String = ""
 ) : Parcelable

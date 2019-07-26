@@ -3,9 +3,8 @@ package com.timgortworst.roomy.ui.setup.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.domain.SetupInteractor
 import com.timgortworst.roomy.model.Role
-import com.timgortworst.roomy.repository.HouseholdRepository
-import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.setup.view.SetupView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -15,8 +14,7 @@ import javax.inject.Inject
 
 class SetupPresenter @Inject constructor(
     private val view: SetupView,
-    private val householdRepository: HouseholdRepository,
-    private val userRepository: UserRepository
+    private val setupInteractor: SetupInteractor
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -30,7 +28,7 @@ class SetupPresenter @Inject constructor(
     fun setupHousehold(referredHouseholdId: String) = scope.launch {
         if (referredHouseholdId.isNotBlank()) {
             // user has accepted the invite
-            if (isHouseholdActive()) {
+            if (setupInteractor.isHouseholdActive()) {
                 if(isIdSimilarToActiveId(referredHouseholdId)){
                     view.presentAlreadyInHouseholdDialog()
                 } else {
@@ -43,16 +41,16 @@ class SetupPresenter @Inject constructor(
             }
         } else {
             // user is not invited
-            if (isHouseholdActive()) {
+            if (setupInteractor.isHouseholdActive()) {
                 // user has an active household
                 view.goToMainActivity()
             } else {
                 // user is not invited and has no household (new user)
-                val householdID = householdRepository.createHousehold()
+                val householdID = setupInteractor.initializeHousehold()
 
                 if (householdID != null) {
                     // update household id for user remote
-                    userRepository.updateUser(
+                    setupInteractor.updateUser(
                         householdId = householdID,
                         role = Role.ADMIN.name
                     )
@@ -65,23 +63,17 @@ class SetupPresenter @Inject constructor(
     }
 
     private suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
-        return referredHouseholdId == userRepository.readHouseholdIdForCurrentUser()
-    }
-
-    private suspend fun isHouseholdActive(): Boolean {
-        return userRepository.readHouseholdIdForCurrentUser().isNotBlank()
+        return referredHouseholdId == setupInteractor.getHouseholdIdForUser()
     }
 
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
-        userRepository.updateUser(
+        setupInteractor.updateUser(
             householdId = newHouseholdId,
             role = Role.NORMAL.name
         )
-        val userList = userRepository.readUsersForHouseholdId(userRepository.readHouseholdIdForCurrentUser())
-        if (userList.isEmpty()) {
-            // remove old household if there are no more users in the household
-            // todo remove nested objects
-            householdRepository.deleteHousehold(userRepository.readHouseholdIdForCurrentUser())
+        val userList = setupInteractor.getUserListForHousehold(setupInteractor.getHouseholdIdForUser())
+        if (userList?.isEmpty() == true) {
+            setupInteractor.deleteHousehold(setupInteractor.getHouseholdIdForUser())
         }
         view.goToMainActivity()
     }

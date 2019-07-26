@@ -3,6 +3,7 @@ package com.timgortworst.roomy.ui.category.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.repository.CategoryRepository
+import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.category.view.CategoryEditView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -11,8 +12,9 @@ import javax.inject.Inject
 
 
 class CategoryEditPresenter @Inject constructor(
-    val view: CategoryEditView,
-    private val categoryRepository: CategoryRepository
+        val view: CategoryEditView,
+        private val categoryRepository: CategoryRepository,
+        private val userRepository: UserRepository
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -24,14 +26,14 @@ class CategoryEditPresenter @Inject constructor(
     }
 
     fun insertOrUpdateCategory(
-        eventCategoryId: String,
-        name: String,
-        description: String) = scope.launch {
+            categoryId: String?,
+            name: String,
+            description: String) = scope.launch {
 
-        if (eventCategoryId.isNotBlank()) {
-            categoryRepository.updateCategory(eventCategoryId, name, description)
+        if (!categoryId.isNullOrEmpty()) {
+            categoryRepository.updateCategory(categoryId, name, description)
         } else {
-            categoryRepository.createCategory(name, description)
+            categoryRepository.createCategory(name, description, userRepository.getHouseholdIdForUser())
         }
     }
 

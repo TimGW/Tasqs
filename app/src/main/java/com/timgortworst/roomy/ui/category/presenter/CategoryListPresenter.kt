@@ -24,9 +24,7 @@ class CategoryListPresenter @Inject constructor(
         }
     }
 
-    fun listenToCategories() = scope.launch {
-        categoryRepository.listenToCategories(this@CategoryListPresenter)
-    }
+    fun listenToCategories() = categoryRepository.listenToCategories(this@CategoryListPresenter)
 
     fun detachCategoryListener() {
         categoryRepository.detachCategoryListener()

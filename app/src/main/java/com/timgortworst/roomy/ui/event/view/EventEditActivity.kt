@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 
 class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
-    private lateinit var agendaEvent: Event
+    private var event: Event? = null
     private lateinit var spinnerAdapterTasks: SpinnerTaskAdapter
     private lateinit var spinnerAdapterUsers: SpinnerUserAdapter
     private lateinit var datePickerDialog: DatePickerDialog
@@ -57,7 +57,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_event)
 
-        agendaEvent = intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) ?: Event()
+        event = intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT)
 
         supportActionBar?.apply {
             title = "Nieuw agenda item"
@@ -65,15 +65,13 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             setDisplayShowHomeEnabled(true)
         }
 
-        agendaEvent.let {
-            if (it.agendaId.isNotEmpty()) {
-                supportActionBar?.title = "Edit  ${agendaEvent.eventCategory.name}"
-                agenda_item_date_input.setText(agendaEvent.eventMetaData.repeatStartDate.toString())
-            }
+        event?.let {
+            supportActionBar?.title = "Edit  ${it.eventCategory.name}"
+            agenda_item_date_input.setText(it.eventMetaData.repeatStartDate.toString())
         }
 
-        presenter.fetchCategories()
-        presenter.fetchUsers()
+        presenter.getCategories()
+        presenter.getUsers()
         setupEventRepeatSpinner()
         setupCalenderDialog()
 
@@ -98,9 +96,9 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
     private fun setupEventRepeatSpinner() {
         spinner_repeat.adapter = ArrayAdapter<EventMetaData.RepeatingInterval>(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            EventMetaData.RepeatingInterval.values().dropWhile { it == EventMetaData.RepeatingInterval.SINGLE_EVENT }
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                EventMetaData.RepeatingInterval.values().dropWhile { it == EventMetaData.RepeatingInterval.SINGLE_EVENT }
         )
     }
 
@@ -123,11 +121,11 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                     EventMetaData(repeatStartDate = calendar.timeInMillis, repeatInterval = EventMetaData.RepeatingInterval.SINGLE_EVENT)
                 }
 
-                presenter.insertOrUpdateEvent(
-                    agendaEvent.agendaId,
-                    (spinner_categories.selectedItem as Category),
-                    (spinner_users.selectedItem as User),
-                    eventMetaData
+                presenter.createOrUpdateEvent(
+                        event?.eventId,
+                        (spinner_categories.selectedItem as Category),
+                        (spinner_users.selectedItem as User),
+                        eventMetaData
                 )
 
                 finish()
@@ -145,35 +143,35 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
     override fun presentUserList(users: MutableList<User>) {
         spinnerAdapterUsers = SpinnerUserAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            users
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                users
         )
         spinner_users.adapter = spinnerAdapterUsers
     }
 
     override fun presentCategoryList(tasks: MutableList<Category>) {
         spinnerAdapterTasks = SpinnerTaskAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            tasks
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                tasks
         )
         spinner_categories.adapter = spinnerAdapterTasks
     }
 
     private fun setupCalenderDialog() {
         datePickerDialog = DatePickerDialog(
-            this, this,
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+                this, this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
         )
 
         datePickerDialog.datePicker.minDate = System.currentTimeMillis()
         presenter.formatDate(
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
         )
     }
 

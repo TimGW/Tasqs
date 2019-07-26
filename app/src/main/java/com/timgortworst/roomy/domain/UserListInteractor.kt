@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.domain
 
+import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.model.Household
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.EventRepository
@@ -15,16 +16,15 @@ constructor(private val householdRepository: HouseholdRepository,
             private val userRepository: UserRepository,
             private val eventRepository: EventRepository) {
 
-    suspend fun getCurrentUser() = userRepository.readCurrentUser(userRepository.getCurrentUserId())
+    suspend fun getCurrentUser() = userRepository.getUser()
 
     fun getCurrentUserId() = userRepository.getCurrentUserId()
 
-    suspend fun getHouseholdIdForCurrentUser() = userRepository.readHouseholdIdForCurrentUser()
+    suspend fun getHouseholdIdForCurrentUser() = userRepository.getHouseholdIdForUser()
 
-    suspend fun getUsersForHouseholdId(householdId: String) = userRepository.readUsersForHouseholdId(householdId)
+    suspend fun getUsersForHouseholdId(householdId: String?) = userRepository.getUserListForHousehold(householdId)
 
     suspend fun deleteAndBanUser(user: User) {
-        // set user on blacklist
         addUserToBlackList(user.userId)
 
         // remove id from user document
@@ -33,13 +33,12 @@ constructor(private val householdRepository: HouseholdRepository,
                 .update(USER_HOUSEHOLDID_REF, "")
                 .await()
 
-        // remove all events for that user
-        removeEventsForUser(user.userId)
+        removeEventsAssignedToUser(user.userId)
     }
 
     private suspend fun addUserToBlackList(userId: String) {
         val household = householdRepository.householdsCollectionRef
-                .document(userRepository.readHouseholdIdForUser(userId))
+                .document(userRepository.getHouseholdIdForUser(userId))
                 .get()
                 .await()
                 .toObject(Household::class.java) as Household
@@ -48,17 +47,16 @@ constructor(private val householdRepository: HouseholdRepository,
         householdRepository.updateHousehold(household.householdId, household.blackList)
     }
 
-    private suspend fun removeEventsForUser(userId: String) {
-//        val householdRef = householdRepository.householdsCollectionRef
-//                .document(userRepository.readHouseholdIdForUser(userId))
-//
-//        val event = householdRef.collection(EVENT_COLLECTION_REF).document().whereEqualTo("user.userId", userId).get() as Event
-//
-//        householdRef
-//            .collection(EVENT_COLLECTION_REF)
-//            .document(event.)
-//            .delete()
-//            .await()
+    // todo use transactions
+    private suspend fun removeEventsAssignedToUser(userId: String) {
+        eventRepository.getEventsForUser(userId).forEach {
+            eventRepository.eventCollectionRef.document(it.eventId).delete()
+        }
     }
 
+    suspend fun isUserBanned(householdId: String): Boolean {
+        val housholdRef = householdRepository.householdsCollectionRef.document(householdId)
+        val household = housholdRef.get().await().toObject(Household::class.java) as Household
+        return household.blackList.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
+    }
 }
