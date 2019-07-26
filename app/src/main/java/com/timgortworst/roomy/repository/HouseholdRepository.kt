@@ -16,7 +16,7 @@ import javax.inject.Singleton
 class HouseholdRepository @Inject constructor() {
     val householdsCollectionRef = FirebaseFirestore.getInstance().collection(Constants.HOUSEHOLD_COLLECTION_REF)
 
-    suspend fun createNewHousehold(): String? {
+    suspend fun createHousehold(): String? {
         val householdID = householdsCollectionRef.document().id
 
         val categories = GenerateData.eventCategories()
@@ -53,7 +53,7 @@ class HouseholdRepository @Inject constructor() {
         householdDocRef.set(fieldMap, SetOptions.merge()).await()
     }
 
-    suspend fun removeHousehold(householdId: String) {
+    suspend fun deleteHousehold(householdId: String) {
         // todo delete sub items
 //        val batch = db.batch()
 //        db.collection(CATEGORIES_COLLECTION_REF).get().result?.forEach { batch.delete(it.reference).commit().await() }

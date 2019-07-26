@@ -42,17 +42,17 @@ class EventEditPresenter @Inject constructor(
         if (eventId.isNotBlank()) {
             agendaRepository.updateEvent(eventId, category, user, eventMetaData, isDone)
         } else {
-            agendaRepository.insertEvent(category, user, eventMetaData, isDone)
+            agendaRepository.createEvent(category, user, eventMetaData, isDone)
         }
     }
 
     fun fetchUsers() = scope.launch {
-        val userList = userRepository.getUsersForHouseholdId(userRepository.getHouseholdIdForCurrentUser())
+        val userList = userRepository.readUsersForHouseholdId(userRepository.readHouseholdIdForCurrentUser())
         view.presentUserList(userList.toMutableList())
     }
 
     fun fetchCategories() = scope.launch {
-        val categories = categoryRepository.getCategories()
+        val categories = categoryRepository.readCategories()
         view.presentCategoryList(categories.toMutableList())
     }
 

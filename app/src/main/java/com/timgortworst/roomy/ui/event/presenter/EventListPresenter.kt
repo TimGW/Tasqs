@@ -62,7 +62,7 @@ class EventListPresenter @Inject constructor(
 
     fun markEventAsCompleted(event: Event) = scope.launch {
         if (event.eventMetaData.repeatInterval == EventMetaData.RepeatingInterval.SINGLE_EVENT) {
-            agendaRepository.removeEvent(event.agendaId)
+            agendaRepository.deleteEvent(event.agendaId)
             return@launch
         }
 
@@ -91,6 +91,6 @@ class EventListPresenter @Inject constructor(
     }
 
     fun deleteEvent(event: Event) = scope.launch {
-        agendaRepository.removeEvent(event.agendaId)
+        agendaRepository.deleteEvent(event.agendaId)
     }
 }

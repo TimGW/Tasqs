@@ -15,13 +15,13 @@ constructor(private val householdRepository: HouseholdRepository,
             private val userRepository: UserRepository,
             private val eventRepository: EventRepository) {
 
-    suspend fun getCurrentUser() = userRepository.getCurrentUser()
+    suspend fun getCurrentUser() = userRepository.readCurrentUser()
 
     fun getCurrentUserId() = userRepository.getCurrentUserId()
 
-    suspend fun getHouseholdIdForCurrentUser() = userRepository.getHouseholdIdForCurrentUser()
+    suspend fun getHouseholdIdForCurrentUser() = userRepository.readHouseholdIdForCurrentUser()
 
-    suspend fun getUsersForHouseholdId(householdId: String) = userRepository.getUsersForHouseholdId(householdId)
+    suspend fun getUsersForHouseholdId(householdId: String) = userRepository.readUsersForHouseholdId(householdId)
 
     suspend fun deleteAndBanUser(user: User) {
         // set user on blacklist
@@ -39,7 +39,7 @@ constructor(private val householdRepository: HouseholdRepository,
 
     private suspend fun addUserToBlackList(userId: String) {
         val household = householdRepository.householdsCollectionRef
-                .document(userRepository.getHouseholdIdForUser(userId))
+                .document(userRepository.readHouseholdIdForUser(userId))
                 .get()
                 .await()
                 .toObject(Household::class.java) as Household
@@ -50,7 +50,7 @@ constructor(private val householdRepository: HouseholdRepository,
 
     private suspend fun removeEventsForUser(userId: String) {
 //        val householdRef = householdRepository.householdsCollectionRef
-//                .document(userRepository.getHouseholdIdForUser(userId))
+//                .document(userRepository.readHouseholdIdForUser(userId))
 //
 //        val event = householdRef.collection(EVENT_COLLECTION_REF).document().whereEqualTo("user.userId", userId).get() as Event
 //
