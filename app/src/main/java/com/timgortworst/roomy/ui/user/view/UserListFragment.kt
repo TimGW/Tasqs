@@ -60,7 +60,10 @@ class UserListFragment : Fragment(), UserListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.getUsers()
+
+        presenter.listenToUsers()
+
+//        view.showOrHideFab(userList.size < 8 && currentUser?.role == Role.ADMIN.name)
 
         recyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(activityContext)
@@ -88,8 +91,9 @@ class UserListFragment : Fragment(), UserListView {
         activityContext.fab.show()
     }
 
-    override fun presentUserList(users: MutableList<User>) {
-        userListAdapter.setUsers(users)
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachUserListener()
     }
 
     override fun share(householdId: String) {
@@ -101,65 +105,73 @@ class UserListFragment : Fragment(), UserListView {
     private fun createShareUri(householdId: String): Uri {
         val builder = Uri.Builder()
         builder.scheme("https")
-            .authority("roomy.xyz")
-            .appendPath("households")
-            .appendQueryParameter(QUERY_PARAM_HOUSEHOLD, householdId)
+                .authority("roomy.xyz")
+                .appendPath("households")
+                .appendQueryParameter(QUERY_PARAM_HOUSEHOLD, householdId)
         return builder.build()
     }
 
     private fun shortenLink(linkUri: Uri) {
         FirebaseDynamicLinks.getInstance().createDynamicLink()
-            .setLongLink(linkUri)
-            .buildShortDynamicLink()
-            .addOnCompleteListener(activityContext) { task ->
-                if (task.isSuccessful) {
-                    val shortLink = task.result?.shortLink
-                    val msg = "$shortLink"
-                    val sendIntent = Intent()
-                    sendIntent.action = Intent.ACTION_SEND
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, msg)
-                    sendIntent.type = "text/plain"
+                .setLongLink(linkUri)
+                .buildShortDynamicLink()
+                .addOnCompleteListener(activityContext) { task ->
+                    if (task.isSuccessful) {
+                        val shortLink = task.result?.shortLink
+                        val msg = "$shortLink"
+                        val sendIntent = Intent()
+                        sendIntent.action = Intent.ACTION_SEND
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, msg)
+                        sendIntent.type = "text/plain"
 
-                    if (sendIntent.resolveActivity(activityContext.packageManager) != null)
-                        startActivity(Intent.createChooser(sendIntent, getString(R.string.invite_title)))
-                    else
-                        startActivity(sendIntent)
-                } else {
-                    Log.e("TIMTIM", task.exception?.message)
+                        if (sendIntent.resolveActivity(activityContext.packageManager) != null)
+                            startActivity(Intent.createChooser(sendIntent, getString(R.string.invite_title)))
+                        else
+                            startActivity(sendIntent)
+                    } else {
+                        Log.e("TIMTIM", task.exception?.message)
+                    }
+                    activityContext.hideProgressDialog()
                 }
-                activityContext.hideProgressDialog()
-            }
     }
 
     private fun createDynamicUri(myUri: Uri): Uri {
         val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-            .setLink(myUri)
-            .setDomainUriPrefix("https://roomyf3eb1.page.link")
-            .setAndroidParameters(
-                DynamicLink.AndroidParameters.Builder()
-                    .build()
-            )
-            .buildDynamicLink()
+                .setLink(myUri)
+                .setDomainUriPrefix("https://roomyf3eb1.page.link")
+                .setAndroidParameters(
+                        DynamicLink.AndroidParameters.Builder()
+                                .build()
+                )
+                .buildDynamicLink()
         return dynamicLink.uri
     }
 
     override fun showOrHideFab(condition: Boolean) =
-        if (condition) activityContext.fab.show() else activityContext.fab.hide()
+            if (condition) activityContext.fab.show() else activityContext.fab.hide()
 
     override fun showContextMenuFor(user: User) {
         var bottomSheetMenu: BottomSheetMenu? = null
 
         val items = arrayListOf(
-            BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                presenter.deleteUser(user)
-                bottomSheetMenu?.dismiss()
-            }
+                BottomMenuItem(R.drawable.ic_delete, "Delete") {
+                    presenter.deleteUser(user)
+                    bottomSheetMenu?.dismiss()
+                }
         )
         bottomSheetMenu = BottomSheetMenu(activityContext, user.name, items)
         bottomSheetMenu.show()
     }
 
-    override fun removeUserFromCurrentUI(user: User) {
-        userListAdapter.remove(user)
+    override fun presentEditedUser(user: User) {
+        userListAdapter.updateUser(user)
+    }
+
+    override fun presentDeletedUser(user: User) {
+        userListAdapter.removeUser(user)
+    }
+
+    override fun presentAddedUser(user: User) {
+        userListAdapter.addUser(user)
     }
 }

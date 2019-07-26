@@ -61,11 +61,11 @@ class EventRepository @Inject constructor() {
             }
 
             for (dc in snapshots!!.documentChanges) {
-                val agendaEvent = dc.document.toObject(Event::class.java)
+                val event = dc.document.toObject(Event::class.java)
                 when (dc.type) {
-                    ADDED -> eventListener.eventAdded(agendaEvent)
-                    MODIFIED -> eventListener.eventModified(agendaEvent)
-                    REMOVED -> eventListener.eventDeleted(agendaEvent)
+                    ADDED -> eventListener.eventAdded(event)
+                    MODIFIED -> eventListener.eventModified(event)
+                    REMOVED -> eventListener.eventDeleted(event)
                 }
             }
             eventListener.setLoading(false)

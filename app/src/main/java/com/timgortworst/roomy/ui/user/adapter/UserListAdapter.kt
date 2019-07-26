@@ -15,7 +15,7 @@ import com.timgortworst.roomy.model.User
  * Handles clicks by expanding items to show a more detailed description of the HouseholdTask
  */
 class UserListAdapter(
-    private val onUserLongClickListener: OnUserLongClickListener
+        private val onUserLongClickListener: OnUserLongClickListener
 ) : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
     private var users: MutableList<User> = mutableListOf()
 
@@ -55,6 +55,47 @@ class UserListAdapter(
         val index = users.indexOf(user)
         users.removeAt(index)
         notifyItemRemoved(index)
+    }
+
+    private fun removeUser(position: Int) {
+        users.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun removeUser(user: User) {
+        val pos = users.indexOf(user)
+        removeUser(pos)
+    }
+
+    fun addUser(user: User) {
+        val index = if (user.role == Role.ADMIN.name) {
+            users.add(0, user)
+            0
+        } else {
+            users.add(user)
+            users.lastIndex
+        }
+        notifyItemInserted(index)
+    }
+
+    fun updateUser(user: User) {
+        val fromPosition = users.indexOf(user)
+        notifyItemChanged(fromPosition)
+
+        val toPosition = users.indexOfFirst { user.role != Role.ADMIN.name }
+
+        // update data array if item is not on first or last position
+        if (toPosition != RecyclerView.NO_POSITION &&
+                users.lastIndex != fromPosition &&
+                toPosition > fromPosition
+        ) {
+            val item = users[fromPosition]
+            users.removeAt(fromPosition)
+            users.add(toPosition, item)
+
+            // notify adapter
+            notifyItemMoved(fromPosition, toPosition)
+        }
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
