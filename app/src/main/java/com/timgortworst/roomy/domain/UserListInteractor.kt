@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.domain
 
-import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.model.Household
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.EventRepository
@@ -22,7 +21,7 @@ constructor(private val householdRepository: HouseholdRepository,
     suspend fun getHouseholdIdForCurrentUser() = userRepository.getHouseholdIdForUser()
 
     suspend fun deleteAndBanUser(user: User) {
-        addUserToBlackList(user.userId)
+        removeEventsAssignedToUser(user.userId)
 
         // remove id from user document
         userRepository.userCollectionRef
@@ -30,7 +29,7 @@ constructor(private val householdRepository: HouseholdRepository,
                 .update(USER_HOUSEHOLDID_REF, "")
                 .await()
 
-        removeEventsAssignedToUser(user.userId)
+        addUserToBlackList(user.userId)
     }
 
     private suspend fun addUserToBlackList(userId: String) {
@@ -40,8 +39,8 @@ constructor(private val householdRepository: HouseholdRepository,
                 .await()
                 .toObject(Household::class.java) as Household
 
-        household.blackList.add(userId)
-        householdRepository.updateHousehold(household.householdId, household.blackList)
+        household.userIdBlackList.add(userId)
+        householdRepository.updateHousehold(household.householdId, household.userIdBlackList)
     }
 
     // todo use transactions
@@ -49,12 +48,6 @@ constructor(private val householdRepository: HouseholdRepository,
         eventRepository.getEventsForUser(userId).forEach {
             eventRepository.eventCollectionRef.document(it.eventId).delete()
         }
-    }
-
-    suspend fun isUserBanned(householdId: String): Boolean {
-        val housholdRef = householdRepository.householdsCollectionRef.document(householdId)
-        val household = housholdRef.get().await().toObject(Household::class.java) as Household
-        return household.blackList.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
     }
 
     fun detachUserListener() {

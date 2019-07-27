@@ -58,7 +58,7 @@ class EventRepository @Inject constructor() {
                         Log.w(TAG, "listen:error", e)
                         return@EventListener
                     }
-
+                    Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
                     for (dc in snapshots!!.documentChanges) {
                         val event = dc.document.toObject(Event::class.java)
                         when (dc.type) {

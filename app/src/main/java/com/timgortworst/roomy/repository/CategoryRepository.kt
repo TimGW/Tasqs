@@ -52,25 +52,25 @@ class CategoryRepository @Inject constructor() {
     fun listenToCategoriesForHousehold(householdId: String, categoryListener: CategoryListener) {
         categoryListener.setLoading(true)
 
-        registration =  categoryCollectionRef
+        registration = categoryCollectionRef
                 .whereEqualTo(CATEGORY_HOUSEHOLDID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-            if (e != null) {
-                categoryListener.setLoading(false)
-                Log.w(TAG, "listen:error", e)
-                return@EventListener
-            }
-
-            for (dc in snapshots!!.documentChanges) {
-                val eventCategory = dc.document.toObject(Category::class.java)
-                when (dc.type) {
-                    DocumentChange.Type.ADDED -> categoryListener.categoryAdded(eventCategory)
-                    DocumentChange.Type.MODIFIED -> categoryListener.categoryModified(eventCategory)
-                    DocumentChange.Type.REMOVED -> categoryListener.categoryDeleted(eventCategory)
-                }
-            }
-            categoryListener.setLoading(false)
-        })
+                    if (e != null) {
+                        categoryListener.setLoading(false)
+                        Log.w(TAG, "listen:error", e)
+                        return@EventListener
+                    }
+                    Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
+                    for (dc in snapshots!!.documentChanges) {
+                        val eventCategory = dc.document.toObject(Category::class.java)
+                        when (dc.type) {
+                            DocumentChange.Type.ADDED -> categoryListener.categoryAdded(eventCategory)
+                            DocumentChange.Type.MODIFIED -> categoryListener.categoryModified(eventCategory)
+                            DocumentChange.Type.REMOVED -> categoryListener.categoryDeleted(eventCategory)
+                        }
+                    }
+                    categoryListener.setLoading(false)
+                })
     }
 
     suspend fun updateCategory(

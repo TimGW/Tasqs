@@ -11,7 +11,9 @@ import com.google.android.gms.ads.AdRequest
 import com.timgortworst.roomy.ui.BaseActivity
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
 import com.timgortworst.roomy.ui.event.view.EventListFragment
+import com.timgortworst.roomy.ui.main.presenter.MainPresenter
 import com.timgortworst.roomy.ui.settings.view.SettingsActivity
+import com.timgortworst.roomy.ui.splash.ui.SplashActivity
 import com.timgortworst.roomy.ui.user.view.UserListFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -21,9 +23,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity(), HasSupportFragmentInjector {
+class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    @Inject
+    lateinit var presenter: MainPresenter
 
     private var adRequest: AdRequest? = null
 
@@ -43,6 +48,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
 
         presentAgendaFragment()
 
+        presenter.listenToHousehold()
+
         adRequest = AdRequest.Builder().build()
         adView?.adListener = object : AdListener() {
             override fun onAdLoaded() {
@@ -59,6 +66,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
 
     override fun onDestroy() {
         super.onDestroy()
+        presenter.detachHouseholdListener()
+
         adView?.removeAllViews()
         adView?.destroy()
     }
@@ -91,6 +100,11 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector {
 
     private fun presentHousematesFragment() {
         fragmentToReplace(UserListFragment.newInstance())
+    }
+
+    override fun logout() {
+        finishAffinity()
+        SplashActivity.start(this)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {

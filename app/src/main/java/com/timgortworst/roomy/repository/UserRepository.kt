@@ -60,7 +60,7 @@ class UserRepository @Inject constructor() {
                         Log.w(TAG, "listen:error", e)
                         return@EventListener
                     }
-
+                    Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
                     for (dc in snapshots!!.documentChanges) {
                         val user = dc.document.toObject(User::class.java)
                         when (dc.type) {
