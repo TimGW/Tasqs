@@ -10,5 +10,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Household(
         var householdId: String = "",
-        var blackList: MutableList<String> = mutableListOf()
+        var userIdBlackList: MutableList<String> = mutableListOf()
 ) : Parcelable

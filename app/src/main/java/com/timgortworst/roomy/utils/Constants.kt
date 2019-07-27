@@ -8,7 +8,7 @@ object Constants {
 
     const val HOUSEHOLD_COLLECTION_REF = "households"
     const val HOUSEHOLD_ID_REF = "householdId"
-    const val HOUSEHOLD_BLACKLIST_REF = "blackList"
+    const val HOUSEHOLD_BLACKLIST_REF = "userIdBlackList"
 
     const val USER_COLLECTION_REF = "users"
     const val USER_NAME_REF = "name"

@@ -1,7 +1,12 @@
 package com.timgortworst.roomy.repository
 
+import android.util.Log
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.model.Household
 import com.timgortworst.roomy.utils.Constants
@@ -12,6 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class HouseholdRepository @Inject constructor() {
     val householdsCollectionRef = FirebaseFirestore.getInstance().collection(Constants.HOUSEHOLD_COLLECTION_REF)
+    private var registration: ListenerRegistration? = null
 
     suspend fun createHousehold(): String? {
         val household = householdsCollectionRef.document()
@@ -21,6 +27,27 @@ class HouseholdRepository @Inject constructor() {
         } catch (e: FirebaseFirestoreException) {
             null
         }
+    }
+
+    fun listenToHousehold(householdId: String?, householdListener: HouseholdListener) {
+        if (householdId.isNullOrEmpty()) return
+
+        registration = householdsCollectionRef
+                .whereEqualTo(Constants.USER_HOUSEHOLDID_REF, householdId)
+                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                    if (e != null && snapshots == null) {
+                        Log.w(TAG, "listen:error", e)
+                        return@EventListener
+                    }
+                    Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
+                    for (dc in snapshots!!.documentChanges) {
+                        val household = dc.document.toObject(Household::class.java)
+                        when (dc.type) {
+                            DocumentChange.Type.MODIFIED -> householdListener.householdModified(household)
+                            else -> { }
+                        }
+                    }
+                })
     }
 
     suspend fun updateHousehold(
@@ -42,5 +69,13 @@ class HouseholdRepository @Inject constructor() {
 
     companion object {
         private const val TAG = "HouseholdRepository"
+    }
+
+    fun detachHouseholdListener() {
+        registration?.remove()
+    }
+
+    interface HouseholdListener {
+        fun householdModified(household: Household)
     }
 }
