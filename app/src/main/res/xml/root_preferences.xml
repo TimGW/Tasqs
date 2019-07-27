@@ -9,6 +9,17 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/preferences_analytics_header">
+
+        <SwitchPreferenceCompat
+            app:key="analytics_key"
+            app:title="@string/preferences_opt_analytics"
+            app:summary="@string/preferences_opt_analytics_description"
+            android:defaultValue="true"
+            />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/dangerous_settings_header">
 
         <!--<EditTextPreference-->

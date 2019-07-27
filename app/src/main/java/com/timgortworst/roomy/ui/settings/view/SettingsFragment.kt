@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.local.HuishoudGenootSharedPref
@@ -38,7 +39,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
 
         val darkModeSwitch: SwitchPreferenceCompat? = findPreference("dark_mode_key")
 
-        darkModeSwitch?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { preference, newValue ->
+        darkModeSwitch?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             val isDarkModeOn = newValue as Boolean
 
             AppCompatDelegate.setDefaultNightMode (
@@ -58,13 +59,21 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
             AlertDialog.Builder(activity!!)
                     .setTitle(getString(R.string.dialog_household_overwrite_title))
                     .setMessage(getString(R.string.dialog_household_overwrite_text))
-                    .setPositiveButton(android.R.string.yes) { dialog, which ->
+                    .setPositiveButton(android.R.string.yes) { _, _ ->
                         settingsPresenter.deleteUser(FirebaseAuth.getInstance().currentUser!!.uid)
                     }
-                    .setNegativeButton(android.R.string.no) { dialog, which ->
+                    .setNegativeButton(android.R.string.no) { _, _ ->
                         activity!!.showToast("no")
                     }
                     .show()
+            true
+        }
+
+        val analyticsOptOut: SwitchPreferenceCompat? = findPreference("analytics_key")
+
+        analyticsOptOut?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+            val isAnalyticsEnabled = newValue as Boolean
+            activity?.let { FirebaseAnalytics.getInstance(it).setAnalyticsCollectionEnabled(isAnalyticsEnabled) }
             true
         }
     }

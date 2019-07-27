@@ -111,4 +111,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="dangerous_settings_header">Dangerous settings</string>
     <string name="connection_error">Please check your internet connection.</string>
     <string name="server_error">A Server Error occurred.</string>
+    <string name="preferences_analytics_header">Data collection</string>
+    <string name="preferences_opt_analytics">Enable data collection</string>
+    <string name="preferences_opt_analytics_description">By sending anonymous user data, you will help improve the application</string>
+
 </resources>
