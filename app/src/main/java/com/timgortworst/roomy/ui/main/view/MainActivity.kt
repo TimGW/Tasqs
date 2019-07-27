@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -15,6 +16,7 @@ import com.timgortworst.roomy.ui.main.presenter.MainPresenter
 import com.timgortworst.roomy.ui.settings.view.SettingsActivity
 import com.timgortworst.roomy.ui.splash.ui.SplashActivity
 import com.timgortworst.roomy.ui.user.view.UserListFragment
+import com.timgortworst.roomy.utils.runBeforeDraw
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -54,6 +56,17 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         adView?.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 adView_container?.visibility = View.VISIBLE
+
+                adView_container.runBeforeDraw {
+                    val params = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT)
+                    params.setMargins(
+                            params.leftMargin,
+                            params.topMargin,
+                            params.rightMargin,
+                            bottom_appbar.measuredHeight + it.measuredHeight)
+
+                    content_frame?.layoutParams = params
+                }
             }
 
             override fun onAdFailedToLoad(errorCode: Int) {

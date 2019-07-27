@@ -2,13 +2,14 @@ package com.timgortworst.roomy.utils
 
 import android.content.Context
 import android.os.IBinder
-import com.google.android.material.textfield.TextInputEditText
 import android.util.Log
-import android.util.Log.d
 import android.util.Log.e
 import android.util.TypedValue
+import android.view.View
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.google.android.material.textfield.TextInputEditText
 
 fun Context.showToast(stringResource: Int, length: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, getString(stringResource), length).show()
@@ -39,8 +40,8 @@ fun Context.pxToDp(px: Float): Int {
 
 fun Context.spToDp(size: Int): Int {
     return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        size.toFloat(), resources.displayMetrics
+            TypedValue.COMPLEX_UNIT_DIP,
+            size.toFloat(), resources.displayMetrics
     ).toInt()
 }
 
@@ -48,4 +49,15 @@ fun Context.spToPx(sp: Float): Int {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics).toInt()
 }
 
-fun Log.msg(message : String) = e("TIMTIM", message)
+fun Log.msg(message: String) = e("TIMTIM", message)
+
+fun View.runBeforeDraw(onFinished: (view: View) -> Unit) {
+    val preDrawListener = object : ViewTreeObserver.OnPreDrawListener {
+        override fun onPreDraw(): Boolean {
+            Runnable { onFinished.invoke(this@runBeforeDraw) }.run()
+            viewTreeObserver.removeOnPreDrawListener(this)
+            return true
+        }
+    }
+    viewTreeObserver.addOnPreDrawListener(preDrawListener)
+}
