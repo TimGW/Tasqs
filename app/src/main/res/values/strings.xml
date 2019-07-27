@@ -131,6 +131,10 @@
     <string name="repeat_label_interval_text_week">W</string>
     <string name="repeat_label_interval_text_month">M</string>
     <string name="dangerous_settings_header">Dangerous settings</string>
+    <string name="preferences_analytics_header">Data collection</string>
+    <string name="preferences_opt_analytics">Enable data collection</string>
+    <string name="preferences_opt_analytics_description">By sending anonymous user data, you will help improve the application</string>
+
 
     <!--&lt;!&ndash; Preference Titles &ndash;&gt;-->
     <!--<string name="messages_header">Messages</string>-->
