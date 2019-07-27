@@ -43,12 +43,13 @@ class SplashActivity : AppCompatActivity(), SplashView {
         GoogleSignInActivity.startForResult(this, RESULT_CODE)
     }
 
-    override fun goToSetupActivity(referredHouseholdId: String) {
-        if (referredHouseholdId.isNotBlank()) {
-            SetupActivity.start(this, referredHouseholdId)
-        } else {
-            SetupActivity.start(this)
-        }
+    override fun goToSetupActivityReferred(referredHouseholdId: String) {
+        SetupActivity.start(this, referredHouseholdId)
+        finish()
+    }
+
+    override fun goToSetupActivity() {
+        SetupActivity.start(this)
         finish()
     }
 

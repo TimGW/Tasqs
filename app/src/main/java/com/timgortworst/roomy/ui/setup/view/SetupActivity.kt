@@ -54,10 +54,10 @@ class SetupActivity : BaseActivity(), SetupView {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.dialog_household_overwrite_title))
             .setMessage(getString(R.string.dialog_household_overwrite_text))
-            .setPositiveButton(android.R.string.yes) { dialog, which ->
+            .setPositiveButton(android.R.string.yes) { _, _ ->
                 presenter.changeCurrentUserHousehold(referredHouseholdId)
             }
-            .setNegativeButton(android.R.string.no) { dialog, which ->
+            .setNegativeButton(android.R.string.no) { _, _ ->
                 goToMainActivity()
             }
             .show()
@@ -69,10 +69,24 @@ class SetupActivity : BaseActivity(), SetupView {
         AlertDialog.Builder(this)
                 .setTitle(getString(R.string.dialog_household_similar_title))
                 .setMessage(getString(R.string.dialog_household_similar_text))
-                .setNeutralButton(android.R.string.yes) { dialog, which ->
+                .setNeutralButton(android.R.string.yes) { _, _ ->
                     goToMainActivity()
                 }
                 .show()
     }
 
+    override fun presentUserIsBannedDialog() {
+        hideProgressDialog()
+
+        AlertDialog.Builder(this)
+                .setTitle(getString(R.string.dialog_household_banned_title))
+                .setMessage(getString(R.string.dialog_household_banned_text))
+                .setPositiveButton(android.R.string.yes) { _, _ ->
+                    presenter.setupHousehold("")
+                }
+                .setNegativeButton(android.R.string.no) { _, _ ->
+                    finish()
+                }
+                .show()
+    }
 }

@@ -5,4 +5,5 @@ interface SetupView {
     fun presentToastError(error: Int)
     fun presentHouseholdOverwriteDialog()
     fun presentAlreadyInHouseholdDialog()
+    fun presentUserIsBannedDialog()
 }

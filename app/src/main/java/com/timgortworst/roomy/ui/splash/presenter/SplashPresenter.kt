@@ -35,7 +35,7 @@ class SplashPresenter @Inject constructor(
             if (referredHouseholdId.isNotBlank()) {
 
                 // user accepted invite link
-                view.goToSetupActivity(referredHouseholdId)
+                view.goToSetupActivityReferred(referredHouseholdId)
             } else {
                 view.goToSetupActivity()
             }

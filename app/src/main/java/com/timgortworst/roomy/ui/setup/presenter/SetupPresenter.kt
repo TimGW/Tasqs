@@ -25,10 +25,16 @@ class SetupPresenter @Inject constructor(
         }
     }
 
+    // todo split up in smaller pieces
     fun setupHousehold(referredHouseholdId: String) = scope.launch {
         if (referredHouseholdId.isNotBlank()) {
+            if (setupInteractor.userBlackListedForHousehold(referredHouseholdId)) {
+                view.presentUserIsBannedDialog()
+                return@launch
+            }
+
             // user has accepted the invite
-            if (setupInteractor.isHouseholdActive()) {
+            if (setupInteractor.getHouseholdIdForUser().isNotBlank()) {
                 if(isIdSimilarToActiveId(referredHouseholdId)){
                     view.presentAlreadyInHouseholdDialog()
                 } else {
@@ -41,7 +47,7 @@ class SetupPresenter @Inject constructor(
             }
         } else {
             // user is not invited
-            if (setupInteractor.isHouseholdActive()) {
+            if (setupInteractor.getHouseholdIdForUser().isNotBlank()) {
                 // user has an active household
                 view.goToMainActivity()
             } else {
