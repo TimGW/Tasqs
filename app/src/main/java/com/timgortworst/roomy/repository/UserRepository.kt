@@ -91,13 +91,14 @@ class UserRepository @Inject constructor() {
         return user.householdId
     }
 
+    //todo update user in events collection
     suspend fun updateUser(
             userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
             name: String = "",
             email: String = "",
             householdId: String = "",
             role: String = ""
-    ) {
+    ): String {
         val userDocRef = userCollectionRef.document(userId)
 
         val userFieldMap = mutableMapOf<String, Any>()
@@ -107,6 +108,8 @@ class UserRepository @Inject constructor() {
         if (role.isNotBlank()) userFieldMap[USER_ROLE_REF] = role
 
         userDocRef.set(userFieldMap, SetOptions.merge()).await()
+
+        return userId
     }
 
     fun detachUserListener() {

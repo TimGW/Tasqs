@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.model.Household
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.CategoryRepository
+import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.utils.GenerateData
@@ -14,7 +15,8 @@ class SetupInteractor
 @Inject
 constructor(private val categoryRepository: CategoryRepository,
             private val householdRepository: HouseholdRepository,
-            private val userRepository: UserRepository) {
+            private val userRepository: UserRepository,
+            private val eventRepository: EventRepository) {
 
     suspend fun initializeHousehold(): String? {
         val householdId = householdRepository.createHousehold()
@@ -27,8 +29,13 @@ constructor(private val categoryRepository: CategoryRepository,
         return householdId
     }
 
-    suspend fun updateUser(householdId: String, role: String) {
-        userRepository.updateUser(householdId = householdId, role = role)
+    suspend fun switchHousehold(householdId: String, role: String) {
+        val userId = userRepository.updateUser(householdId = householdId, role = role)
+
+        // remove events assigned to user
+        eventRepository.getEventsForUser(userId).forEach {
+            eventRepository.eventCollectionRef.document(it.eventId).delete()
+        }
     }
 
     suspend fun getHouseholdIdForUser() = userRepository.getHouseholdIdForUser()

@@ -56,7 +56,7 @@ class SetupPresenter @Inject constructor(
 
                 if (householdID != null) {
                     // update household id for user remote
-                    setupInteractor.updateUser(
+                    setupInteractor.switchHousehold(
                         householdId = householdID,
                         role = Role.ADMIN.name
                     )
@@ -73,7 +73,7 @@ class SetupPresenter @Inject constructor(
     }
 
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
-        setupInteractor.updateUser(
+        setupInteractor.switchHousehold(
             householdId = newHouseholdId,
             role = Role.NORMAL.name
         )
