@@ -9,11 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.timgortworst.roomy.customview.EmptyRecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="?actionBarSize" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <include
+        android:id="@+id/layout_list_state_empty"
+        layout="@layout/layout_list_state_empty"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/layout_list_state_error"
+        layout="@layout/layout_list_state_error"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

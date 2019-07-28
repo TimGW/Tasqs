@@ -2,7 +2,6 @@ package com.timgortworst.roomy.repository
 
 import android.os.Handler
 import android.util.Log
-import com.google.firebase.firestore.DocumentChange.Type.*
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -50,30 +49,23 @@ class EventRepository @Inject constructor() {
         return eventCollectionRef.whereEqualTo("user.userId", userId).get().await().toObjects(Event::class.java)
     }
 
-    fun listenToEventsForHousehold(householdId: String, eventListener: EventListener) {
+    fun listenToEventsForHousehold(householdId: String, baseResponse: BaseResponse) {
         val handler = Handler()
-        val runnable = Runnable { eventListener.setLoading(true) }
+        val runnable = Runnable { baseResponse.setResponse(DataListener.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = eventCollectionRef
                 .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
-                    eventListener.setLoading(false)
 
                     if (e != null && snapshots == null) {
+                        baseResponse.setResponse(DataListener.Error(e))
                         Log.w(TAG, "listen:error", e)
                         return@EventListener
                     }
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-                    for (dc in snapshots!!.documentChanges) {
-                        val event = dc.document.toObject(Event::class.java)
-                        when (dc.type) {
-                            ADDED -> eventListener.eventAdded(event)
-                            MODIFIED -> eventListener.eventModified(event)
-                            REMOVED -> eventListener.eventDeleted(event)
-                        }
-                    }
+                    baseResponse.setResponse(DataListener.Success(snapshots!!.documentChanges))
                 })
     }
 
@@ -120,11 +112,5 @@ class EventRepository @Inject constructor() {
 
     companion object {
         private const val TAG = "EventRepository"
-    }
-
-    interface EventListener : DataLoadingListener {
-        fun eventAdded(event: Event)
-        fun eventModified(event: Event)
-        fun eventDeleted(event: Event)
     }
 }

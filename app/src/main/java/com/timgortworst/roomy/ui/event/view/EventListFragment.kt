@@ -12,9 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.customview.BottomSheetMenu
-import com.timgortworst.roomy.customview.EmptyRecyclerView
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.ui.event.adapter.EventListAdapter
@@ -30,7 +30,9 @@ import javax.inject.Inject
 
 
 class EventListFragment : Fragment(), EventListView {
-    private var recyclerView: EmptyRecyclerView? = null
+    private var emptyView: View? = null
+    private var errorView: View? = null
+    private var recyclerView: RecyclerView? = null
     private lateinit var touchListener: RecyclerTouchListener
     private lateinit var activityContext: AppCompatActivity
     private lateinit var eventListAdapter: EventListAdapter
@@ -83,12 +85,17 @@ class EventListFragment : Fragment(), EventListView {
             adapter = eventListAdapter
             addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
             addOnItemTouchListener(touchListener)
+        }
 
-            val emptyView = View.inflate(activity, R.layout.layout_list_state_empty, view.root).apply {
-                state_title.text = activity?.getString(R.string.empty_list_state_title_events)
-                state_message.text = activity?.getString(R.string.empty_list_state_text_events)
-            }
-            setEmptyView(emptyView)
+        emptyView = view.layout_list_state_empty.apply {
+            state_title.text = activity?.getString(R.string.empty_list_state_title_events)
+            state_message.text = activity?.getString(R.string.empty_list_state_text_events)
+        }
+
+        errorView = view.layout_list_state_error.apply {
+            state_title.text = activity?.getString(R.string.error_list_state_title)
+            state_message.text = activity?.getString(R.string.error_list_state_text)
+            state_action_button.setOnClickListener { presenter.listenToEvents() }
         }
         return view
     }
@@ -163,7 +170,15 @@ class EventListFragment : Fragment(), EventListView {
         eventListAdapter.removeEvent(agendaEvent)
     }
 
-    override fun setLoading(isLoading: Boolean) {
+    override fun setLoadingView(isLoading: Boolean) {
         swipe_container?.isRefreshing = isLoading
+    }
+
+    override fun presentEmptyView() {
+        emptyView?.visibility = View.VISIBLE
+    }
+
+    override fun presentErrorView() {
+        errorView?.visibility = View.VISIBLE
     }
 }

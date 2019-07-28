@@ -26,15 +26,18 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
+import kotlinx.android.synthetic.main.layout_list_state_error.view.*
 import javax.inject.Inject
 
 
 class UserListFragment : Fragment(), UserListView {
-    @Inject
-    lateinit var presenter: UserListPresenter
     private lateinit var userListAdapter: UserListAdapter
     private lateinit var activityContext: MainActivity
     private var recyclerView: RecyclerView? = null
+    private var errorView: View? = null
+
+    @Inject
+    lateinit var presenter: UserListPresenter
 
     companion object {
         fun newInstance(): UserListFragment {
@@ -69,11 +72,15 @@ class UserListFragment : Fragment(), UserListView {
         recyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(activityContext)
             val dividerItemDecoration = DividerItemDecoration(activityContext, linearLayoutManager.orientation)
-
             layoutManager = linearLayoutManager
             adapter = userListAdapter
-
             addItemDecoration(dividerItemDecoration)
+        }
+
+        errorView = view.layout_list_state_error.apply {
+            state_title.text = activity?.getString(R.string.error_list_state_title)
+            state_message.text = activity?.getString(R.string.error_list_state_text)
+            state_action_button.setOnClickListener { presenter.listenToUsers() }
         }
     }
 
@@ -176,7 +183,11 @@ class UserListFragment : Fragment(), UserListView {
         userListAdapter.addUser(user)
     }
 
-    override fun setLoading(loading: Boolean) {
-        swipe_container?.isRefreshing = loading
+    override fun setLoadingView(isLoading: Boolean) {
+        swipe_container?.isRefreshing = isLoading
+    }
+
+    override fun presentErrorView() {
+       errorView?.visibility = View.VISIBLE
     }
 }

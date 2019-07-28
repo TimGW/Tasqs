@@ -3,8 +3,10 @@ package com.timgortworst.roomy.ui.event.presenter
 import android.widget.Filter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
+import com.timgortworst.roomy.repository.BaseResponse
 import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.event.view.EventListView
@@ -18,34 +20,13 @@ class EventListPresenter @Inject constructor(
         private val view: EventListView,
         private val agendaRepository: EventRepository,
         private val userRepository: UserRepository
-) : EventRepository.EventListener, DefaultLifecycleObserver {
-
+) : BaseResponse(), DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
         if (view is LifecycleOwner) {
             view.lifecycle.addObserver(scope)
         }
-    }
-
-    override fun eventAdded(event: Event) {
-        if (event.eventMetaData.repeatStartDate.isTimeStampInPast()) {
-            // event is in het verleden
-            // todo send reminder
-        }
-        view.presentAddedEvent(event)
-    }
-
-    override fun eventModified(event: Event) {
-        view.presentEditedEvent(event)
-    }
-
-    override fun eventDeleted(event: Event) {
-        view.presentDeletedEvent(event)
-    }
-
-    override fun setLoading(isLoading: Boolean) {
-        view.setLoading(isLoading)
     }
 
     fun detachEventListener() {
@@ -94,5 +75,40 @@ class EventListPresenter @Inject constructor(
 
     fun deleteEvent(event: Event) = scope.launch {
         agendaRepository.deleteEvent(event.eventId)
+    }
+
+    override fun renderSuccessfulState(dc: List<DocumentChange>?) {
+        view.setLoadingView(false)
+
+        dc?.let {
+            if (it.isEmpty()) { view.presentEmptyView() }
+
+            for (docChange in it) {
+                val event = docChange.document.toObject(Event::class.java)
+                when (docChange.type) {
+                    DocumentChange.Type.ADDED -> {
+//                    if (event.eventMetaData.repeatStartDate.isTimeStampInPast()) {
+//                        // event is in het verleden
+//                        // todo send reminder
+//                    }
+                        view.presentAddedEvent(event)
+                    }
+                    DocumentChange.Type.MODIFIED -> view.presentEditedEvent(event)
+                    DocumentChange.Type.REMOVED -> {
+                        if (it.size == 1) { view.presentEmptyView() }
+                        view.presentDeletedEvent(event)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun renderLoadingState() {
+        view.setLoadingView(true)
+    }
+
+    override fun renderUnsuccessfulState(throwable: Throwable) {
+        view.setLoadingView(false)
+        view.presentErrorView()
     }
 }
