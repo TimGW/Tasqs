@@ -30,4 +30,6 @@ object Constants {
     const val EVENT_META_DATA_REF = "eventMetaData"
     const val EVENT_HOUSEHOLD_ID_REF = "householdId"
 
+    const val LOADING_SPINNER_DELAY = 200L
+
 }
