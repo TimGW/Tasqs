@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.repository
 
+import android.os.Handler
 import android.util.Log
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
@@ -14,6 +15,7 @@ import com.timgortworst.roomy.utils.Constants.CATEGORY_DESCRIPTION_REF
 import com.timgortworst.roomy.utils.Constants.CATEGORY_HOUSEHOLDID_REF
 import com.timgortworst.roomy.utils.Constants.CATEGORY_ID_REF
 import com.timgortworst.roomy.utils.Constants.CATEGORY_NAME_REF
+import com.timgortworst.roomy.utils.Constants.LOADING_SPINNER_DELAY
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -50,13 +52,16 @@ class CategoryRepository @Inject constructor() {
     }
 
     fun listenToCategoriesForHousehold(householdId: String, categoryListener: CategoryListener) {
-        categoryListener.setLoading(true)
+        val handler = Handler()
+        val runnable = Runnable { categoryListener.setLoading(true) }
+        handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = categoryCollectionRef
                 .whereEqualTo(CATEGORY_HOUSEHOLDID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                    handler.removeCallbacks(runnable)
+                    categoryListener.setLoading(false)
                     if (e != null) {
-                        categoryListener.setLoading(false)
                         Log.w(TAG, "listen:error", e)
                         return@EventListener
                     }
@@ -69,7 +74,6 @@ class CategoryRepository @Inject constructor() {
                             DocumentChange.Type.REMOVED -> categoryListener.categoryDeleted(eventCategory)
                         }
                     }
-                    categoryListener.setLoading(false)
                 })
     }
 
@@ -113,7 +117,7 @@ class CategoryRepository @Inject constructor() {
         private const val TAG = "CategoryRepository"
     }
 
-    interface CategoryListener : ObjectStateListener {
+    interface CategoryListener : DataLoadingListener {
         fun categoryAdded(category: Category)
         fun categoryModified(category: Category)
         fun categoryDeleted(category: Category)

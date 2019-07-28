@@ -1,5 +1,5 @@
 package com.timgortworst.roomy.repository
 
-interface ObjectStateListener {
+interface DataLoadingListener {
     fun setLoading(isLoading: Boolean)
 }

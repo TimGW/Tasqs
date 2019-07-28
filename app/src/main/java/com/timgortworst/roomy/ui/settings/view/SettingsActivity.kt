@@ -31,7 +31,7 @@ class SettingsActivity : BaseActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings_activity)
+        setContentView(R.layout.activity_settings)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.settings, SettingsFragment())

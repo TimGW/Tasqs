@@ -114,5 +114,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="preferences_analytics_header">Data collection</string>
     <string name="preferences_opt_analytics">Enable data collection</string>
     <string name="preferences_opt_analytics_description">By sending anonymous user data, you will help improve the application</string>
+    <string name="try_again">try again</string>
+    <string name="empty_list_state_title_events">No events</string>
+    <string name="empty_list_state_text_events">Try adding your first event by clicking the + button</string>
+
 
 </resources>

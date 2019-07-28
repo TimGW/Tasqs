@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.repository
 
+import android.os.Handler
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
@@ -9,6 +10,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.model.User
+import com.timgortworst.roomy.utils.Constants.LOADING_SPINNER_DELAY
 import com.timgortworst.roomy.utils.Constants.USER_COLLECTION_REF
 import com.timgortworst.roomy.utils.Constants.USER_EMAIL_REF
 import com.timgortworst.roomy.utils.Constants.USER_HOUSEHOLDID_REF
@@ -50,13 +52,17 @@ class UserRepository @Inject constructor() {
     fun listenToUsersForHousehold(householdId: String?, userListener: UserListener) {
         if (householdId.isNullOrEmpty()) return
 
-        userListener.setLoading(true)
+        val handler = Handler()
+        val runnable = Runnable { userListener.setLoading(true) }
+        handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = userCollectionRef
                 .whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                    handler.removeCallbacks(runnable)
+                    userListener.setLoading(false)
+
                     if (e != null && snapshots == null) {
-                        userListener.setLoading(false)
                         Log.w(TAG, "listen:error", e)
                         return@EventListener
                     }
@@ -69,7 +75,6 @@ class UserRepository @Inject constructor() {
                             DocumentChange.Type.REMOVED -> userListener.userDeleted(user)
                         }
                     }
-                    userListener.setLoading(false)
                 })
     }
 
@@ -120,7 +125,7 @@ class UserRepository @Inject constructor() {
         private const val TAG = "UserRepository"
     }
 
-    interface UserListener : ObjectStateListener {
+    interface UserListener : DataLoadingListener {
         fun userAdded(user: User): Job
         fun userModified(user: User)
         fun userDeleted(user: User)
