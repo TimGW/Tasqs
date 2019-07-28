@@ -21,21 +21,23 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
+import kotlinx.android.synthetic.main.layout_list_state_empty.view.state_message
+import kotlinx.android.synthetic.main.layout_list_state_empty.view.state_title
+import kotlinx.android.synthetic.main.layout_list_state_error.view.*
 import javax.inject.Inject
 
 
-class CategoryListFragment : Fragment(), CategoryListView {
+class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.OnOptionsClickListener {
+    private var recyclerView: RecyclerView? = null
+    private var emptyView: View? = null
+    private var errorView: View? = null
     private lateinit var activityContext: MainActivity
     private lateinit var categoryListAdapter: CategoryListAdapter
 
     @Inject
     lateinit var presenter: CategoryListPresenter
 
-    private var recyclerView: RecyclerView? = null
-
     companion object {
-        private val TAG = "CategoryListFragment"
-
         fun newInstance(): CategoryListFragment {
             return CategoryListFragment()
         }
@@ -49,30 +51,34 @@ class CategoryListFragment : Fragment(), CategoryListView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_recycler_view, container, false)
-        categoryListAdapter = CategoryListAdapter(object : CategoryListAdapter.OnOptionsClickListener {
-            override fun onOptionsClick(householdTask: Category) {
-                showContextMenuFor(householdTask)
-            }
-        })
+        categoryListAdapter = CategoryListAdapter(this)
         recyclerView = view.recycler_view
+        view.swipe_container?.isEnabled = false
+
+        recyclerView?.apply {
+            val linearLayoutManager = LinearLayoutManager(activityContext)
+            layoutManager = linearLayoutManager
+            adapter = categoryListAdapter
+            addItemDecoration(StickyRecyclerHeadersDecoration(categoryListAdapter))
+            addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
+        }
+
+        emptyView = view.layout_list_state_empty.apply {
+            state_title.text = activity?.getString(R.string.empty_list_state_title_categories)
+            state_message.text = activity?.getString(R.string.empty_list_state_text_categories)
+        }
+
+        errorView = view.layout_list_state_error.apply {
+            state_title.text = activity?.getString(R.string.error_list_state_title)
+            state_message.text = activity?.getString(R.string.error_list_state_text)
+            state_action_button.setOnClickListener { presenter.listenToCategories() }
+        }
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.listenToCategories()
-
-        swipe_container?.isEnabled = false
-
-        recyclerView?.apply {
-            val linearLayoutManager = LinearLayoutManager(activityContext)
-
-            layoutManager = linearLayoutManager
-            adapter = categoryListAdapter
-
-            addItemDecoration(StickyRecyclerHeadersDecoration(categoryListAdapter))
-            addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
-        }
     }
 
     override fun onResume() {
@@ -93,36 +99,48 @@ class CategoryListFragment : Fragment(), CategoryListView {
         presenter.detachCategoryListener()
     }
 
-    fun showContextMenuFor(householdTask: Category) {
+    override fun onOptionsClick(category: Category) {
+        showContextMenuFor(category)
+    }
+
+    private fun showContextMenuFor(householdTask: Category) {
         var bottomSheetMenu: BottomSheetMenu? = null
 
         val items = arrayListOf(
-            BottomMenuItem(R.drawable.ic_edit, "Edit") {
-                CategoryEditActivity.start(activityContext, householdTask)
-                bottomSheetMenu?.dismiss()
-            },
-            BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                presenter.deleteCategory(householdTask)
-                bottomSheetMenu?.dismiss()
-            }
+                BottomMenuItem(R.drawable.ic_edit, "Edit") {
+                    CategoryEditActivity.start(activityContext, householdTask)
+                    bottomSheetMenu?.dismiss()
+                },
+                BottomMenuItem(R.drawable.ic_delete, "Delete") {
+                    presenter.deleteCategory(householdTask)
+                    bottomSheetMenu?.dismiss()
+                }
         )
         bottomSheetMenu = BottomSheetMenu(activityContext, householdTask.name, items)
         bottomSheetMenu.show()
     }
 
-    override fun presentNewCategory(householdTask: Category) {
-        categoryListAdapter.insertItem(householdTask)
+    override fun presentAddedCategory(category: Category) {
+        categoryListAdapter.insertItem(category)
     }
 
-    override fun presentEditedCategory(householdTask: Category) {
-        categoryListAdapter.editItem(householdTask)
+    override fun presentEditedCategory(category: Category) {
+        categoryListAdapter.editItem(category)
     }
 
-    override fun presentDeletedCategory(householdTask: Category) {
-        categoryListAdapter.removeItem(householdTask)
+    override fun presentDeletedCategory(category: Category) {
+        categoryListAdapter.removeItem(category)
     }
 
-    override fun setLoading(isLoading: Boolean) {
+    override fun setLoadingView(isLoading: Boolean) {
         swipe_container?.isRefreshing = isLoading
+    }
+
+    override fun presentEmptyView() {
+        emptyView?.visibility = View.VISIBLE
+    }
+
+    override fun presentErrorView() {
+        errorView?.visibility = View.VISIBLE
     }
 }

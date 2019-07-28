@@ -2,7 +2,6 @@ package com.timgortworst.roomy.repository
 
 import android.os.Handler
 import android.util.Log
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -51,29 +50,22 @@ class CategoryRepository @Inject constructor() {
         return categoryCollectionRef.get(Source.CACHE).await().toObjects(Category::class.java)
     }
 
-    fun listenToCategoriesForHousehold(householdId: String, categoryListener: CategoryListener) {
+    fun listenToCategoriesForHousehold(householdId: String, baseResponse: BaseResponse) {
         val handler = Handler()
-        val runnable = Runnable { categoryListener.setLoading(true) }
+        val runnable = Runnable { baseResponse.setResponse(DataListener.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = categoryCollectionRef
                 .whereEqualTo(CATEGORY_HOUSEHOLDID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
-                    categoryListener.setLoading(false)
                     if (e != null) {
-                        Log.w(TAG, "listen:error", e)
+                        baseResponse.setResponse(DataListener.Error(e))
+                        Log.e(TAG, "listen:error", e)
                         return@EventListener
                     }
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-                    for (dc in snapshots!!.documentChanges) {
-                        val eventCategory = dc.document.toObject(Category::class.java)
-                        when (dc.type) {
-                            DocumentChange.Type.ADDED -> categoryListener.categoryAdded(eventCategory)
-                            DocumentChange.Type.MODIFIED -> categoryListener.categoryModified(eventCategory)
-                            DocumentChange.Type.REMOVED -> categoryListener.categoryDeleted(eventCategory)
-                        }
-                    }
+                    baseResponse.setResponse(DataListener.Success(snapshots!!.documentChanges))
                 })
     }
 
@@ -115,11 +107,5 @@ class CategoryRepository @Inject constructor() {
 
     companion object {
         private const val TAG = "CategoryRepository"
-    }
-
-    interface CategoryListener : DataLoadingListener {
-        fun categoryAdded(category: Category)
-        fun categoryModified(category: Category)
-        fun categoryDeleted(category: Category)
     }
 }

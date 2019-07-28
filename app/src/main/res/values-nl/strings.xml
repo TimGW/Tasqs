@@ -117,6 +117,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="try_again">try again</string>
     <string name="empty_list_state_title_events">No events</string>
     <string name="empty_list_state_text_events">Try adding your first event by clicking the + button</string>
-
-
+    <string name="empty_list_state_title_categories">No categories</string>
+    <string name="empty_list_state_text_categories">Try adding your first category by clicking the + button</string>
+    <string name="error_list_state_title_users">Whoops!</string>
+    <string name="error_list_state_text_users">Something went wrong, click the button to try again</string>
 </resources>

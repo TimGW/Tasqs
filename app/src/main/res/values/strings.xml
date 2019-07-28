@@ -137,7 +137,10 @@
     <string name="try_again">try again</string>
     <string name="empty_list_state_title_events">No events</string>
     <string name="empty_list_state_text_events">Try adding your first event by clicking the + button</string>
-
+    <string name="empty_list_state_title_categories">No categories</string>
+    <string name="empty_list_state_text_categories">Try adding your first category by clicking the + button</string>
+    <string name="error_list_state_title">Whoops!</string>
+    <string name="error_list_state_text">Something went wrong, click the button to try again</string>
 
     <!--&lt;!&ndash; Preference Titles &ndash;&gt;-->
     <!--<string name="messages_header">Messages</string>-->

@@ -2,10 +2,11 @@ package com.timgortworst.roomy.ui.user.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.domain.UserListInteractor
 import com.timgortworst.roomy.model.Role
 import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.repository.UserRepository
+import com.timgortworst.roomy.repository.BaseResponse
 import com.timgortworst.roomy.ui.user.view.UserListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,7 @@ import javax.inject.Inject
 class UserListPresenter @Inject constructor(
         private val view: UserListView,
         private val userListInteractor: UserListInteractor
-) : UserRepository.UserListener, DefaultLifecycleObserver {
+) : BaseResponse(), DefaultLifecycleObserver {
     private val localUserList = mutableListOf<User>()
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
@@ -23,27 +24,6 @@ class UserListPresenter @Inject constructor(
         if (view is LifecycleOwner) {
             view.lifecycle.addObserver(scope)
         }
-    }
-
-    override fun userAdded(user: User) = scope.launch {
-        view.presentAddedUser(user)
-
-        localUserList.add(user)
-        view.showOrHideFab(localUserList.size < 8 && userListInteractor.getCurrentUser()?.role == Role.ADMIN.name)
-    }
-
-    override fun userModified(user: User) {
-        localUserList[localUserList.indexOf(user)] = user
-        view.presentEditedUser(user)
-    }
-
-    override fun userDeleted(user: User) {
-        localUserList.remove(user)
-        view.presentDeletedUser(user)
-    }
-
-    override fun setLoading(isLoading: Boolean) {
-        view.setLoading(isLoading)
     }
 
     fun detachUserListener() {
@@ -71,5 +51,43 @@ class UserListPresenter @Inject constructor(
 
     fun inviteUser() = scope.launch {
         view.share(userListInteractor.getHouseholdIdForCurrentUser())
+    }
+
+    override fun renderSuccessfulState(dc: List<DocumentChange>?) {
+        view.setLoadingView(false)
+
+        scope.launch {
+            dc?.let {
+                for (docChange in it) {
+                    val user = docChange.document.toObject(User::class.java)
+                    when (docChange.type) {
+                        DocumentChange.Type.ADDED -> {
+                            view.presentAddedUser(user)
+
+                            localUserList.add(user)
+                            view.showOrHideFab(localUserList.size < 8 &&
+                                    userListInteractor.getCurrentUser()?.role == Role.ADMIN.name)
+                        }
+                        DocumentChange.Type.MODIFIED -> {
+                            localUserList[localUserList.indexOf(user)] = user
+                            view.presentEditedUser(user)
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            localUserList.remove(user)
+                            view.presentDeletedUser(user)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun renderLoadingState() {
+        view.setLoadingView(true)
+    }
+
+    override fun renderUnsuccessfulState(throwable: Throwable) {
+        view.setLoadingView(false)
+        view.presentErrorView()
     }
 }

@@ -3,7 +3,6 @@ package com.timgortworst.roomy.repository
 import android.os.Handler
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -16,7 +15,6 @@ import com.timgortworst.roomy.utils.Constants.USER_EMAIL_REF
 import com.timgortworst.roomy.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.utils.Constants.USER_ROLE_REF
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,32 +47,24 @@ class UserRepository @Inject constructor() {
         return currentUserDocRef.get().await().toObject(User::class.java) as User
     }
 
-    fun listenToUsersForHousehold(householdId: String?, userListener: UserListener) {
+    fun listenToUsersForHousehold(householdId: String?, baseResponse: BaseResponse) {
         if (householdId.isNullOrEmpty()) return
 
         val handler = Handler()
-        val runnable = Runnable { userListener.setLoading(true) }
+        val runnable = Runnable { baseResponse.setResponse(DataListener.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = userCollectionRef
                 .whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
-                    userListener.setLoading(false)
-
                     if (e != null && snapshots == null) {
+                        baseResponse.setResponse(DataListener.Error(e))
                         Log.w(TAG, "listen:error", e)
                         return@EventListener
                     }
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-                    for (dc in snapshots!!.documentChanges) {
-                        val user = dc.document.toObject(User::class.java)
-                        when (dc.type) {
-                            DocumentChange.Type.ADDED -> userListener.userAdded(user)
-                            DocumentChange.Type.MODIFIED -> userListener.userModified(user)
-                            DocumentChange.Type.REMOVED -> userListener.userDeleted(user)
-                        }
-                    }
+                    baseResponse.setResponse(DataListener.Success(snapshots!!.documentChanges))
                 })
     }
 
@@ -123,11 +113,5 @@ class UserRepository @Inject constructor() {
 
     companion object {
         private const val TAG = "UserRepository"
-    }
-
-    interface UserListener : DataLoadingListener {
-        fun userAdded(user: User): Job
-        fun userModified(user: User)
-        fun userDeleted(user: User)
     }
 }

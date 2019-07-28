@@ -100,6 +100,6 @@ class CategoryListAdapter(
     }
 
     interface OnOptionsClickListener {
-        fun onOptionsClick(householdTask: Category)
+        fun onOptionsClick(category: Category)
     }
 }
