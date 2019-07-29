@@ -18,7 +18,6 @@ import com.timgortworst.roomy.ui.category.adapter.CategoryListAdapter
 import com.timgortworst.roomy.ui.category.presenter.CategoryListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
 import kotlinx.android.synthetic.main.layout_list_state_empty.view.state_message
@@ -46,7 +45,7 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
-        activityContext = (activity as MainActivity)
+        activityContext = (activity as? MainActivity) ?: return
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -79,19 +78,6 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.listenToCategories()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        activityContext.supportActionBar?.title = getString(R.string.householdtasks_toolbar_title)
-        activityContext.fab.setOnClickListener {
-            CategoryEditActivity.start(activityContext)
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        activityContext.fab.setOnClickListener(null)
     }
 
     override fun onDestroy() {

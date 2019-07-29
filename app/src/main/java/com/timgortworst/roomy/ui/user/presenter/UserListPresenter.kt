@@ -49,10 +49,6 @@ class UserListPresenter @Inject constructor(
         }
     }
 
-    fun inviteUser() = scope.launch {
-        view.share(userListInteractor.getHouseholdIdForCurrentUser())
-    }
-
     override fun renderSuccessfulState(dc: List<DocumentChange>?) {
         view.setLoadingView(false)
 
