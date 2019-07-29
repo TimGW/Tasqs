@@ -41,4 +41,8 @@ class MainPresenter
             view.logout()
         }
     }
+
+    fun inviteUser() = scope.launch {
+        view.share(userRepository.getHouseholdIdForUser())
+    }
 }
