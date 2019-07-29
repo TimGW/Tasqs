@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.BaseActivity
 import com.timgortworst.roomy.ui.category.view.CategoryListFragment
 import com.timgortworst.roomy.ui.event.view.EventListFragment
@@ -32,6 +33,11 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
 
     private var adRequest: AdRequest? = null
 
+    private val eventListFragment: Fragment = EventListFragment.newInstance()
+    private val categoryListFragment: Fragment = CategoryListFragment.newInstance()
+    private val userListFragment: Fragment = UserListFragment.newInstance()
+    private var active = eventListFragment
+
     companion object {
         fun start(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
@@ -42,11 +48,13 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(com.timgortworst.roomy.R.layout.activity_main)
+        setContentView(R.layout.activity_main)
+
+        addFragment(userListFragment, true)
+        addFragment(categoryListFragment, true)
+        addFragment(eventListFragment, false)
 
         setupClickListeners()
-
-        presentAgendaFragment()
 
         presenter.listenToHousehold()
 
@@ -58,48 +66,47 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
 
             override fun onAdFailedToLoad(errorCode: Int) {
                 adView_container?.visibility = View.GONE
-                Toast.makeText(this@MainActivity, getString(com.timgortworst.roomy.R.string.connection_error), Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MainActivity, getString(R.string.connection_error), Toast.LENGTH_LONG).show()
             }
         }
         adView?.loadAd(adRequest)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         presenter.detachHouseholdListener()
 
         adView?.removeAllViews()
         adView?.destroy()
+
+        super.onDestroy()
     }
 
     private fun setupClickListeners() {
-        main_agenda.setOnClickListener { presentAgendaFragment() }
-        main_categories.setOnClickListener { presentTasksFragment() }
-        main_housemates.setOnClickListener { presentHousematesFragment() }
+        main_agenda.setOnClickListener { fragmentToReplace(eventListFragment) }
+        main_categories.setOnClickListener { fragmentToReplace(categoryListFragment) }
+        main_housemates.setOnClickListener { fragmentToReplace(userListFragment) }
         main_settings.setOnClickListener { SettingsActivity.start(this) }
     }
 
-    private fun fragmentToReplace(newFragment: Fragment) {
-        val currentFragment = supportFragmentManager.findFragmentById(com.timgortworst.roomy.R.id.content_frame)
-        if (newFragment::class.java.toString() != currentFragment?.tag) {
-            supportFragmentManager
-                    .beginTransaction()
-                    .setCustomAnimations(com.timgortworst.roomy.R.anim.fade_in, com.timgortworst.roomy.R.anim.fade_out)
-                    .replace(com.timgortworst.roomy.R.id.content_frame, newFragment, newFragment::class.java.toString())
-                    .commit()
+    private fun addFragment(fragment: Fragment, hide: Boolean) {
+        val transaction = supportFragmentManager
+                .beginTransaction()
+                .add(R.id.content_frame, fragment, fragment::class.java.toString())
+        if (hide) {
+            transaction.hide(fragment)
         }
+        transaction.commit()
     }
 
-    private fun presentAgendaFragment() {
-        fragmentToReplace(EventListFragment.newInstance())
-    }
-
-    private fun presentTasksFragment() {
-        fragmentToReplace(CategoryListFragment.newInstance())
-    }
-
-    private fun presentHousematesFragment() {
-        fragmentToReplace(UserListFragment.newInstance())
+    private fun fragmentToReplace(newFragment: Fragment) {
+        if (newFragment::class.java.toString() != active.tag) {
+            supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                    .hide(active)
+                    .show(newFragment)
+                    .commit()
+            active = newFragment
+        }
     }
 
     override fun logout() {

@@ -18,6 +18,7 @@
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="?android:colorBackground"
             android:layout_marginBottom="?actionBarSize" />
 
         <com.google.android.material.bottomappbar.BottomAppBar
