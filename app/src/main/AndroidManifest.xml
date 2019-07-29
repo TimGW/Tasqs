@@ -44,7 +44,8 @@
         </activity>
         <activity
                 android:name=".ui.main.view.MainActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
         <activity android:name=".ui.BaseActivity"/>
         <activity
                 android:name=".ui.googlesignin.view.GoogleSignInActivity"
