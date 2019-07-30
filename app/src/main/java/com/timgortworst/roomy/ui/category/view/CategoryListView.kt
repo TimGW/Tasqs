@@ -7,6 +7,6 @@ interface CategoryListView {
     fun presentEditedCategory(category: Category)
     fun presentDeletedCategory(category: Category)
     fun presentErrorView()
-    fun presentEmptyView()
+    fun presentEmptyView(isVisible: Boolean)
     fun setLoadingView(isLoading: Boolean)
 }

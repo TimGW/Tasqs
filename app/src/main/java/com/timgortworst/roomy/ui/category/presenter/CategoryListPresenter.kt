@@ -39,22 +39,16 @@ class CategoryListPresenter @Inject constructor(
         categoryRepository.deleteCategory(agendaEventCategory)
     }
 
-    override fun renderSuccessfulState(dc: List<DocumentChange>?) {
+    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
         view.setLoadingView(false)
+        view.presentEmptyView(totalDataSetSize == 0)
 
-        dc?.let {
-            if (it.isEmpty()) { view.presentEmptyView() }
-
-            for (documentChange in it) {
-                val category = documentChange.document.toObject(Category::class.java)
-                when (documentChange.type) {
-                    DocumentChange.Type.ADDED -> view.presentAddedCategory(category)
-                    DocumentChange.Type.MODIFIED -> view.presentEditedCategory(category)
-                    DocumentChange.Type.REMOVED -> {
-                        if (it.size == 1) { view.presentEmptyView() }
-                        view.presentDeletedCategory(category)
-                    }
-                }
+        dc.forEach {
+            val category = it.document.toObject(Category::class.java)
+            when (it.type) {
+                DocumentChange.Type.ADDED -> view.presentAddedCategory(category)
+                DocumentChange.Type.MODIFIED -> view.presentEditedCategory(category)
+                DocumentChange.Type.REMOVED -> view.presentDeletedCategory(category)
             }
         }
     }

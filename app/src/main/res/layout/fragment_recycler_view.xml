@@ -18,8 +18,7 @@
 
     <include
         android:id="@+id/layout_list_state_empty"
-        layout="@layout/layout_list_state_empty"
-        android:visibility="gone"/>
+        layout="@layout/layout_list_state_empty"/>
 
     <include
         android:id="@+id/layout_list_state_error"

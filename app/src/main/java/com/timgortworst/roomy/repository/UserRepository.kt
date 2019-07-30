@@ -64,7 +64,11 @@ class UserRepository @Inject constructor() {
                         return@EventListener
                     }
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-                    baseResponse.setResponse(DataListener.Success(snapshots!!.documentChanges))
+
+                    val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
+                    val totalDataSetSize = snapshots.documents.toList().size
+
+                    baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize))
                 })
     }
 
