@@ -151,6 +151,7 @@ class EventListFragment : Fragment(), EventListView {
     }
 
     override fun presentEditedEvent(agendaEvent: Event) {
+        emptyView?.visibility = View.GONE
         eventListAdapter.updateEvent(agendaEvent)
     }
 
@@ -162,8 +163,8 @@ class EventListFragment : Fragment(), EventListView {
         swipe_container?.isRefreshing = isLoading
     }
 
-    override fun presentEmptyView() {
-        emptyView?.visibility = View.VISIBLE
+    override fun presentEmptyView(isVisible: Boolean) {
+        emptyView?.visibility = if(isVisible) View.VISIBLE else View.GONE
     }
 
     override fun presentErrorView() {

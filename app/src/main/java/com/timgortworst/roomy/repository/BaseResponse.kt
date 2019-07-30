@@ -4,7 +4,7 @@ import com.google.firebase.firestore.DocumentChange
 
 abstract class BaseResponse {
 
-    abstract fun renderSuccessfulState(dc: List<DocumentChange>?)
+    abstract fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int)
     abstract fun renderLoadingState()
     abstract fun renderUnsuccessfulState(throwable: Throwable)
 
@@ -12,7 +12,7 @@ abstract class BaseResponse {
         when (response) {
             is DataListener.Loading -> renderLoadingState()
             is DataListener.Error -> renderUnsuccessfulState(response.throwable)
-            is DataListener.Success -> renderSuccessfulState(response.dc)
+            is DataListener.Success -> renderSuccessfulState(response.dc, response.totalDataSetSize)
         }
     }
 }

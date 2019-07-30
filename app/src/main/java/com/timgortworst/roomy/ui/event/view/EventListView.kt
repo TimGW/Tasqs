@@ -7,6 +7,6 @@ interface EventListView  {
     fun presentEditedEvent(agendaEvent: Event)
     fun presentDeletedEvent(agendaEvent: Event)
     fun presentErrorView()
-    fun presentEmptyView()
+    fun presentEmptyView(isVisible: Boolean)
     fun setLoadingView(isLoading: Boolean)
 }

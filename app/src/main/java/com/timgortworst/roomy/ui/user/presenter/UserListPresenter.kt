@@ -49,12 +49,11 @@ class UserListPresenter @Inject constructor(
         }
     }
 
-    override fun renderSuccessfulState(dc: List<DocumentChange>?) {
+    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
         view.setLoadingView(false)
 
         scope.launch {
-            dc?.let {
-                for (docChange in it) {
+                for (docChange in dc) {
                     val user = docChange.document.toObject(User::class.java)
                     when (docChange.type) {
                         DocumentChange.Type.ADDED -> {
@@ -73,7 +72,6 @@ class UserListPresenter @Inject constructor(
                             view.presentDeletedUser(user)
                         }
                     }
-                }
             }
         }
     }

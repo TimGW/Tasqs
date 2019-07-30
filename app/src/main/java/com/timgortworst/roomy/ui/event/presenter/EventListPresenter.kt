@@ -77,28 +77,16 @@ class EventListPresenter @Inject constructor(
         agendaRepository.deleteEvent(event.eventId)
     }
 
-    override fun renderSuccessfulState(dc: List<DocumentChange>?) {
+    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
         view.setLoadingView(false)
+        view.presentEmptyView(totalDataSetSize == 0)
 
-        dc?.let {
-            if (it.isEmpty()) { view.presentEmptyView() }
-
-            for (docChange in it) {
-                val event = docChange.document.toObject(Event::class.java)
-                when (docChange.type) {
-                    DocumentChange.Type.ADDED -> {
-//                    if (event.eventMetaData.repeatStartDate.isTimeStampInPast()) {
-//                        // event is in het verleden
-//                        // todo send reminder
-//                    }
-                        view.presentAddedEvent(event)
-                    }
-                    DocumentChange.Type.MODIFIED -> view.presentEditedEvent(event)
-                    DocumentChange.Type.REMOVED -> {
-                        if (it.size == 1) { view.presentEmptyView() }
-                        view.presentDeletedEvent(event)
-                    }
-                }
+        dc.forEach {
+            val event = it.document.toObject(Event::class.java)
+            when (it.type) {
+                DocumentChange.Type.ADDED -> view.presentAddedEvent(event)
+                DocumentChange.Type.MODIFIED -> view.presentEditedEvent(event)
+                DocumentChange.Type.REMOVED -> view.presentDeletedEvent(event)
             }
         }
     }
