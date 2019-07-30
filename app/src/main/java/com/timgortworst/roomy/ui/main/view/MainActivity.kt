@@ -56,9 +56,11 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        addFragment(userListFragment, true)
-        addFragment(categoryListFragment, true)
-        addFragment(eventListFragment, false)
+        addFragment(userListFragment, true, FragmentTag.USER_LIST_FRAGMENT.name)
+        addFragment(categoryListFragment, true, FragmentTag.CATEGORY_LIST_FRAGMENT.name)
+        addFragment(eventListFragment, false, FragmentTag.EVENT_LIST_FRAGMENT.name)
+        setFabAction(eventListFragment)
+        setToolbarTitle(eventListFragment)
 
         setupClickListeners()
 
@@ -88,50 +90,61 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
     }
 
     private fun setupClickListeners() {
-        main_agenda.setOnClickListener {
-            fragmentToReplace(eventListFragment)
-            fab.setOnClickListener {
-                EventEditActivity.start(this)
-            }
-        }
-        main_categories.setOnClickListener {
-            fragmentToReplace(categoryListFragment)
-            fab.setOnClickListener {
-                CategoryEditActivity.start(this)
-            }
-        }
-        main_housemates.setOnClickListener {
-            fragmentToReplace(userListFragment)
-            fab.setOnClickListener {
-                showProgressDialog()
-                presenter.inviteUser()
-            }
-        }
+        main_agenda.setOnClickListener { replaceCurrentFragmentWith(eventListFragment) }
+        main_categories.setOnClickListener { replaceCurrentFragmentWith(categoryListFragment) }
+        main_housemates.setOnClickListener { replaceCurrentFragmentWith(userListFragment) }
         main_settings.setOnClickListener { SettingsActivity.start(this) }
     }
 
-    private fun addFragment(fragment: Fragment, hide: Boolean) {
+    private fun addFragment(fragment: Fragment, hide: Boolean, tag: String) {
         val transaction = supportFragmentManager
                 .beginTransaction()
-                .add(R.id.content_frame, fragment, fragment::class.java.toString())
+                .add(R.id.content_frame, fragment, tag)
         if (hide) {
             transaction.hide(fragment)
         }
         transaction.commit()
     }
 
-    private fun fragmentToReplace(newFragment: Fragment) {
-        if (newFragment::class.java.toString() != active.tag) {
+    private fun replaceCurrentFragmentWith(fragment: Fragment) {
+        if (fragment.tag != active.tag) {
             supportFragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                     .hide(active)
-                    .show(newFragment)
+                    .show(fragment)
                     .commit()
-            active = newFragment
-//            supportActionBar?.title = getString(R.string.roommates) todo
-//            activityContext.supportActionBar?.title = getString(R.string.schema_toolbar_title)
-//            activityContext.supportActionBar?.title = getString(R.string.householdtasks_toolbar_title)
+            active = fragment
+
+            setFabAction(fragment)
+            setToolbarTitle(fragment)
         }
+    }
+
+    private fun setToolbarTitle(fragment: Fragment) {
+        supportActionBar?.title = when (fragment.tag) {
+            FragmentTag.EVENT_LIST_FRAGMENT.name -> getString(R.string.schema_toolbar_title)
+            FragmentTag.CATEGORY_LIST_FRAGMENT.name -> getString(R.string.householdtasks_toolbar_title)
+            FragmentTag.USER_LIST_FRAGMENT.name -> getString(R.string.roommates)
+            else -> getString(R.string.app_name)
+        }
+    }
+
+    private fun setFabAction(fragment: Fragment) {
+        val clickEvent : (View) -> Unit = when (fragment.tag) {
+            FragmentTag.EVENT_LIST_FRAGMENT.name -> { _ ->
+                EventEditActivity.start(this)
+            }
+            FragmentTag.CATEGORY_LIST_FRAGMENT.name -> { _ ->
+                CategoryEditActivity.start(this)
+            }
+            FragmentTag.USER_LIST_FRAGMENT.name -> { _ ->
+                    showProgressDialog()
+                    presenter.inviteUser()
+            }
+            else -> { _ -> null }
+        }
+
+        fab.setOnClickListener(clickEvent)
     }
 
     override fun logout() {
@@ -173,5 +186,11 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return dispatchingAndroidInjector
+    }
+
+    enum class FragmentTag {
+        EVENT_LIST_FRAGMENT,
+        CATEGORY_LIST_FRAGMENT,
+        USER_LIST_FRAGMENT;
     }
 }
