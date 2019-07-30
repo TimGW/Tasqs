@@ -2,7 +2,6 @@ package com.timgortworst.roomy.ui.main.view
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.BaseActivity
@@ -22,7 +20,6 @@ import com.timgortworst.roomy.ui.main.presenter.MainPresenter
 import com.timgortworst.roomy.ui.settings.view.SettingsActivity
 import com.timgortworst.roomy.ui.splash.ui.SplashActivity
 import com.timgortworst.roomy.ui.user.view.UserListFragment
-import com.timgortworst.roomy.utils.Constants
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -46,6 +43,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
     private var active = eventListFragment
 
     companion object {
+        private const val TAG = "MainActivity"
+
         fun start(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)
@@ -132,7 +131,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
 //            supportActionBar?.title = getString(R.string.roommates) todo
 //            activityContext.supportActionBar?.title = getString(R.string.schema_toolbar_title)
 //            activityContext.supportActionBar?.title = getString(R.string.householdtasks_toolbar_title)
-
         }
     }
 
@@ -142,21 +140,10 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
     }
 
     override fun share(householdId: String) {
-        val myUri = createShareUri(householdId)
-        val dynamicLinkUri = createDynamicUri(myUri)
-        shortenLink(dynamicLinkUri)
-    }
+        val linkUri = InviteLink.Builder()
+                .householdId(householdId)
+                .build()
 
-    private fun createShareUri(householdId: String): Uri {
-        val builder = Uri.Builder()
-        builder.scheme("https")
-                .authority("roomy.xyz")
-                .appendPath("households")
-                .appendQueryParameter(Constants.QUERY_PARAM_HOUSEHOLD, householdId)
-        return builder.build()
-    }
-
-    private fun shortenLink(linkUri: Uri) {
         FirebaseDynamicLinks.getInstance().createDynamicLink()
                 .setLongLink(linkUri)
                 .buildShortDynamicLink()
@@ -174,22 +161,10 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
                         else
                             startActivity(sendIntent)
                     } else {
-                        Log.e("TIMTIM", task.exception?.message!!)
+                        Log.e(TAG, task.exception?.message!!)
                     }
                     hideProgressDialog()
                 }
-    }
-
-    private fun createDynamicUri(myUri: Uri): Uri {
-        val dynamicLink = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(myUri)
-                .setDomainUriPrefix("https://roomyf3eb1.page.link")
-                .setAndroidParameters(
-                        DynamicLink.AndroidParameters.Builder()
-                                .build()
-                )
-                .buildDynamicLink()
-        return dynamicLink.uri
     }
 
     override fun setFabVisible(isVisible: Boolean) {
