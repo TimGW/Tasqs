@@ -37,13 +37,14 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
 
     private var adRequest: AdRequest? = null
 
-    private var eventListFragment: Fragment = EventListFragment.newInstance()
-    private var categoryListFragment: Fragment = CategoryListFragment.newInstance()
-    private var userListFragment: Fragment = UserListFragment.newInstance()
+    private val eventListFragment: Fragment by lazy { EventListFragment.newInstance() }
+    private val categoryListFragment: Fragment by lazy { CategoryListFragment.newInstance() }
+    private val userListFragment: Fragment by lazy { UserListFragment.newInstance() }
     private var activeFragment: Fragment? = null
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val ACTIVE_FRAG_KEY = "activeFragment"
 
         fun start(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
@@ -53,11 +54,9 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
-        supportFragmentManager.putFragment(outState, FragmentTag.USER_LIST_FRAGMENT.name, userListFragment)
-        supportFragmentManager.putFragment(outState, FragmentTag.CATEGORY_LIST_FRAGMENT.name, categoryListFragment)
-        supportFragmentManager.putFragment(outState, FragmentTag.EVENT_LIST_FRAGMENT.name, eventListFragment)
-        activeFragment?.let { supportFragmentManager.putFragment(outState, FragmentTag.ACTIVE_FRAGMENT.name, it) }
+        if (activeFragment?.isAdded == true) {
+            activeFragment?.let { supportFragmentManager.putFragment(outState, ACTIVE_FRAG_KEY, it) }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,17 +65,13 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            openFragment(userListFragment, FragmentTag.USER_LIST_FRAGMENT.name)
-            openFragment(categoryListFragment, FragmentTag.CATEGORY_LIST_FRAGMENT.name)
-            openFragment(eventListFragment, FragmentTag.EVENT_LIST_FRAGMENT.name)
+            openFragment(eventListFragment, eventListFragment::class.java.toString())
         } else {
-            userListFragment = supportFragmentManager.getFragment(savedInstanceState, FragmentTag.USER_LIST_FRAGMENT.name) as Fragment
-            categoryListFragment = supportFragmentManager.getFragment(savedInstanceState, FragmentTag.CATEGORY_LIST_FRAGMENT.name) as Fragment
-            eventListFragment = supportFragmentManager.getFragment(savedInstanceState, FragmentTag.EVENT_LIST_FRAGMENT.name) as Fragment
-            activeFragment = supportFragmentManager.getFragment(savedInstanceState, FragmentTag.ACTIVE_FRAGMENT.name) as Fragment
+            activeFragment = supportFragmentManager.getFragment(savedInstanceState, ACTIVE_FRAG_KEY)
+            activeFragment?.let { openFragment(it, it::class.java.toString()) }
         }
 
-        setupClickListeners(activeFragment)
+        setClickListeners(activeFragment)
 
         presenter.listenToHousehold()
 
@@ -103,10 +98,10 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
         super.onDestroy()
     }
 
-    private fun setupClickListeners(activeFragment: Fragment?) {
-        main_agenda.setOnClickListener { openFragment(eventListFragment, FragmentTag.EVENT_LIST_FRAGMENT.name) }
-        main_categories.setOnClickListener { openFragment(categoryListFragment, FragmentTag.CATEGORY_LIST_FRAGMENT.name) }
-        main_housemates.setOnClickListener { openFragment(userListFragment, FragmentTag.USER_LIST_FRAGMENT.name) }
+    private fun setClickListeners(activeFragment: Fragment?) {
+        main_agenda.setOnClickListener { openFragment(eventListFragment, eventListFragment::class.java.toString()) }
+        main_categories.setOnClickListener { openFragment(categoryListFragment, categoryListFragment::class.java.toString()) }
+        main_housemates.setOnClickListener { openFragment(userListFragment, userListFragment::class.java.toString()) }
         main_settings.setOnClickListener { SettingsActivity.start(this) }
         activeFragment?.let { fragment ->
             setFabClickListenerFor(fragment)
@@ -115,44 +110,40 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
     }
 
     private fun openFragment(fragment: Fragment, tag: String) {
-        val fragmentTransaction = supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-        activeFragment?.let { fragmentTransaction.hide(it) }
+        supportFragmentManager.beginTransaction().apply {
+            setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+            activeFragment?.let { hide(it) }
 
-        if (doesFragmentExist(tag)) {
-            fragmentTransaction.show(fragment)
-        } else {
-            fragmentTransaction.add(R.id.content_frame, fragment, tag)
+            if (fragment.isAdded) {
+                show(fragment)
+            } else {
+                add(R.id.content_frame, fragment, tag)
+            }
+            commit()
+            activeFragment = fragment
         }
 
-        fragmentTransaction.commit()
-        activeFragment = fragment
-
-        setFabClickListenerFor(fragment)
-        setToolbarTitleFor(fragment.tag.orEmpty())
+        setClickListeners(activeFragment)
     }
-
-    private fun doesFragmentExist(tag: String) = supportFragmentManager.findFragmentByTag(tag) != null
 
     private fun setToolbarTitleFor(tag: String) {
         supportActionBar?.title = when (tag) {
-            FragmentTag.EVENT_LIST_FRAGMENT.name -> getString(R.string.schema_toolbar_title)
-            FragmentTag.CATEGORY_LIST_FRAGMENT.name -> getString(R.string.householdtasks_toolbar_title)
-            FragmentTag.USER_LIST_FRAGMENT.name -> getString(R.string.roommates)
+            eventListFragment::class.java.toString() -> getString(R.string.schema_toolbar_title)
+            categoryListFragment::class.java.toString() -> getString(R.string.householdtasks_toolbar_title)
+            userListFragment::class.java.toString() -> getString(R.string.roommates)
             else -> getString(R.string.app_name)
         }
     }
 
-    private fun setFabClickListenerFor(fragment: Fragment) {
-        val clickEvent: (View) -> Unit = when (fragment.tag) {
-            FragmentTag.EVENT_LIST_FRAGMENT.name -> { _ ->
+    private fun setFabClickListenerFor(fragment: Fragment?) {
+        val clickEvent: (View) -> Unit = when (fragment?.tag) {
+            eventListFragment::class.java.toString() -> { _ ->
                 EventEditActivity.start(this)
             }
-            FragmentTag.CATEGORY_LIST_FRAGMENT.name -> { _ ->
+            categoryListFragment::class.java.toString() -> { _ ->
                 CategoryEditActivity.start(this)
             }
-            FragmentTag.USER_LIST_FRAGMENT.name -> { _ ->
+            userListFragment::class.java.toString() -> { _ ->
                 showProgressDialog()
                 presenter.inviteUser()
             }
@@ -201,12 +192,5 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return dispatchingAndroidInjector
-    }
-
-    enum class FragmentTag {
-        ACTIVE_FRAGMENT,
-        EVENT_LIST_FRAGMENT,
-        CATEGORY_LIST_FRAGMENT,
-        USER_LIST_FRAGMENT;
     }
 }
