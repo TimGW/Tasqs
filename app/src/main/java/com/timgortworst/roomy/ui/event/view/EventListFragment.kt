@@ -29,8 +29,6 @@ import javax.inject.Inject
 
 
 class EventListFragment : Fragment(), EventListView {
-    private var emptyView: View? = null
-    private var errorView: View? = null
     private var recyclerView: RecyclerView? = null
     private lateinit var touchListener: RecyclerTouchListener
     private lateinit var activityContext: AppCompatActivity
@@ -69,6 +67,7 @@ class EventListFragment : Fragment(), EventListView {
                     override fun onRowClicked(position: Int) {
                         touchListener.openSwipeOptions(position)
                     }
+
                     override fun onIndependentViewClicked(independentViewID: Int, position: Int) {}
                 })
                 .setSwipeOptionViews(R.id.task_done)
@@ -86,16 +85,6 @@ class EventListFragment : Fragment(), EventListView {
             addOnItemTouchListener(touchListener)
         }
 
-        emptyView = view.layout_list_state_empty.apply {
-            state_title.text = activity?.getString(R.string.empty_list_state_title_events)
-            state_message.text = activity?.getString(R.string.empty_list_state_text_events)
-        }
-
-        errorView = view.layout_list_state_error.apply {
-            state_title.text = activity?.getString(R.string.error_list_state_title)
-            state_message.text = activity?.getString(R.string.error_list_state_text)
-            state_action_button.setOnClickListener { presenter.listenToEvents() }
-        }
         return view
     }
 
@@ -151,7 +140,6 @@ class EventListFragment : Fragment(), EventListView {
     }
 
     override fun presentEditedEvent(agendaEvent: Event) {
-        emptyView?.visibility = View.GONE
         eventListAdapter.updateEvent(agendaEvent)
     }
 
@@ -164,16 +152,24 @@ class EventListFragment : Fragment(), EventListView {
     }
 
     override fun presentEmptyView(isVisible: Boolean) {
-        emptyView?.visibility = if(isVisible) View.VISIBLE else View.GONE
+        layout_list_state_empty.apply {
+            state_title.text = activity?.getString(R.string.empty_list_state_title_events)
+            state_message.text = activity?.getString(R.string.empty_list_state_text_events)
+            visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
     }
 
-    override fun presentErrorView() {
-        errorView?.visibility = View.VISIBLE
+    override fun setErrorView(isVisible: Boolean, title: Int, message: Int) {
+        layout_list_state_error?.apply {
+            state_title.text = activity?.getString(title)
+            state_message.text = activity?.getString(message)
+            state_action_button.setOnClickListener { presenter.listenToEvents() }
+            visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
     }
 
     fun presentAirplaneModeView() {
-        swipe_container?.visibility  = View.GONE
-        emptyView?.visibility = View.GONE
-        errorView?.visibility = View.VISIBLE
+//        swipe_container?.visibility = View.GONE
+
     }
 }

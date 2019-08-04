@@ -59,6 +59,6 @@ class CategoryListPresenter @Inject constructor(
 
     override fun renderUnsuccessfulState(throwable: Throwable) {
         view.setLoadingView(false)
-        view.presentErrorView()
+        view.setErrorView(true)
     }
 }
