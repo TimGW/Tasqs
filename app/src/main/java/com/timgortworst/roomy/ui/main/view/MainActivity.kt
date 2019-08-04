@@ -75,9 +75,16 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
 
         airplaneModeReceiver = object : AirplaneModeReceiver(this) {
             override fun airplaneModeChanged(isEnabled: Boolean) {
-                (activeFragment as PageStateListener).setErrorView(isEnabled)
+                (activeFragment as PageStateListener).setErrorView(
+                        isEnabled,
+                        R.string.disable_airplane_mode_title,
+                        R.string.disable_airplane_mode_text)
+
                 if (!isEnabled) {
-                    (activeFragment as PageStateListener).reloadPage()
+                    eventListFragment.tag?.let { reloadFragment(it) }
+                    categoryListFragment.tag?.let { reloadFragment(it) }
+                    userListFragment.tag?.let { reloadFragment(it) }
+                    activeFragment?.tag?.let { reloadFragment(it) }
                 }
             }
         }
@@ -123,6 +130,15 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
         activeFragment?.let { fragment ->
             setFabClickListenerFor(fragment)
             setToolbarTitleFor(fragment.tag.orEmpty())
+        }
+    }
+
+    private fun reloadFragment(tag: String) {
+        val frg = supportFragmentManager.findFragmentByTag(tag) ?: return
+        supportFragmentManager.beginTransaction().apply {
+            detach(frg)
+            attach(frg)
+            commit()
         }
     }
 

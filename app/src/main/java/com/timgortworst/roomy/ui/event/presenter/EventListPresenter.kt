@@ -4,12 +4,14 @@ import android.widget.Filter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.repository.BaseResponse
 import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.event.view.EventListView
+import com.timgortworst.roomy.ui.main.view.AirplaneModeException
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.utils.isTimeStampInPast
 import kotlinx.coroutines.Dispatchers
@@ -99,6 +101,13 @@ class EventListPresenter @Inject constructor(
 
     override fun renderUnsuccessfulState(throwable: Throwable) {
         view.setLoadingView(false)
-        view.setErrorView(true)
+        when(throwable) {
+            is AirplaneModeException -> {
+                view.setErrorView(true, R.string.disable_airplane_mode_title, R.string.disable_airplane_mode_text)
+            }
+            else -> {
+                view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
+            }
+        }
     }
 }

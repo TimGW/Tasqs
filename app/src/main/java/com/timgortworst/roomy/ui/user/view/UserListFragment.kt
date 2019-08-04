@@ -120,15 +120,11 @@ class UserListFragment : Fragment(), UserListView {
         swipe_container?.isRefreshing = isLoading
     }
 
-    override fun setErrorView(isVisible: Boolean) {
+    override fun setErrorView(isVisible: Boolean, title: Int?, text: Int?) {
         layout_list_state_error?.apply {
-            this.state_title.text = activityContext.getString(R.string.error_list_state_title)
-            this.state_message.text = activityContext.getString(R.string.error_list_state_text)
+            title?.let { this.state_title.text = activityContext.getString(it) }
+            text?.let { this.state_message.text = activityContext.getString(it) }
             visibility = if (isVisible) View.VISIBLE else View.GONE
         }
-    }
-
-    override fun reloadPage() {
-        presenter.listenToUsers()
     }
 }

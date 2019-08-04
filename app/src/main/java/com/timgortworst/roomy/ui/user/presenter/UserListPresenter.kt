@@ -3,10 +3,12 @@ package com.timgortworst.roomy.ui.user.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.UserListInteractor
 import com.timgortworst.roomy.model.Role
 import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.BaseResponse
+import com.timgortworst.roomy.ui.main.view.AirplaneModeException
 import com.timgortworst.roomy.ui.user.view.UserListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -83,6 +85,13 @@ class UserListPresenter @Inject constructor(
 
     override fun renderUnsuccessfulState(throwable: Throwable) {
         view.setLoadingView(false)
-        view.setErrorView(true)
+        when(throwable) {
+            is AirplaneModeException -> {
+                view.setErrorView(true, R.string.disable_airplane_mode_title, R.string.disable_airplane_mode_text)
+            }
+            else -> {
+                view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
+            }
+        }
     }
 }

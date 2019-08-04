@@ -11,6 +11,7 @@ import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.model.User
+import com.timgortworst.roomy.ui.main.view.AirplaneModeException
 import com.timgortworst.roomy.utils.Constants.EVENT_CATEGORY_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_COLLECTION_REF
 import com.timgortworst.roomy.utils.Constants.EVENT_HOUSEHOLD_ID_REF
@@ -51,7 +52,7 @@ class EventRepository @Inject constructor() {
 
     fun listenToEventsForHousehold(householdId: String, baseResponse: BaseResponse, isAirplaneModeEnabled: Boolean) {
         if (isAirplaneModeEnabled) {
-            baseResponse.setResponse(DataListener.Error(Throwable()))
+            baseResponse.setResponse(DataListener.Error(AirplaneModeException()))
             return
         }
 

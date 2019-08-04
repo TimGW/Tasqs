@@ -9,6 +9,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.model.User
+import com.timgortworst.roomy.ui.main.view.AirplaneModeException
 import com.timgortworst.roomy.utils.Constants.LOADING_SPINNER_DELAY
 import com.timgortworst.roomy.utils.Constants.USER_COLLECTION_REF
 import com.timgortworst.roomy.utils.Constants.USER_EMAIL_REF
@@ -49,7 +50,7 @@ class UserRepository @Inject constructor() {
 
     fun listenToUsersForHousehold(householdId: String?, baseResponse: BaseResponse, isAirplaneModeEnabled: Boolean) {
         if (isAirplaneModeEnabled) {
-            baseResponse.setResponse(DataListener.Error(Throwable()))
+            baseResponse.setResponse(DataListener.Error(AirplaneModeException()))
             return
         }
         if (householdId.isNullOrEmpty()) return
