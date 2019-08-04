@@ -28,7 +28,6 @@ class UserListFragment : Fragment(), UserListView {
     private lateinit var userListAdapter: UserListAdapter
     private lateinit var activityContext: MainActivity
     private var recyclerView: RecyclerView? = null
-    private var errorView: View? = null
     private var fabVisibilityListener: FabVisibilityListener? = null
 
     @Inject
@@ -77,12 +76,6 @@ class UserListFragment : Fragment(), UserListView {
             adapter = userListAdapter
             addItemDecoration(dividerItemDecoration)
         }
-
-        errorView = view.layout_list_state_error.apply {
-            state_title.text = activity?.getString(R.string.error_list_state_title)
-            state_message.text = activity?.getString(R.string.error_list_state_text)
-            state_action_button.setOnClickListener { presenter.listenToUsers() }
-        }
     }
 
     override fun onDestroy() {
@@ -123,7 +116,13 @@ class UserListFragment : Fragment(), UserListView {
         swipe_container?.isRefreshing = isLoading
     }
 
-    override fun presentErrorView() {
-       errorView?.visibility = View.VISIBLE
+    override fun setErrorView(isVisible: Boolean, title: Int, message: Int) {
+        swipe_container?.visibility = View.GONE
+        layout_list_state_error?.visibility = if (isVisible) View.VISIBLE else View.GONE
+        layout_list_state_error.apply {
+            state_title.text = activity?.getString(title)
+            state_message.text = activity?.getString(message)
+            state_action_button.setOnClickListener { presenter.listenToUsers() }
+        }
     }
 }

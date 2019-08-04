@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.ui.user.view
 
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.model.User
 
 interface UserListView {
@@ -9,5 +10,7 @@ interface UserListView {
     fun presentDeletedUser(user: User)
     fun presentAddedUser(user: User)
     fun setLoadingView(isLoading: Boolean)
-    fun presentErrorView()
+    fun setErrorView(isVisible: Boolean,
+                     title: Int = R.string.error_list_state_title,
+                     message: Int = R.string.error_list_state_text)
 }

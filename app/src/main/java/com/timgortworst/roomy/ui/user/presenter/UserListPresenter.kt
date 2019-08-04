@@ -51,6 +51,7 @@ class UserListPresenter @Inject constructor(
 
     override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
         view.setLoadingView(false)
+        view.setErrorView(false)
 
         scope.launch {
                 for (docChange in dc) {
@@ -82,6 +83,6 @@ class UserListPresenter @Inject constructor(
 
     override fun renderUnsuccessfulState(throwable: Throwable) {
         view.setLoadingView(false)
-        view.presentErrorView()
+        view.setErrorView(true)
     }
 }
