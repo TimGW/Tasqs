@@ -36,11 +36,11 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
     lateinit var presenter: MainPresenter
 
     private var adRequest: AdRequest? = null
-
     private val eventListFragment: Fragment by lazy { EventListFragment.newInstance() }
     private val categoryListFragment: Fragment by lazy { CategoryListFragment.newInstance() }
     private val userListFragment: Fragment by lazy { UserListFragment.newInstance() }
     private var activeFragment: Fragment? = null
+    private lateinit var airplaneModeReceiver: AirplaneModeReceiver
 
     companion object {
         private const val TAG = "MainActivity"
@@ -73,6 +73,16 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
 
         setClickListeners(activeFragment)
 
+        airplaneModeReceiver = object : AirplaneModeReceiver(this) {
+            override fun airplaneModeChanged(isEnabled: Boolean) {
+                if (isEnabled) {
+                    (userListFragment as UserListFragment).setErrorView(true, R.string.disable_airplane_mode_title, R.string.disable_airplane_mode_text)
+                    (categoryListFragment as CategoryListFragment).presentAirplaneModeView()
+                    (eventListFragment as EventListFragment).presentAirplaneModeView()
+                }
+            }
+        }
+
         presenter.listenToHousehold()
 
         adRequest = AdRequest.Builder().build()
@@ -89,12 +99,20 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
         adView?.loadAd(adRequest)
     }
 
+    override fun onResume() {
+        super.onResume()
+        airplaneModeReceiver.register()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        airplaneModeReceiver.unregister()
+    }
+
     override fun onDestroy() {
         presenter.detachHouseholdListener()
-
         adView?.removeAllViews()
         adView?.destroy()
-
         super.onDestroy()
     }
 

@@ -129,4 +129,10 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
     override fun presentErrorView() {
         errorView?.visibility = View.VISIBLE
     }
+
+    fun presentAirplaneModeView() {
+        swipe_container?.visibility  = View.GONE
+        emptyView?.visibility = View.GONE
+        errorView?.visibility = View.VISIBLE
+    }
 }
