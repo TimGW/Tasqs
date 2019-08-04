@@ -47,7 +47,11 @@ class UserRepository @Inject constructor() {
         return currentUserDocRef.get().await().toObject(User::class.java) as User
     }
 
-    fun listenToUsersForHousehold(householdId: String?, baseResponse: BaseResponse) {
+    fun listenToUsersForHousehold(householdId: String?, baseResponse: BaseResponse, isAirplaneModeEnabled: Boolean) {
+        if (isAirplaneModeEnabled) {
+            baseResponse.setResponse(DataListener.Error(Throwable()))
+            return
+        }
         if (householdId.isNullOrEmpty()) return
 
         val handler = Handler()
@@ -58,17 +62,18 @@ class UserRepository @Inject constructor() {
                 .whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
-                    if (e != null && snapshots == null) {
-                        baseResponse.setResponse(DataListener.Error(e))
-                        Log.w(TAG, "listen:error", e)
-                        return@EventListener
-                    }
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-
-                    val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
-                    val totalDataSetSize = snapshots.documents.toList().size
-
-                    baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize))
+                    when {
+                        e != null && snapshots == null -> {
+                            baseResponse.setResponse(DataListener.Error(e))
+                            Log.w(TAG, "listen:error", e)
+                        }
+                        else -> {
+                            val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
+                            val totalDataSetSize = snapshots.documents.toList().size
+                            baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize))
+                        }
+                    }
                 })
     }
 

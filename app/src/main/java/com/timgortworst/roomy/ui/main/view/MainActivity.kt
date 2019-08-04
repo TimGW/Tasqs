@@ -75,10 +75,9 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
 
         airplaneModeReceiver = object : AirplaneModeReceiver(this) {
             override fun airplaneModeChanged(isEnabled: Boolean) {
-                if (isEnabled) {
-                    (userListFragment as UserListFragment).setErrorView(true, R.string.disable_airplane_mode_title, R.string.disable_airplane_mode_text)
-                    (categoryListFragment as CategoryListFragment).presentAirplaneModeView()
-                    (eventListFragment as EventListFragment).presentAirplaneModeView()
+                (activeFragment as PageStateListener).setErrorView(isEnabled)
+                if (!isEnabled) {
+                    (activeFragment as PageStateListener).reloadPage()
                 }
             }
         }
@@ -165,7 +164,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
                 showProgressDialog()
                 presenter.inviteUser()
             }
-            else -> { _ -> null }
+            else -> { _ -> }
         }
 
         fab.setOnClickListener(clickEvent)

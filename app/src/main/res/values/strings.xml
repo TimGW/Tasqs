@@ -140,7 +140,7 @@
     <string name="empty_list_state_title_categories">No categories</string>
     <string name="empty_list_state_text_categories">Try adding your first category by clicking the + button</string>
     <string name="error_list_state_title">Whoops!</string>
-    <string name="error_list_state_text">Something went wrong, click the button to try again</string>
+    <string name="error_list_state_text">Something went wrong, try again later</string>
     <string name="disable_airplane_mode_title">No Internet!</string>
     <string name="disable_airplane_mode_text">Please turn off your airplane mode</string>
 

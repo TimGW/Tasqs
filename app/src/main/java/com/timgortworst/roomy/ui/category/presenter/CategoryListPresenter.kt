@@ -27,8 +27,11 @@ class CategoryListPresenter @Inject constructor(
         }
     }
 
-    fun listenToCategories() = scope.launch {
-        categoryRepository.listenToCategoriesForHousehold(userRepository.getHouseholdIdForUser(), this@CategoryListPresenter)
+    fun listenToCategories(isAirplaneModeEnabled: Boolean = false) = scope.launch {
+        categoryRepository.listenToCategoriesForHousehold(
+                userRepository.getHouseholdIdForUser(),
+                this@CategoryListPresenter,
+                isAirplaneModeEnabled)
     }
 
     fun detachCategoryListener() {
@@ -41,6 +44,7 @@ class CategoryListPresenter @Inject constructor(
 
     override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
         view.setLoadingView(false)
+        view.setErrorView(false)
         view.presentEmptyView(totalDataSetSize == 0)
 
         dc.forEach {

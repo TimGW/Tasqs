@@ -2,6 +2,7 @@ package com.timgortworst.roomy.utils
 
 import android.content.Context
 import android.os.IBinder
+import android.provider.Settings
 import android.util.Log
 import android.util.Log.e
 import android.util.TypedValue
@@ -61,3 +62,7 @@ fun View.runBeforeDraw(onFinished: (view: View) -> Unit) {
     }
     viewTreeObserver.addOnPreDrawListener(preDrawListener)
 }
+
+fun Context.isAirplaneModeEnabled() =
+        Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) != 0
+

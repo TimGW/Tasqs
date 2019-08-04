@@ -52,7 +52,7 @@ constructor(private val householdRepository: HouseholdRepository,
         userRepository.detachUserListener()
     }
 
-    suspend fun listenToUsers(userListPresenter: UserListPresenter) {
-        userRepository.listenToUsersForHousehold(userRepository.getHouseholdIdForUser(), userListPresenter)
+    suspend fun listenToUsers(userListPresenter: UserListPresenter, isAirplaneModeEnabled: Boolean) {
+        userRepository.listenToUsersForHousehold(userRepository.getHouseholdIdForUser(), userListPresenter, isAirplaneModeEnabled)
     }
 }
