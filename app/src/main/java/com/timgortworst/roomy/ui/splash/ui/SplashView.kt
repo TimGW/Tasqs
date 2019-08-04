@@ -5,4 +5,5 @@ interface SplashView {
     fun goToSetupActivityReferred(referredHouseholdId: String)
     fun userInvalid()
     fun goToSetupActivity()
+    fun goToMainActivity()
 }

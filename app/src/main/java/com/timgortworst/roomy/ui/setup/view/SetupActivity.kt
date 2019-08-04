@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.ui.BaseActivity
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.setup.presenter.SetupPresenter
 import com.timgortworst.roomy.utils.showToast
@@ -13,7 +13,7 @@ import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 
-class SetupActivity : BaseActivity(), SetupView {
+class SetupActivity : AppCompatActivity(), SetupView {
     @Inject
     lateinit var presenter: SetupPresenter
 
@@ -33,13 +33,11 @@ class SetupActivity : BaseActivity(), SetupView {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
-        showProgressDialog()
         referredHouseholdId = intent.getStringExtra(referredHouseholdIdKey) ?: ""
         presenter.setupHousehold(referredHouseholdId)
     }
 
     override fun presentToastError(error: Int) {
-        hideProgressDialog()
         showToast(error)
     }
 
@@ -49,8 +47,6 @@ class SetupActivity : BaseActivity(), SetupView {
     }
 
     override fun presentHouseholdOverwriteDialog() {
-        hideProgressDialog()
-
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.dialog_household_overwrite_title))
             .setMessage(getString(R.string.dialog_household_overwrite_text))
@@ -64,8 +60,6 @@ class SetupActivity : BaseActivity(), SetupView {
     }
 
     override fun presentAlreadyInHouseholdDialog() {
-        hideProgressDialog()
-
         AlertDialog.Builder(this)
                 .setTitle(getString(R.string.dialog_household_similar_title))
                 .setMessage(getString(R.string.dialog_household_similar_text))
@@ -76,8 +70,6 @@ class SetupActivity : BaseActivity(), SetupView {
     }
 
     override fun presentUserIsBannedDialog() {
-        hideProgressDialog()
-
         AlertDialog.Builder(this)
                 .setTitle(getString(R.string.dialog_household_banned_title))
                 .setMessage(getString(R.string.dialog_household_banned_text))
