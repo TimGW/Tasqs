@@ -79,6 +79,7 @@ class EventListPresenter @Inject constructor(
 
     override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
         view.setLoadingView(false)
+        view.setErrorView(false)
         view.presentEmptyView(totalDataSetSize == 0)
 
         dc.forEach {
@@ -97,6 +98,6 @@ class EventListPresenter @Inject constructor(
 
     override fun renderUnsuccessfulState(throwable: Throwable) {
         view.setLoadingView(false)
-        view.presentErrorView()
+        view.setErrorView(true)
     }
 }

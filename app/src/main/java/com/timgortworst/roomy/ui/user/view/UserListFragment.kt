@@ -117,12 +117,11 @@ class UserListFragment : Fragment(), UserListView {
     }
 
     override fun setErrorView(isVisible: Boolean, title: Int, message: Int) {
-        swipe_container?.visibility = View.GONE
-        layout_list_state_error?.visibility = if (isVisible) View.VISIBLE else View.GONE
         layout_list_state_error.apply {
             state_title.text = activity?.getString(title)
             state_message.text = activity?.getString(message)
             state_action_button.setOnClickListener { presenter.listenToUsers() }
+            visibility = if (isVisible) View.VISIBLE else View.GONE
         }
     }
 }

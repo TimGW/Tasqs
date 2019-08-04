@@ -18,8 +18,6 @@ constructor(private val householdRepository: HouseholdRepository,
 
     suspend fun getCurrentUser() = userRepository.getUser()
 
-    suspend fun getHouseholdIdForCurrentUser() = userRepository.getHouseholdIdForUser()
-
     suspend fun deleteAndBanUser(user: User) {
         removeEventsAssignedToUser(user.userId)
 

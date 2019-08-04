@@ -28,8 +28,6 @@ import javax.inject.Inject
 
 class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.OnOptionsClickListener {
     private var recyclerView: RecyclerView? = null
-    private var emptyView: View? = null
-    private var errorView: View? = null
     private lateinit var activityContext: MainActivity
     private lateinit var categoryListAdapter: CategoryListAdapter
 
@@ -62,16 +60,6 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
             addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
         }
 
-        emptyView = view.layout_list_state_empty.apply {
-            state_title.text = activity?.getString(R.string.empty_list_state_title_categories)
-            state_message.text = activity?.getString(R.string.empty_list_state_text_categories)
-        }
-
-        errorView = view.layout_list_state_error.apply {
-            state_title.text = activity?.getString(R.string.error_list_state_title)
-            state_message.text = activity?.getString(R.string.error_list_state_text)
-            state_action_button.setOnClickListener { presenter.listenToCategories() }
-        }
         return view
     }
 
@@ -123,16 +111,23 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
     }
 
     override fun presentEmptyView(isVisible: Boolean) {
-        emptyView?.visibility = if (isVisible) View.VISIBLE else View.GONE
+        layout_list_state_empty?.apply {
+            state_title.text = activity?.getString(R.string.empty_list_state_title_categories)
+            state_message.text = activity?.getString(R.string.empty_list_state_text_categories)
+            visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
     }
 
-    override fun presentErrorView() {
-        errorView?.visibility = View.VISIBLE
+    override fun setErrorView(isVisible: Boolean, title: Int, message: Int) {
+        layout_list_state_error?.apply {
+            state_title.text = activity?.getString(title)
+            state_message.text = activity?.getString(message)
+            state_action_button.setOnClickListener { presenter.listenToCategories() }
+            visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
     }
 
     fun presentAirplaneModeView() {
-        swipe_container?.visibility  = View.GONE
-        emptyView?.visibility = View.GONE
-        errorView?.visibility = View.VISIBLE
+//        swipe_container?.visibility = View.GONE
     }
 }

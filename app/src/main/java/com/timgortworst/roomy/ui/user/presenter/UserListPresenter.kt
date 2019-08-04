@@ -50,29 +50,28 @@ class UserListPresenter @Inject constructor(
     }
 
     override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
-        view.setLoadingView(false)
-        view.setErrorView(false)
-
         scope.launch {
-                for (docChange in dc) {
-                    val user = docChange.document.toObject(User::class.java)
-                    when (docChange.type) {
-                        DocumentChange.Type.ADDED -> {
-                            view.presentAddedUser(user)
+            view.setLoadingView(false)
+            view.setErrorView(false)
+            for (docChange in dc) {
+                val user = docChange.document.toObject(User::class.java)
+                when (docChange.type) {
+                    DocumentChange.Type.ADDED -> {
+                        view.presentAddedUser(user)
 
-                            localUserList.add(user)
-                            view.showOrHideFab(localUserList.size < 8 &&
-                                    userListInteractor.getCurrentUser()?.role == Role.ADMIN.name)
-                        }
-                        DocumentChange.Type.MODIFIED -> {
-                            localUserList[localUserList.indexOf(user)] = user
-                            view.presentEditedUser(user)
-                        }
-                        DocumentChange.Type.REMOVED -> {
-                            localUserList.remove(user)
-                            view.presentDeletedUser(user)
-                        }
+                        localUserList.add(user)
+                        view.showOrHideFab(localUserList.size < 8 &&
+                                userListInteractor.getCurrentUser()?.role == Role.ADMIN.name)
                     }
+                    DocumentChange.Type.MODIFIED -> {
+                        localUserList[localUserList.indexOf(user)] = user
+                        view.presentEditedUser(user)
+                    }
+                    DocumentChange.Type.REMOVED -> {
+                        localUserList.remove(user)
+                        view.presentDeletedUser(user)
+                    }
+                }
             }
         }
     }
