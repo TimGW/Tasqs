@@ -29,6 +29,10 @@ constructor(private val categoryRepository: CategoryRepository,
         return householdId
     }
 
+    suspend fun createUser() {
+        userRepository.createUser()
+    }
+
     suspend fun switchHousehold(householdId: String, role: String) {
         val userId = userRepository.updateUser(householdId = householdId, role = role)
 

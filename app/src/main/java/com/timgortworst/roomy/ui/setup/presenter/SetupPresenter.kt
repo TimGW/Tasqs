@@ -13,8 +13,8 @@ import javax.inject.Inject
 
 
 class SetupPresenter @Inject constructor(
-    private val view: SetupView,
-    private val setupInteractor: SetupInteractor
+        private val view: SetupView,
+        private val setupInteractor: SetupInteractor
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -25,46 +25,35 @@ class SetupPresenter @Inject constructor(
         }
     }
 
-    // todo split up in smaller pieces
     fun setupHousehold(referredHouseholdId: String) = scope.launch {
+        setupInteractor.createUser()
+
+        // user has accepted the invite
         if (referredHouseholdId.isNotBlank()) {
-            if (setupInteractor.userBlackListedForHousehold(referredHouseholdId)) {
-                view.presentUserIsBannedDialog()
+            when {
+                setupInteractor.userBlackListedForHousehold(referredHouseholdId) -> {
+                    view.presentUserIsBannedDialog()
+                }
+                isIdSimilarToActiveId(referredHouseholdId) -> {
+                    view.presentAlreadyInHouseholdDialog()
+                }
+                setupInteractor.getHouseholdIdForUser().isNotBlank() -> {
+                    view.presentHouseholdOverwriteDialog()
+                }
+                else -> changeCurrentUserHousehold(referredHouseholdId)
+            }
+        } else {
+            setupInteractor.initializeHousehold()?.let {
+                // update household id for user remote
+                setupInteractor.switchHousehold(
+                        householdId = it,
+                        role = Role.ADMIN.name
+                )
+                view.goToMainActivity()
                 return@launch
             }
 
-            // user has accepted the invite
-            if (setupInteractor.getHouseholdIdForUser().isNotBlank()) {
-                if(isIdSimilarToActiveId(referredHouseholdId)){
-                    view.presentAlreadyInHouseholdDialog()
-                } else {
-                    // caution user that household will be overwritten
-                    view.presentHouseholdOverwriteDialog()
-                }
-            } else {
-                // no active household, so update
-                changeCurrentUserHousehold(referredHouseholdId)
-            }
-        } else {
-            // user is not invited
-            if (setupInteractor.getHouseholdIdForUser().isNotBlank()) {
-                // user has an active household
-                view.goToMainActivity()
-            } else {
-                // user is not invited and has no household (new user)
-                val householdID = setupInteractor.initializeHousehold()
-
-                if (householdID != null) {
-                    // update household id for user remote
-                    setupInteractor.switchHousehold(
-                        householdId = householdID,
-                        role = Role.ADMIN.name
-                    )
-                    view.goToMainActivity()
-                } else {
-                    view.presentToastError(R.string.generic_error)
-                }
-            }
+            view.presentToastError(R.string.generic_error)
         }
     }
 
@@ -73,13 +62,15 @@ class SetupPresenter @Inject constructor(
     }
 
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
+        val oldHouseholdId = setupInteractor.getHouseholdIdForUser()
+
         setupInteractor.switchHousehold(
-            householdId = newHouseholdId,
-            role = Role.NORMAL.name
+                householdId = newHouseholdId,
+                role = Role.NORMAL.name
         )
         val userList = setupInteractor.getUserListForHousehold(setupInteractor.getHouseholdIdForUser())
         if (userList?.isEmpty() == true) {
-            setupInteractor.deleteHousehold(setupInteractor.getHouseholdIdForUser())
+            setupInteractor.deleteHousehold(oldHouseholdId)
         }
         view.goToMainActivity()
     }

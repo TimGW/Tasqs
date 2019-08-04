@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInActivity
+import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.setup.view.SetupActivity
 import com.timgortworst.roomy.ui.splash.presenter.SplashPresenter
 import com.timgortworst.roomy.utils.Constants
@@ -35,7 +36,7 @@ class SplashActivity : AppCompatActivity(), SplashView {
 
         FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnCompleteListener {
             val referredHouseholdId = it.result?.link?.getQueryParameter(Constants.QUERY_PARAM_HOUSEHOLD).orEmpty()
-            presenter.userLogin(referredHouseholdId)
+            presenter.initializeUser(referredHouseholdId)
         }
     }
 
@@ -53,6 +54,11 @@ class SplashActivity : AppCompatActivity(), SplashView {
         finish()
     }
 
+    override fun goToMainActivity() {
+        MainActivity.start(this)
+        finish()
+    }
+
     override fun userInvalid() {
         finish()
     }
@@ -61,7 +67,7 @@ class SplashActivity : AppCompatActivity(), SplashView {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RESULT_CODE && resultCode == Activity.RESULT_OK) {
-            presenter.userLogin()
+            presenter.initializeUser()
         }
     }
 }
