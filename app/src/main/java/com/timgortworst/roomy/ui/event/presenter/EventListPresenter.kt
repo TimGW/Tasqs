@@ -33,10 +33,11 @@ class EventListPresenter @Inject constructor(
         agendaRepository.detachEventListener()
     }
 
-    fun listenToEvents() = scope.launch {
+    fun listenToEvents(airplaneModeEnabled: Boolean = false) = scope.launch {
         agendaRepository.listenToEventsForHousehold(
                 userRepository.getHouseholdIdForUser(),
-                this@EventListPresenter)
+                this@EventListPresenter,
+                airplaneModeEnabled)
     }
 
     fun filterMe(filter: Filter) {

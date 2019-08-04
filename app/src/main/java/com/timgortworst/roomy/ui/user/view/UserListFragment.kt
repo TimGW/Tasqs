@@ -17,10 +17,11 @@ import com.timgortworst.roomy.ui.main.view.FabVisibilityListener
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.user.adapter.UserListAdapter
 import com.timgortworst.roomy.ui.user.presenter.UserListPresenter
+import com.timgortworst.roomy.utils.isAirplaneModeEnabled
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
-import kotlinx.android.synthetic.main.layout_list_state_error.view.*
+import kotlinx.android.synthetic.main.layout_list_state.view.*
 import javax.inject.Inject
 
 
@@ -30,8 +31,7 @@ class UserListFragment : Fragment(), UserListView {
     private var recyclerView: RecyclerView? = null
     private var fabVisibilityListener: FabVisibilityListener? = null
 
-    @Inject
-    lateinit var presenter: UserListPresenter
+    @Inject lateinit var presenter: UserListPresenter
 
     companion object {
         fun newInstance(): UserListFragment {
@@ -67,7 +67,7 @@ class UserListFragment : Fragment(), UserListView {
 
         swipe_container?.isEnabled = false
 
-        presenter.listenToUsers()
+        listenToUsers(activityContext.isAirplaneModeEnabled())
 
         recyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(activityContext)
@@ -81,6 +81,10 @@ class UserListFragment : Fragment(), UserListView {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachUserListener()
+    }
+
+    fun listenToUsers(isAirplaneModeEnabled: Boolean) {
+        presenter.listenToUsers(isAirplaneModeEnabled)
     }
 
     override fun showOrHideFab(condition: Boolean) {
@@ -116,12 +120,15 @@ class UserListFragment : Fragment(), UserListView {
         swipe_container?.isRefreshing = isLoading
     }
 
-    override fun setErrorView(isVisible: Boolean, title: Int, message: Int) {
-        layout_list_state_error.apply {
-            state_title.text = activity?.getString(title)
-            state_message.text = activity?.getString(message)
-            state_action_button.setOnClickListener { presenter.listenToUsers() }
+    override fun setErrorView(isVisible: Boolean) {
+        layout_list_state_error?.apply {
+            this.state_title.text = activityContext.getString(R.string.error_list_state_title)
+            this.state_message.text = activityContext.getString(R.string.error_list_state_text)
             visibility = if (isVisible) View.VISIBLE else View.GONE
         }
+    }
+
+    override fun reloadPage() {
+        presenter.listenToUsers()
     }
 }

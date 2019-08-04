@@ -30,8 +30,8 @@ class UserListPresenter @Inject constructor(
         userListInteractor.detachUserListener()
     }
 
-    fun listenToUsers() = scope.launch {
-        userListInteractor.listenToUsers(this@UserListPresenter)
+    fun listenToUsers(isAirplaneModeEnabled: Boolean = false) = scope.launch {
+        userListInteractor.listenToUsers(this@UserListPresenter, isAirplaneModeEnabled)
     }
 
     fun deleteUser(user: User) = scope.launch {
@@ -53,6 +53,7 @@ class UserListPresenter @Inject constructor(
         scope.launch {
             view.setLoadingView(false)
             view.setErrorView(false)
+
             for (docChange in dc) {
                 val user = docChange.document.toObject(User::class.java)
                 when (docChange.type) {

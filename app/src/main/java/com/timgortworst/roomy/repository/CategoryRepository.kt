@@ -50,7 +50,12 @@ class CategoryRepository @Inject constructor() {
         return categoryCollectionRef.get(Source.CACHE).await().toObjects(Category::class.java)
     }
 
-    fun listenToCategoriesForHousehold(householdId: String, baseResponse: BaseResponse) {
+    fun listenToCategoriesForHousehold(householdId: String, baseResponse: BaseResponse, isAirplaneModeEnabled: Boolean) {
+        if (isAirplaneModeEnabled) {
+            baseResponse.setResponse(DataListener.Error(Throwable()))
+            return
+        }
+
         val handler = Handler()
         val runnable = Runnable { baseResponse.setResponse(DataListener.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
@@ -59,17 +64,18 @@ class CategoryRepository @Inject constructor() {
                 .whereEqualTo(CATEGORY_HOUSEHOLDID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
-                    if (e != null) {
-                        baseResponse.setResponse(DataListener.Error(e))
-                        Log.e(TAG, "listen:error", e)
-                        return@EventListener
-                    }
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-
-                    val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
-                    val totalDataSetSize = snapshots.documents.toList().size
-
-                    baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize))
+                    when {
+                        e != null && snapshots == null -> {
+                            baseResponse.setResponse(DataListener.Error(e))
+                            Log.w(TAG, "listen:error", e)
+                        }
+                        else -> {
+                            val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
+                            val totalDataSetSize = snapshots.documents.toList().size
+                            baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize))
+                        }
+                    }
                 })
     }
 

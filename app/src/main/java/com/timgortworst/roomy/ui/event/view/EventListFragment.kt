@@ -21,10 +21,11 @@ import com.timgortworst.roomy.ui.event.adapter.EventListAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.utils.RecyclerTouchListener
+import com.timgortworst.roomy.utils.isAirplaneModeEnabled
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
-import kotlinx.android.synthetic.main.layout_list_state_error.view.*
+import kotlinx.android.synthetic.main.layout_list_state.view.*
 import javax.inject.Inject
 
 
@@ -34,8 +35,7 @@ class EventListFragment : Fragment(), EventListView {
     private lateinit var activityContext: AppCompatActivity
     private lateinit var eventListAdapter: EventListAdapter
 
-    @Inject
-    lateinit var presenter: EventListPresenter
+    @Inject lateinit var presenter: EventListPresenter
 
     companion object {
         fun newInstance(): EventListFragment {
@@ -90,7 +90,7 @@ class EventListFragment : Fragment(), EventListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.listenToEvents()
+        presenter.listenToEvents(activityContext.isAirplaneModeEnabled())
     }
 
     override fun onDestroy() {
@@ -153,23 +153,21 @@ class EventListFragment : Fragment(), EventListView {
 
     override fun presentEmptyView(isVisible: Boolean) {
         layout_list_state_empty.apply {
-            state_title.text = activity?.getString(R.string.empty_list_state_title_events)
-            state_message.text = activity?.getString(R.string.empty_list_state_text_events)
+            this.state_title.text = activity?.getString(R.string.empty_list_state_title_events)
+            this.state_message.text = activity?.getString(R.string.empty_list_state_text_events)
             visibility = if (isVisible) View.VISIBLE else View.GONE
         }
     }
 
-    override fun setErrorView(isVisible: Boolean, title: Int, message: Int) {
+    override fun setErrorView(isVisible: Boolean) {
         layout_list_state_error?.apply {
-            state_title.text = activity?.getString(title)
-            state_message.text = activity?.getString(message)
-            state_action_button.setOnClickListener { presenter.listenToEvents() }
+            this.state_title.text = activityContext.getString(R.string.error_list_state_title)
+            this.state_message.text = activityContext.getString(R.string.error_list_state_text)
             visibility = if (isVisible) View.VISIBLE else View.GONE
         }
     }
 
-    fun presentAirplaneModeView() {
-//        swipe_container?.visibility = View.GONE
-
+    override fun reloadPage() {
+        presenter.listenToEvents()
     }
 }

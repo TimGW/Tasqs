@@ -17,12 +17,11 @@ import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.ui.category.adapter.CategoryListAdapter
 import com.timgortworst.roomy.ui.category.presenter.CategoryListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
+import com.timgortworst.roomy.utils.isAirplaneModeEnabled
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
-import kotlinx.android.synthetic.main.layout_list_state_empty.view.state_message
-import kotlinx.android.synthetic.main.layout_list_state_empty.view.state_title
-import kotlinx.android.synthetic.main.layout_list_state_error.view.*
+import kotlinx.android.synthetic.main.layout_list_state.view.*
 import javax.inject.Inject
 
 
@@ -31,8 +30,7 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
     private lateinit var activityContext: MainActivity
     private lateinit var categoryListAdapter: CategoryListAdapter
 
-    @Inject
-    lateinit var presenter: CategoryListPresenter
+    @Inject lateinit var presenter: CategoryListPresenter
 
     companion object {
         fun newInstance(): CategoryListFragment {
@@ -65,12 +63,16 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.listenToCategories()
+        listenToCategories(activityContext.isAirplaneModeEnabled())
     }
 
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachCategoryListener()
+    }
+
+    fun listenToCategories(isAirplaneModeEnabled: Boolean) {
+        presenter.listenToCategories(isAirplaneModeEnabled)
     }
 
     override fun onOptionsClick(category: Category) {
@@ -118,16 +120,15 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
         }
     }
 
-    override fun setErrorView(isVisible: Boolean, title: Int, message: Int) {
+    override fun setErrorView(isVisible: Boolean) {
         layout_list_state_error?.apply {
-            state_title.text = activity?.getString(title)
-            state_message.text = activity?.getString(message)
-            state_action_button.setOnClickListener { presenter.listenToCategories() }
+            this.state_title.text = activityContext.getString(R.string.error_list_state_title)
+            this.state_message.text = activityContext.getString(R.string.error_list_state_text)
             visibility = if (isVisible) View.VISIBLE else View.GONE
         }
     }
 
-    fun presentAirplaneModeView() {
-//        swipe_container?.visibility = View.GONE
+    override fun reloadPage() {
+        presenter.listenToCategories()
     }
 }
