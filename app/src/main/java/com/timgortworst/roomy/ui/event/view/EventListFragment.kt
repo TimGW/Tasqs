@@ -152,7 +152,7 @@ class EventListFragment : Fragment(), EventListView {
     }
 
     override fun presentEmptyView(isVisible: Boolean) {
-        layout_list_state_empty.apply {
+        layout_list_state_empty?.apply {
             this.state_title.text = activity?.getString(R.string.empty_list_state_title_events)
             this.state_message.text = activity?.getString(R.string.empty_list_state_text_events)
             visibility = if (isVisible) View.VISIBLE else View.GONE
