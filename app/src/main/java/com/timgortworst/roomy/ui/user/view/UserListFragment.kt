@@ -16,7 +16,6 @@ import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.user.adapter.UserListAdapter
 import com.timgortworst.roomy.ui.user.presenter.UserListPresenter
-import com.timgortworst.roomy.utils.isAirplaneModeEnabled
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
@@ -59,7 +58,7 @@ class UserListFragment : Fragment(), UserListView {
 
         swipe_container?.isEnabled = false
 
-        listenToUsers(activityContext.isAirplaneModeEnabled())
+        presenter.listenToUsers()
 
         recyclerView?.apply {
             val linearLayoutManager = LinearLayoutManager(activityContext)
@@ -73,10 +72,6 @@ class UserListFragment : Fragment(), UserListView {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachUserListener()
-    }
-
-    fun listenToUsers(isAirplaneModeEnabled: Boolean) {
-        presenter.listenToUsers(isAirplaneModeEnabled)
     }
 
     override fun showContextMenuFor(user: User) {

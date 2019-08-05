@@ -40,7 +40,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     private val categoryListFragment: Fragment by lazy { CategoryListFragment.newInstance() }
     private val userListFragment: Fragment by lazy { UserListFragment.newInstance() }
     private var activeFragment: Fragment? = null
-    private lateinit var airplaneModeReceiver: AirplaneModeReceiver
+    private lateinit var networkChangeReceiver: NetworkChangeReceiver
 
     companion object {
         private const val TAG = "MainActivity"
@@ -73,46 +73,20 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
 
         setClickListeners(activeFragment)
 
-        airplaneModeReceiver = object : AirplaneModeReceiver(this) {
-            override fun airplaneModeChanged(isEnabled: Boolean) {
-                (activeFragment as PageStateListener).setErrorView(
-                        isEnabled,
-                        R.string.disable_airplane_mode_title,
-                        R.string.disable_airplane_mode_text)
-
-                if (!isEnabled) {
-                    eventListFragment.tag?.let { reloadFragment(it) }
-                    categoryListFragment.tag?.let { reloadFragment(it) }
-                    userListFragment.tag?.let { reloadFragment(it) }
-                    activeFragment?.tag?.let { reloadFragment(it) }
-                }
-            }
-        }
-
         presenter.listenToHousehold()
 
-        adRequest = AdRequest.Builder().build()
-        adView?.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                adView_container?.visibility = View.VISIBLE
-            }
-
-            override fun onAdFailedToLoad(errorCode: Int) {
-                adView_container?.visibility = View.GONE
-                Toast.makeText(this@MainActivity, getString(R.string.connection_error), Toast.LENGTH_LONG).show()
-            }
-        }
-        adView?.loadAd(adRequest)
+        setupAds()
+        setupBroadcastReceivers()
     }
 
     override fun onResume() {
         super.onResume()
-        airplaneModeReceiver.register()
+        networkChangeReceiver.register()
     }
 
     override fun onPause() {
         super.onPause()
-        airplaneModeReceiver.unregister()
+        networkChangeReceiver.unregister()
     }
 
     override fun onDestroy() {
@@ -130,15 +104,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         activeFragment?.let { fragment ->
             setFabClickListenerFor(fragment)
             setToolbarTitleFor(fragment.tag.orEmpty())
-        }
-    }
-
-    private fun reloadFragment(tag: String) {
-        val frg = supportFragmentManager.findFragmentByTag(tag) ?: return
-        supportFragmentManager.beginTransaction().apply {
-            detach(frg)
-            attach(frg)
-            commit()
         }
     }
 
@@ -218,6 +183,33 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
                     hideProgressDialog()
                 }
     }
+
+    private fun setupBroadcastReceivers() {
+        networkChangeReceiver = object : NetworkChangeReceiver(this) {
+            override fun networkStatusChanged(isEnabled: Boolean) {
+                if (isEnabled) {
+                    adView?.loadAd(adRequest)
+                } else {
+                    Toast.makeText(this@MainActivity, getString(R.string.connection_error), Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun setupAds() {
+        adRequest = AdRequest.Builder().build()
+        adView?.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                adView_container?.visibility = View.VISIBLE
+            }
+
+            override fun onAdFailedToLoad(errorCode: Int) {
+                adView_container?.visibility = View.GONE
+            }
+        }
+        adView?.loadAd(adRequest)
+    }
+
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return dispatchingAndroidInjector

@@ -9,7 +9,6 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.model.Category
-import com.timgortworst.roomy.ui.main.view.AirplaneModeException
 import com.timgortworst.roomy.utils.Constants.CATEGORY_COLLECTION_REF
 import com.timgortworst.roomy.utils.Constants.CATEGORY_DESCRIPTION_REF
 import com.timgortworst.roomy.utils.Constants.CATEGORY_HOUSEHOLDID_REF
@@ -51,12 +50,7 @@ class CategoryRepository @Inject constructor() {
         return categoryCollectionRef.get(Source.CACHE).await().toObjects(Category::class.java)
     }
 
-    fun listenToCategoriesForHousehold(householdId: String, baseResponse: BaseResponse, isAirplaneModeEnabled: Boolean) {
-        if (isAirplaneModeEnabled) {
-            baseResponse.setResponse(DataListener.Error(AirplaneModeException()))
-            return
-        }
-
+    fun listenToCategoriesForHousehold(householdId: String, baseResponse: BaseResponse) {
         val handler = Handler()
         val runnable = Runnable { baseResponse.setResponse(DataListener.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)

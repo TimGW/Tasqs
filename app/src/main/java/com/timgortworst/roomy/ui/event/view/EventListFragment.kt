@@ -21,7 +21,6 @@ import com.timgortworst.roomy.ui.event.adapter.EventListAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.utils.RecyclerTouchListener
-import com.timgortworst.roomy.utils.isAirplaneModeEnabled
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
@@ -90,7 +89,7 @@ class EventListFragment : Fragment(), EventListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.listenToEvents(activityContext.isAirplaneModeEnabled())
+        presenter.listenToEvents()
     }
 
     override fun onDestroy() {

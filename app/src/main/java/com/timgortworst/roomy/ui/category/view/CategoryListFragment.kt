@@ -17,7 +17,6 @@ import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.ui.category.adapter.CategoryListAdapter
 import com.timgortworst.roomy.ui.category.presenter.CategoryListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
-import com.timgortworst.roomy.utils.isAirplaneModeEnabled
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
@@ -63,16 +62,12 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        listenToCategories(activityContext.isAirplaneModeEnabled())
+        presenter.listenToCategories()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachCategoryListener()
-    }
-
-    fun listenToCategories(isAirplaneModeEnabled: Boolean) {
-        presenter.listenToCategories(isAirplaneModeEnabled)
     }
 
     override fun onOptionsClick(category: Category) {
