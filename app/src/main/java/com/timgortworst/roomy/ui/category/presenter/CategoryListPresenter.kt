@@ -9,12 +9,10 @@ import com.timgortworst.roomy.repository.BaseResponse
 import com.timgortworst.roomy.repository.CategoryRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.category.view.CategoryListView
-import com.timgortworst.roomy.ui.main.view.AirplaneModeException
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 class CategoryListPresenter @Inject constructor(
         val view: CategoryListView,
@@ -29,11 +27,10 @@ class CategoryListPresenter @Inject constructor(
         }
     }
 
-    fun listenToCategories(isAirplaneModeEnabled: Boolean = false) = scope.launch {
+    fun listenToCategories() = scope.launch {
         categoryRepository.listenToCategoriesForHousehold(
                 userRepository.getHouseholdIdForUser(),
-                this@CategoryListPresenter,
-                isAirplaneModeEnabled)
+                this@CategoryListPresenter)
     }
 
     fun detachCategoryListener() {
@@ -65,14 +62,6 @@ class CategoryListPresenter @Inject constructor(
 
     override fun renderUnsuccessfulState(throwable: Throwable) {
         view.setLoadingView(false)
-
-        when(throwable) {
-            is AirplaneModeException -> {
-                view.setErrorView(true, R.string.disable_airplane_mode_title, R.string.disable_airplane_mode_text)
-            }
-            else -> {
-                view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
-            }
-        }
+        view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
     }
 }

@@ -11,7 +11,6 @@ import com.timgortworst.roomy.repository.BaseResponse
 import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.event.view.EventListView
-import com.timgortworst.roomy.ui.main.view.AirplaneModeException
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.utils.isTimeStampInPast
 import kotlinx.coroutines.Dispatchers
@@ -35,11 +34,10 @@ class EventListPresenter @Inject constructor(
         agendaRepository.detachEventListener()
     }
 
-    fun listenToEvents(airplaneModeEnabled: Boolean = false) = scope.launch {
+    fun listenToEvents() = scope.launch {
         agendaRepository.listenToEventsForHousehold(
                 userRepository.getHouseholdIdForUser(),
-                this@EventListPresenter,
-                airplaneModeEnabled)
+                this@EventListPresenter)
     }
 
     fun filterMe(filter: Filter) {
@@ -101,13 +99,6 @@ class EventListPresenter @Inject constructor(
 
     override fun renderUnsuccessfulState(throwable: Throwable) {
         view.setLoadingView(false)
-        when(throwable) {
-            is AirplaneModeException -> {
-                view.setErrorView(true, R.string.disable_airplane_mode_title, R.string.disable_airplane_mode_text)
-            }
-            else -> {
-                view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
-            }
-        }
+        view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
     }
 }
