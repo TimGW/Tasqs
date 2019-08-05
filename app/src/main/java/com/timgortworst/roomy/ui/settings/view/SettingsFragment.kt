@@ -37,8 +37,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val darkModeSwitch: SwitchPreferenceCompat? = findPreference("dark_mode_key")
+        val activity = activity ?: return
 
+        val darkModeSwitch: SwitchPreferenceCompat? = findPreference("dark_mode_key")
         darkModeSwitch?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             val isDarkModeOn = newValue as Boolean
 
@@ -50,30 +51,29 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
                     }
             )
             sharedPref.setDisplayModeDark(isDarkModeOn)
-            activity?.recreate()
+            activity.recreate()
             true
         }
 
         val logoutButton: Preference? = findPreference("logout_key")
         logoutButton?.setOnPreferenceClickListener {
-            AlertDialog.Builder(activity!!)
+            AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.dialog_household_overwrite_title))
                     .setMessage(getString(R.string.dialog_household_overwrite_text))
                     .setPositiveButton(android.R.string.yes) { _, _ ->
                         settingsPresenter.deleteUser(FirebaseAuth.getInstance().currentUser!!.uid)
                     }
                     .setNegativeButton(android.R.string.no) { _, _ ->
-                        activity!!.showToast("no")
+                        activity.showToast("no")
                     }
                     .show()
             true
         }
 
         val analyticsOptOut: SwitchPreferenceCompat? = findPreference("analytics_key")
-
         analyticsOptOut?.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             val isAnalyticsEnabled = newValue as Boolean
-            activity?.let { FirebaseAnalytics.getInstance(it).setAnalyticsCollectionEnabled(isAnalyticsEnabled) }
+            FirebaseAnalytics.getInstance(activity).setAnalyticsCollectionEnabled(isAnalyticsEnabled)
             true
         }
     }
