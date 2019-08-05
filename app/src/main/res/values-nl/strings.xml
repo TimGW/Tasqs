@@ -104,6 +104,8 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="dialog_household_similar_text">You\'re already in this household. Press \'OK\' to continue</string>
     <string name="dialog_household_banned_title">Insuffiecient permissions</string>
     <string name="dialog_household_banned_text">You\'ve been removed from this household press \'OK\' to setup a new household</string>
+    <string name="dialog_household_full_title">Household is full!</string>
+    <string name="dialog_household_full_text">Ask the admin of the household to first remove someone</string>
     <string name="repeat_label_interval_text_year">J</string>
     <string name="repeat_label_interval_text_day">D</string>
     <string name="repeat_label_interval_text_week">W</string>

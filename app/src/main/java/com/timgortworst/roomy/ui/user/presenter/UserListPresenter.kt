@@ -19,7 +19,6 @@ class UserListPresenter @Inject constructor(
         private val view: UserListView,
         private val userListInteractor: UserListInteractor
 ) : BaseResponse(), DefaultLifecycleObserver {
-    private val localUserList = mutableListOf<User>()
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -59,21 +58,9 @@ class UserListPresenter @Inject constructor(
             for (docChange in dc) {
                 val user = docChange.document.toObject(User::class.java)
                 when (docChange.type) {
-                    DocumentChange.Type.ADDED -> {
-                        view.presentAddedUser(user)
-
-                        localUserList.add(user)
-                        view.showOrHideFab(localUserList.size < 8 &&
-                                userListInteractor.getCurrentUser()?.role == Role.ADMIN.name)
-                    }
-                    DocumentChange.Type.MODIFIED -> {
-                        localUserList[localUserList.indexOf(user)] = user
-                        view.presentEditedUser(user)
-                    }
-                    DocumentChange.Type.REMOVED -> {
-                        localUserList.remove(user)
-                        view.presentDeletedUser(user)
-                    }
+                    DocumentChange.Type.ADDED -> view.presentAddedUser(user)
+                    DocumentChange.Type.MODIFIED -> view.presentEditedUser(user)
+                    DocumentChange.Type.REMOVED -> view.presentDeletedUser(user)
                 }
             }
         }

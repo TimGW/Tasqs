@@ -6,4 +6,5 @@ interface SetupView {
     fun presentHouseholdOverwriteDialog()
     fun presentAlreadyInHouseholdDialog()
     fun presentUserIsBannedDialog()
+    fun presentHouseholdFullDialog()
 }

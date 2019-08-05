@@ -34,7 +34,10 @@ class SetupPresenter @Inject constructor(
                 setupInteractor.userBlackListedForHousehold(referredHouseholdId) -> {
                     view.presentUserIsBannedDialog()
                 }
-                isIdSimilarToActiveId(referredHouseholdId) -> {
+                setupInteractor.isHouseholdFull(referredHouseholdId) -> {
+                    view.presentHouseholdFullDialog()
+                }
+                setupInteractor.isIdSimilarToActiveId(referredHouseholdId) -> {
                     view.presentAlreadyInHouseholdDialog()
                 }
                 setupInteractor.getHouseholdIdForUser().isNotBlank() -> {
@@ -55,10 +58,6 @@ class SetupPresenter @Inject constructor(
 
             view.presentToastError(R.string.generic_error)
         }
-    }
-
-    private suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
-        return referredHouseholdId == setupInteractor.getHouseholdIdForUser()
     }
 
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
