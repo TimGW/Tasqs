@@ -57,4 +57,13 @@ constructor(private val categoryRepository: CategoryRepository,
         val household = housholdRef.get().await().toObject(Household::class.java) as Household
         return household.userIdBlackList.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
     }
+
+    suspend fun isHouseholdFull(referredHouseholdId: String): Boolean {
+        val userList = userRepository.getUserListForHousehold(referredHouseholdId) ?: return true
+        return userList.size >= 10
+    }
+
+    suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
+        return referredHouseholdId == getHouseholdIdForUser()
+    }
 }

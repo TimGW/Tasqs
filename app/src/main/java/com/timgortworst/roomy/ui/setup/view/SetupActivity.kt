@@ -81,4 +81,13 @@ class SetupActivity : AppCompatActivity(), SetupView {
                 }
                 .show()
     }
+    override fun presentHouseholdFullDialog() {
+        AlertDialog.Builder(this)
+                .setTitle(getString(R.string.dialog_household_full_title))
+                .setMessage(getString(R.string.dialog_household_full_text))
+                .setNeutralButton(android.R.string.ok) { _, _ ->
+                    finish()
+                }
+                .show()
+    }
 }

@@ -13,7 +13,6 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.customview.BottomSheetMenu
 import com.timgortworst.roomy.model.BottomMenuItem
 import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.ui.main.view.FabVisibilityListener
 import com.timgortworst.roomy.ui.main.view.MainActivity
 import com.timgortworst.roomy.ui.user.adapter.UserListAdapter
 import com.timgortworst.roomy.ui.user.presenter.UserListPresenter
@@ -29,7 +28,6 @@ class UserListFragment : Fragment(), UserListView {
     private lateinit var userListAdapter: UserListAdapter
     private lateinit var activityContext: MainActivity
     private var recyclerView: RecyclerView? = null
-    private var fabVisibilityListener: FabVisibilityListener? = null
 
     @Inject lateinit var presenter: UserListPresenter
 
@@ -43,12 +41,6 @@ class UserListFragment : Fragment(), UserListView {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
         activityContext = (activity as? MainActivity) ?: return
-
-        try {
-            fabVisibilityListener = activity as? FabVisibilityListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(activity.toString() + " must implement FabVisibilityListener")
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -85,10 +77,6 @@ class UserListFragment : Fragment(), UserListView {
 
     fun listenToUsers(isAirplaneModeEnabled: Boolean) {
         presenter.listenToUsers(isAirplaneModeEnabled)
-    }
-
-    override fun showOrHideFab(condition: Boolean) {
-        fabVisibilityListener?.setFabVisible(condition)
     }
 
     override fun showContextMenuFor(user: User) {

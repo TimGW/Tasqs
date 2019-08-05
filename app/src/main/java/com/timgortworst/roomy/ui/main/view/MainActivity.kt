@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVisibilityListener {
+class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
@@ -217,10 +217,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView, FabVi
                     }
                     hideProgressDialog()
                 }
-    }
-
-    override fun setFabVisible(isVisible: Boolean) {
-        if (isVisible) fab.show() else fab.hide()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
