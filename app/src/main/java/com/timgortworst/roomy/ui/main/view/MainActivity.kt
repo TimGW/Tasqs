@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.ui.BaseActivity
 import com.timgortworst.roomy.ui.category.view.CategoryEditActivity
@@ -108,6 +109,8 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     }
 
     private fun openFragment(fragment: Fragment, tag: String) {
+        if(tag == activeFragment?.tag) return
+
         supportFragmentManager.beginTransaction().apply {
             setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             activeFragment?.let { hide(it) }
@@ -197,7 +200,9 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     }
 
     private fun setupAds() {
-        adRequest = AdRequest.Builder().build()
+        val builder = AdRequest.Builder()
+        if (BuildConfig.DEBUG) builder.addTestDevice("C25E23F0B3FBE6F14EBD485DB2BAD83A")
+        adRequest = builder.build()
         adView?.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 adView_container?.visibility = View.VISIBLE
