@@ -36,12 +36,14 @@ class EventRepository @Inject constructor() {
             category: Category,
             user: User,
             householdId: String
-    ) {
+    ) : String {
         val document = eventCollectionRef.document()
-        try {
+        return try {
             document.set(Event(document.id, eventMetaData, category, user, householdId)).await()
+            document.id
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
+            ""
         }
     }
 

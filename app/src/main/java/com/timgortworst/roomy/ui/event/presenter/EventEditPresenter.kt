@@ -2,12 +2,10 @@ package com.timgortworst.roomy.ui.event.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.timgortworst.roomy.domain.EventInteractor
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.repository.CategoryRepository
-import com.timgortworst.roomy.repository.EventRepository
-import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.event.view.EventEditView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -17,10 +15,8 @@ import javax.inject.Inject
 
 
 class EventEditPresenter @Inject constructor(
-    private val view: EventEditView,
-    private val agendaRepository: EventRepository,
-    private val userRepository: UserRepository,
-    private val categoryRepository: CategoryRepository
+        private val view: EventEditView,
+        private val eventInteractor: EventInteractor
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -32,26 +28,41 @@ class EventEditPresenter @Inject constructor(
     }
 
     fun createOrUpdateEvent(
-        eventId: String?,
-        category: Category,
-        user: User,
-        eventMetaData: EventMetaData
+            eventId: String?,
+            category: Category,
+            user: User,
+            eventMetaData: EventMetaData
     ) = scope.launch {
 
-        if (!eventId.isNullOrEmpty()) {
-            agendaRepository.updateEvent(eventId, eventMetaData, category, user)
+        val workRequestTag = if (!eventId.isNullOrEmpty()) {
+            eventInteractor.updateEvent(eventId, eventMetaData, category, user)
+            eventId
         } else {
-            agendaRepository.createEvent(eventMetaData, category, user, userRepository.getHouseholdIdForUser())
+            val householdId = eventInteractor.getHouseholdIdForUser()
+            eventInteractor.createEvent(eventMetaData, category, user, householdId)
+        }
+
+        setNotificationReminder(workRequestTag, eventMetaData, category, user)
+    }
+
+    fun setNotificationReminder(workRequestTag: String,
+                                eventMetaData: EventMetaData,
+                                category: Category,
+                                user: User) {
+        if (eventMetaData.repeatInterval == EventMetaData.RepeatingInterval.SINGLE_EVENT) {
+            view.setSingleNotificationReminder(workRequestTag, eventMetaData, category, user)
+        } else {
+            view.setRepeatingNotificationReminder(workRequestTag, eventMetaData, category, user)
         }
     }
 
     fun getUsers() = scope.launch {
-        val userList = userRepository.getUserListForHousehold(userRepository.getHouseholdIdForUser())
+        val userList = eventInteractor.getUserListForCurrentHousehold()
         view.presentUserList(userList?.toMutableList() ?: mutableListOf())
     }
 
     fun getCategories() = scope.launch {
-        val categories = categoryRepository.getCategories()
+        val categories = eventInteractor.getCategories()
         view.presentCategoryList(categories.toMutableList())
     }
 

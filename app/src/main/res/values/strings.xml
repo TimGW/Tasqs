@@ -145,6 +145,8 @@
     <string name="error_list_state_text">Something went wrong, try again later</string>
     <string name="disable_airplane_mode_title">No Internet!</string>
     <string name="disable_airplane_mode_text">Please turn off your airplane mode</string>
+    <string name="default_notification_msg">it\'s time do to some work!</string>
+    <string name="notification_message">Hi %1$s it\'s time to do: \'%2$s\'</string>
 
     <!--&lt;!&ndash; Preference Titles &ndash;&gt;-->
     <!--<string name="messages_header">Messages</string>-->
