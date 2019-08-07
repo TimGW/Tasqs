@@ -68,8 +68,6 @@ class EventListPresenter @Inject constructor(
 
         // reset done to false
         eventListInteractor.updateEvent(event.eventId, eventMetaData = eventMetaData)
-
-        setNotificationReminder(event.eventId, eventMetaData, event.eventCategory.name, event.user.name)
     }
 
     fun setNotificationReminder(workRequestTag: String,
@@ -88,7 +86,7 @@ class EventListPresenter @Inject constructor(
         view.removePendingNotificationReminder(event.eventId)
     }
 
-    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
+    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
         view.setLoadingView(false)
         view.setErrorView(false)
         view.presentEmptyView(totalDataSetSize == 0)
@@ -96,8 +94,18 @@ class EventListPresenter @Inject constructor(
         dc.forEach {
             val event = it.document.toObject(Event::class.java)
             when (it.type) {
-                DocumentChange.Type.ADDED -> view.presentAddedEvent(event)
-                DocumentChange.Type.MODIFIED -> view.presentEditedEvent(event)
+                DocumentChange.Type.ADDED -> {
+                    if (hasPendingWrites) {
+                        setNotificationReminder(event.eventId, event.eventMetaData, event.eventCategory.name, event.user.name)
+                    }
+                    view.presentAddedEvent(event)
+                }
+                DocumentChange.Type.MODIFIED -> {
+                    if (hasPendingWrites) {
+                        setNotificationReminder(event.eventId, event.eventMetaData, event.eventCategory.name, event.user.name)
+                    }
+                    view.presentEditedEvent(event)
+                }
                 DocumentChange.Type.REMOVED -> view.presentDeletedEvent(event)
             }
         }
