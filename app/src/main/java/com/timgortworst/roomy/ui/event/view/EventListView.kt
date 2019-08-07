@@ -8,4 +8,5 @@ interface EventListView : PageStateListener, NotificationReminder {
     fun presentEditedEvent(agendaEvent: Event)
     fun presentDeletedEvent(agendaEvent: Event)
     fun presentEmptyView(isVisible: Boolean)
+    fun removePendingNotificationReminder(eventId: String)
 }

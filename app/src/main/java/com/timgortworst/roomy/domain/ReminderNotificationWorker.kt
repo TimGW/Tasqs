@@ -16,24 +16,25 @@ import java.util.*
 class ReminderNotificationWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
 
     override fun doWork() = try {
+        val notificationTitle = inputData.getString(NOTIFICATION_MSG_KEY) ?: context.getString(R.string.app_name)
         val notificationMessage = inputData.getString(NOTIFICATION_MSG_KEY) ?: context.getString(R.string.default_notification_msg)
-        triggerNotification(notificationMessage)
+        triggerNotification(notificationTitle, notificationMessage)
         Result.success()
     } catch (e: Exception) {
         Result.failure()
     }
 
-    private fun triggerNotification(notificationMessage: String) {
+    private fun triggerNotification(notificationTitle: String, notificationMessage: String) {
         createNotificationChannelIfRequired()
 
         with(NotificationManagerCompat.from(context)) {
-            notify(createNotificationID(), buildNotification(notificationMessage).build())
+            notify(createNotificationID(), buildNotification(notificationTitle, notificationMessage).build())
         }
     }
 
-    private fun buildNotification(notificationMessage: String) = NotificationCompat.Builder(context, CHANNEL_ID)
+    private fun buildNotification(notificationTitle: String, notificationMessage: String) = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.accent_home_icon)
-            .setContentTitle(context.getString(R.string.app_name))
+            .setContentTitle(notificationTitle)
             .setContentText(notificationMessage)
             .setStyle(NotificationCompat.BigTextStyle()
                     .bigText(notificationMessage))
@@ -61,6 +62,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
     }
 
     companion object {
+        const val NOTIFICATION_TITLE_KEY = "NOTIFICATION_TITLE_KEY"
         const val NOTIFICATION_MSG_KEY = "NOTIFICATION_MSG_KEY"
         const val CHANNEL_ID = "channel_01"
         const val CHANNEL_DESC = "channel for notifications to remind users to perform their tasks"

@@ -10,12 +10,8 @@ import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.ReminderNotificationWorker
+import com.timgortworst.roomy.domain.NotificationWorkerBuilder
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
@@ -27,7 +23,6 @@ import com.timgortworst.roomy.ui.event.presenter.EventEditPresenter
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_event.*
 import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -36,8 +31,8 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     private lateinit var spinnerAdapterTasks: SpinnerTaskAdapter
     private lateinit var spinnerAdapterUsers: SpinnerUserAdapter
     private lateinit var datePickerDialog: DatePickerDialog
+    private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
     private var calendar = Calendar.getInstance()
-    private val workManager = WorkManager.getInstance(this)
 
     @Inject
     lateinit var presenter: EventEditPresenter
@@ -76,6 +71,8 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             supportActionBar?.title = "Edit  ${it.eventCategory.name}"
             agenda_item_date_input.setText(it.eventMetaData.repeatStartDate.toString())
         }
+
+        notificationWorkerBuilder = NotificationWorkerBuilder(this)
 
         presenter.getCategories()
         presenter.getUsers()
@@ -186,6 +183,9 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         calendar.set(Calendar.YEAR, year)
         calendar.set(Calendar.MONTH, month)
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+//        calendar.set(Calendar.HOUR_OF_DAY, 12)
+//        calendar.set(Calendar.MINUTE, 0)
+//        calendar.set(Calendar.MILLISECOND, 0)
 
         presenter.formatDate(year, month, dayOfMonth)
     }
@@ -194,46 +194,25 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         agenda_item_date_input.setText("$formattedDayOfMonth $formattedMonth $formattedYear")
     }
 
-    override fun setSingleNotificationReminder(workRequestTag: String,
-                                               eventMetaData: EventMetaData,
-                                               category: Category,
-                                               user: User) {
-        workManager.cancelAllWorkByTag(workRequestTag)
-
-        val msg = getString(R.string.notification_message, user.name, category.name)
-        val inputData = Data.Builder()
-                .putString(ReminderNotificationWorker.NOTIFICATION_MSG_KEY, msg)
-                .build()
-
-        val notificationWork =  OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
-                .setInitialDelay(eventMetaData.repeatStartDate, TimeUnit.MILLISECONDS)
-                .addTag(workRequestTag)
-                .setInputData(inputData)
-                .build()
-
-        workManager.enqueue(notificationWork)
+    override fun enqueueOneTimeNotification(eventId: String,
+                                            eventMetaData: EventMetaData,
+                                            categoryName: String,
+                                            userName: String) {
+        notificationWorkerBuilder.enqueueOneTimeNotification(
+                eventId,
+                eventMetaData,
+                categoryName,
+                userName)
     }
 
-    override fun setRepeatingNotificationReminder(workRequestTag: String,
-                                                  eventMetaData: EventMetaData,
-                                                  category: Category,
-                                                  user: User) {
-        workManager.cancelAllWorkByTag(workRequestTag)
-
-        val msg = getString(R.string.notification_message, user.name, category.name)
-        val inputData = Data.Builder()
-                .putString(ReminderNotificationWorker.NOTIFICATION_MSG_KEY, msg)
-                .build()
-
-        val notificationWork = PeriodicWorkRequest.Builder(
-                ReminderNotificationWorker::class.java,
-                eventMetaData.repeatInterval.interval,
-                TimeUnit.SECONDS)
-                .setInitialDelay(eventMetaData.repeatStartDate, TimeUnit.MILLISECONDS)
-                .addTag(workRequestTag)
-                .setInputData(inputData)
-                .build()
-
-        workManager.enqueue(notificationWork)
+    override fun enqueuePeriodicNotification(eventId: String,
+                                             eventMetaData: EventMetaData,
+                                             categoryName: String,
+                                             userName: String) {
+        notificationWorkerBuilder.enqueuePeriodicNotification(
+                eventId,
+                eventMetaData,
+                categoryName,
+                userName)
     }
 }

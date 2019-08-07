@@ -13,18 +13,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.customview.BottomSheetMenu
-import com.timgortworst.roomy.domain.ReminderNotificationWorker
+import com.timgortworst.roomy.domain.NotificationWorkerBuilder
 import com.timgortworst.roomy.model.BottomMenuItem
-import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
-import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.ui.event.adapter.EventListAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
 import com.timgortworst.roomy.ui.main.view.MainActivity
@@ -33,7 +27,6 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
 import kotlinx.android.synthetic.main.layout_list_state.view.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -42,9 +35,10 @@ class EventListFragment : Fragment(), EventListView {
     private lateinit var touchListener: RecyclerTouchListener
     private lateinit var activityContext: AppCompatActivity
     private lateinit var eventListAdapter: EventListAdapter
-    private lateinit var workManager : WorkManager
+    private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
 
-    @Inject lateinit var presenter: EventListPresenter
+    @Inject
+    lateinit var presenter: EventListPresenter
 
     companion object {
         fun newInstance(): EventListFragment {
@@ -56,7 +50,6 @@ class EventListFragment : Fragment(), EventListView {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
         activityContext = (activity as? MainActivity) ?: return
-        workManager = WorkManager.getInstance(activityContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +59,7 @@ class EventListFragment : Fragment(), EventListView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_recycler_view, container, false)
+        notificationWorkerBuilder = NotificationWorkerBuilder(activityContext)
         eventListAdapter = EventListAdapter(activityContext)
         recyclerView = view.recycler_view
         view.swipe_container?.isEnabled = false
@@ -177,46 +171,29 @@ class EventListFragment : Fragment(), EventListView {
         }
     }
 
-    override fun setSingleNotificationReminder(workRequestTag: String,
-                                               eventMetaData: EventMetaData,
-                                               category: Category,
-                                               user: User) {
-        workManager.cancelAllWorkByTag(workRequestTag)
-
-        val msg = getString(R.string.notification_message, user.name, category.name)
-        val inputData = Data.Builder()
-                .putString(ReminderNotificationWorker.NOTIFICATION_MSG_KEY, msg)
-                .build()
-
-        val notificationWork =  OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
-                .setInitialDelay(eventMetaData.repeatStartDate, TimeUnit.MILLISECONDS)
-                .addTag(workRequestTag)
-                .setInputData(inputData)
-                .build()
-
-        workManager.enqueue(notificationWork)
+    override fun enqueueOneTimeNotification(eventId: String,
+                                            eventMetaData: EventMetaData,
+                                            categoryName: String,
+                                            userName: String) {
+        notificationWorkerBuilder.enqueueOneTimeNotification(
+                eventId,
+                eventMetaData,
+                categoryName,
+                userName)
     }
 
-    override fun setRepeatingNotificationReminder(workRequestTag: String,
-                                                  eventMetaData: EventMetaData,
-                                                  category: Category,
-                                                  user: User) {
-        workManager.cancelAllWorkByTag(workRequestTag)
+    override fun enqueuePeriodicNotification(eventId: String,
+                                             eventMetaData: EventMetaData,
+                                             categoryName: String,
+                                             userName: String) {
+        notificationWorkerBuilder.enqueuePeriodicNotification(
+                eventId,
+                eventMetaData,
+                categoryName,
+                userName)
+    }
 
-        val msg = getString(R.string.notification_message, user.name, category.name)
-        val inputData = Data.Builder()
-                .putString(ReminderNotificationWorker.NOTIFICATION_MSG_KEY, msg)
-                .build()
-
-        val notificationWork = PeriodicWorkRequest.Builder(
-                ReminderNotificationWorker::class.java,
-                eventMetaData.repeatInterval.interval,
-                TimeUnit.SECONDS)
-                .setInitialDelay(eventMetaData.repeatStartDate, TimeUnit.MILLISECONDS)
-                .addTag(workRequestTag)
-                .setInputData(inputData)
-                .build()
-
-        workManager.enqueue(notificationWork)
+    override fun removePendingNotificationReminder(eventId: String) {
+        notificationWorkerBuilder.removePendingNotificationReminder(eventId)
     }
 }

@@ -105,6 +105,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,7 +115,6 @@
             android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
             app:adSize="BANNER"
             app:adUnitId="@string/ad_unit_id" />
     </LinearLayout>

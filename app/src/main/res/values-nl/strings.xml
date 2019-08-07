@@ -126,5 +126,6 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="disable_airplane_mode_title">No Internet!</string>
     <string name="disable_airplane_mode_text">Please turn off your airplane mode</string>
     <string name="default_notification_msg">it\'s time do to some work!</string>
-    <string name="notification_message">Hi %1$s it\'s time to do: \'%2$s\'</string>
+    <string name="notification_title">Reminder for %1$s</string>
+    <string name="notification_message">It\'s time to: %1$s</string>
 </resources>
