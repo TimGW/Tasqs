@@ -41,7 +41,7 @@ class CategoryListPresenter @Inject constructor(
         categoryRepository.deleteCategory(agendaEventCategory)
     }
 
-    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
+    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
         view.setLoadingView(false)
         view.setErrorView(false)
         view.presentEmptyView(totalDataSetSize == 0)

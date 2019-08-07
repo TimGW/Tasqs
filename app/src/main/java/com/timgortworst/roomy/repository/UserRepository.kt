@@ -67,7 +67,7 @@ class UserRepository @Inject constructor() {
                         else -> {
                             val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.toList().size
-                            baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize))
+                            baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })

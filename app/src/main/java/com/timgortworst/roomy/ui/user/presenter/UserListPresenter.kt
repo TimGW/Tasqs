@@ -49,7 +49,7 @@ class UserListPresenter @Inject constructor(
         }
     }
 
-    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
+    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
         scope.launch {
             view.setLoadingView(false)
             view.setErrorView(false)

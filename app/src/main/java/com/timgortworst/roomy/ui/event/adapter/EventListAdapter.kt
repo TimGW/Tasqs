@@ -66,14 +66,10 @@ class EventListAdapter(
         }
     }
 
-    private fun removeEvent(position: Int) {
+    fun removeEvent(event: Event) {
+        val position = filteredEvents.indexOfFirst { event.eventId == it.eventId }
         filteredEvents.removeAt(position)
         notifyItemRemoved(position)
-    }
-
-    fun removeEvent(event: Event) {
-        val pos = filteredEvents.indexOf(event)
-        removeEvent(pos)
     }
 
     fun getEvent(position: Int) = filteredEvents[position]
@@ -87,7 +83,8 @@ class EventListAdapter(
     }
 
     fun updateEvent(event: Event) {
-        val fromPosition = filteredEvents.indexOf(event)
+        val fromPosition = filteredEvents.indexOfFirst { event.eventId == it.eventId }
+        filteredEvents[fromPosition] = event
         notifyItemChanged(fromPosition)
 
         val toPosition = filteredEvents.indexOfLast { event.eventMetaData.repeatStartDate > it.eventMetaData.repeatStartDate }
@@ -107,7 +104,7 @@ class EventListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return filteredEvents.size
+        return events.size
     }
 
     fun clearFilter() {

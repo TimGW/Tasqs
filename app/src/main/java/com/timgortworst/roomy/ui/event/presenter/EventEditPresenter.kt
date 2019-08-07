@@ -33,26 +33,11 @@ class EventEditPresenter @Inject constructor(
             user: User,
             eventMetaData: EventMetaData
     ) = scope.launch {
-
-        val workRequestTag = if (!eventId.isNullOrEmpty()) {
+        if (!eventId.isNullOrEmpty()) {
             eventInteractor.updateEvent(eventId, eventMetaData, category, user)
-            eventId
         } else {
             val householdId = eventInteractor.getHouseholdIdForUser()
             eventInteractor.createEvent(eventMetaData, category, user, householdId)
-        }
-
-        setNotificationReminder(workRequestTag, eventMetaData, category.name, user.name)
-    }
-
-    fun setNotificationReminder(workRequestTag: String,
-                                eventMetaData: EventMetaData,
-                                categoryName: String,
-                                userName: String) {
-        if (eventMetaData.repeatInterval == EventMetaData.RepeatingInterval.SINGLE_EVENT) {
-            view.enqueueOneTimeNotification(workRequestTag, eventMetaData, categoryName, userName)
-        } else {
-            view.enqueuePeriodicNotification(workRequestTag, eventMetaData, categoryName, userName)
         }
     }
 

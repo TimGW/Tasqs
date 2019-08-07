@@ -6,6 +6,7 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
@@ -58,7 +59,7 @@ class EventRepository @Inject constructor() {
 
         registration = eventCollectionRef
                 .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)
-                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+                .addSnapshotListener(MetadataChanges.INCLUDE, EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
                     when {
@@ -69,7 +70,8 @@ class EventRepository @Inject constructor() {
                         else -> {
                             val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.toList().size
-                            baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize))
+
+                            baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })

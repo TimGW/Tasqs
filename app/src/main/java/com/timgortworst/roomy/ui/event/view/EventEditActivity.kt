@@ -31,7 +31,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     private lateinit var spinnerAdapterTasks: SpinnerTaskAdapter
     private lateinit var spinnerAdapterUsers: SpinnerUserAdapter
     private lateinit var datePickerDialog: DatePickerDialog
-    private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
     private var calendar = Calendar.getInstance()
 
     @Inject
@@ -71,8 +70,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             supportActionBar?.title = "Edit  ${it.eventCategory.name}"
             agenda_item_date_input.setText(it.eventMetaData.repeatStartDate.toString())
         }
-
-        notificationWorkerBuilder = NotificationWorkerBuilder(this)
 
         presenter.getCategories()
         presenter.getUsers()
@@ -192,27 +189,5 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
     override fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String) {
         agenda_item_date_input.setText("$formattedDayOfMonth $formattedMonth $formattedYear")
-    }
-
-    override fun enqueueOneTimeNotification(eventId: String,
-                                            eventMetaData: EventMetaData,
-                                            categoryName: String,
-                                            userName: String) {
-        notificationWorkerBuilder.enqueueOneTimeNotification(
-                eventId,
-                eventMetaData,
-                categoryName,
-                userName)
-    }
-
-    override fun enqueuePeriodicNotification(eventId: String,
-                                             eventMetaData: EventMetaData,
-                                             categoryName: String,
-                                             userName: String) {
-        notificationWorkerBuilder.enqueuePeriodicNotification(
-                eventId,
-                eventMetaData,
-                categoryName,
-                userName)
     }
 }

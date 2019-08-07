@@ -178,8 +178,8 @@ class EventListFragment : Fragment(), EventListView {
         notificationWorkerBuilder.enqueueOneTimeNotification(
                 eventId,
                 eventMetaData,
-                categoryName,
-                userName)
+                userName,
+                categoryName)
     }
 
     override fun enqueuePeriodicNotification(eventId: String,
@@ -189,8 +189,8 @@ class EventListFragment : Fragment(), EventListView {
         notificationWorkerBuilder.enqueuePeriodicNotification(
                 eventId,
                 eventMetaData,
-                categoryName,
-                userName)
+                userName,
+                categoryName)
     }
 
     override fun removePendingNotificationReminder(eventId: String) {
