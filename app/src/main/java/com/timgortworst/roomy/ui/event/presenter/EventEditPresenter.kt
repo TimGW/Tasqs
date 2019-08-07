@@ -42,17 +42,17 @@ class EventEditPresenter @Inject constructor(
             eventInteractor.createEvent(eventMetaData, category, user, householdId)
         }
 
-        setNotificationReminder(workRequestTag, eventMetaData, category, user)
+        setNotificationReminder(workRequestTag, eventMetaData, category.name, user.name)
     }
 
     fun setNotificationReminder(workRequestTag: String,
                                 eventMetaData: EventMetaData,
-                                category: Category,
-                                user: User) {
+                                categoryName: String,
+                                userName: String) {
         if (eventMetaData.repeatInterval == EventMetaData.RepeatingInterval.SINGLE_EVENT) {
-            view.setSingleNotificationReminder(workRequestTag, eventMetaData, category, user)
+            view.enqueueOneTimeNotification(workRequestTag, eventMetaData, categoryName, userName)
         } else {
-            view.setRepeatingNotificationReminder(workRequestTag, eventMetaData, category, user)
+            view.enqueuePeriodicNotification(workRequestTag, eventMetaData, categoryName, userName)
         }
     }
 

@@ -1,10 +1,8 @@
 package com.timgortworst.roomy.ui.event.view
 
-import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.EventMetaData
-import com.timgortworst.roomy.model.User
 
 interface NotificationReminder {
-    fun setSingleNotificationReminder(workRequestTag: String, eventMetaData: EventMetaData, category: Category, user: User)
-    fun setRepeatingNotificationReminder(workRequestTag: String, eventMetaData: EventMetaData, category: Category, user: User)
+    fun enqueueOneTimeNotification(eventId: String, eventMetaData: EventMetaData, categoryName: String, userName: String)
+    fun enqueuePeriodicNotification(eventId: String, eventMetaData: EventMetaData, categoryName: String, userName: String)
 }

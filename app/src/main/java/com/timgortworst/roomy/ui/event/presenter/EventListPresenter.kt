@@ -6,10 +6,8 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.EventInteractor
-import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
-import com.timgortworst.roomy.model.User
 import com.timgortworst.roomy.repository.BaseResponse
 import com.timgortworst.roomy.ui.event.view.EventListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
@@ -71,22 +69,23 @@ class EventListPresenter @Inject constructor(
         // reset done to false
         eventListInteractor.updateEvent(event.eventId, eventMetaData = eventMetaData)
 
-        setNotificationReminder(event.eventId, eventMetaData, event.eventCategory, event.user)
+        setNotificationReminder(event.eventId, eventMetaData, event.eventCategory.name, event.user.name)
     }
 
     fun setNotificationReminder(workRequestTag: String,
                                 eventMetaData: EventMetaData,
-                                category: Category,
-                                user: User) {
+                                categoryName: String,
+                                userName: String) {
         if (eventMetaData.repeatInterval == EventMetaData.RepeatingInterval.SINGLE_EVENT) {
-            view.setSingleNotificationReminder(workRequestTag, eventMetaData, category, user)
+            view.enqueueOneTimeNotification(workRequestTag, eventMetaData, categoryName, userName)
         } else {
-            view.setRepeatingNotificationReminder(workRequestTag, eventMetaData, category, user)
+            view.enqueuePeriodicNotification(workRequestTag, eventMetaData, categoryName, userName)
         }
     }
 
     fun deleteEvent(event: Event) = scope.launch {
         eventListInteractor.deleteEvent(event.eventId)
+        view.removePendingNotificationReminder(event.eventId)
     }
 
     override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int) {
