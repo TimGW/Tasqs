@@ -120,7 +120,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="empty_list_state_title_events">No events</string>
     <string name="empty_list_state_text_events">Try adding your first event by clicking the + button</string>
     <string name="empty_list_state_title_categories">No categories</string>
-    <string name="empty_list_state_text_categories">Try adding your first category by clicking the + button</string>
+    <string name="empty_list_state_text_categories">Try adding your first category by clicking the + button or click the generate button to create some default household tasks</string>
     <string name="error_list_state_title_users">Whoops!</string>
     <string name="error_list_state_text">Something went wrong, try again later</string>
     <string name="disable_airplane_mode_title">No Internet!</string>

@@ -109,17 +109,21 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
 
     override fun presentEmptyView(isVisible: Boolean) {
         layout_list_state_empty?.apply {
+            visibility = if (isVisible) View.VISIBLE else View.GONE
             state_title.text = activity?.getString(R.string.empty_list_state_title_categories)
             state_message.text = activity?.getString(R.string.empty_list_state_text_categories)
-            visibility = if (isVisible) View.VISIBLE else View.GONE
+            state_button.visibility = View.VISIBLE
+            state_button.setOnClickListener {
+                presenter.generateCategories()
+            }
         }
     }
 
     override fun setErrorView(isVisible: Boolean, title: Int?, text: Int?) {
         layout_list_state_error?.apply {
+            visibility = if (isVisible) View.VISIBLE else View.GONE
             title?.let { this.state_title.text = activityContext.getString(it) }
             text?.let { this.state_message.text = activityContext.getString(it) }
-            visibility = if (isVisible) View.VISIBLE else View.GONE
         }
     }
 }

@@ -3,30 +3,20 @@ package com.timgortworst.roomy.domain
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.model.Household
 import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.repository.CategoryRepository
 import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
-import com.timgortworst.roomy.utils.GenerateData
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class SetupInteractor
 @Inject
-constructor(private val categoryRepository: CategoryRepository,
-            private val householdRepository: HouseholdRepository,
+constructor(private val householdRepository: HouseholdRepository,
             private val userRepository: UserRepository,
             private val eventRepository: EventRepository) {
 
     suspend fun initializeHousehold(): String? {
-        val householdId = householdRepository.createHousehold()
-
-        if (householdId?.isNotEmpty() == true) {
-            GenerateData.setupCategoriesForHousehold(householdId).forEach {
-                categoryRepository.createCategory(it.name, it.description, it.householdId)
-            }
-        }
-        return householdId
+        return householdRepository.createHousehold()
     }
 
     suspend fun createUser() {

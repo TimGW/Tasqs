@@ -4,10 +4,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.domain.CategoryInteractor
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.repository.BaseResponse
-import com.timgortworst.roomy.repository.CategoryRepository
-import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.category.view.CategoryListView
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +15,7 @@ import javax.inject.Inject
 
 class CategoryListPresenter @Inject constructor(
         val view: CategoryListView,
-        private val categoryRepository: CategoryRepository,
-        private val userRepository: UserRepository
+        val categoryInteractor: CategoryInteractor
 ) : BaseResponse(), DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
@@ -28,17 +26,19 @@ class CategoryListPresenter @Inject constructor(
     }
 
     fun listenToCategories() = scope.launch {
-        categoryRepository.listenToCategoriesForHousehold(
-                userRepository.getHouseholdIdForUser(),
-                this@CategoryListPresenter)
+        categoryInteractor.listenToCategoriesForHousehold(this@CategoryListPresenter)
     }
 
     fun detachCategoryListener() {
-        categoryRepository.detachCategoryListener()
+        categoryInteractor.detachCategoryListener()
     }
 
     fun deleteCategory(agendaEventCategory: Category) = scope.launch {
-        categoryRepository.deleteCategory(agendaEventCategory)
+        categoryInteractor.deleteCategory(agendaEventCategory)
+    }
+
+    fun generateCategories() = scope.launch {
+        categoryInteractor.setupCategoriesForHousehold()
     }
 
     override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {

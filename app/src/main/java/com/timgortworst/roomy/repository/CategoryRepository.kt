@@ -21,7 +21,8 @@ import javax.inject.Singleton
 
 @Singleton
 class CategoryRepository @Inject constructor() {
-    var categoryCollectionRef = FirebaseFirestore.getInstance().collection(CATEGORY_COLLECTION_REF)
+    private val db = FirebaseFirestore.getInstance()
+    var categoryCollectionRef = db.collection(CATEGORY_COLLECTION_REF)
         private set
 
     private var registration: ListenerRegistration? = null
@@ -44,6 +45,14 @@ class CategoryRepository @Inject constructor() {
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
         }
+    }
+
+    suspend fun createCategoryBatch(categoryList: MutableList<Category>) {
+        val batch = db.batch()
+        categoryList.forEach {
+            batch.set(categoryCollectionRef.document(), it)
+        }
+        batch.commit().await()
     }
 
     suspend fun getCategories(): List<Category> {
