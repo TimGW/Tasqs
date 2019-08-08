@@ -1,166 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="home">home</string>
-    <string name="profile">profile</string>
-
-    <string name="material_calendar_monday">Mon</string>
-    <string name="material_calendar_tuesday">Tue</string>
-    <string name="material_calendar_wednesday">Wed</string>
-    <string name="material_calendar_thursday">Thu</string>
-    <string name="material_calendar_friday">Fri</string>
-    <string name="material_calendar_saturday">Sat</string>
-    <string name="material_calendar_sunday">Sun</string>
-
-    <array name="material_calendar_months_array">
-        <item>January</item>
-        <item>February</item>
-        <item>March</item>
-        <item>April</item>
-        <item>May</item>
-        <item>June</item>
-        <item>July</item>
-        <item>August</item>
-        <item>September</item>
-        <item>October</item>
-        <item>November</item>
-        <item>December</item>
-    </array>
-
-
-    <string name="current_date">June, 2016</string>
-    <string name="add_event">ADD CALENDAR EVENT</string>
-    <string name="sun">SUN</string>
-    <string name="mon">MON</string>
-    <string name="tue">TUE</string>
-    <string name="wed">WED</string>
-    <string name="thu">THU</string>
-    <string name="fri">FRI</string>
-    <string name="sat">SAT</string>
-    <string name="last_date">30</string>
-
-    <string name="material_calendar_today_button">Today</string>
-    <string name="material_calendar_positive_button">OK</string>
-    <string name="material_calendar_negative_button">Cancel</string>
-    <string name="household_tasks">Household tasks</string>
-    <string name="add_roommate">add roommate</string>
-    <string name="schema_toolbar_title">Schema</string>
-    <string name="householdtasks_toolbar_title">Household tasks</string>
-    <string name="householdtask_points">Points: %1$d</string>
-    <string name="loading">loading</string>
-    <string name="profile_invite">Vriend uitnodigen</string>
-    <string name="profile_help">Help</string>
-    <string name="profile_logout_text">Logout</string>
-    <string name="profile_remove_household_text">Remove household</string>
-    <string name="profile_notifications">Meldingen</string>
-    <string name="event_today">Vandaag</string>
-    <string name="planning">Planning</string>
-    <string name="three_days">3 dagen</string>
-    <string name="week">Week</string>
-    <string name="setup_new_household_rb_text">Create new household</string>
-    <string name="setup_existing_household_rb_text">Join existing household</string>
-    <string name="setup_existing_household_code_hint">Household code</string>
-    <string name="setup_referral_code_empty_error">Please provide a referral code</string>
-    <string name="button_next">Volgende</string>
-    <string name="generic_error">Something went wrong</string>
-    <string name="connection_error">Please check your internet connection.</string>
-    <string name="server_error">A Server Error occurred.</string>
-    <string name="punten">Punten</string>
-    <string name="beschrijving">Beschrijving</string>
-    <string name="taak">Taak</string>
-    <string name="roommates">Huisgenoten</string>
-    <string name="date_hint">Datum</string>
-    <string name="task_hint">Taak</string>
-    <string name="user_hint">Persoon</string>
-    <string name="repeat_checkbox_text">Herhalen</string>
-    <string name="repeat_interval_hint">repeat interval</string>
-    <string name="repeating_interval_single_event">Single event</string>
-    <string name="repeating_interval_daily_event">Daily</string>
-    <string name="repeating_interval_weekly_event">Weekly</string>
-    <string name="repeating_interval_monthly_event">Monthly</string>
-    <string name="repeating_interval_annually_event">Annually</string>
-    <string name="next_occurance">Next occurrence: %1$s</string>
-    <string name="overdue_occurance">OVERDUE: %1$s</string>
-
-    <string name="tequila_name">Tequila</string>
-    <string name="tequila_tagline">Is an alcoholic beverage</string>
-    <string name="tequila_title">Tequila!</string>
-    <string name="lorem">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula sem a malesuada rhoncus. Pellentesque ut
-        dolor a dui porttitor porta lacinia non libero. Nunc volutpat arcu quis quam convallis molestie. Etiam ac
-        tristique sem, id commodo justo. Phasellus congue tincidunt lectus, at dignissim ligula maximus eu. Quisque
-        interdum nunc eget tellus bibendum suscipit. Phasellus feugiat ultricies posuere. Nullam porta accumsan velit,
-        ut rutrum massa fermentum eu. Nunc ac bibendum nunc. Mauris eu ultricies ipsum. Ut id dolor dui. Pellentesque
-        dictum dui vel tempus maximus. Vivamus non nisi quis libero scelerisque pretium. Ut eu tristique justo. Sed
-        pellentesque placerat quam, ut ultricies turpis feugiat a. Aliquam a volutpat risus.
-
-        Praesent at lectus semper, suscipit elit in, facilisis massa. Phasellus sed vestibulum ante, a euismod sem.
-        Interdum et malesuada fames ac ante ipsum primis in faucibus. Proin tincidunt orci augue, a porta odio lacinia
-        eu. Nunc in congue risus. Maecenas commodo nibh ac enim fermentum, eu sagittis massa blandit. Vestibulum
-        elementum massa nec dapibus mollis. Etiam porta, est sit amet aliquet porta, odio elit finibus risus, id rutrum
-        purus mi non ipsum. Nulla viverra nec enim sed venenatis.
-
-        Maecenas mattis, erat et viverra euismod, neque diam porttitor tellus, in fringilla metus est id augue. Nunc at
-        metus cursus, porttitor nisi vitae, congue diam. Curabitur ligula massa, ullamcorper eget scelerisque vel,
-        pharetra ac sapien. Ut auctor luctus ultricies. Nullam semper tortor ac elementum luctus. In et tempus ex.
-        Praesent sodales, dolor id volutpat elementum, ligula enim euismod odio, maximus sodales magna neque nec neque.
-        Curabitur pretium nisl neque, consequat aliquet dui tincidunt ac. Vivamus augue nunc, aliquet eu ex a, ultrices
-        aliquam lorem. Duis nibh lectus, ultricies vel iaculis sit amet, imperdiet id sapien. Duis scelerisque sodales
-        metus eu rutrum. Suspendisse posuere nisi ac magna consequat, eu vestibulum ipsum venenatis. Suspendisse auctor
-        nisi nec leo venenatis tristique.
-
-        Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fames ac ante ipsum primis in
-        faucibus. Praesent vitae blandit sapien. Curabitur est sapien, lobortis sit amet facilisis vel, faucibus eu
-        quam. Nam tempus libero at tellus tempor laoreet. Pellentesque quam lorem, tincidunt in molestie eget, dictum
-        vel risus. Nunc gravida convallis mattis.
-    </string>
     <string name="admin_label">Chief</string>
-    <string name="settings">Settings</string>
-    <string name="preferences_display_header">Display</string>
-    <string name="preferences_display_dark_mode">Dark mode</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="filter_show_all">Show all</string>
-    <string name="filter_just_me">Show just me</string>
-    <string name="invite_title">Share invite link</string>
+    <string name="beschrijving">Beschrijving</string>
+    <string name="connection_error">Please check your internet connection.</string>
+    <string name="dangerous_settings_header">Dangerous settings</string>
+    <string name="date_hint">Datum</string>
+    <string name="default_notification_msg">it\'s time do to some work!</string>
+    <string name="dialog_household_banned_text">You\'ve been removed from this household press \'OK\' to setup a new household</string>
+    <string name="dialog_household_banned_title">Insuffiecient permissions</string>
+    <string name="dialog_household_full_text">Ask the admin of the household to first remove someone</string>
+    <string name="dialog_household_full_title">Household is full!</string>
     <string name="dialog_household_overwrite_text">Your current household will be overwritten. All data will be lost. Are you sure?</string>
     <string name="dialog_household_overwrite_title">Household overwrite</string>
-    <string name="dialog_household_similar_title">Same household!</string>
     <string name="dialog_household_similar_text">You\'re already in this household. Press \'OK\' to continue</string>
-    <string name="dialog_household_banned_title">Insuffiecient permissions</string>
-    <string name="dialog_household_banned_text">You\'ve been removed from this household press \'OK\' to setup a new household</string>
-    <string name="dialog_household_full_title">Household is full!</string>
-    <string name="dialog_household_full_text">Ask the admin of the household to first remove someone</string>
-    <string name="repeat_label_interval_text_year">Y</string>
-    <string name="repeat_label_interval_text_day">D</string>
-    <string name="repeat_label_interval_text_week">W</string>
-    <string name="repeat_label_interval_text_month">M</string>
-    <string name="dangerous_settings_header">Dangerous settings</string>
-    <string name="preferences_analytics_header">Data collection</string>
-    <string name="preferences_opt_analytics">Enable data collection</string>
-    <string name="preferences_opt_analytics_description">By sending anonymous user data, you will help improve the application</string>
-    <string name="try_again">try again</string>
-    <string name="empty_list_state_title_events">No events</string>
+    <string name="dialog_household_similar_title">Same household!</string>
+    <string name="empty_list_state_text_categories">Try adding your first category by clicking the + button or click the generate button to create some default household tasks</string>
     <string name="empty_list_state_text_events">Try adding your first event by clicking the + button</string>
     <string name="empty_list_state_title_categories">No categories</string>
-    <string name="empty_list_state_text_categories">Try adding your first category by clicking the + button or click the generate button to create some default household tasks</string>
-    <string name="error_list_state_title">Whoops!</string>
+    <string name="empty_list_state_title_events">No events</string>
     <string name="error_list_state_text">Something went wrong, try again later</string>
-    <string name="disable_airplane_mode_title">No Internet!</string>
-    <string name="disable_airplane_mode_text">Please turn off your airplane mode</string>
-    <string name="default_notification_msg">it\'s time do to some work!</string>
-    <string name="notification_title">Reminder for %1$s</string>
+    <string name="error_list_state_title">Whoops!</string>
+    <string name="filter_just_me">Show just me</string>
+    <string name="filter_show_all">Show all</string>
+    <string name="generic_error">Something went wrong</string>
+    <string name="householdtasks_toolbar_title">Household tasks</string>
+    <string name="invite_title">Share invite link</string>
+    <string name="loading">loading</string>
+    <string name="next_occurance">Next occurrence: %1$s</string>
     <string name="notification_message">It\'s time to: %1$s</string>
-
-    <!--&lt;!&ndash; Preference Titles &ndash;&gt;-->
-    <!--<string name="messages_header">Messages</string>-->
-    <!--<string name="sync_header">Sync</string>-->
-
-    <!--&lt;!&ndash; Messages Preferences &ndash;&gt;-->
-    <!--<string name="signature_title">Your signature</string>-->
-    <!--<string name="reply_title">Default reply action</string>-->
-
-    <!--&lt;!&ndash; Sync Preferences &ndash;&gt;-->
-    <!--<string name="sync_title">Sync email periodically</string>-->
-    <!--<string name="attachment_title">Download incoming attachments</string>-->
-    <!--<string name="attachment_summary_on">Automatically download attachments for incoming emails</string>-->
-    <!--<string name="attachment_summary_off">Only download attachments when manually requested</string>-->
-
+    <string name="notification_title">Reminder for %1$s</string>
+    <string name="overdue_occurance">OVERDUE: %1$s</string>
+    <string name="preferences_analytics_header">Data collection</string>
+    <string name="preferences_display_dark_mode">Dark mode</string>
+    <string name="preferences_display_header">Display</string>
+    <string name="preferences_notifications_header">Notifications</string>
+    <string name="preferences_opt_analytics">Enable data collection</string>
+    <string name="preferences_opt_analytics_description">By sending anonymous user data, you will help improve the application</string>
+    <string name="punten">Punten</string>
+    <string name="repeat_checkbox_text">Herhalen</string>
+    <string name="repeat_interval_hint">repeat interval</string>
+    <string name="repeat_label_interval_text_day">D</string>
+    <string name="repeat_label_interval_text_month">M</string>
+    <string name="repeat_label_interval_text_week">W</string>
+    <string name="repeat_label_interval_text_year">Y</string>
+    <string name="repeating_interval_annually_event">Annually</string>
+    <string name="repeating_interval_daily_event">Daily</string>
+    <string name="repeating_interval_monthly_event">Monthly</string>
+    <string name="repeating_interval_single_event">Single event</string>
+    <string name="repeating_interval_weekly_event">Weekly</string>
+    <string name="roommates">Huisgenoten</string>
+    <string name="schema_toolbar_title">Schema</string>
+    <string name="taak">Taak</string>
+    <string name="task_hint">Taak</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="user_hint">Persoon</string>
 </resources>
