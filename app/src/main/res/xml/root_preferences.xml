@@ -1,48 +1,50 @@
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="@string/preferences_display_header">
+    <PreferenceCategory app:title="@string/preferences_display_header" app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
             app:key="dark_mode_key"
-            app:title="@string/preferences_display_dark_mode" />
+            app:title="@string/preferences_display_dark_mode"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/preferences_analytics_header">
+    <PreferenceCategory app:title="@string/preferences_analytics_header" app:iconSpaceReserved="false">
 
         <SwitchPreferenceCompat
             app:key="analytics_key"
-            app:title="@string/preferences_opt_analytics"
-            app:summary="@string/preferences_opt_analytics_description"
+            app:title="@string/preferences_analytics"
+            app:summary="@string/preferences_analytics_description"
             android:defaultValue="true"
+            app:iconSpaceReserved="false"
             />
+
+        <Preference
+            android:key="privacy_policy_key"
+            android:title="Privacy policy"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/dangerous_settings_header">
+    <PreferenceCategory app:title="About" app:iconSpaceReserved="false">
 
-        <!--<EditTextPreference-->
-        <!--app:key="signature"-->
-        <!--app:title="@string/signature_title"-->
-        <!--app:useSimpleSummaryProvider="true" />-->
+        <Preference android:title="App version"
+            android:summary="@string/versionName"
+            app:iconSpaceReserved="false">
 
-        <!--<ListPreference-->
-        <!--app:defaultValue="reply"-->
-        <!--app:entries="@array/reply_entries"-->
-        <!--app:entryValues="@array/reply_values"-->
-        <!--app:key="reply"-->
-        <!--app:title="@string/reply_title"-->
-        <!--app:useSimpleSummaryProvider="true"
+        </Preference>
 
-        app:dependency="failsafe_key"/>-->
+        <Preference
+            android:key="preferences_about_key"
+            android:title="About this app"
+            app:iconSpaceReserved="false"/>
+        <Preference
+            android:key="preferences_rate_app_key"
+            android:title="Rate this app"
+            app:iconSpaceReserved="false"/>
 
-    <Preference
-        android:key="logout_key"
-        android:summary="This button will permanently delete your account "
-        android:title="DELETE ACCOUNT"/>
+    </PreferenceCategory>
 
-
-</PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
