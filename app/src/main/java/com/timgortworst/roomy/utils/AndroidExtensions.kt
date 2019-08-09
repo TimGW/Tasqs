@@ -1,8 +1,11 @@
 package com.timgortworst.roomy.utils
 
 import android.content.Context
+import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
+import android.text.Html
+import android.text.Spanned
 import android.util.Log
 import android.util.Log.e
 import android.util.TypedValue
@@ -66,3 +69,11 @@ fun View.runBeforeDraw(onFinished: (view: View) -> Unit) {
 fun Context.isAirplaneModeEnabled() =
         Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) != 0
 
+@Suppress("DEPRECATION")
+fun String.fromHtml(): Spanned {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
+    } else {
+        Html.fromHtml(this)
+    }
+}

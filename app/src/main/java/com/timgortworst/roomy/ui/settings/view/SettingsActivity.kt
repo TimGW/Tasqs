@@ -16,9 +16,6 @@ import javax.inject.Inject
 class SettingsActivity : BaseActivity(), HasSupportFragmentInjector {
 
     @Inject
-    lateinit var sharedPref: HuishoudGenootSharedPref
-
-    @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     companion object {
@@ -36,7 +33,6 @@ class SettingsActivity : BaseActivity(), HasSupportFragmentInjector {
             .beginTransaction()
             .replace(R.id.settings, SettingsFragment())
             .commit()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {

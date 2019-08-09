@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/home"
-          android:title="@string/home"
+          android:title="home"
           app:showAsAction="always"
           android:icon="@drawable/ic_calendar"/>
     <item android:id="@+id/household_task_list"
-          android:title="@string/household_tasks"
+          android:title="events"
           app:showAsAction="ifRoom"
           android:icon="@drawable/ic_list"/>
     <item android:id="@+id/profile"
-          android:title="@string/profile"
+          android:title="profiel"
           app:showAsAction="ifRoom"
           android:icon="@drawable/ic_group"/>
 </menu>
