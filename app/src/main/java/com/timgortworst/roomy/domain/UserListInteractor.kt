@@ -6,7 +6,7 @@ import com.timgortworst.roomy.repository.EventRepository
 import com.timgortworst.roomy.repository.HouseholdRepository
 import com.timgortworst.roomy.repository.UserRepository
 import com.timgortworst.roomy.ui.user.presenter.UserListPresenter
-import com.timgortworst.roomy.utils.Constants.USER_HOUSEHOLDID_REF
+import com.timgortworst.roomy.utils.Constants
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -21,13 +21,12 @@ constructor(private val householdRepository: HouseholdRepository,
     suspend fun deleteAndBanUser(user: User) {
         removeEventsAssignedToUser(user.userId)
 
+        addUserToBlackList(user.userId)
+
         // remove id from user document
         userRepository.userCollectionRef
                 .document(user.userId)
-                .update(USER_HOUSEHOLDID_REF, "")
-                .await()
-
-        addUserToBlackList(user.userId)
+                .update(Constants.USER_HOUSEHOLDID_REF, "")
     }
 
     private suspend fun addUserToBlackList(userId: String) {
@@ -41,7 +40,6 @@ constructor(private val householdRepository: HouseholdRepository,
         householdRepository.updateHousehold(household.householdId, household.userIdBlackList)
     }
 
-    // todo use transactions
     private suspend fun removeEventsAssignedToUser(userId: String) {
         eventRepository.getEventsForUser(userId).forEach {
             eventRepository.eventCollectionRef.document(it.eventId).delete()
