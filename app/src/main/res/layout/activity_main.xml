@@ -18,8 +18,8 @@
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?android:colorBackground"
-            android:layout_marginBottom="?actionBarSize" />
+            android:layout_marginBottom="?actionBarSize"
+            android:background="?android:colorBackground" />
 
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottom_appbar"
@@ -43,6 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/cd_household_agenda"
                     android:padding="8dp"
                     app:srcCompat="@drawable/ic_calendar" />
 
@@ -52,6 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/cd_household_categories"
                     android:padding="8dp"
                     app:srcCompat="@drawable/ic_list" />
 
@@ -59,7 +61,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@android:color/transparent" />
+                    android:background="@android:color/transparent"
+                    android:importantForAccessibility="no" />
 
                 <ImageButton
                     android:id="@+id/main_housemates"
@@ -67,6 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/cd_housemates"
                     android:padding="8dp"
                     app:srcCompat="@drawable/ic_group" />
 
@@ -76,6 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/cd_settings"
                     android:padding="8dp"
                     app:srcCompat="@drawable/ic_settings" />
             </LinearLayout>
@@ -92,6 +97,7 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/cd_add_button"
             app:layout_anchor="@id/bottom_appbar"
             app:srcCompat="@drawable/ic_plus_white_48dp" />
 
@@ -104,8 +110,8 @@
         android:background="@color/color_alpha_10"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="gone"
         android:padding="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
