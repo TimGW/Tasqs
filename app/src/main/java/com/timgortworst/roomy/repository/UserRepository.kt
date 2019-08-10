@@ -91,7 +91,6 @@ class UserRepository @Inject constructor() {
         return user.householdId
     }
 
-    //todo update user in events collection
     suspend fun updateUser(
             userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
             name: String = "",
