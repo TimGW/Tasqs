@@ -9,8 +9,6 @@ import com.timgortworst.roomy.ui.googlesignin.module.GoogleSignInModule
 import com.timgortworst.roomy.ui.googlesignin.view.GoogleSignInActivity
 import com.timgortworst.roomy.ui.main.module.MainModule
 import com.timgortworst.roomy.ui.main.view.MainActivity
-import com.timgortworst.roomy.ui.settings.module.SettingsActivityFragmentProvider
-import com.timgortworst.roomy.ui.settings.view.SettingsActivity
 import com.timgortworst.roomy.ui.setup.module.SetupModule
 import com.timgortworst.roomy.ui.setup.view.SetupActivity
 import com.timgortworst.roomy.ui.splash.module.SplashModule
@@ -41,7 +39,4 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = [SplashModule::class])
     internal abstract fun bindSplashActivity(): SplashActivity
-
-    @ContributesAndroidInjector(modules = [SettingsActivityFragmentProvider::class])
-    internal abstract fun bindSettingsActivity(): SettingsActivity
 }

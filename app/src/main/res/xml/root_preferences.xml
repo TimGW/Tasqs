@@ -36,10 +36,6 @@
         </Preference>
 
         <Preference
-            android:key="preferences_about_key"
-            android:title="About this app"
-            app:iconSpaceReserved="false"/>
-        <Preference
             android:key="preferences_rate_app_key"
             android:title="Rate this app"
             app:iconSpaceReserved="false"/>
