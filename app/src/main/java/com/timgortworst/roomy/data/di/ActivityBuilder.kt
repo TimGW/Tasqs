@@ -14,7 +14,7 @@ import com.timgortworst.roomy.ui.features.settings.view.SettingsActivity
 import com.timgortworst.roomy.ui.base.di.SetupModule
 import com.timgortworst.roomy.ui.features.setup.view.SetupActivity
 import com.timgortworst.roomy.ui.base.di.SplashModule
-import com.timgortworst.roomy.ui.features.splash.ui.SplashActivity
+import com.timgortworst.roomy.ui.features.splash.view.SplashActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

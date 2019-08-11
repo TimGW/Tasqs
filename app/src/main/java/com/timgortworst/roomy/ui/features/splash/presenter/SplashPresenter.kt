@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
-import com.timgortworst.roomy.ui.features.splash.ui.SplashView
+import com.timgortworst.roomy.ui.features.splash.view.SplashView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject

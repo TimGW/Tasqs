@@ -18,9 +18,10 @@ import com.timgortworst.roomy.ui.features.category.view.CategoryEditActivity
 import com.timgortworst.roomy.ui.features.category.view.CategoryListFragment
 import com.timgortworst.roomy.ui.features.event.view.EventEditActivity
 import com.timgortworst.roomy.ui.features.event.view.EventListFragment
+import com.timgortworst.roomy.ui.features.main.NetworkChangeReceiver
 import com.timgortworst.roomy.ui.features.main.presenter.MainPresenter
 import com.timgortworst.roomy.ui.features.settings.view.SettingsActivity
-import com.timgortworst.roomy.ui.features.splash.ui.SplashActivity
+import com.timgortworst.roomy.ui.features.splash.view.SplashActivity
 import com.timgortworst.roomy.ui.features.user.view.UserListFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -167,11 +168,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     private fun setupBroadcastReceivers() {
         networkChangeReceiver = object : NetworkChangeReceiver(this) {
             override fun networkStatusChanged(isEnabled: Boolean) {
-                if (isEnabled) {
-                    adView?.loadAd(adRequest)
-                } else {
-                    Toast.makeText(this@MainActivity, getString(R.string.connection_error), Toast.LENGTH_LONG).show()
-                }
+                presenter.networkStatusChanged(isEnabled)
             }
         }
     }
@@ -214,6 +211,14 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
                     }
                     hideProgressDialog()
                 }
+    }
+
+    override fun loadAd() {
+        adView?.loadAd(adRequest)
+    }
+
+    override fun showToast(stringRes: Int) {
+        Toast.makeText(this@MainActivity, getString(stringRes), Toast.LENGTH_LONG).show()
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {

@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.features.main.view
+package com.timgortworst.roomy.ui.features.main
 
 import android.content.BroadcastReceiver
 import android.content.Context

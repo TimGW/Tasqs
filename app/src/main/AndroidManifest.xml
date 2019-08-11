@@ -22,7 +22,7 @@
         </activity>
         <!-- Main activities -->
         <activity
-            android:name=".ui.features.splash.ui.SplashActivity"
+            android:name=".ui.features.splash.view.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>

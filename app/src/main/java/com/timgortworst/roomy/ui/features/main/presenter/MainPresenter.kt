@@ -2,6 +2,7 @@ package com.timgortworst.roomy.ui.features.main.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Household
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
@@ -52,5 +53,13 @@ class MainPresenter
                 .householdId(householdId)
                 .build()
         view.presentShareLinkUri(linkUri)
+    }
+
+    fun networkStatusChanged(isEnabled: Boolean) {
+        if (isEnabled) {
+            view.loadAd()
+        } else {
+            view.showToast(R.string.connection_error)
+        }
     }
 }
