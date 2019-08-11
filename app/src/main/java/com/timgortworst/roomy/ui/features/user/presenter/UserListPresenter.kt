@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class UserListPresenter @Inject constructor(
         private val view: UserListView,
-        private val userListInteractor: UserUseCase
+        private val userUseCase: UserUseCase
 ) : BaseResponse(), DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
@@ -27,19 +27,19 @@ class UserListPresenter @Inject constructor(
     }
 
     fun detachUserListener() {
-        userListInteractor.detachUserListener()
+        userUseCase.detachUserListener()
     }
 
     fun listenToUsers() = scope.launch {
-        userListInteractor.listenToUsers(this@UserListPresenter)
+        userUseCase.listenToUsers(this@UserListPresenter)
     }
 
     fun deleteUser(user: User) = scope.launch {
-        userListInteractor.deleteAndBanUser(user)
+        userUseCase.deleteAndBanUser(user)
     }
 
     fun showContextMenuIfUserHasPermission(user: User) = scope.launch {
-        val currentUser = userListInteractor.getCurrentUser() ?: return@launch
+        val currentUser = userUseCase.getCurrentUser() ?: return@launch
 
         if (user.role != Role.ADMIN.name &&
                 currentUser.role == Role.ADMIN.name &&

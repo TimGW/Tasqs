@@ -29,4 +29,12 @@ constructor(private val categoryRepository: CategoryRepository,
     suspend fun setupCategoriesForHousehold() {
         categoryRepository.createCategoryBatch(GenerateData.setupCategoriesForHousehold(userRepository.getHouseholdIdForUser()))
     }
+
+    suspend fun updateCategory(categoryId: String, name: String, description: String) {
+        categoryRepository.updateCategory(categoryId, name, description)
+    }
+
+    suspend fun createCategory(name: String, description: String) {
+        categoryRepository.createCategory(name, description, userRepository.getHouseholdIdForUser())
+    }
 }

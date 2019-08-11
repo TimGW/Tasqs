@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class SplashPresenter @Inject constructor(
         private val view: SplashView,
-        private val setupInteractor: SetupUseCase
+        private val setupUseCase: SetupUseCase
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -31,7 +31,7 @@ class SplashPresenter @Inject constructor(
         }
 
         // continue to main activity
-        if (setupInteractor.getHouseholdIdForUser().isNotBlank()) {
+        if (setupUseCase.getHouseholdIdForUser().isNotBlank()) {
             view.goToMainActivity()
             return@launch
         }
