@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Household
 import com.timgortworst.roomy.data.repository.HouseholdRepository
-import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.usecase.MainUseCase
 import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.main.view.InviteLink
 import com.timgortworst.roomy.ui.features.main.view.MainView
@@ -16,9 +16,8 @@ import javax.inject.Inject
 class MainPresenter
 @Inject constructor(
         private val view: MainView,
-        private val householdRepository: HouseholdRepository,
-        private val userRepository: UserRepository
-        ) : DefaultLifecycleObserver, HouseholdRepository.HouseholdListener {
+        private val mainUseCase: MainUseCase
+) : DefaultLifecycleObserver, HouseholdRepository.HouseholdListener {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -28,24 +27,21 @@ class MainPresenter
     }
 
     fun listenToHousehold() = scope.launch {
-        householdRepository.listenToHousehold(
-                userRepository.getHouseholdIdForUser(),
-                this@MainPresenter
-        )
+        mainUseCase.listenToHousehold(this@MainPresenter)
     }
 
     fun detachHouseholdListener() {
-        householdRepository.detachHouseholdListener()
+        mainUseCase.detachHouseholdListener()
     }
 
     override fun householdModified(household: Household) {
-        if (household.userIdBlackList.contains(userRepository.getCurrentUserId())){
+        if (household.userIdBlackList.contains(mainUseCase.getCurrentUserId())) {
             view.logout()
         }
     }
 
     fun inviteUser() = scope.launch {
-        view.share(userRepository.getHouseholdIdForUser())
+        view.share(mainUseCase.getHouseholdIdForUser())
     }
 
     fun buildInviteLink(householdId: String) {
