@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CategoryListPresenter @Inject constructor(
-        val view: CategoryListView,
-        val categoryInteractor: CategoryUseCase
+        private val view: CategoryListView,
+        private val categoryUseCase: CategoryUseCase
 ) : BaseResponse(), DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
@@ -26,19 +26,19 @@ class CategoryListPresenter @Inject constructor(
     }
 
     fun listenToCategories() = scope.launch {
-        categoryInteractor.listenToCategoriesForHousehold(this@CategoryListPresenter)
+        categoryUseCase.listenToCategoriesForHousehold(this@CategoryListPresenter)
     }
 
     fun detachCategoryListener() {
-        categoryInteractor.detachCategoryListener()
+        categoryUseCase.detachCategoryListener()
     }
 
     fun deleteCategory(agendaEventCategory: Category) = scope.launch {
-        categoryInteractor.deleteCategory(agendaEventCategory)
+        categoryUseCase.deleteCategory(agendaEventCategory)
     }
 
     fun generateCategories() = scope.launch {
-        categoryInteractor.setupCategoriesForHousehold()
+        categoryUseCase.setupCategoriesForHousehold()
     }
 
     override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {

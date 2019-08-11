@@ -8,8 +8,8 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.repository.BaseResponse
-import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.data.utils.Constants
+import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.domain.utils.isTimeStampInPast
 import com.timgortworst.roomy.ui.features.event.view.EventListView
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class EventListPresenter @Inject constructor(
         private val view: EventListView,
-        private val eventListInteractor: EventUseCase
+        private val eventUseCase: EventUseCase
 ) : BaseResponse(), DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
@@ -31,20 +31,20 @@ class EventListPresenter @Inject constructor(
     }
 
     fun detachEventListener() {
-        eventListInteractor.detachEventListener()
+        eventUseCase.detachEventListener()
     }
 
     fun listenToEvents() = scope.launch {
-        eventListInteractor.listenToEvents(this@EventListPresenter)
+        eventUseCase.listenToEvents(this@EventListPresenter)
     }
 
     fun filterMe(filter: Filter) {
-        filter.filter(eventListInteractor.getCurrentUserId())
+        filter.filter(eventUseCase.getCurrentUserId())
     }
 
     fun markEventAsCompleted(event: Event) = scope.launch {
         if (event.eventMetaData.repeatInterval == EventMetaData.RepeatingInterval.SINGLE_EVENT) {
-            eventListInteractor.deleteEvent(event.eventId)
+            eventUseCase.deleteEvent(event.eventId)
             return@launch
         }
 
@@ -77,7 +77,7 @@ class EventListPresenter @Inject constructor(
         event.eventMetaData = eventMetaData
 
         // reset done to false
-        eventListInteractor.updateEvent(event.eventId, eventMetaData = eventMetaData)
+        eventUseCase.updateEvent(event.eventId, eventMetaData = eventMetaData)
     }
 
     fun setNotificationReminder(workRequestTag: String,
@@ -92,7 +92,7 @@ class EventListPresenter @Inject constructor(
     }
 
     fun deleteEvent(event: Event) = scope.launch {
-        eventListInteractor.deleteEvent(event.eventId)
+        eventUseCase.deleteEvent(event.eventId)
         view.removePendingNotificationReminder(event.eventId)
     }
 

@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class SetupPresenter @Inject constructor(
         private val view: SetupView,
-        private val setupInteractor: SetupUseCase
+        private val setupUseCase: SetupUseCase
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -26,29 +26,29 @@ class SetupPresenter @Inject constructor(
     }
 
     fun setupHousehold(referredHouseholdId: String) = scope.launch {
-        setupInteractor.createUser()
+        setupUseCase.createUser()
 
         // user has accepted the invite
         if (referredHouseholdId.isNotBlank()) {
             when {
-                setupInteractor.userBlackListedForHousehold(referredHouseholdId) -> {
+                setupUseCase.userBlackListedForHousehold(referredHouseholdId) -> {
                     view.presentUserIsBannedDialog()
                 }
-                setupInteractor.isHouseholdFull(referredHouseholdId) -> {
+                setupUseCase.isHouseholdFull(referredHouseholdId) -> {
                     view.presentHouseholdFullDialog()
                 }
-                setupInteractor.isIdSimilarToActiveId(referredHouseholdId) -> {
+                setupUseCase.isIdSimilarToActiveId(referredHouseholdId) -> {
                     view.presentAlreadyInHouseholdDialog()
                 }
-                setupInteractor.getHouseholdIdForUser().isNotBlank() -> {
+                setupUseCase.getHouseholdIdForUser().isNotBlank() -> {
                     view.presentHouseholdOverwriteDialog()
                 }
                 else -> changeCurrentUserHousehold(referredHouseholdId)
             }
         } else {
-            setupInteractor.initializeHousehold()?.let {
+            setupUseCase.initializeHousehold()?.let {
                 // update household id for user remote
-                setupInteractor.switchHousehold(
+                setupUseCase.switchHousehold(
                         householdId = it,
                         role = Role.ADMIN.name
                 )
@@ -61,15 +61,15 @@ class SetupPresenter @Inject constructor(
     }
 
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
-        val oldHouseholdId = setupInteractor.getHouseholdIdForUser()
+        val oldHouseholdId = setupUseCase.getHouseholdIdForUser()
 
-        setupInteractor.switchHousehold(
+        setupUseCase.switchHousehold(
                 householdId = newHouseholdId,
                 role = Role.NORMAL.name
         )
-        val userList = setupInteractor.getUserListForHousehold(setupInteractor.getHouseholdIdForUser())
+        val userList = setupUseCase.getUserListForHousehold(setupUseCase.getHouseholdIdForUser())
         if (userList?.isEmpty() == true) {
-            setupInteractor.deleteHousehold(oldHouseholdId)
+            setupUseCase.deleteHousehold(oldHouseholdId)
         }
         view.goToMainActivity()
     }

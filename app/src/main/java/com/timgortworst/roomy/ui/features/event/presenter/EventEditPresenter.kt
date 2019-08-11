@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class EventEditPresenter @Inject constructor(
         private val view: EventEditView,
-        private val eventInteractor: EventUseCase
+        private val eventUseCase: EventUseCase
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -34,20 +34,20 @@ class EventEditPresenter @Inject constructor(
             eventMetaData: EventMetaData
     ) = scope.launch {
         if (!eventId.isNullOrEmpty()) {
-            eventInteractor.updateEvent(eventId, eventMetaData, category, user)
+            eventUseCase.updateEvent(eventId, eventMetaData, category, user)
         } else {
-            val householdId = eventInteractor.getHouseholdIdForUser()
-            eventInteractor.createEvent(eventMetaData, category, user, householdId)
+            val householdId = eventUseCase.getHouseholdIdForUser()
+            eventUseCase.createEvent(eventMetaData, category, user, householdId)
         }
     }
 
     fun getUsers() = scope.launch {
-        val userList = eventInteractor.getUserListForCurrentHousehold()
+        val userList = eventUseCase.getUserListForCurrentHousehold()
         view.presentUserList(userList?.toMutableList() ?: mutableListOf())
     }
 
     fun getCategories() = scope.launch {
-        val categories = eventInteractor.getCategories()
+        val categories = eventUseCase.getCategories()
         view.presentCategoryList(categories.toMutableList())
     }
 
