@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain
+package com.timgortworst.roomy.domain.usecase
 
 import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.EventMetaData
@@ -9,7 +9,7 @@ import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.ui.features.event.presenter.EventListPresenter
 import javax.inject.Inject
 
-class EventInteractor
+class EventUseCase
 @Inject
 constructor(private val eventRepository: EventRepository,
             private val userRepository: UserRepository,

@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.*;
 
-public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, OnActivityTouchListener {
+public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
     private static final String TAG = "RecyclerTouchListener";
     private final Handler handler = new Handler();
     private Activity act;
@@ -201,9 +201,6 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
         fgViewID = foregroundID;
         bgViewID = backgroundID;
         this.mBgClickListener = listener;
-
-        if (act instanceof RecyclerTouchListenerHelper)
-            ((RecyclerTouchListenerHelper) act).setOnActivityTouchListener(this);
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         act.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -842,17 +839,6 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
         return false;
     }
 
-    /**
-     * Gets coordinates from Activity and closes any
-     * swiped rows if touch happens outside the recycler view
-     */
-    @Override
-    public void getTouchCoordinates(MotionEvent ev) {
-        int y = (int) ev.getRawY();
-        if (swipeable && bgVisible && ev.getActionMasked() == MotionEvent.ACTION_DOWN
-                && y < heightOutsideRView) closeVisibleBG(null);
-    }
-
     private boolean shouldIgnoreAction(int touchedPosition) {
         return rView == null || ignoredViewTypes.contains(rView.getAdapter().getItemViewType(touchedPosition));
     }
@@ -873,10 +859,6 @@ public class RecyclerTouchListener implements RecyclerView.OnItemTouchListener, 
 
     public interface OnSwipeOptionsClickListener {
         void onSwipeOptionClicked(int viewID, int position);
-    }
-
-    public interface RecyclerTouchListenerHelper {
-        void setOnActivityTouchListener(OnActivityTouchListener listener);
     }
 
     public interface OnSwipeListener {

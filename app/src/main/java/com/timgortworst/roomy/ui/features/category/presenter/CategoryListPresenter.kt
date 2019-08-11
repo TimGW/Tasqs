@@ -6,7 +6,7 @@ import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.repository.BaseResponse
-import com.timgortworst.roomy.domain.CategoryInteractor
+import com.timgortworst.roomy.domain.usecase.CategoryUseCase
 import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.category.view.CategoryListView
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class CategoryListPresenter @Inject constructor(
         val view: CategoryListView,
-        val categoryInteractor: CategoryInteractor
+        val categoryInteractor: CategoryUseCase
 ) : BaseResponse(), DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 

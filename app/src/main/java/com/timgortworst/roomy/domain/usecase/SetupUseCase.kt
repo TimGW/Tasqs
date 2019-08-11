@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain
+package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.data.model.Household
@@ -9,7 +9,7 @@ import com.timgortworst.roomy.data.repository.UserRepository
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class SetupInteractor
+class SetupUseCase
 @Inject
 constructor(private val householdRepository: HouseholdRepository,
             private val userRepository: UserRepository,

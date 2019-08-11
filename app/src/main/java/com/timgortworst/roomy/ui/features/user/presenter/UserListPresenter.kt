@@ -7,7 +7,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Role
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.repository.BaseResponse
-import com.timgortworst.roomy.domain.UserListInteractor
+import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.user.view.UserListView
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class UserListPresenter @Inject constructor(
         private val view: UserListView,
-        private val userListInteractor: UserListInteractor
+        private val userListInteractor: UserUseCase
 ) : BaseResponse(), DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 

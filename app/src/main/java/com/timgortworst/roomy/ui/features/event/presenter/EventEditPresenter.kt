@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
-import com.timgortworst.roomy.domain.EventInteractor
+import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.event.view.EventEditView
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class EventEditPresenter @Inject constructor(
         private val view: EventEditView,
-        private val eventInteractor: EventInteractor
+        private val eventInteractor: EventUseCase
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)

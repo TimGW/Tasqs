@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain
+package com.timgortworst.roomy.domain.usecase
 
 import com.timgortworst.roomy.data.model.Household
 import com.timgortworst.roomy.data.model.User
@@ -10,7 +10,7 @@ import com.timgortworst.roomy.ui.features.user.presenter.UserListPresenter
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class UserListInteractor
+class UserUseCase
 @Inject
 constructor(private val householdRepository: HouseholdRepository,
             private val userRepository: UserRepository,

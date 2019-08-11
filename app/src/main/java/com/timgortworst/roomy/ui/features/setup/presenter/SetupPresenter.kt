@@ -4,7 +4,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Role
-import com.timgortworst.roomy.domain.SetupInteractor
+import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.setup.view.SetupView
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class SetupPresenter @Inject constructor(
         private val view: SetupView,
-        private val setupInteractor: SetupInteractor
+        private val setupInteractor: SetupUseCase
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)

@@ -3,7 +3,7 @@ package com.timgortworst.roomy.ui.features.splash.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.auth.FirebaseAuth
-import com.timgortworst.roomy.domain.SetupInteractor
+import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.splash.ui.SplashView
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class SplashPresenter @Inject constructor(
         private val view: SplashView,
-        private val setupInteractor: SetupInteractor
+        private val setupInteractor: SetupUseCase
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)

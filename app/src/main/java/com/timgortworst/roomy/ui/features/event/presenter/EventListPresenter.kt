@@ -8,7 +8,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.repository.BaseResponse
-import com.timgortworst.roomy.domain.EventInteractor
+import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.domain.utils.Constants
 import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.domain.utils.isTimeStampInPast
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class EventListPresenter @Inject constructor(
         private val view: EventListView,
-        private val eventListInteractor: EventInteractor
+        private val eventListInteractor: EventUseCase
 ) : BaseResponse(), DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
