@@ -1,20 +1,20 @@
 package com.timgortworst.roomy.data.di
 
 
-import com.timgortworst.roomy.ui.base.di.CategoryEditModule
-import com.timgortworst.roomy.ui.features.category.view.CategoryEditActivity
-import com.timgortworst.roomy.ui.base.di.EventEditModule
-import com.timgortworst.roomy.ui.features.event.view.EventEditActivity
-import com.timgortworst.roomy.ui.base.di.GoogleSignInModule
-import com.timgortworst.roomy.ui.features.googlesignin.view.GoogleSignInActivity
-import com.timgortworst.roomy.ui.base.di.MainModule
-import com.timgortworst.roomy.ui.features.main.view.MainActivity
-import com.timgortworst.roomy.ui.base.di.SettingsModule
-import com.timgortworst.roomy.ui.features.settings.view.SettingsActivity
-import com.timgortworst.roomy.ui.base.di.SetupModule
-import com.timgortworst.roomy.ui.features.setup.view.SetupActivity
-import com.timgortworst.roomy.ui.base.di.SplashModule
-import com.timgortworst.roomy.ui.features.splash.view.SplashActivity
+import com.timgortworst.roomy.presentation.base.di.CategoryEditModule
+import com.timgortworst.roomy.presentation.features.category.view.CategoryEditActivity
+import com.timgortworst.roomy.presentation.base.di.EventEditModule
+import com.timgortworst.roomy.presentation.features.event.view.EventEditActivity
+import com.timgortworst.roomy.presentation.base.di.GoogleSignInModule
+import com.timgortworst.roomy.presentation.features.googlesignin.view.GoogleSignInActivity
+import com.timgortworst.roomy.presentation.base.di.MainModule
+import com.timgortworst.roomy.presentation.features.main.view.MainActivity
+import com.timgortworst.roomy.presentation.base.di.SettingsModule
+import com.timgortworst.roomy.presentation.features.settings.view.SettingsActivity
+import com.timgortworst.roomy.presentation.base.di.SetupModule
+import com.timgortworst.roomy.presentation.features.setup.view.SetupActivity
+import com.timgortworst.roomy.presentation.base.di.SplashModule
+import com.timgortworst.roomy.presentation.features.splash.view.SplashActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

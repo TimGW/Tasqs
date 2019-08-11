@@ -6,7 +6,7 @@ import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.repository.CategoryRepository
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.ui.features.event.presenter.EventListPresenter
+import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
 import javax.inject.Inject
 
 class EventUseCase

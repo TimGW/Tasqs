@@ -4,7 +4,7 @@
     package="com.timgortworst.roomy">
 
     <application
-        android:name=".ui.base.RoomyApp"
+        android:name=".presentation.base.RoomyApp"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,16 +13,16 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.features.settings.view.SettingsActivity"
+            android:name=".presentation.features.settings.view.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ui.features.main.view.MainActivity">
+            android:parentActivityName=".presentation.features.main.view.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.features.main.view.MainActivity" />
+                android:value=".presentation.features.main.view.MainActivity" />
         </activity>
         <!-- Main activities -->
         <activity
-            android:name=".ui.features.splash.view.SplashActivity"
+            android:name=".presentation.features.splash.view.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
@@ -43,26 +43,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.features.main.view.MainActivity"
+            android:name=".presentation.features.main.view.MainActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".ui.base.view.BaseActivity" />
+        <activity android:name=".presentation.base.view.BaseActivity" />
         <activity
-            android:name=".ui.features.googlesignin.view.GoogleSignInActivity"
+            android:name=".presentation.features.googlesignin.view.GoogleSignInActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.features.category.view.CategoryEditActivity"
+            android:name=".presentation.features.category.view.CategoryEditActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".ui.features.event.view.EventEditActivity"
+            android:name=".presentation.features.event.view.EventEditActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".ui.features.setup.view.SetupActivity"
+            android:name=".presentation.features.setup.view.SetupActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.features.settings.view.HtmlTextActivity"
+            android:name=".presentation.features.settings.view.HtmlTextActivity"
             android:label=""
-            android:parentActivityName=".ui.features.settings.view.SettingsActivity" />
+            android:parentActivityName=".presentation.features.settings.view.SettingsActivity" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

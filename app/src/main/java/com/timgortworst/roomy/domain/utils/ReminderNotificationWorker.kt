@@ -11,7 +11,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.ui.features.main.view.MainActivity
+import com.timgortworst.roomy.presentation.features.main.view.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
 

@@ -3,7 +3,7 @@ package com.timgortworst.roomy.domain.usecase
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
-import com.timgortworst.roomy.ui.features.main.presenter.MainPresenter
+import com.timgortworst.roomy.presentation.features.main.presenter.MainPresenter
 import javax.inject.Inject
 
 class MainUseCase
