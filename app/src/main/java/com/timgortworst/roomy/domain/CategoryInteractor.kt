@@ -1,10 +1,10 @@
 package com.timgortworst.roomy.domain
 
-import com.timgortworst.roomy.model.Category
-import com.timgortworst.roomy.repository.CategoryRepository
-import com.timgortworst.roomy.repository.UserRepository
-import com.timgortworst.roomy.ui.category.presenter.CategoryListPresenter
-import com.timgortworst.roomy.utils.GenerateData
+import com.timgortworst.roomy.data.model.Category
+import com.timgortworst.roomy.data.repository.CategoryRepository
+import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.utils.GenerateData
+import com.timgortworst.roomy.ui.features.category.presenter.CategoryListPresenter
 import javax.inject.Inject
 
 class CategoryInteractor

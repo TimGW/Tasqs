@@ -6,7 +6,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.model.EventMetaData
+import com.timgortworst.roomy.data.model.EventMetaData
 import java.util.concurrent.TimeUnit
 
 

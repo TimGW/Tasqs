@@ -1,12 +1,12 @@
 package com.timgortworst.roomy.domain
 
-import com.timgortworst.roomy.model.Category
-import com.timgortworst.roomy.model.EventMetaData
-import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.repository.CategoryRepository
-import com.timgortworst.roomy.repository.EventRepository
-import com.timgortworst.roomy.repository.UserRepository
-import com.timgortworst.roomy.ui.event.presenter.EventListPresenter
+import com.timgortworst.roomy.data.model.Category
+import com.timgortworst.roomy.data.model.EventMetaData
+import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.data.repository.CategoryRepository
+import com.timgortworst.roomy.data.repository.EventRepository
+import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.ui.features.event.presenter.EventListPresenter
 import javax.inject.Inject
 
 class EventInteractor
