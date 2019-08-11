@@ -104,7 +104,7 @@ class EventListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return events.size
+        return filteredEvents.size
     }
 
     fun clearFilter() {
@@ -119,9 +119,10 @@ class EventListAdapter(
                 events
             } else {
                 val filteredList = mutableListOf<Event>()
-                for (event in events) {
-                    if (event.user.userId.contains(pattern)) {
-                        filteredList.add(event)
+
+                events.forEach {
+                    if (it.user.userId.contains(pattern)) {
+                        filteredList.add(it)
                     }
                 }
                 filteredList
