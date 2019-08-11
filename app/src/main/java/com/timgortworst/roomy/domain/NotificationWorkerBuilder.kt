@@ -18,9 +18,10 @@ class NotificationWorkerBuilder(private val context: Context) {
                                    userName: String,
                                    categoryName: String) {
         removePendingNotificationReminder(eventId)
+        val initialDelay = calculateInitialDelay(eventMetaData.nextEventDate)
 
         workManager.enqueue(OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
-                .setInitialDelay(calculateInitialDelay(eventMetaData.repeatStartDate), TimeUnit.MILLISECONDS)
+                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .addTag(eventId)
                 .setInputData(buildInputData(userName, categoryName))
                 .build())
@@ -32,11 +33,12 @@ class NotificationWorkerBuilder(private val context: Context) {
                                     categoryName: String) {
         removePendingNotificationReminder(eventId)
 
+        val initialDelay = calculateInitialDelay(eventMetaData.nextEventDate)
         workManager.enqueue(PeriodicWorkRequest.Builder(
                 ReminderNotificationWorker::class.java,
                 eventMetaData.repeatInterval.interval,
-                TimeUnit.SECONDS)
-                .setInitialDelay(calculateInitialDelay(eventMetaData.repeatStartDate), TimeUnit.MILLISECONDS)
+                TimeUnit.MILLISECONDS)
+                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .addTag(eventId)
                 .setInputData(buildInputData(userName, categoryName))
                 .build())

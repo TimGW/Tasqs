@@ -42,10 +42,10 @@ class EventListAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val event = filteredEvents[position]
 
-        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        val formattedDate = formatter.format(Date(event.eventMetaData.repeatStartDate))
+        val formatter = SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS", Locale.getDefault())
+        val formattedDate = formatter.format(Date(event.eventMetaData.nextEventDate))
 
-        viewHolder.dateTime.text = if (event.eventMetaData.repeatStartDate.isTimeStampInPast()) {
+        viewHolder.dateTime.text = if (event.eventMetaData.nextEventDate.isTimeStampInPast()) {
             viewHolder.dateTime.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.error))
             viewHolder.dateTime.setTypeface(null, Typeface.BOLD)
             activity.getString(R.string.overdue_occurance, formattedDate)
@@ -76,7 +76,7 @@ class EventListAdapter(
 
     fun addEvent(event: Event) {
         val newAddIndex = filteredEvents.indexOfLast {
-            it.eventMetaData.repeatStartDate <= event.eventMetaData.repeatStartDate
+            it.eventMetaData.nextEventDate <= event.eventMetaData.nextEventDate
         } + 1
         filteredEvents.add(newAddIndex, event)
         notifyItemInserted(newAddIndex)
@@ -87,7 +87,7 @@ class EventListAdapter(
         filteredEvents[fromPosition] = event
         notifyItemChanged(fromPosition)
 
-        val toPosition = filteredEvents.indexOfLast { event.eventMetaData.repeatStartDate > it.eventMetaData.repeatStartDate }
+        val toPosition = filteredEvents.indexOfLast { event.eventMetaData.nextEventDate > it.eventMetaData.nextEventDate }
 
         // update data array if item is not on first or last position
         if (toPosition != RecyclerView.NO_POSITION &&

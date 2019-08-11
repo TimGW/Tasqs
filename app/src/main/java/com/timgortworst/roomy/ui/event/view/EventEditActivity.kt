@@ -11,7 +11,6 @@ import android.widget.CompoundButton
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.NotificationWorkerBuilder
 import com.timgortworst.roomy.model.Category
 import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
@@ -20,6 +19,7 @@ import com.timgortworst.roomy.ui.BaseActivity
 import com.timgortworst.roomy.ui.event.adapter.SpinnerTaskAdapter
 import com.timgortworst.roomy.ui.event.adapter.SpinnerUserAdapter
 import com.timgortworst.roomy.ui.event.presenter.EventEditPresenter
+import com.timgortworst.roomy.utils.Constants
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_event.*
 import java.util.*
@@ -31,7 +31,12 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     private lateinit var spinnerAdapterTasks: SpinnerTaskAdapter
     private lateinit var spinnerAdapterUsers: SpinnerUserAdapter
     private lateinit var datePickerDialog: DatePickerDialog
-    private var calendar = Calendar.getInstance()
+    private var calendar = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, Constants.DEFAULT_HOUR_OF_DAY_NOTIFICATION) // default of 20:00
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
 
     @Inject
     lateinit var presenter: EventEditPresenter
@@ -61,14 +66,14 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         event = intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT)
 
         supportActionBar?.apply {
-            title = "Nieuw agenda item"
+            title = getString(R.string.new_agenda_item)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
 
         event?.let {
-            supportActionBar?.title = "Edit  ${it.eventCategory.name}"
-            agenda_item_date_input.setText(it.eventMetaData.repeatStartDate.toString())
+            supportActionBar?.title = getString(R.string.edit_event, it.eventCategory.name)
+            agenda_item_date_input.setText(it.eventMetaData.nextEventDate.toString())
         }
 
         presenter.getCategories()
@@ -117,9 +122,9 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             R.id.action_edit_done -> {
                 val eventMetaData = if (event_repeat_checkbox.isChecked) {
                     val repeatInterval = (spinner_repeat.selectedItem as EventMetaData.RepeatingInterval)
-                    EventMetaData(repeatStartDate = calendar.timeInMillis, repeatInterval = repeatInterval)
+                    EventMetaData(nextEventDate = calendar.timeInMillis, repeatInterval = repeatInterval)
                 } else {
-                    EventMetaData(repeatStartDate = calendar.timeInMillis, repeatInterval = EventMetaData.RepeatingInterval.SINGLE_EVENT)
+                    EventMetaData(nextEventDate = calendar.timeInMillis, repeatInterval = EventMetaData.RepeatingInterval.SINGLE_EVENT)
                 }
 
                 presenter.createOrUpdateEvent(
@@ -168,7 +173,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 calendar.get(Calendar.DAY_OF_MONTH)
         )
 
-        datePickerDialog.datePicker.minDate = System.currentTimeMillis()
+        datePickerDialog.datePicker.minDate = calendar.timeInMillis
         presenter.formatDate(
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -180,10 +185,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         calendar.set(Calendar.YEAR, year)
         calendar.set(Calendar.MONTH, month)
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-//        calendar.set(Calendar.HOUR_OF_DAY, 12)
-//        calendar.set(Calendar.MINUTE, 0)
-//        calendar.set(Calendar.MILLISECOND, 0)
-
         presenter.formatDate(year, month, dayOfMonth)
     }
 

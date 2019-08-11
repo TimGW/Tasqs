@@ -73,4 +73,6 @@
     <string name="cd_add_button">add button</string>
     <string name="cd_delete">delete</string>
     <string name="cd_mark_as_done">mark as done</string>
+    <string name="new_agenda_item">Nieuw agenda item</string>
+    <string name="edit_event">Edit %1$s</string>
 </resources>
