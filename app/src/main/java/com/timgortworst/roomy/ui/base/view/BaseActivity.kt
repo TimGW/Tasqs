@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.base
+package com.timgortworst.roomy.ui.base.view
 
 import android.app.ProgressDialog
 import androidx.appcompat.app.AppCompatActivity

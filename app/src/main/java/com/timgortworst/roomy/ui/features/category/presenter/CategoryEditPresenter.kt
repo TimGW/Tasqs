@@ -3,7 +3,7 @@ package com.timgortworst.roomy.ui.features.category.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.domain.usecase.CategoryUseCase
-import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
+import com.timgortworst.roomy.ui.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.category.view.CategoryEditView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

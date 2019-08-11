@@ -7,7 +7,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.repository.BaseResponse
 import com.timgortworst.roomy.domain.usecase.CategoryUseCase
-import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
+import com.timgortworst.roomy.ui.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.category.view.CategoryListView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

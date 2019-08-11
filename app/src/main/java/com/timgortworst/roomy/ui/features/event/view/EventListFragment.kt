@@ -17,7 +17,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.BottomMenuItem
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.domain.NotificationWorkerBuilder
+import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
 import com.timgortworst.roomy.domain.utils.RecyclerTouchListener
 import com.timgortworst.roomy.ui.base.customview.BottomSheetMenu
 import com.timgortworst.roomy.ui.features.event.adapter.EventListAdapter

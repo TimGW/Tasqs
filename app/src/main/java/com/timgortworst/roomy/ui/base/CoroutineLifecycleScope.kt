@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.utils
+package com.timgortworst.roomy.ui.base
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver

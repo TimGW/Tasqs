@@ -45,7 +45,7 @@
         <activity
             android:name=".ui.features.main.view.MainActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".ui.base.BaseActivity" />
+        <activity android:name=".ui.base.view.BaseActivity" />
         <activity
             android:name=".ui.features.googlesignin.view.GoogleSignInActivity"
             android:theme="@style/AppTheme.NoActionBar" />

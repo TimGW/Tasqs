@@ -2,9 +2,9 @@ package com.timgortworst.roomy.ui.features.event.view
 
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.ui.base.view.PageStateListener
+import com.timgortworst.roomy.ui.base.view.PageStateView
 
-interface EventListView : PageStateListener {
+interface EventListView : PageStateView {
     fun presentAddedEvent(agendaEvent: Event)
     fun presentEditedEvent(agendaEvent: Event)
     fun presentDeletedEvent(agendaEvent: Event)

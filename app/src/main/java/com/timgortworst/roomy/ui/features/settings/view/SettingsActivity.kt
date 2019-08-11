@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.ui.base.BaseActivity
+import com.timgortworst.roomy.ui.base.view.BaseActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector

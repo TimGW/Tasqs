@@ -9,7 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Category
-import com.timgortworst.roomy.ui.base.BaseActivity
+import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.features.category.presenter.CategoryEditPresenter
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_category.*

@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain
+package com.timgortworst.roomy.domain.utils
 
 import android.content.Context
 import androidx.work.Data
