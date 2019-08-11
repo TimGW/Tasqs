@@ -2,6 +2,7 @@ package com.timgortworst.roomy.ui.features.main.view
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -160,31 +161,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     }
 
     override fun share(householdId: String) {
-        val linkUri = InviteLink.Builder()
-                .householdId(householdId)
-                .build()
-
-        FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLongLink(linkUri)
-                .buildShortDynamicLink()
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        val shortLink = task.result?.shortLink
-                        val msg = "$shortLink"
-                        val sendIntent = Intent()
-                        sendIntent.action = Intent.ACTION_SEND
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, msg)
-                        sendIntent.type = "text/plain"
-
-                        if (sendIntent.resolveActivity(packageManager) != null)
-                            startActivity(Intent.createChooser(sendIntent, getString(R.string.invite_title)))
-                        else
-                            startActivity(sendIntent)
-                    } else {
-                        Log.e(TAG, task.exception?.message!!)
-                    }
-                    hideProgressDialog()
-                }
+        presenter.buildInviteLink(householdId)
     }
 
     private fun setupBroadcastReceivers() {
@@ -215,6 +192,29 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         adView?.loadAd(adRequest)
     }
 
+    override fun presentShareLinkUri(linkUri: Uri) {
+        FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setLongLink(linkUri)
+                .buildShortDynamicLink()
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        val shortLink = task.result?.shortLink
+                        val msg = "$shortLink"
+                        val sendIntent = Intent()
+                        sendIntent.action = Intent.ACTION_SEND
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, msg)
+                        sendIntent.type = "text/plain"
+
+                        if (sendIntent.resolveActivity(packageManager) != null)
+                            startActivity(Intent.createChooser(sendIntent, getString(R.string.invite_title)))
+                        else
+                            startActivity(sendIntent)
+                    } else {
+                        Log.e(TAG, task.exception?.message!!)
+                    }
+                    hideProgressDialog()
+                }
+    }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
         return dispatchingAndroidInjector

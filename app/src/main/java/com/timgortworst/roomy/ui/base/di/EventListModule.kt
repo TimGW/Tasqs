@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.features.event.module
+package com.timgortworst.roomy.ui.base.di
 
 import com.timgortworst.roomy.ui.features.event.view.EventListFragment
 import com.timgortworst.roomy.ui.features.event.view.EventListView

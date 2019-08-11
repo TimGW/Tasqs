@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.features.settings.module
+package com.timgortworst.roomy.ui.base.di
 
 import com.timgortworst.roomy.ui.features.settings.view.SettingsFragment
 import dagger.Module

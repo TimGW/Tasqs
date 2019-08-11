@@ -7,7 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.utils.Constants
+import com.timgortworst.roomy.data.utils.Constants
 import com.timgortworst.roomy.ui.features.googlesignin.view.GoogleSignInActivity
 import com.timgortworst.roomy.ui.features.main.view.MainActivity
 import com.timgortworst.roomy.ui.features.setup.view.SetupActivity

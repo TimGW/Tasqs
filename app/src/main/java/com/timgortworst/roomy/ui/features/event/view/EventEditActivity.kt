@@ -15,7 +15,7 @@ import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
-import com.timgortworst.roomy.domain.utils.Constants
+import com.timgortworst.roomy.data.utils.Constants
 import com.timgortworst.roomy.ui.base.BaseActivity
 import com.timgortworst.roomy.ui.features.event.adapter.SpinnerTaskAdapter
 import com.timgortworst.roomy.ui.features.event.adapter.SpinnerUserAdapter

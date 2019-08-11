@@ -9,7 +9,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.data.model.Household
-import com.timgortworst.roomy.domain.utils.Constants
+import com.timgortworst.roomy.data.utils.Constants
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton

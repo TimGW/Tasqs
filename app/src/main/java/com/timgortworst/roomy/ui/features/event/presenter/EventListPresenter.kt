@@ -9,7 +9,7 @@ import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.repository.BaseResponse
 import com.timgortworst.roomy.domain.usecase.EventUseCase
-import com.timgortworst.roomy.domain.utils.Constants
+import com.timgortworst.roomy.data.utils.Constants
 import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.domain.utils.isTimeStampInPast
 import com.timgortworst.roomy.ui.features.event.view.EventListView

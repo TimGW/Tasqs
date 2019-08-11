@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.features.setup.module
+package com.timgortworst.roomy.ui.base.di
 
 import com.timgortworst.roomy.ui.features.setup.view.SetupActivity
 import com.timgortworst.roomy.ui.features.setup.view.SetupView

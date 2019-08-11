@@ -3,7 +3,7 @@ package com.timgortworst.roomy.ui.features.main.view
 import android.net.Uri
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import com.timgortworst.roomy.domain.utils.Constants
+import com.timgortworst.roomy.data.utils.Constants
 
 class InviteLink private constructor(val householdId: String) {
 
