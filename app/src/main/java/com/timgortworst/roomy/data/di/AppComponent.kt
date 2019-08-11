@@ -1,7 +1,7 @@
 package com.timgortworst.roomy.data.di
 
 import android.content.Context
-import com.timgortworst.roomy.ui.base.RoomyApp
+import com.timgortworst.roomy.presentation.base.RoomyApp
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule

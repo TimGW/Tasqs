@@ -6,7 +6,7 @@ import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.data.utils.Constants
-import com.timgortworst.roomy.ui.features.user.presenter.UserListPresenter
+import com.timgortworst.roomy.presentation.features.user.presenter.UserListPresenter
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 

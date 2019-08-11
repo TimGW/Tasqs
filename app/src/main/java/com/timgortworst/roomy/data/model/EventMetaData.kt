@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Parcelable
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.ui.base.RoomyApp
+import com.timgortworst.roomy.presentation.base.RoomyApp
 import kotlinx.android.parcel.Parcelize
 
 

@@ -4,7 +4,7 @@ import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.repository.CategoryRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.data.utils.GenerateData
-import com.timgortworst.roomy.ui.features.category.presenter.CategoryListPresenter
+import com.timgortworst.roomy.presentation.features.category.presenter.CategoryListPresenter
 import javax.inject.Inject
 
 class CategoryUseCase

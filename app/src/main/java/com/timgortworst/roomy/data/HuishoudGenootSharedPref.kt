@@ -3,7 +3,7 @@ package com.timgortworst.roomy.data
 import androidx.preference.PreferenceManager
 import com.timgortworst.roomy.data.utils.Constants.SHARED_PREF_DARK_MODE
 import com.timgortworst.roomy.data.utils.Constants.SHARED_PREF_FIRST_LAUNCH
-import com.timgortworst.roomy.ui.base.RoomyApp
+import com.timgortworst.roomy.presentation.base.RoomyApp
 import javax.inject.Inject
 import javax.inject.Singleton
 
