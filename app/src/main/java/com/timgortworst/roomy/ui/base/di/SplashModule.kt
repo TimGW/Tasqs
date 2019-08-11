@@ -1,7 +1,7 @@
 package com.timgortworst.roomy.ui.base.di
 
-import com.timgortworst.roomy.ui.features.splash.ui.SplashActivity
-import com.timgortworst.roomy.ui.features.splash.ui.SplashView
+import com.timgortworst.roomy.ui.features.splash.view.SplashActivity
+import com.timgortworst.roomy.ui.features.splash.view.SplashView
 import dagger.Binds
 import dagger.Module
 

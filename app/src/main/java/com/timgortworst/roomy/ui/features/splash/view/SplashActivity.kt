@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.features.splash.ui
+package com.timgortworst.roomy.ui.features.splash.view
 
 import android.app.Activity
 import android.content.Context
