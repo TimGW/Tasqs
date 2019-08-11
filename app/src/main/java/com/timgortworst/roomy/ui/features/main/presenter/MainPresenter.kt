@@ -6,8 +6,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Household
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.domain.usecase.MainUseCase
-import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
-import com.timgortworst.roomy.ui.features.main.view.InviteLink
+import com.timgortworst.roomy.ui.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.main.view.MainView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,9 +44,7 @@ class MainPresenter
     }
 
     fun buildInviteLink(householdId: String) {
-        val linkUri = InviteLink.Builder()
-                .householdId(householdId)
-                .build()
+        val linkUri = mainUseCase.buildInviteLink(householdId)
         view.presentShareLinkUri(linkUri)
     }
 

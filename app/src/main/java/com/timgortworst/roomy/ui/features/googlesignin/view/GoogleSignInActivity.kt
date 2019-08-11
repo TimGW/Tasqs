@@ -10,7 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
-import com.timgortworst.roomy.ui.base.BaseActivity
+import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.features.googlesignin.presenter.GoogleSignInPresenter
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_login.*

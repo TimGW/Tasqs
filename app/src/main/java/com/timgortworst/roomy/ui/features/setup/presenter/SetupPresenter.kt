@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Role
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
-import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
+import com.timgortworst.roomy.ui.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.setup.view.SetupView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

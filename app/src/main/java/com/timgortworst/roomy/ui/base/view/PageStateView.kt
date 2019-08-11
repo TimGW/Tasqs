@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.ui.base.view
 
-interface PageStateListener {
+interface PageStateView {
     fun setErrorView(isVisible: Boolean, title: Int? = null, text: Int? = null)
     fun setLoadingView(isLoading: Boolean)
 }

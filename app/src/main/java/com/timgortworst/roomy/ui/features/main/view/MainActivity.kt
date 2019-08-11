@@ -13,7 +13,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.ui.base.BaseActivity
+import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.features.category.view.CategoryEditActivity
 import com.timgortworst.roomy.ui.features.category.view.CategoryListFragment
 import com.timgortworst.roomy.ui.features.event.view.EventEditActivity

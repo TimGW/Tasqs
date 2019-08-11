@@ -16,7 +16,7 @@ import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.utils.Constants
-import com.timgortworst.roomy.ui.base.BaseActivity
+import com.timgortworst.roomy.ui.base.view.BaseActivity
 import com.timgortworst.roomy.ui.features.event.adapter.SpinnerTaskAdapter
 import com.timgortworst.roomy.ui.features.event.adapter.SpinnerUserAdapter
 import com.timgortworst.roomy.ui.features.event.presenter.EventEditPresenter

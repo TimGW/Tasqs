@@ -2,6 +2,7 @@ package com.timgortworst.roomy.domain.usecase
 
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
 import com.timgortworst.roomy.ui.features.main.presenter.MainPresenter
 import javax.inject.Inject
 
@@ -23,4 +24,6 @@ constructor(private val householdRepository: HouseholdRepository,
     fun getCurrentUserId() = userRepository.getCurrentUserId()
 
     suspend fun getHouseholdIdForUser() = userRepository.getHouseholdIdForUser()
+
+    fun buildInviteLink(householdId: String) = InviteLinkBuilder.Builder().householdId(householdId).build()
 }

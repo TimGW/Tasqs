@@ -8,7 +8,7 @@ import com.timgortworst.roomy.data.model.Role
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.repository.BaseResponse
 import com.timgortworst.roomy.domain.usecase.UserUseCase
-import com.timgortworst.roomy.domain.utils.CoroutineLifecycleScope
+import com.timgortworst.roomy.ui.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.ui.features.user.view.UserListView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

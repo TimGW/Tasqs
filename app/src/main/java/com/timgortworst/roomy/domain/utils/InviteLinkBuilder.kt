@@ -1,11 +1,11 @@
-package com.timgortworst.roomy.ui.features.main.view
+package com.timgortworst.roomy.domain.utils
 
 import android.net.Uri
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.data.utils.Constants
 
-class InviteLink private constructor(val householdId: String) {
+class InviteLinkBuilder private constructor(val householdId: String) {
 
     class Builder {
         private lateinit var householdId: String
