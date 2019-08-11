@@ -1,11 +1,11 @@
 package com.timgortworst.roomy.domain
 
 import com.google.firebase.auth.FirebaseAuth
-import com.timgortworst.roomy.model.Household
-import com.timgortworst.roomy.model.User
-import com.timgortworst.roomy.repository.EventRepository
-import com.timgortworst.roomy.repository.HouseholdRepository
-import com.timgortworst.roomy.repository.UserRepository
+import com.timgortworst.roomy.data.model.Household
+import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.data.repository.EventRepository
+import com.timgortworst.roomy.data.repository.HouseholdRepository
+import com.timgortworst.roomy.data.repository.UserRepository
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
