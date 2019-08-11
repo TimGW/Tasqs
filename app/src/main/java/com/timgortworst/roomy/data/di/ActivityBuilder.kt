@@ -1,19 +1,19 @@
 package com.timgortworst.roomy.data.di
 
 
-import com.timgortworst.roomy.ui.features.category.module.CategoryEditModule
+import com.timgortworst.roomy.ui.base.di.CategoryEditModule
 import com.timgortworst.roomy.ui.features.category.view.CategoryEditActivity
-import com.timgortworst.roomy.ui.features.event.module.EventEditModule
+import com.timgortworst.roomy.ui.base.di.EventEditModule
 import com.timgortworst.roomy.ui.features.event.view.EventEditActivity
-import com.timgortworst.roomy.ui.features.googlesignin.module.GoogleSignInModule
+import com.timgortworst.roomy.ui.base.di.GoogleSignInModule
 import com.timgortworst.roomy.ui.features.googlesignin.view.GoogleSignInActivity
-import com.timgortworst.roomy.ui.features.main.module.MainModule
+import com.timgortworst.roomy.ui.base.di.MainModule
 import com.timgortworst.roomy.ui.features.main.view.MainActivity
-import com.timgortworst.roomy.ui.features.settings.module.SettingsModule
+import com.timgortworst.roomy.ui.base.di.SettingsModule
 import com.timgortworst.roomy.ui.features.settings.view.SettingsActivity
-import com.timgortworst.roomy.ui.features.setup.module.SetupModule
+import com.timgortworst.roomy.ui.base.di.SetupModule
 import com.timgortworst.roomy.ui.features.setup.view.SetupActivity
-import com.timgortworst.roomy.ui.features.splash.module.SplashModule
+import com.timgortworst.roomy.ui.base.di.SplashModule
 import com.timgortworst.roomy.ui.features.splash.ui.SplashActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

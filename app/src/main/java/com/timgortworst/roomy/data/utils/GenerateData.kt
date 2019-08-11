@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.utils
+package com.timgortworst.roomy.data.utils
 
 import com.timgortworst.roomy.data.model.Category
 

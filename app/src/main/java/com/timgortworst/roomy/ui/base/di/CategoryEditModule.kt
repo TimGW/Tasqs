@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.ui.features.category.module
+package com.timgortworst.roomy.ui.base.di
 
 import com.timgortworst.roomy.ui.features.category.view.CategoryEditActivity
 import com.timgortworst.roomy.ui.features.category.view.CategoryEditView

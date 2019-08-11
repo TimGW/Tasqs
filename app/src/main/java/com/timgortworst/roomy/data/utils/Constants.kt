@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.utils
+package com.timgortworst.roomy.data.utils
 
 object Constants {
     const val SHARED_PREF_FIRST_LAUNCH = "SHARED_PREF_FIRST_LAUNCH"

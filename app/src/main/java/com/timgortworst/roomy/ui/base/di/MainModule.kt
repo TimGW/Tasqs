@@ -1,12 +1,9 @@
-package com.timgortworst.roomy.ui.features.main.module
+package com.timgortworst.roomy.ui.base.di
 
-import com.timgortworst.roomy.ui.features.category.module.CategoryListModule
 import com.timgortworst.roomy.ui.features.category.view.CategoryListFragment
-import com.timgortworst.roomy.ui.features.event.module.EventListModule
 import com.timgortworst.roomy.ui.features.event.view.EventListFragment
 import com.timgortworst.roomy.ui.features.main.view.MainActivity
 import com.timgortworst.roomy.ui.features.main.view.MainView
-import com.timgortworst.roomy.ui.features.user.module.UserListModule
 import com.timgortworst.roomy.ui.features.user.view.UserListFragment
 import dagger.Binds
 import dagger.Module
