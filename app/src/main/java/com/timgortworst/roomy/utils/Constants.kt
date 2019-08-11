@@ -25,11 +25,12 @@ object Constants {
     const val EVENT_COLLECTION_REF = "events"
     const val EVENT_CATEGORY_REF = "eventCategory"
     const val EVENT_INTERVAL_REF = "repeatInterval"
-    const val EVENT_START_DATE_REF = "repeatStartDate"
+    const val EVENT_START_DATE_REF = "nextEventDate"
     const val EVENT_USER_REF = "user"
     const val EVENT_META_DATA_REF = "eventMetaData"
     const val EVENT_HOUSEHOLD_ID_REF = "householdId"
 
     const val LOADING_SPINNER_DELAY = 200L
+    const val DEFAULT_HOUR_OF_DAY_NOTIFICATION = 20
 
 }

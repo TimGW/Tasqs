@@ -10,10 +10,12 @@ import com.timgortworst.roomy.model.Event
 import com.timgortworst.roomy.model.EventMetaData
 import com.timgortworst.roomy.repository.BaseResponse
 import com.timgortworst.roomy.ui.event.view.EventListView
+import com.timgortworst.roomy.utils.Constants
 import com.timgortworst.roomy.utils.CoroutineLifecycleScope
 import com.timgortworst.roomy.utils.isTimeStampInPast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 class EventListPresenter @Inject constructor(
@@ -33,7 +35,7 @@ class EventListPresenter @Inject constructor(
     }
 
     fun listenToEvents() = scope.launch {
-       eventListInteractor.listenToEvents(this@EventListPresenter)
+        eventListInteractor.listenToEvents(this@EventListPresenter)
     }
 
     fun filterMe(filter: Filter) {
@@ -46,21 +48,29 @@ class EventListPresenter @Inject constructor(
             return@launch
         }
 
-        val nextOccurance = calcNextOccurance(event)
-        updateEventMetaData(event, nextOccurance)
+        updateEventMetaData(event, calcNextOccurance(event.eventMetaData))
     }
 
-    private fun calcNextOccurance(event: Event): Long {
-        return if (event.eventMetaData.repeatStartDate.isTimeStampInPast()) {
-            System.currentTimeMillis() + (event.eventMetaData.repeatInterval.interval * 1000)
+    private fun calcNextOccurance(eventMetaData: EventMetaData): Long {
+        val cal = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, Constants.DEFAULT_HOUR_OF_DAY_NOTIFICATION) // default of 20:00
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        return if (eventMetaData.nextEventDate.isTimeStampInPast()) {
+            // if timestamp is in past, update to the next interval measured from today
+            cal.timeInMillis + (eventMetaData.repeatInterval.interval)
         } else {
-            event.eventMetaData.repeatStartDate + (event.eventMetaData.repeatInterval.interval * 1000)
+            // if timestamp is in the future, update to the next interval measured from the previous
+            eventMetaData.nextEventDate + (eventMetaData.repeatInterval.interval)
         }
     }
 
     private suspend fun updateEventMetaData(event: Event, nextOccurrence: Long) {
         val eventMetaData = EventMetaData(
-                repeatStartDate = nextOccurrence,
+                nextEventDate = nextOccurrence,
                 repeatInterval = event.eventMetaData.repeatInterval
         )
 

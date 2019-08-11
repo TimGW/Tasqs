@@ -87,7 +87,7 @@ class EventRepository @Inject constructor() {
         val document = eventCollectionRef.document(eventId)
 
         val eventMetaDataMap = mutableMapOf<String, Any>()
-        if (eventMetaData != null) eventMetaDataMap[EVENT_START_DATE_REF] = eventMetaData.repeatStartDate
+        if (eventMetaData != null) eventMetaDataMap[EVENT_START_DATE_REF] = eventMetaData.nextEventDate
         if (eventMetaData != null) eventMetaDataMap[EVENT_INTERVAL_REF] = eventMetaData.repeatInterval.name
 
         val eventFieldMap = mutableMapOf<String, Any>()

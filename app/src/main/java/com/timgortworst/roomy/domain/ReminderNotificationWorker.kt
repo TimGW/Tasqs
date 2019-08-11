@@ -2,13 +2,16 @@ package com.timgortworst.roomy.domain
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.ui.main.view.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,16 +29,25 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
 
     private fun triggerNotification(notificationTitle: String, notificationMessage: String) {
         createNotificationChannelIfRequired()
+        val pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                Intent(context, MainActivity::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT)
 
         with(NotificationManagerCompat.from(context)) {
-            notify(createNotificationID(), buildNotification(notificationTitle, notificationMessage).build())
+            notify(createNotificationID(), buildNotification(notificationTitle, notificationMessage, pendingIntent).build())
         }
     }
 
-    private fun buildNotification(notificationTitle: String, notificationMessage: String) = NotificationCompat.Builder(context, CHANNEL_ID)
+    private fun buildNotification(notificationTitle: String,
+                                  notificationMessage: String,
+                                  notificationPendingIntent: PendingIntent) = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.accent_home_icon)
             .setContentTitle(notificationTitle)
             .setContentText(notificationMessage)
+            .setContentIntent(notificationPendingIntent)
+            .setAutoCancel(true)
             .setStyle(NotificationCompat.BigTextStyle()
                     .bigText(notificationMessage))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
