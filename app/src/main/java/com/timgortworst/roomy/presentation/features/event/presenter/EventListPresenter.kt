@@ -7,11 +7,11 @@ import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.domain.ApiStatus
 import com.timgortworst.roomy.data.utils.Constants
+import com.timgortworst.roomy.domain.ApiStatus
 import com.timgortworst.roomy.domain.usecase.EventUseCase
-import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.domain.utils.isTimeStampInPast
+import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventListView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -128,5 +128,13 @@ class EventListPresenter @Inject constructor(
     override fun renderUnsuccessfulState(throwable: Throwable) {
         view.setLoadingView(false)
         view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
+    }
+
+    fun checkIfUserCanEditEvent(event: Event) = scope.launch {
+        if (eventUseCase.isUserAbleToCreateEvent()) {
+            view.openEventEditActivity(event)
+        } else {
+            view.showToast(R.string.no_categories_error)
+        }
     }
 }

@@ -9,4 +9,5 @@ interface MainView {
     fun presentShareLinkUri(linkUri: Uri)
     fun loadAd()
     fun showToast(@StringRes stringRes: Int)
+    fun openEventEditActivity()
 }

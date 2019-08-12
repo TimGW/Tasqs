@@ -132,7 +132,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     private fun setToolbarTitleFor(tag: String) {
         supportActionBar?.title = when (tag) {
             eventListFragment::class.java.toString() -> getString(R.string.schema_toolbar_title)
-            categoryListFragment::class.java.toString() -> getString(R.string.householdtasks_toolbar_title)
+            categoryListFragment::class.java.toString() -> getString(R.string.categories_toolbar_title)
             userListFragment::class.java.toString() -> getString(R.string.roommates)
             else -> getString(R.string.app_name)
         }
@@ -141,7 +141,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     private fun setFabClickListenerFor(fragment: Fragment?) {
         val clickEvent: (View) -> Unit = when (fragment?.tag) {
             eventListFragment::class.java.toString() -> { _ ->
-                EventEditActivity.start(this)
+                presenter.checkIfUserCanCreateEvent()
             }
             categoryListFragment::class.java.toString() -> { _ ->
                 CategoryEditActivity.start(this)
@@ -219,6 +219,10 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
 
     override fun showToast(stringRes: Int) {
         Toast.makeText(this@MainActivity, getString(stringRes), Toast.LENGTH_LONG).show()
+    }
+
+    override fun openEventEditActivity() {
+        EventEditActivity.start(this)
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {

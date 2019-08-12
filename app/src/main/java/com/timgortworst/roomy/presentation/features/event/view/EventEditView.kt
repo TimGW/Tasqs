@@ -5,6 +5,6 @@ import com.timgortworst.roomy.data.model.User
 
 interface EventEditView {
     fun presentUserList(users: MutableList<User>)
-    fun presentCategoryList(tasks: MutableList<Category>)
+    fun presentCategoryList(categories: MutableList<Category>)
     fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String)
 }

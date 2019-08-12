@@ -19,8 +19,8 @@ abstract class MainModule {
     internal abstract fun provideAgendaFragment(): EventListFragment
 
     @ContributesAndroidInjector(modules = [(CategoryListModule::class)])
-    internal abstract fun provideTasksFragment(): CategoryListFragment
+    internal abstract fun provideCategoriesFragment(): CategoryListFragment
 
     @ContributesAndroidInjector(modules = [(UserListModule::class)])
-    internal abstract fun provideHouseMatesFragment(): UserListFragment
+    internal abstract fun provideUserListFragment(): UserListFragment
 }

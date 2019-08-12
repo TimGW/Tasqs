@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_edit_category.*
 import javax.inject.Inject
 
 class CategoryEditActivity : BaseActivity(), CategoryEditView {
-    private var category: Category? =null
+    private var category: Category? = null
 
     @Inject
     lateinit var presenter: CategoryEditPresenter
@@ -30,9 +30,9 @@ class CategoryEditActivity : BaseActivity(), CategoryEditView {
             context.overridePendingTransition(R.anim.slide_up, R.anim.stay)
         }
 
-        fun start(context: AppCompatActivity, householdTask: Category) {
+        fun start(context: AppCompatActivity, category: Category) {
             val intent = Intent(context, CategoryEditActivity::class.java)
-            intent.putExtra(INTENT_EXTRA_EDIT_CATEGORY, householdTask)
+            intent.putExtra(INTENT_EXTRA_EDIT_CATEGORY, category)
             context.startActivity(intent)
             context.overridePendingTransition(R.anim.slide_up, R.anim.stay)
         }
@@ -53,8 +53,8 @@ class CategoryEditActivity : BaseActivity(), CategoryEditView {
 
         category?.let {
             supportActionBar?.title = "Edit  ${it.name}"
-            task_name_hint.editText?.setText(it.name)
-            task_description_hint.editText?.setText(it.description)
+            name_hint.editText?.setText(it.name)
+            description_hint.editText?.setText(it.description)
         }
 
         setupTextWachters()
@@ -75,8 +75,8 @@ class CategoryEditActivity : BaseActivity(), CategoryEditView {
             R.id.action_edit_done -> {
                 presenter.insertOrUpdateCategory(
                         category?.categoryId,
-                        task_name_hint.editText?.text.toString(),
-                        task_description_hint.editText?.text.toString())
+                        name_hint.editText?.text.toString(),
+                        description_hint.editText?.text.toString())
 
                 finish()
                 true
@@ -92,18 +92,11 @@ class CategoryEditActivity : BaseActivity(), CategoryEditView {
     }
 
     private fun setupTextWachters() {
-        task_name_hint.editText?.addTextChangedListener(object : TextWatcher {
+        name_hint.editText?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                task_name_hint.error = null
-            }
-        })
-        task_points_hint.editText?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                task_points_hint.error = null
+                name_hint.error = null
             }
         })
     }

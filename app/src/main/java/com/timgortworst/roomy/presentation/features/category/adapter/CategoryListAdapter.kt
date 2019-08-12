@@ -18,7 +18,7 @@ class CategoryListAdapter(
         private var optionsClickListener: OnOptionsClickListener
 ) : StickyRecyclerHeadersAdapter<CategoryListAdapter.HeaderViewHolder>,
         RecyclerView.Adapter<CategoryListAdapter.ViewHolder>() {
-    private val houseHoldTasks: MutableList<Category> = mutableListOf()
+    private val categories: MutableList<Category> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.row_category_list, parent, false)
@@ -31,63 +31,63 @@ class CategoryListAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val householdTask = houseHoldTasks[position]
+        val category = categories[position]
 
-        viewHolder.taskTitle.text = householdTask.name
+        viewHolder.title.text = category.name
 
-        if (householdTask.description.isNotBlank()) {
-            viewHolder.taskDescription.text = householdTask.description
-            viewHolder.taskDescription.visibility = View.VISIBLE
+        if (category.description.isNotBlank()) {
+            viewHolder.description.text = category.description
+            viewHolder.description.visibility = View.VISIBLE
         } else {
-            viewHolder.taskDescription.visibility = View.GONE
+            viewHolder.description.visibility = View.GONE
         }
 
         viewHolder.itemView.setOnLongClickListener {
-            optionsClickListener.onOptionsClick(householdTask)
+            optionsClickListener.onOptionsClick(category)
             true
         }
     }
 
     override fun onBindHeaderViewHolder(holder: HeaderViewHolder, position: Int) {
-        val headerFirstLetter = houseHoldTasks[position].name[0].toString()
+        val headerFirstLetter = categories[position].name[0].toString()
         holder.firstLetter.text = headerFirstLetter.toUpperCase()
     }
 
     override fun getItemCount(): Int {
-        return houseHoldTasks.size
+        return categories.size
     }
 
     override fun getHeaderId(position: Int): Long {
-        return houseHoldTasks[position].name[0].toLong()
+        return categories[position].name[0].toLong()
     }
 
-    fun removeItem(householdTask: Category) {
-        val indexToRemove = houseHoldTasks.indexOf(householdTask)
-        houseHoldTasks.removeAt(indexToRemove)
-        houseHoldTasks.sortBy { it.name }
+    fun removeItem(category: Category) {
+        val indexToRemove = categories.indexOf(category)
+        categories.removeAt(indexToRemove)
+        categories.sortBy { it.name }
         notifyItemRemoved(indexToRemove)
     }
 
     fun insertItem(task: Category) {
-        houseHoldTasks.add(task)
-        houseHoldTasks.sortBy { it.name }
+        categories.add(task)
+        categories.sortBy { it.name }
         notifyDataSetChanged()
     }
 
-    fun editItem(householdTask: Category) {
-        val indexToUpdate = houseHoldTasks.indexOfFirst { it.categoryId == householdTask.categoryId }
-        houseHoldTasks[indexToUpdate] = householdTask
-        houseHoldTasks.sortBy { it.name }
+    fun editItem(category: Category) {
+        val indexToUpdate = categories.indexOfFirst { it.categoryId == category.categoryId }
+        categories[indexToUpdate] = category
+        categories.sortBy { it.name }
         notifyDataSetChanged()
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val taskTitle: TextView
-        val taskDescription: TextView
+        val title: TextView
+        val description: TextView
 
         init {
-            this.taskTitle = view.findViewById(R.id.task_title)
-            this.taskDescription = view.findViewById(R.id.task_description)
+            this.title = view.findViewById(R.id.title)
+            this.description = view.findViewById(R.id.description)
         }
     }
 

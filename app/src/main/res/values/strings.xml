@@ -23,7 +23,7 @@
     <string name="filter_just_me">Show just me</string>
     <string name="filter_show_all">Show all</string>
     <string name="generic_error">Something went wrong</string>
-    <string name="householdtasks_toolbar_title">Household tasks</string>
+    <string name="categories_toolbar_title">Categories</string>
     <string name="invite_title">Share invite link</string>
     <string name="loading">loading</string>
     <string name="next_occurance">Next occurrence: %1$s</string>
@@ -91,4 +91,5 @@
     <string name="example_data_plants_title">Water plants</string>
     <string name="example_data_dishes_title">Wash dishes</string>
     <string name="example_data_windows_title">Wash windows</string>
+    <string name="no_categories_error">Please create a category first</string>
 </resources>

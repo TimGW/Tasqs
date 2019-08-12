@@ -8,10 +8,10 @@ import android.widget.TextView
 import com.timgortworst.roomy.data.model.Category
 
 
-class SpinnerTaskAdapter(
-    private val ctx: Context,
-    private val textViewResourceId: Int,
-    private val userList: MutableList<Category>
+class SpinnerCategoryAdapter(
+        ctx: Context,
+        textViewResourceId: Int,
+        private val userList: MutableList<Category>
 ) : ArrayAdapter<Category>(ctx, textViewResourceId, userList) {
 
     override fun getCount(): Int {

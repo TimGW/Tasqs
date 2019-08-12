@@ -60,5 +60,7 @@ constructor(private val eventRepository: EventRepository,
         return categoryRepository.getCategories()
     }
 
-
+    suspend fun isUserAbleToCreateEvent(): Boolean {
+        return categoryRepository.getCategories().isNotEmpty()
+    }
 }
