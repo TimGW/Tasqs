@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.base
+package com.timgortworst.roomy.domain
 
 import com.google.firebase.firestore.DocumentChange
 

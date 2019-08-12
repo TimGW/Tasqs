@@ -15,7 +15,7 @@ import com.timgortworst.roomy.data.utils.Constants.USER_EMAIL_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_ROLE_REF
-import com.timgortworst.roomy.presentation.base.ApiStatus
+import com.timgortworst.roomy.domain.ApiStatus
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton

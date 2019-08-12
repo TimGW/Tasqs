@@ -15,7 +15,7 @@ import com.timgortworst.roomy.data.utils.Constants.CATEGORY_HOUSEHOLDID_REF
 import com.timgortworst.roomy.data.utils.Constants.CATEGORY_ID_REF
 import com.timgortworst.roomy.data.utils.Constants.CATEGORY_NAME_REF
 import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
-import com.timgortworst.roomy.presentation.base.ApiStatus
+import com.timgortworst.roomy.domain.ApiStatus
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
