@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
@@ -42,7 +43,11 @@ class EventListAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val event = filteredEvents[position]
 
-        val formatter = SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS", Locale.getDefault())
+        val formatter = if (BuildConfig.DEBUG) {
+            SimpleDateFormat("dd MMM yyyy HH:mm:ss.SSS", Locale.getDefault())
+        } else {
+            SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        }
         val formattedDate = formatter.format(Date(event.eventMetaData.nextEventDate))
 
         viewHolder.dateTime.text = if (event.eventMetaData.nextEventDate.isTimeStampInPast()) {
