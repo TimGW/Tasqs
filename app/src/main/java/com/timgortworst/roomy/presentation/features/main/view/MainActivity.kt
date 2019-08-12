@@ -131,9 +131,9 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
 
     private fun setToolbarTitleFor(tag: String) {
         supportActionBar?.title = when (tag) {
-            eventListFragment::class.java.toString() -> getString(R.string.schema_toolbar_title)
-            categoryListFragment::class.java.toString() -> getString(R.string.categories_toolbar_title)
-            userListFragment::class.java.toString() -> getString(R.string.roommates)
+            eventListFragment::class.java.toString() -> getString(R.string.toolbar_title_schema)
+            categoryListFragment::class.java.toString() -> getString(R.string.toolbar_title_categories)
+            userListFragment::class.java.toString() -> getString(R.string.toolbar_title_users)
             else -> getString(R.string.app_name)
         }
     }

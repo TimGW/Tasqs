@@ -66,13 +66,13 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         event = intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT)
 
         supportActionBar?.apply {
-            title = getString(R.string.new_agenda_item)
+            title = getString(R.string.toolbar_title_new_event)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
 
         event?.let {
-            supportActionBar?.title = getString(R.string.edit_event, it.eventCategory.name)
+            supportActionBar?.title = getString(R.string.toolbar_title_edit_event, it.eventCategory.name)
             agenda_item_date_input.setText(it.eventMetaData.nextEventDate.toString())
         }
 

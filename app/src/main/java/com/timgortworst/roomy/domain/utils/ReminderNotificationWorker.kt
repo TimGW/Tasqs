@@ -20,7 +20,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
 
     override fun doWork() = try {
         val notificationTitle = inputData.getString(NOTIFICATION_TITLE_KEY) ?: context.getString(R.string.app_name)
-        val notificationMessage = inputData.getString(NOTIFICATION_MSG_KEY) ?: context.getString(R.string.default_notification_msg)
+        val notificationMessage = inputData.getString(NOTIFICATION_MSG_KEY) ?: context.getString(R.string.notification_default_msg)
         triggerNotification(notificationTitle, notificationMessage)
         Result.success()
     } catch (e: Exception) {
