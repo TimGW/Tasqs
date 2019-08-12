@@ -20,6 +20,7 @@ import com.timgortworst.roomy.data.utils.Constants.EVENT_META_DATA_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_START_DATE_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_USER_REF
 import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
+import com.timgortworst.roomy.presentation.base.ApiStatus
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -52,9 +53,9 @@ class EventRepository @Inject constructor() {
         return eventCollectionRef.whereEqualTo("user.userId", userId).get().await().toObjects(Event::class.java)
     }
 
-    fun listenToEventsForHousehold(householdId: String, baseResponse: BaseResponse) {
+    fun listenToEventsForHousehold(householdId: String, apiStatus: ApiStatus) {
         val handler = Handler()
-        val runnable = Runnable { baseResponse.setResponse(DataListener.Loading) }
+        val runnable = Runnable { apiStatus.setState(ApiStatus.Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = eventCollectionRef
@@ -64,14 +65,14 @@ class EventRepository @Inject constructor() {
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
                     when {
                         e != null && snapshots == null -> {
-                            baseResponse.setResponse(DataListener.Error(e))
+                            apiStatus.setState(ApiStatus.Response.Error(e))
                             Log.w(TAG, "listen:error", e)
                         }
                         else -> {
                             val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.toList().size
 
-                            baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })
