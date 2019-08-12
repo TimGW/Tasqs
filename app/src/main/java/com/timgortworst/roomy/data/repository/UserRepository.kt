@@ -15,6 +15,7 @@ import com.timgortworst.roomy.data.utils.Constants.USER_EMAIL_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_ROLE_REF
+import com.timgortworst.roomy.presentation.base.ApiStatus
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -47,11 +48,11 @@ class UserRepository @Inject constructor() {
         return currentUserDocRef.get().await().toObject(User::class.java) as User
     }
 
-    fun listenToUsersForHousehold(householdId: String?, baseResponse: BaseResponse) {
+    fun listenToUsersForHousehold(householdId: String?, apiStatus: ApiStatus) {
         if (householdId.isNullOrEmpty()) return
 
         val handler = Handler()
-        val runnable = Runnable { baseResponse.setResponse(DataListener.Loading) }
+        val runnable = Runnable { apiStatus.setState(ApiStatus.Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = userCollectionRef
@@ -61,13 +62,13 @@ class UserRepository @Inject constructor() {
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
                     when {
                         e != null && snapshots == null -> {
-                            baseResponse.setResponse(DataListener.Error(e))
+                            apiStatus.setState(ApiStatus.Response.Error(e))
                             Log.w(TAG, "listen:error", e)
                         }
                         else -> {
                             val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.toList().size
-                            baseResponse.setResponse(DataListener.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })

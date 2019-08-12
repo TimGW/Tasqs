@@ -6,7 +6,7 @@ import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Role
 import com.timgortworst.roomy.data.model.User
-import com.timgortworst.roomy.data.repository.BaseResponse
+import com.timgortworst.roomy.presentation.base.ApiStatus
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.user.view.UserListView
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class UserListPresenter @Inject constructor(
         private val view: UserListView,
         private val userUseCase: UserUseCase
-) : BaseResponse(), DefaultLifecycleObserver {
+) : ApiStatus(), DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
