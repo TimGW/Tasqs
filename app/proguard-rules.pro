@@ -21,4 +21,9 @@
 #-renamesourcefileattribute SourceFile
 
 -ignorewarnings
+
+# Keep custom model classes
 -keep class androidx.core.app.CoreComponentFactory { *; }
+-keep class com.google.firebase.example.fireeats.java.model.** { *; }
+-keep class com.google.firebase.example.fireeats.kotlin.model.** { *; }
+-keep class com.timgortworst.roomy.data.model.** { *; }
