@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -126,7 +127,7 @@ class EventListFragment : Fragment(), EventListView {
 
         val items = arrayListOf(
                 BottomMenuItem(R.drawable.ic_edit, "Edit") {
-                    EventEditActivity.start(activityContext, event)
+                    presenter.checkIfUserCanEditEvent(event)
                     bottomSheetMenu?.dismiss()
                 },
                 BottomMenuItem(R.drawable.ic_delete, "Delete") {
@@ -169,6 +170,14 @@ class EventListFragment : Fragment(), EventListView {
             text?.let { this.state_message.text = activityContext.getString(it) }
             visibility = if (isVisible) View.VISIBLE else View.GONE
         }
+    }
+
+    override fun showToast(stringRes: Int) {
+        Toast.makeText(activityContext, getString(stringRes), Toast.LENGTH_LONG).show()
+    }
+
+    override fun openEventEditActivity(event: Event) {
+        EventEditActivity.start(activityContext, event)
     }
 
     override fun enqueueOneTimeNotification(eventId: String,

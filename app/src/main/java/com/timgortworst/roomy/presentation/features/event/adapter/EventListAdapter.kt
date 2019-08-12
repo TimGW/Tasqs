@@ -22,7 +22,7 @@ import java.util.*
 /**
  * Recyclerview adapter for handling the list items in the task overview
  *
- * Handles clicks by expanding items to show a more detailed description of the HouseholdTask
+ * Handles clicks by expanding items to show a more detailed description of the category
  */
 class EventListAdapter(
         private var activity: AppCompatActivity

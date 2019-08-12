@@ -75,20 +75,20 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
         showContextMenuFor(category)
     }
 
-    private fun showContextMenuFor(householdTask: Category) {
+    private fun showContextMenuFor(category: Category) {
         var bottomSheetMenu: BottomSheetMenu? = null
 
         val items = arrayListOf(
                 BottomMenuItem(R.drawable.ic_edit, "Edit") {
-                    CategoryEditActivity.start(activityContext, householdTask)
+                    CategoryEditActivity.start(activityContext, category)
                     bottomSheetMenu?.dismiss()
                 },
                 BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                    presenter.deleteCategory(householdTask)
+                    presenter.deleteCategory(category)
                     bottomSheetMenu?.dismiss()
                 }
         )
-        bottomSheetMenu = BottomSheetMenu(activityContext, householdTask.name, items)
+        bottomSheetMenu = BottomSheetMenu(activityContext, category.name, items)
         bottomSheetMenu.show()
     }
 

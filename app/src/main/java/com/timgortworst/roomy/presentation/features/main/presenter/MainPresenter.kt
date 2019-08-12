@@ -55,4 +55,12 @@ class MainPresenter
             view.showToast(R.string.connection_error)
         }
     }
+
+    fun checkIfUserCanCreateEvent() = scope.launch {
+        if (mainUseCase.isUserAbleToCreateEvent()) {
+            view.openEventEditActivity()
+        } else {
+            view.showToast(R.string.no_categories_error)
+        }
+    }
 }

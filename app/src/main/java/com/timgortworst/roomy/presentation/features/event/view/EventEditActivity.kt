@@ -17,7 +17,7 @@ import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.utils.Constants
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
-import com.timgortworst.roomy.presentation.features.event.adapter.SpinnerTaskAdapter
+import com.timgortworst.roomy.presentation.features.event.adapter.SpinnerCategoryAdapter
 import com.timgortworst.roomy.presentation.features.event.adapter.SpinnerUserAdapter
 import com.timgortworst.roomy.presentation.features.event.presenter.EventEditPresenter
 import dagger.android.AndroidInjection
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
     private var event: Event? = null
-    private lateinit var spinnerAdapterTasks: SpinnerTaskAdapter
+    private lateinit var spinnerAdapterCategories: SpinnerCategoryAdapter
     private lateinit var spinnerAdapterUsers: SpinnerUserAdapter
     private lateinit var datePickerDialog: DatePickerDialog
     private var calendar = Calendar.getInstance().apply {
@@ -156,13 +156,13 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         spinner_users.adapter = spinnerAdapterUsers
     }
 
-    override fun presentCategoryList(tasks: MutableList<Category>) {
-        spinnerAdapterTasks = SpinnerTaskAdapter(
+    override fun presentCategoryList(categories: MutableList<Category>) {
+        spinnerAdapterCategories = SpinnerCategoryAdapter(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
-                tasks
+                categories
         )
-        spinner_categories.adapter = spinnerAdapterTasks
+        spinner_categories.adapter = spinnerAdapterCategories
     }
 
     private fun setupCalenderDialog() {

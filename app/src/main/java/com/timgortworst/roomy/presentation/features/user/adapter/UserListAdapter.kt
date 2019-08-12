@@ -12,7 +12,7 @@ import com.timgortworst.roomy.data.model.User
 /**
  * Recyclerview adapter for handling the list items in the task overview
  *
- * Handles clicks by expanding items to show a more detailed description of the HouseholdTask
+ * Handles clicks by expanding items to show a more detailed description of the Category
  */
 class UserListAdapter(
         private val onUserLongClickListener: OnUserLongClickListener
