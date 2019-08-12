@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/cd_household_agenda"
+                    android:contentDescription="@string/cd_household_events"
                     android:padding="8dp"
                     app:srcCompat="@drawable/ic_calendar" />
 
@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/cd_housemates"
+                    android:contentDescription="@string/cd_household_users"
                     android:padding="8dp"
                     app:srcCompat="@drawable/ic_group" />
 

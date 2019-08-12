@@ -52,7 +52,7 @@ class MainPresenter
         if (isEnabled) {
             view.loadAd()
         } else {
-            view.showToast(R.string.connection_error)
+            view.showToast(R.string.error_connection)
         }
     }
 
@@ -60,7 +60,7 @@ class MainPresenter
         if (mainUseCase.isUserAbleToCreateEvent()) {
             view.openEventEditActivity()
         } else {
-            view.showToast(R.string.no_categories_error)
+            view.showToast(R.string.error_no_categories)
         }
     }
 }

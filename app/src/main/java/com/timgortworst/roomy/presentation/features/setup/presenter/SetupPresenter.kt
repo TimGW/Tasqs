@@ -56,7 +56,7 @@ class SetupPresenter @Inject constructor(
                 return@launch
             }
 
-            view.presentToastError(R.string.generic_error)
+            view.presentToastError(R.string.error_generic)
         }
     }
 

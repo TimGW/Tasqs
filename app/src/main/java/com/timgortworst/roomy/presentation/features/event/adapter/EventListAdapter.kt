@@ -53,11 +53,11 @@ class EventListAdapter(
         viewHolder.dateTime.text = if (event.eventMetaData.nextEventDate.isTimeStampInPast()) {
             viewHolder.dateTime.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.error))
             viewHolder.dateTime.setTypeface(null, Typeface.BOLD)
-            activity.getString(R.string.overdue_occurance, formattedDate)
+            activity.getString(R.string.event_overdue, formattedDate)
         } else {
             viewHolder.dateTime.setTextColor(viewHolder.description.currentTextColor)
             viewHolder.dateTime.setTypeface(null, Typeface.NORMAL)
-            activity.getString(R.string.next_occurance, formattedDate)
+            activity.getString(R.string.event_next, formattedDate)
         }
 
         viewHolder.user.text = event.user.name.capitalize()

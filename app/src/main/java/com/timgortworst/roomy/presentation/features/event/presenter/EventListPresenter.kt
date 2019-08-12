@@ -134,7 +134,7 @@ class EventListPresenter @Inject constructor(
         if (eventUseCase.isUserAbleToCreateEvent()) {
             view.openEventEditActivity(event)
         } else {
-            view.showToast(R.string.no_categories_error)
+            view.showToast(R.string.error_no_categories)
         }
     }
 }
