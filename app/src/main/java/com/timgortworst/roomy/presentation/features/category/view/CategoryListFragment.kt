@@ -13,6 +13,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.BottomMenuItem
 import com.timgortworst.roomy.data.model.Category
+import com.timgortworst.roomy.data.utils.GenerateData
 import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
 import com.timgortworst.roomy.presentation.features.category.adapter.CategoryListAdapter
 import com.timgortworst.roomy.presentation.features.category.presenter.CategoryListPresenter
@@ -114,7 +115,8 @@ class CategoryListFragment : Fragment(), CategoryListView, CategoryListAdapter.O
             state_message.text = activity?.getString(R.string.empty_list_state_text_categories)
             state_button.visibility = View.VISIBLE
             state_button.setOnClickListener {
-                presenter.generateCategories()
+                val generatedListOfCategories = GenerateData(activityContext).createCategoryList()
+                presenter.createCategoryBatch(generatedListOfCategories)
             }
         }
     }
