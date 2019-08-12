@@ -75,4 +75,20 @@
     <string name="cd_mark_as_done">mark as done</string>
     <string name="new_agenda_item">Nieuw agenda item</string>
     <string name="edit_event">Edit %1$s</string>
+    <string name="example_data_bathroom_title">Clean bathroom</string>
+    <string name="example_data_bathroom_description">sink + shower</string>
+    <string name="example_data_kitchen_title">Clean kitchen</string>
+    <string name="example_data_kitchen_description">including the oven</string>
+    <string name="example_data_toilet_title">Clean toilet</string>
+    <string name="example_data_dusting_title">Dusting</string>
+    <string name="example_data_pets_title">Feed pets</string>
+    <string name="example_data_groceries_title">Groceries</string>
+    <string name="example_data_laundry_title">Laundry</string>
+    <string name="example_data_mopping_title">Mopping floors</string>
+    <string name="example_data_trash_title">Take out the trash</string>
+    <string name="example_data_vacuuming_title">Vacuuming</string>
+    <string name="example_data_vacuuming_description">living room and kitchen</string>
+    <string name="example_data_plants_title">Water plants</string>
+    <string name="example_data_dishes_title">Wash dishes</string>
+    <string name="example_data_windows_title">Wash windows</string>
 </resources>

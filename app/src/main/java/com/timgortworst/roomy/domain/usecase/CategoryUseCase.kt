@@ -3,7 +3,6 @@ package com.timgortworst.roomy.domain.usecase
 import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.repository.CategoryRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.data.utils.GenerateData
 import com.timgortworst.roomy.presentation.features.category.presenter.CategoryListPresenter
 import javax.inject.Inject
 
@@ -26,8 +25,11 @@ constructor(private val categoryRepository: CategoryRepository,
         categoryRepository.deleteCategory(agendaEventCategory)
     }
 
-    suspend fun setupCategoriesForHousehold() {
-        categoryRepository.createCategoryBatch(GenerateData.setupCategoriesForHousehold(userRepository.getHouseholdIdForUser()))
+    suspend fun createCategoryBatch(generatedListOfCategories: MutableList<Category>) {
+        generatedListOfCategories.forEach {
+            it.householdId = userRepository.getHouseholdIdForUser()
+        }
+        categoryRepository.createCategoryBatch(generatedListOfCategories)
     }
 
     suspend fun updateCategory(categoryId: String, name: String, description: String) {

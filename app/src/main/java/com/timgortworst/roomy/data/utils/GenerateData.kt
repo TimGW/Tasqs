@@ -1,34 +1,27 @@
 package com.timgortworst.roomy.data.utils
 
+import android.content.Context
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Category
 
-object GenerateData {
+class GenerateData(private val context: Context) {
 
-    fun setupCategoriesForHousehold(householdId: String) = mutableListOf<Category>().apply {
-        add(Category(name = "Dusting", description = "description", householdId = householdId))
-        add(Category(name = "Sweeping", description = "description", householdId = householdId))
-        add(Category(name = "Vacuuming", description = "description", householdId = householdId))
-        add(Category(name = "Washing dishes", description = "description", householdId = householdId))
-        add(Category(name = "Feeding pets", description = "description", householdId = householdId))
-        add(Category(name = "Doing laundry", description = "description", householdId = householdId))
-        add(Category(name = "Preparing meals", description = "description", householdId = householdId))
-        add(Category(name = "Cleaning bathrooms", description = "description", householdId = householdId))
-        add(Category(name = "Washing bedding", description = "description", householdId = householdId))
-        add(Category(name = "Mopping floors", description = "description", householdId = householdId))
-        add(Category(name = "Watering plants", description = "description", householdId = householdId))
-        add(Category(name = "Mowing the lawn", description = "description", householdId = householdId))
-        add(Category(name = "Weeding the garden", description = "description", householdId = householdId))
-        add(Category(name = "Taking out the trash", description = "description", householdId = householdId))
-        add(Category(name = "Wash the car", description = "description", householdId = householdId))
-        add(Category(name = "Washing windows", description = "description", householdId = householdId))
-        add(Category(name = "Bathing pets", description = "description", householdId = householdId))
-        add(Category(name = "Clean refrigerator", description = "description", householdId = householdId))
-        add(Category(name = "Change air filters on furnace or air conditioner", description = "description", householdId = householdId))
-        add(Category(name = "Clean blinds", description = "description", householdId = householdId))
-        add(Category(name = "Vacuum curtains", description = "description", householdId = householdId))
-        add(Category(name = "Shampooing the carpets", description = "description", householdId = householdId))
-        add(Category(name = "Winterize the house", description = "description", householdId = householdId))
-        add(Category(name = "Clean garage", description = "description", householdId = householdId))
-        add(Category(name = "Prune trees and shrubs", description = "description", householdId = householdId))
+    fun createCategoryList() = mutableListOf<Category>().apply {
+        add(Category(name = context.getString(R.string.example_data_bathroom_title),
+                description = context.getString(R.string.example_data_bathroom_description)))
+        add(Category(name = context.getString(R.string.example_data_kitchen_title), 
+                description = context.getString(R.string.example_data_kitchen_description)))
+        add(Category(name = context.getString(R.string.example_data_toilet_title)))
+        add(Category(name = context.getString(R.string.example_data_dusting_title)))
+        add(Category(name = context.getString(R.string.example_data_pets_title)))
+        add(Category(name = context.getString(R.string.example_data_groceries_title)))
+        add(Category(name = context.getString(R.string.example_data_laundry_title)))
+        add(Category(name = context.getString(R.string.example_data_mopping_title)))
+        add(Category(name = context.getString(R.string.example_data_trash_title)))
+        add(Category(name = context.getString(R.string.example_data_vacuuming_title), 
+                description = context.getString(R.string.example_data_vacuuming_description)))
+        add(Category(name = context.getString(R.string.example_data_plants_title)))
+        add(Category(name = context.getString(R.string.example_data_dishes_title)))
+        add(Category(name = context.getString(R.string.example_data_windows_title)))
     }
 }

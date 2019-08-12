@@ -5,8 +5,8 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Category
-import com.timgortworst.roomy.domain.usecase.CategoryUseCase
 import com.timgortworst.roomy.domain.ApiStatus
+import com.timgortworst.roomy.domain.usecase.CategoryUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.category.view.CategoryListView
 import kotlinx.coroutines.Dispatchers
@@ -37,8 +37,8 @@ class CategoryListPresenter @Inject constructor(
         categoryUseCase.deleteCategory(agendaEventCategory)
     }
 
-    fun generateCategories() = scope.launch {
-        categoryUseCase.setupCategoriesForHousehold()
+    fun createCategoryBatch(generatedListOfCategories: MutableList<Category>) = scope.launch {
+        categoryUseCase.createCategoryBatch(generatedListOfCategories)
     }
 
     override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
