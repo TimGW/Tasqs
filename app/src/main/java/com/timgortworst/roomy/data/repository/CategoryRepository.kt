@@ -51,7 +51,9 @@ class CategoryRepository @Inject constructor() {
     suspend fun createCategoryBatch(categoryList: MutableList<Category>) {
         val batch = db.batch()
         categoryList.forEach {
-            batch.set(categoryCollectionRef.document(), it)
+            val document = categoryCollectionRef.document()
+            it.categoryId = document.id
+            batch.set(document, it)
         }
         batch.commit().await()
     }
