@@ -50,10 +50,10 @@
     <string name="example_data_windows_title">Ramen lappen</string>
     <string name="filter_just_me">Toon mij alleen</string>
     <string name="filter_show_all">Laat iedereen zien</string>
-    <string name="generate_categories_button_text">voortbrengen</string>
+    <string name="generate_categories_button_text">Genereren</string>
     <string name="invite_title">Deel uitnodigingslink</string>
-    <string name="loading">bezig met laden</string>
-    <string name="notification_default_msg">het is tijd om wat klusjes te doen!</string>
+    <string name="loading">Bezig met laden</string>
+    <string name="notification_default_msg">Het is tijd om wat klusjes te doen!</string>
     <string name="notification_message">Het is tijd om: %1$s</string>
     <string name="notification_title">Herinnering voor %1$s</string>
     <string name="preferences_analytics">Gebruikers statistieken</string>
