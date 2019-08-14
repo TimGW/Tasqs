@@ -51,19 +51,12 @@ class EventEditPresenter @Inject constructor(
         view.presentCategoryList(categories.toMutableList())
     }
 
-    fun formatDate(year: Int, month: Int, dayOfMonth: Int) {
-        val cal = Calendar.getInstance()
-        cal.set(Calendar.YEAR, year)
-        cal.set(Calendar.MONTH, month)
-        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
+    fun formatDateAndSetUI(cal: Calendar) {
         val formattedDayOfMonth = cal.get(Calendar.DAY_OF_MONTH).toString()
         val formattedMonth = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
         val formattedYear = cal.get(Calendar.YEAR).toString()
-
         view.presentFormattedDate(formattedDayOfMonth, formattedMonth, formattedYear)
     }
-
 
     companion object {
         private const val TAG = "EventEditPresenter"

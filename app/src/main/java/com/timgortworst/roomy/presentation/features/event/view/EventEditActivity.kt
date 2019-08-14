@@ -30,6 +30,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     private var event: Event? = null
     private lateinit var spinnerAdapterCategories: SpinnerCategoryAdapter
     private lateinit var spinnerAdapterUsers: SpinnerUserAdapter
+    private lateinit var spinnerAdapterRepeat: ArrayAdapter<EventMetaData.RepeatingInterval>
     private lateinit var datePickerDialog: DatePickerDialog
     private var calendar = Calendar.getInstance().apply {
         set(Calendar.HOUR_OF_DAY, Constants.DEFAULT_HOUR_OF_DAY_NOTIFICATION) // default of 20:00
@@ -71,17 +72,24 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             setDisplayShowHomeEnabled(true)
         }
 
-        event?.let {
-            supportActionBar?.title = getString(R.string.toolbar_title_edit_event, it.eventCategory.name)
-            agenda_item_date_input.setText(it.eventMetaData.nextEventDate.toString())
-        }
+        setupCategorySpinner()
+        setupUserSpinner()
+        setupEventRepeatSpinner()
+        setupCalenderDialog()
+        setupClickListeners()
 
         presenter.getCategories()
         presenter.getUsers()
-        setupEventRepeatSpinner()
-        setupCalenderDialog()
+        presenter.formatDateAndSetUI(calendar)
 
-        setupClickListeners()
+        event?.let {
+            calendar.timeInMillis = it.eventMetaData.nextEventDate
+            supportActionBar?.title = getString(R.string.toolbar_title_edit_event, it.eventCategory.name)
+            presenter.formatDateAndSetUI(calendar)
+            event_repeat_checkbox.isChecked = it.eventMetaData.repeatInterval != EventMetaData.RepeatingInterval.SINGLE_EVENT
+            val repeatPos = spinnerAdapterRepeat.getPosition(it.eventMetaData.repeatInterval)
+            spinner_repeat.setSelection(repeatPos)
+        }
     }
 
     private fun setupClickListeners() {
@@ -100,12 +108,43 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         }
     }
 
+    private fun setupCategorySpinner(){
+        spinnerAdapterCategories = SpinnerCategoryAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                mutableListOf()
+        )
+        spinner_categories.adapter = spinnerAdapterCategories
+    }
+
+    private fun setupUserSpinner(){
+        spinnerAdapterUsers = SpinnerUserAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                mutableListOf()
+        )
+        spinner_users.adapter = spinnerAdapterUsers
+    }
+
+
+    private fun setupCalenderDialog() {
+        datePickerDialog = DatePickerDialog(
+                this, this,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        )
+
+        datePickerDialog.datePicker.minDate = calendar.timeInMillis
+    }
+
     private fun setupEventRepeatSpinner() {
-        spinner_repeat.adapter = ArrayAdapter<EventMetaData.RepeatingInterval>(
+        spinnerAdapterRepeat = ArrayAdapter(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
                 EventMetaData.RepeatingInterval.values().dropWhile { it == EventMetaData.RepeatingInterval.SINGLE_EVENT }
         )
+        spinner_repeat.adapter = spinnerAdapterRepeat
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -148,44 +187,31 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     }
 
     override fun presentUserList(users: MutableList<User>) {
-        spinnerAdapterUsers = SpinnerUserAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                users
-        )
-        spinner_users.adapter = spinnerAdapterUsers
+        spinnerAdapterUsers.addAll(users)
+        spinnerAdapterUsers.notifyDataSetChanged()
+
+        event?.let {
+            val userPos = spinnerAdapterUsers.getPosition(it.user)
+            spinner_users.setSelection(userPos)
+        }
     }
 
     override fun presentCategoryList(categories: MutableList<Category>) {
-        spinnerAdapterCategories = SpinnerCategoryAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                categories
-        )
-        spinner_categories.adapter = spinnerAdapterCategories
-    }
+        spinnerAdapterCategories.addAll(categories)
+        spinnerAdapterCategories.notifyDataSetChanged()
 
-    private fun setupCalenderDialog() {
-        datePickerDialog = DatePickerDialog(
-                this, this,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-        )
-
-        datePickerDialog.datePicker.minDate = calendar.timeInMillis
-        presenter.formatDate(
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-        )
+        event?.let {
+            val categoryPos = spinnerAdapterCategories.getPosition(it.eventCategory)
+            spinner_categories.setSelection(categoryPos)
+        }
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         calendar.set(Calendar.YEAR, year)
         calendar.set(Calendar.MONTH, month)
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-        presenter.formatDate(year, month, dayOfMonth)
+
+        presenter.formatDateAndSetUI(calendar)
     }
 
     override fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String) {
