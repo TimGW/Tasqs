@@ -22,6 +22,7 @@
     <string name="edit_category_name_hint">Titel</string>
     <string name="edit_event_category_hint">Categorie</string>
     <string name="edit_event_user_hint">Persoon</string>
+    <string name="empty_list_state_text_categories">Voeg uw eerste categorie toe door op de knop + te klikken of klik op de knop Genereren om enkele standaardcategorieën te maken</string>
     <string name="empty_list_state_text_events">Voeg uw eerste evenement toe door op de knop + te klikken</string>
     <string name="empty_list_state_title_categories">Geen categorieën</string>
     <string name="empty_list_state_title_events">Geen evenementen</string>
@@ -60,7 +61,6 @@
     <string name="preferences_analytics_description">Door anonieme gebruikersgegevens te verzenden, helpt u deze applicatie te verbeteren</string>
     <string name="preferences_analytics_header">Privacy</string>
     <string name="preferences_display_dark_mode">Donkere modus</string>
-    <string name="empty_list_state_text_categories">Voeg uw eerste categorie toe door op de knop + te klikken of klik op de knop Genereren om enkele standaardcategorieën te maken</string>
     <string name="preferences_display_header">Weergave</string>
     <string name="privacy_policy"><![CDATA[
     <p>I built Roomy app as an Ad Supported app. This SERVICE is provided by me at no cost and is intended for use as is.
@@ -87,6 +87,7 @@
     <string name="title_activity_settings">Instellingen</string>
     <string name="toolbar_title_categories">Categorieën</string>
     <string name="toolbar_title_edit_event">%1$s aanpassen</string>
+    <string name="toolbar_title_new_category">Nieuwe categorie</string>
     <string name="toolbar_title_new_event">Nieuw evenement</string>
     <string name="toolbar_title_schema">Evenementen</string>
     <string name="toolbar_title_users">Gebruikers</string>
