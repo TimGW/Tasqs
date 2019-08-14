@@ -49,7 +49,11 @@ class CategoryListAdapter(
     }
 
     override fun onBindHeaderViewHolder(holder: HeaderViewHolder, position: Int) {
-        val headerFirstLetter = categories[position].name[0].toString()
+        val headerFirstLetter = if (categories[position].name.isNotEmpty()) {
+            categories[position].name[0].toString()
+        }  else {
+            ""
+        }
         holder.firstLetter.text = headerFirstLetter.toUpperCase()
     }
 
@@ -58,7 +62,11 @@ class CategoryListAdapter(
     }
 
     override fun getHeaderId(position: Int): Long {
-        return categories[position].name[0].toLong()
+        return if (categories[position].name.isNotEmpty()) {
+            categories[position].name.first().toLong()
+        }  else {
+            0L
+        }
     }
 
     fun removeItem(category: Category) {
