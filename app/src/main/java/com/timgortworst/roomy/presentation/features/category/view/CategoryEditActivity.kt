@@ -46,13 +46,13 @@ class CategoryEditActivity : BaseActivity(), CategoryEditView {
         category = intent.getParcelableExtra(INTENT_EXTRA_EDIT_CATEGORY)
 
         supportActionBar?.apply {
-            title = "Nieuwe taak"
+            title = getString(R.string.toolbar_title_new_category)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
 
         category?.let {
-            supportActionBar?.title = "Edit  ${it.name}"
+            supportActionBar?.title =  getString(R.string.toolbar_title_edit_event, it.name)
             name_hint.editText?.setText(it.name)
             description_hint.editText?.setText(it.description)
         }
