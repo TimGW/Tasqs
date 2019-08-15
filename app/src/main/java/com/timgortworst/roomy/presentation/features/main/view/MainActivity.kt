@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.category.view.CategoryEditActivity
@@ -175,7 +174,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
 
     private fun setupAds() {
         val builder = AdRequest.Builder()
-        if (BuildConfig.DEBUG) builder.addTestDevice("C25E23F0B3FBE6F14EBD485DB2BAD83A")
         adRequest = builder.build()
         adView?.adListener = object : AdListener() {
             override fun onAdLoaded() {
