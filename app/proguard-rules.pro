@@ -27,3 +27,5 @@
 -keep class com.google.firebase.example.fireeats.java.model.** { *; }
 -keep class com.google.firebase.example.fireeats.kotlin.model.** { *; }
 -keep class com.timgortworst.roomy.data.model.** { *; }
+-keep class com.google.ads.**
+-dontwarn com.google.ads.**
