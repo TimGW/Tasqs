@@ -3,6 +3,7 @@ package com.timgortworst.roomy.presentation.features.splash.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.splash.view.SplashView
@@ -30,11 +31,13 @@ class SplashPresenter @Inject constructor(
             return@launch
         }
 
-        // continue to main activity
-        if (setupUseCase.getHouseholdIdForUser().isNotBlank()) {
-            view.goToMainActivity()
-            return@launch
-        }
+        // continue to main activity if possible
+        try {
+            if (setupUseCase.getHouseholdIdForUser().isNotBlank()) {
+                view.goToMainActivity()
+                return@launch
+            }
+        } catch (fireStoreEx: FirebaseFirestoreException) { }
 
         // setup new or referred user
         if (referredHouseholdId.isNotBlank()) {
