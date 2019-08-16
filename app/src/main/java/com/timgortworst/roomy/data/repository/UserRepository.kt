@@ -45,7 +45,7 @@ class UserRepository @Inject constructor() {
         if (userId.isNullOrEmpty()) return null
 
         val currentUserDocRef = userCollectionRef.document(userId)
-        return currentUserDocRef.get().await().toObject(User::class.java) as User
+        return currentUserDocRef.get().await().toObject(User::class.java)
     }
 
     fun listenToUsersForHousehold(householdId: String?, apiStatus: ApiStatus) {
@@ -88,8 +88,8 @@ class UserRepository @Inject constructor() {
         if (userId.isNullOrEmpty()) return ""
 
         val userDocRef = userCollectionRef.document(userId)
-        val user = userDocRef.get().await().toObject(User::class.java) as User
-        return user.householdId
+        val user = userDocRef.get().await().toObject(User::class.java)
+        return user?.householdId.orEmpty()
     }
 
     suspend fun updateUser(
