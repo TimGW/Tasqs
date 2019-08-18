@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.utils.Constants
+import com.timgortworst.roomy.domain.utils.showToast
 import com.timgortworst.roomy.presentation.features.googlesignin.view.GoogleSignInActivity
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
 import com.timgortworst.roomy.presentation.features.setup.view.SetupActivity
@@ -21,6 +23,7 @@ class SplashActivity : AppCompatActivity(), SplashView {
     lateinit var presenter: SplashPresenter
 
     companion object {
+        private const val TAG = "SplashActivity"
         private const val RESULT_CODE = 1234
 
         fun start(context: Context) {
@@ -37,6 +40,9 @@ class SplashActivity : AppCompatActivity(), SplashView {
         FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnCompleteListener {
             val referredHouseholdId = it.result?.link?.getQueryParameter(Constants.QUERY_PARAM_HOUSEHOLD).orEmpty()
             presenter.initializeUser(referredHouseholdId)
+        }.addOnFailureListener {
+            Log.e(TAG, it.localizedMessage.orEmpty())
+            showToast(R.string.error_generic)
         }
     }
 
