@@ -23,9 +23,7 @@ import javax.inject.Singleton
 @Singleton
 class CategoryRepository @Inject constructor() {
     private val db = FirebaseFirestore.getInstance()
-    var categoryCollectionRef = db.collection(CATEGORY_COLLECTION_REF)
-        private set
-
+    private val categoryCollectionRef = db.collection(CATEGORY_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 
     suspend fun createCategory(
@@ -55,11 +53,21 @@ class CategoryRepository @Inject constructor() {
             it.categoryId = document.id
             batch.set(document, it)
         }
-        batch.commit().await()
+
+        try {
+            batch.commit().await()
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+        }
     }
 
     suspend fun getCategories(): List<Category> {
-        return categoryCollectionRef.get(Source.CACHE).await().toObjects(Category::class.java)
+        return try {
+            categoryCollectionRef.get(Source.CACHE).await().toObjects(Category::class.java)
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+            mutableListOf()
+        }
     }
 
     fun listenToCategoriesForHousehold(householdId: String, apiStatus: ApiStatus) {
@@ -88,17 +96,17 @@ class CategoryRepository @Inject constructor() {
 
     suspend fun updateCategory(
             categoryId: String,
-            name: String = "",
-            description: String = "",
-            householdId: String = ""
+            name: String? = null,
+            description: String? = null,
+            householdId: String? = null
     ) {
         val document = categoryCollectionRef.document(categoryId)
 
         val categoryFieldMap = mutableMapOf<String, Any>()
         categoryFieldMap[CATEGORY_ID_REF] = document.id
-        if (name.isNotBlank()) categoryFieldMap[CATEGORY_NAME_REF] = name
-        if (description.isNotBlank()) categoryFieldMap[CATEGORY_DESCRIPTION_REF] = description
-        if (householdId.isNotBlank()) categoryFieldMap[CATEGORY_HOUSEHOLDID_REF] = description
+        name?.let { categoryFieldMap[CATEGORY_NAME_REF] = it }
+        description?.let { categoryFieldMap[CATEGORY_DESCRIPTION_REF] = it }
+        householdId?.let { categoryFieldMap[CATEGORY_HOUSEHOLDID_REF] = it }
 
         try {
             document.update(categoryFieldMap).await()

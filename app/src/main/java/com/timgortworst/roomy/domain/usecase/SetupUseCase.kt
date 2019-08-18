@@ -24,11 +24,13 @@ constructor(private val householdRepository: HouseholdRepository,
     }
 
     suspend fun switchHousehold(householdId: String, role: String) {
-        val userId = userRepository.updateUser(householdId = householdId, role = role)
+        val currentUserId = userRepository.getCurrentUserId() ?: return
+
+        userRepository.updateUser(householdId = householdId, role = role)
 
         // remove events assigned to user
-        eventRepository.getEventsForUser(userId).forEach {
-            eventRepository.eventCollectionRef.document(it.eventId).delete()
+        eventRepository.getEventsForUser(currentUserId).forEach {
+            eventRepository.deleteEvent(it.eventId)
         }
     }
 
@@ -43,9 +45,8 @@ constructor(private val householdRepository: HouseholdRepository,
     }
 
     suspend fun userBlackListedForHousehold(householdId: String): Boolean {
-        val housholdRef = householdRepository.householdsCollectionRef.document(householdId)
-        val household = housholdRef.get().await().toObject(Household::class.java) as Household
-        return household.userIdBlackList.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
+        val household = householdRepository.getHousehold(householdId)
+        return household?.userIdBlackList?.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty()) ?: false
     }
 
     suspend fun isHouseholdFull(referredHouseholdId: String): Boolean {

@@ -5,6 +5,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
@@ -22,22 +23,35 @@ import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor() {
-    val userCollectionRef = FirebaseFirestore.getInstance().collection(USER_COLLECTION_REF)
+    private val userCollectionRef = FirebaseFirestore.getInstance().collection(USER_COLLECTION_REF)
 
     private var registration: ListenerRegistration? = null
 
     fun getCurrentUserId() = FirebaseAuth.getInstance().currentUser?.uid
 
     suspend fun createUser() {
-        val currentUserDocRef = userCollectionRef.document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
-        val userDoc = currentUserDocRef.get().await()
-        if (!userDoc.exists()) {
+        val currentUserID = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val currentUserDocRef = userCollectionRef.document(currentUserID)
+
+        val userDoc = try {
+            currentUserDocRef.get().await()
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+            null
+        }
+
+        if (userDoc?.exists() == false) {
             val newUser = User(
                     FirebaseAuth.getInstance().currentUser?.uid ?: "",
                     FirebaseAuth.getInstance().currentUser?.displayName ?: "",
                     FirebaseAuth.getInstance().currentUser?.email ?: ""
             )
-            currentUserDocRef.set(newUser).await()
+
+            try {
+                currentUserDocRef.set(newUser).await()
+            } catch (e: FirebaseFirestoreException) {
+                Log.e(TAG, e.localizedMessage.orEmpty())
+            }
         }
     }
 
@@ -45,7 +59,12 @@ class UserRepository @Inject constructor() {
         if (userId.isNullOrEmpty()) return null
 
         val currentUserDocRef = userCollectionRef.document(userId)
-        return currentUserDocRef.get().await().toObject(User::class.java)
+        return try {
+            currentUserDocRef.get().await().toObject(User::class.java)
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+            null
+        }
     }
 
     fun listenToUsersForHousehold(householdId: String?, apiStatus: ApiStatus) {
@@ -77,39 +96,53 @@ class UserRepository @Inject constructor() {
     suspend fun getUserListForHousehold(householdId: String?): List<User>? {
         if (householdId.isNullOrEmpty()) return null
 
-        return userCollectionRef
-                .whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
-                .get()
-                .await()
-                .toObjects(User::class.java)
+        return try {
+            userCollectionRef
+                    .whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
+                    .get()
+                    .await()
+                    .toObjects(User::class.java)
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+            null
+        }
     }
 
     suspend fun getHouseholdIdForUser(userId: String? = getCurrentUserId()): String {
         if (userId.isNullOrEmpty()) return ""
 
         val userDocRef = userCollectionRef.document(userId)
-        val user = userDocRef.get().await().toObject(User::class.java)
+        val user = try {
+            userDocRef.get().await().toObject(User::class.java)
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+            null
+        }
+
         return user?.householdId.orEmpty()
     }
 
     suspend fun updateUser(
-            userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty(),
-            name: String = "",
-            email: String = "",
-            householdId: String = "",
-            role: String = ""
-    ): String {
+            userId: String? = getCurrentUserId(),
+            name: String? = null,
+            email: String? = null,
+            householdId: String? = null,
+            role: String? = null
+    ) {
+        userId ?: return
         val userDocRef = userCollectionRef.document(userId)
 
         val userFieldMap = mutableMapOf<String, Any>()
-        if (name.isNotBlank()) userFieldMap[USER_NAME_REF] = name
-        if (email.isNotBlank()) userFieldMap[USER_EMAIL_REF] = email
-        if (householdId.isNotBlank()) userFieldMap[USER_HOUSEHOLDID_REF] = householdId
-        if (role.isNotBlank()) userFieldMap[USER_ROLE_REF] = role
+        name?.let { userFieldMap[USER_NAME_REF] = it }
+        email?.let { userFieldMap[USER_EMAIL_REF] = it }
+        householdId?.let { userFieldMap[USER_HOUSEHOLDID_REF] = it }
+        role?.let { userFieldMap[USER_ROLE_REF] = it }
 
-        userDocRef.set(userFieldMap, SetOptions.merge()).await()
-
-        return userId
+        try {
+            userDocRef.set(userFieldMap, SetOptions.merge()).await()
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+        }
     }
 
     fun detachUserListener() {

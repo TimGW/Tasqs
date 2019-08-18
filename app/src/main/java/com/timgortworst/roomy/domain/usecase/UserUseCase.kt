@@ -1,13 +1,10 @@
 package com.timgortworst.roomy.domain.usecase
 
-import com.timgortworst.roomy.data.model.Household
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.data.utils.Constants
 import com.timgortworst.roomy.presentation.features.user.presenter.UserListPresenter
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class UserUseCase
@@ -23,26 +20,19 @@ constructor(private val householdRepository: HouseholdRepository,
 
         addUserToBlackList(user.userId)
 
-        // remove id from user document
-        userRepository.userCollectionRef
-                .document(user.userId)
-                .update(Constants.USER_HOUSEHOLDID_REF, "")
+        // clear household id from user document
+        userRepository.updateUser(userId = user.userId, householdId = "")
     }
 
     private suspend fun addUserToBlackList(userId: String) {
-        val household = householdRepository.householdsCollectionRef
-                .document(userRepository.getHouseholdIdForUser(userId))
-                .get()
-                .await()
-                .toObject(Household::class.java) as Household
-
-        household.userIdBlackList.add(userId)
-        householdRepository.updateHousehold(household.householdId, household.userIdBlackList)
+        val household = householdRepository.getHousehold(userRepository.getHouseholdIdForUser(userId))
+        household?.userIdBlackList?.add(userId)
+        householdRepository.updateHousehold(household?.householdId, household?.userIdBlackList)
     }
 
     private suspend fun removeEventsAssignedToUser(userId: String) {
         eventRepository.getEventsForUser(userId).forEach {
-            eventRepository.eventCollectionRef.document(it.eventId).delete()
+            eventRepository.deleteEvent(it.eventId)
         }
     }
 

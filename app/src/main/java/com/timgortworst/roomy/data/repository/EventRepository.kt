@@ -28,9 +28,7 @@ import javax.inject.Singleton
 
 @Singleton
 class EventRepository @Inject constructor() {
-    var eventCollectionRef = FirebaseFirestore.getInstance().collection(EVENT_COLLECTION_REF)
-        private set
-
+    private val eventCollectionRef = FirebaseFirestore.getInstance().collection(EVENT_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 
     suspend fun createEvent(
@@ -50,7 +48,14 @@ class EventRepository @Inject constructor() {
     }
 
     suspend fun getEventsForUser(userId: String): MutableList<Event> {
-        return eventCollectionRef.whereEqualTo("user.userId", userId).get().await().toObjects(Event::class.java)
+        if (userId.isBlank()) return mutableListOf()
+
+        return try {
+            eventCollectionRef.whereEqualTo("user.userId", userId).get().await().toObjects(Event::class.java)
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+            mutableListOf()
+        }
     }
 
     fun listenToEventsForHousehold(householdId: String, apiStatus: ApiStatus) {
@@ -85,17 +90,20 @@ class EventRepository @Inject constructor() {
             user: User? = null,
             householdId: String? = null
     ) {
+        if (eventId.isBlank()) return
         val document = eventCollectionRef.document(eventId)
 
         val eventMetaDataMap = mutableMapOf<String, Any>()
-        if (eventMetaData != null) eventMetaDataMap[EVENT_START_DATE_REF] = eventMetaData.nextEventDate
-        if (eventMetaData != null) eventMetaDataMap[EVENT_INTERVAL_REF] = eventMetaData.repeatInterval.name
+        eventMetaData?.let {
+            eventMetaDataMap[EVENT_START_DATE_REF] = it.nextEventDate
+            eventMetaDataMap[EVENT_INTERVAL_REF] = it.repeatInterval.name
+        }
 
         val eventFieldMap = mutableMapOf<String, Any>()
-        if (category != null) eventFieldMap[EVENT_CATEGORY_REF] = category
-        if (user != null) eventFieldMap[EVENT_USER_REF] = user
-        if (eventMetaData != null) eventFieldMap[EVENT_META_DATA_REF] = eventMetaDataMap
-        if (householdId != null) eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = householdId
+        category?.let { eventFieldMap[EVENT_CATEGORY_REF] = it }
+        user?.let { eventFieldMap[EVENT_USER_REF] = it }
+        eventMetaData?.let { eventFieldMap[EVENT_META_DATA_REF] = it }
+        householdId?.let { eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = it }
 
         try {
             document.update(eventFieldMap).await()
@@ -111,7 +119,7 @@ class EventRepository @Inject constructor() {
                     .delete()
                     .await()
         } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage!!)
+            Log.e(TAG, e.localizedMessage.orEmpty())
         }
     }
 

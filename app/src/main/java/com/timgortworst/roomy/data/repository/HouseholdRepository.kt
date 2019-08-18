@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 @Singleton
 class HouseholdRepository @Inject constructor() {
-    val householdsCollectionRef = FirebaseFirestore.getInstance().collection(Constants.HOUSEHOLD_COLLECTION_REF)
+    private val householdsCollectionRef = FirebaseFirestore.getInstance().collection(Constants.HOUSEHOLD_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 
     suspend fun createHousehold(): String? {
@@ -27,6 +27,11 @@ class HouseholdRepository @Inject constructor() {
         } catch (e: FirebaseFirestoreException) {
             null
         }
+    }
+
+    suspend fun getHousehold(householdId: String): Household? {
+        val housholdRef = householdsCollectionRef.document(householdId)
+        return housholdRef.get().await().toObject(Household::class.java)
     }
 
     fun listenToHousehold(householdId: String?, householdListener: HouseholdListener) {
@@ -51,20 +56,29 @@ class HouseholdRepository @Inject constructor() {
     }
 
     suspend fun updateHousehold(
-        householdId: String,
-        blackList: MutableList<String> = mutableListOf()
+        householdId: String?,
+        blackList: MutableList<String>?
     ) {
+        householdId ?: return
         val householdDocRef = householdsCollectionRef.document(householdId)
 
         val fieldMap = mutableMapOf<String, Any>()
-        if (householdId.isNotBlank()) fieldMap[Constants.HOUSEHOLD_ID_REF] = householdId
-        if (blackList.isNotEmpty()) fieldMap[Constants.HOUSEHOLD_BLACKLIST_REF] = blackList
+        fieldMap[Constants.HOUSEHOLD_ID_REF] = householdId
+        blackList?.let { fieldMap[Constants.HOUSEHOLD_BLACKLIST_REF] = it }
 
-        householdDocRef.set(fieldMap, SetOptions.merge()).await()
+        try {
+            householdDocRef.set(fieldMap, SetOptions.merge()).await()
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+        }
     }
 
     suspend fun deleteHousehold(householdId: String) {
-        householdsCollectionRef.document(householdId).delete().await()
+        try {
+            householdsCollectionRef.document(householdId).delete().await()
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+        }
     }
 
     companion object {
