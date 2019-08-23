@@ -30,17 +30,16 @@ class SplashPresenter @Inject constructor(
             return@launch
         }
 
-        // continue to main activity if possible
-        if (setupUseCase.getHouseholdIdForUser().isNotBlank()) {
-            view.goToMainActivity()
-            return@launch
-        }
-
         // setup new or referred user
         if (referredHouseholdId.isNotBlank()) {
             view.goToSetupActivityReferred(referredHouseholdId)
         } else {
-            view.goToSetupActivity()
+            // continue to main activity if possible
+            if (setupUseCase.getHouseholdIdForUser().isNotBlank()) {
+                view.goToMainActivity()
+            } else {
+                view.goToSetupActivity()
+            }
         }
     }
 }

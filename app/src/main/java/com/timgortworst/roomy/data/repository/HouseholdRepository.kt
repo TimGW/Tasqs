@@ -31,7 +31,11 @@ class HouseholdRepository @Inject constructor() {
 
     suspend fun getHousehold(householdId: String): Household? {
         val housholdRef = householdsCollectionRef.document(householdId)
-        return housholdRef.get().await().toObject(Household::class.java)
+        return try {
+            housholdRef.get().await().toObject(Household::class.java)
+        } catch (e: FirebaseFirestoreException) {
+            null
+        }
     }
 
     fun listenToHousehold(householdId: String?, householdListener: HouseholdListener) {
