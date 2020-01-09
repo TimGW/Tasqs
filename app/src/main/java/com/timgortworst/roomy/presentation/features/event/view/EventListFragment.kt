@@ -180,17 +180,6 @@ class EventListFragment : Fragment(), EventListView {
         EventEditActivity.start(activityContext, event)
     }
 
-    override fun enqueueOneTimeNotification(eventId: String,
-                                            eventMetaData: EventMetaData,
-                                            categoryName: String,
-                                            userName: String) {
-        notificationWorkerBuilder.enqueueOneTimeNotification(
-                eventId,
-                eventMetaData,
-                userName,
-                categoryName)
-    }
-
     override fun enqueuePeriodicNotification(eventId: String,
                                              eventMetaData: EventMetaData,
                                              categoryName: String,

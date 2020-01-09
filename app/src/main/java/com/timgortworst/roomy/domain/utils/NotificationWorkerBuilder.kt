@@ -2,30 +2,18 @@ package com.timgortworst.roomy.domain.utils
 
 import android.content.Context
 import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.EventMetaData
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
+import kotlin.math.max
 
 
 class NotificationWorkerBuilder(private val context: Context) {
     private val workManager = WorkManager.getInstance(context)
-
-    fun enqueueOneTimeNotification(eventId: String,
-                                   eventMetaData: EventMetaData,
-                                   userName: String,
-                                   categoryName: String) {
-        removePendingNotificationReminder(eventId)
-        val initialDelay = calculateInitialDelay(eventMetaData.nextEventDate)
-
-        workManager.enqueue(OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
-                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .addTag(eventId)
-                .setInputData(buildInputData(userName, categoryName))
-                .build())
-    }
 
     fun enqueuePeriodicNotification(eventId: String,
                                     eventMetaData: EventMetaData,
@@ -33,11 +21,16 @@ class NotificationWorkerBuilder(private val context: Context) {
                                     categoryName: String) {
         removePendingNotificationReminder(eventId)
 
-        val initialDelay = calculateInitialDelay(eventMetaData.nextEventDate)
+        val upcomingEvent = eventMetaData.eventTimestamp.toInstant()
+        val futureEvent = upcomingEvent.plusInterval(eventMetaData.eventInterval)
+
+        val repeatInterval = Duration.between(upcomingEvent, futureEvent).toMillis()
+        val initialDelay = max(0L, Duration.between(Instant.now(), upcomingEvent).toMillis())
+
         workManager.enqueue(PeriodicWorkRequest.Builder(
-                ReminderNotificationWorker::class.java,
-                eventMetaData.repeatInterval.interval,
-                TimeUnit.MILLISECONDS)
+                    ReminderNotificationWorker::class.java,
+                    repeatInterval,
+                    TimeUnit.MILLISECONDS)
                 .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .addTag(eventId)
                 .setInputData(buildInputData(userName, categoryName))
@@ -56,6 +49,4 @@ class NotificationWorkerBuilder(private val context: Context) {
     fun removePendingNotificationReminder(eventId: String) {
         workManager.cancelAllWorkByTag(eventId)
     }
-
-    private fun calculateInitialDelay(nextOccurrence: Long) = nextOccurrence - System.currentTimeMillis()
 }

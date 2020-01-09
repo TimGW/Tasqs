@@ -6,9 +6,10 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.firestore.FirebaseFirestore
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.HuishoudGenootSharedPref
+import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.data.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -25,7 +26,7 @@ class RoomyApp : Application(), HasActivityInjector {
     internal lateinit var activityInjector: DispatchingAndroidInjector<Activity>
 
     @Inject
-    lateinit var sharedPref: HuishoudGenootSharedPref
+    lateinit var sharedPref: SharedPrefs
 
     init {
         instance = this
@@ -38,6 +39,8 @@ class RoomyApp : Application(), HasActivityInjector {
             .context(this)
             .build()
             .inject(this)
+
+        AndroidThreeTen.init(this)
 
         if (BuildConfig.DEBUG) {
             FirebaseFirestore.setLoggingEnabled(true)

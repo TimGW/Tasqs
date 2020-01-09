@@ -12,14 +12,14 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.HuishoudGenootSharedPref
+import com.timgortworst.roomy.data.SharedPrefs
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
     @Inject
-    lateinit var sharedPref: HuishoudGenootSharedPref
+    lateinit var sharedPref: SharedPrefs
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)

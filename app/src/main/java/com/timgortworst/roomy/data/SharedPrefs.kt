@@ -11,7 +11,7 @@ import javax.inject.Singleton
  * Created by tim.gortworst on 07/03/2018.
  */
 @Singleton
-class HuishoudGenootSharedPref
+class SharedPrefs
 @Inject constructor() {
     private val sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(RoomyApp.applicationContext())
 

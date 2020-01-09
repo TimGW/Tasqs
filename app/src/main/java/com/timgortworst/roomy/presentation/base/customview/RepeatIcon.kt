@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.data.model.EventMetaData.RepeatingInterval.*
+import com.timgortworst.roomy.data.model.EventMetaData.EventInterval.*
 import kotlinx.android.synthetic.main.custom_repeat_icon.view.*
 
 class RepeatIcon
@@ -18,7 +18,7 @@ constructor(context: Context,
         LayoutInflater.from(context).inflate(R.layout.custom_repeat_icon, this, true)
     }
 
-    fun setRepeatLabelText(interval: EventMetaData.RepeatingInterval) {
+    fun setRepeatLabelText(interval: EventMetaData.EventInterval) {
         val label = when (interval) {
             SINGLE_EVENT -> ""
             DAILY -> context.getString(R.string.repeat_label_interval_text_day)

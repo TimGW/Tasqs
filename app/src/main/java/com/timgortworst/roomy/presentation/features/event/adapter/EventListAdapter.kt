@@ -10,14 +10,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.domain.utils.isTimeStampInPast
+import com.timgortworst.roomy.domain.utils.TimeOperations
+import com.timgortworst.roomy.domain.utils.toZonedDateTime
 import com.timgortworst.roomy.presentation.base.customview.RepeatIcon
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 /**
@@ -30,6 +28,7 @@ class EventListAdapter(
 ) : RecyclerView.Adapter<EventListAdapter.ViewHolder>(), Filterable {
     private var filteredEvents: MutableList<Event>
     private var events: MutableList<Event> = mutableListOf()
+    private val timeOperations = TimeOperations.Impl()
 
     init {
         filteredEvents = events
@@ -42,15 +41,10 @@ class EventListAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val event = filteredEvents[position]
+        val dateTimeEvent = event.eventMetaData.eventTimestamp.toZonedDateTime()
+        val formattedDate = timeOperations.format(dateTimeEvent)
 
-        val formatter = if (BuildConfig.DEBUG) {
-            SimpleDateFormat("dd MMM yyyy HH:mm:ss.SSS", Locale.getDefault())
-        } else {
-            SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-        }
-        val formattedDate = formatter.format(Date(event.eventMetaData.nextEventDate))
-
-        viewHolder.dateTime.text = if (event.eventMetaData.nextEventDate.isTimeStampInPast()) {
+        viewHolder.dateTime.text = if (timeOperations.isDateInPast(dateTimeEvent.toInstant())) {
             viewHolder.dateTime.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.error))
             viewHolder.dateTime.setTypeface(null, Typeface.BOLD)
             activity.getString(R.string.event_overdue, formattedDate)
@@ -63,8 +57,8 @@ class EventListAdapter(
         viewHolder.user.text = event.user.name.capitalize()
         viewHolder.description.text = event.eventCategory.name
 
-        viewHolder.repeatIcon.setRepeatLabelText(event.eventMetaData.repeatInterval)
-        if (event.eventMetaData.repeatInterval != EventMetaData.RepeatingInterval.SINGLE_EVENT) {
+        viewHolder.repeatIcon.setRepeatLabelText(event.eventMetaData.eventInterval)
+        if (event.eventMetaData.eventInterval != EventMetaData.EventInterval.SINGLE_EVENT) {
             viewHolder.repeatIcon.visibility = View.VISIBLE
         } else {
             viewHolder.repeatIcon.visibility = View.GONE
@@ -81,7 +75,7 @@ class EventListAdapter(
 
     fun addEvent(event: Event) {
         val newAddIndex = filteredEvents.indexOfLast {
-            it.eventMetaData.nextEventDate <= event.eventMetaData.nextEventDate
+            it.eventMetaData.eventTimestamp <= event.eventMetaData.eventTimestamp
         } + 1
         filteredEvents.add(newAddIndex, event)
         notifyItemInserted(newAddIndex)
@@ -92,7 +86,7 @@ class EventListAdapter(
         filteredEvents[fromPosition] = event
         notifyItemChanged(fromPosition)
 
-        val toPosition = filteredEvents.indexOfLast { event.eventMetaData.nextEventDate > it.eventMetaData.nextEventDate }
+        val toPosition = filteredEvents.indexOfLast { event.eventMetaData.eventTimestamp > it.eventMetaData.eventTimestamp }
 
         // update data array if item is not on first or last position
         if (toPosition != RecyclerView.NO_POSITION &&

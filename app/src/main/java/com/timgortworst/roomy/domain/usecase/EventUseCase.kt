@@ -1,12 +1,18 @@
 package com.timgortworst.roomy.domain.usecase
 
 import com.timgortworst.roomy.data.model.Category
+import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.repository.CategoryRepository
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.utils.TimeOperations
+import com.timgortworst.roomy.domain.utils.plusInterval
+import com.timgortworst.roomy.domain.utils.toInstant
+import com.timgortworst.roomy.domain.utils.toTimestamp
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
+import org.threeten.bp.Instant
 import javax.inject.Inject
 
 class EventUseCase
@@ -31,6 +37,16 @@ constructor(private val eventRepository: EventRepository,
 
     suspend fun deleteEvent(eventId: String) {
         eventRepository.deleteEvent(eventId)
+    }
+
+    suspend fun markEventAsComplete(event : Event) {
+        val nextEvent = calcNextEventInUTC(event.eventMetaData).toTimestamp()
+
+        eventRepository.updateEvent(
+                eventId = event.eventId,
+                eventMetaData = EventMetaData(
+                    eventTimestamp = nextEvent,
+                    eventInterval = event.eventMetaData.eventInterval))
     }
 
     suspend fun updateEvent(eventId: String,
@@ -62,5 +78,17 @@ constructor(private val eventRepository: EventRepository,
 
     suspend fun isUserAbleToCreateEvent(): Boolean {
         return categoryRepository.getCategories().isNotEmpty()
+    }
+
+    private fun calcNextEventInUTC(eventMetaData: EventMetaData): Instant {
+        val timeOperations = TimeOperations.Impl()
+        val dateTimeEvent = eventMetaData.eventTimestamp.toInstant()
+        val dateTimeToday = timeOperations.todayAtEightUTC()
+
+        return if (timeOperations.isDateInPast(dateTimeEvent)) {
+            dateTimeToday.plusInterval(eventMetaData.eventInterval)
+        } else {
+            dateTimeEvent.plusInterval(eventMetaData.eventInterval)
+        }
     }
 }
