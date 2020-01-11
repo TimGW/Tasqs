@@ -74,6 +74,9 @@ class SplashActivity : AppCompatActivity(), SplashView {
 
         if (requestCode == RESULT_CODE && resultCode == Activity.RESULT_OK) {
             presenter.initializeUser()
+        } else {
+            recreate()
+            showToast(R.string.error_connection)
         }
     }
 }
