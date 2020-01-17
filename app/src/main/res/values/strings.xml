@@ -91,4 +91,6 @@
     <string name="toolbar_title_new_event">New event</string>
     <string name="toolbar_title_schema">Events</string>
     <string name="toolbar_title_users">Users</string>
+    <string name="easter_egg_enabled">Ads are now disabled!</string>
+    <string name="easter_egg_message">Click %1$d more time(s) to remove ads</string>
 </resources>

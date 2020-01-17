@@ -22,7 +22,7 @@ interface TimeOperations {
     class Impl : TimeOperations {
         override fun nowUTC() = Instant.now()
 
-        override fun todayAtEightUTC() = nowUTC().atZone(ZoneOffset.UTC)
+        override fun todayAtEightUTC() = Instant.now().atZone(ZoneOffset.UTC)
                 .withHour(DEFAULT_HOUR_OF_DAY_NOTIFICATION)
                 .truncatedTo(ChronoUnit.HOURS)
                 .toInstant()

@@ -15,10 +15,10 @@ import kotlin.math.max
 class NotificationWorkerBuilder(private val context: Context) {
     private val workManager = WorkManager.getInstance(context)
 
-    fun enqueuePeriodicNotification(eventId: String,
-                                    eventMetaData: EventMetaData,
-                                    userName: String,
-                                    categoryName: String) {
+    fun enqueueNotification(eventId: String,
+                            eventMetaData: EventMetaData,
+                            userName: String,
+                            categoryName: String) {
         removePendingNotificationReminder(eventId)
 
         val upcomingEvent = eventMetaData.eventTimestamp.toInstant()

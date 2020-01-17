@@ -26,7 +26,7 @@
 //    }
 //
 //    @Test
-//    fun enqueuePeriodicNotification() {
+//    fun enqueueNotification() {
 //    }
 //
 //    @Test

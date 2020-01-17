@@ -84,6 +84,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     override fun onResume() {
         super.onResume()
         networkChangeReceiver.register()
+        presenter.showOrHideAd()
     }
 
     override fun onPause() {
@@ -172,20 +173,22 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         }
     }
 
-    private fun setupAds() {
+    fun setupAds() {
         val builder = AdRequest.Builder()
         adRequest = builder.build()
         adView?.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                adView_container?.visibility = View.VISIBLE
-            }
+            override fun onAdLoaded() { presenter.showOrHideAd() }
 
-            override fun onAdFailedToLoad(errorCode: Int) {
-                adView_container?.visibility = View.GONE
-            }
+            override fun onAdFailedToLoad(errorCode: Int) { hideAd() }
         }
-        adView?.loadAd(adRequest)
+        loadAd()
     }
+
+    override fun loadAd() { adView?.loadAd(adRequest) }
+
+    override fun showAd() { adView_container?.visibility = View.VISIBLE }
+
+    override fun hideAd() { adView_container?.visibility = View.GONE }
 
     override fun presentShareLinkUri(linkUri: Uri) {
         FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -209,10 +212,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
                     }
                     hideProgressDialog()
                 }
-    }
-
-    override fun loadAd() {
-        adView?.loadAd(adRequest)
     }
 
     override fun showToast(stringRes: Int) {

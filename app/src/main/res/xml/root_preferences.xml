@@ -1,36 +1,43 @@
-<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/preferences_display_header" app:iconSpaceReserved="false">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/preferences_display_header">
 
         <SwitchPreferenceCompat
+            app:iconSpaceReserved="false"
             app:key="dark_mode_key"
-            app:title="@string/preferences_display_dark_mode"
-            app:iconSpaceReserved="false"/>
+            app:title="@string/preferences_display_dark_mode" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/preferences_analytics_header" app:iconSpaceReserved="false">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/preferences_analytics_header">
 
         <SwitchPreferenceCompat
-            app:key="analytics_key"
-            app:title="@string/preferences_analytics"
-            app:summary="@string/preferences_analytics_description"
             android:defaultValue="true"
             app:iconSpaceReserved="false"
-            />
+            app:key="analytics_key"
+            app:summary="@string/preferences_analytics_description"
+            app:title="@string/preferences_analytics" />
 
         <Preference
             android:key="privacy_policy_key"
             android:title="Privacy policy"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="About" app:iconSpaceReserved="false">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="About">
 
-        <Preference android:title="App version"
+        <Preference
+            android:key="preferences_app_version_key"
             android:summary="@string/versionName"
+            android:title="App version"
             app:iconSpaceReserved="false">
 
         </Preference>
@@ -38,7 +45,7 @@
         <Preference
             android:key="preferences_rate_app_key"
             android:title="Rate this app"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 

@@ -51,7 +51,7 @@ class EventListPresenter @Inject constructor(
 
     fun setNotificationReminder(event: Event, hasPendingWrites: Boolean) {
         if (hasPendingWrites && event.user.userId == eventUseCase.getCurrentUserId()) {
-            view.enqueuePeriodicNotification(event.eventId, event.eventMetaData, event.eventCategory.name, event.user.name)
+            view.enqueueNotification(event.eventId, event.eventMetaData, event.eventCategory.name, event.user.name)
         }
     }
 

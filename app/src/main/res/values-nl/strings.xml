@@ -91,4 +91,6 @@
     <string name="toolbar_title_new_event">Nieuw evenement</string>
     <string name="toolbar_title_schema">Evenementen</string>
     <string name="toolbar_title_users">Gebruikers</string>
+    <string name="easter_egg_enabled">Advertenties zijn nu uitgeschakeld!</string>
+    <string name="easter_egg_message">Klik nog %1$d keer om advertenties te verwijderen</string>
 </resources>

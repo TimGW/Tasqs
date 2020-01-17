@@ -3,6 +3,7 @@ package com.timgortworst.roomy.presentation.features.main.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.data.model.Household
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.domain.usecase.MainUseCase
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class MainPresenter
 @Inject constructor(
         private val view: MainView,
-        private val mainUseCase: MainUseCase
+        private val mainUseCase: MainUseCase,
+        private val sharedPrefs: SharedPrefs
 ) : DefaultLifecycleObserver, HouseholdRepository.HouseholdListener {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
@@ -63,4 +65,6 @@ class MainPresenter
             view.showToast(R.string.error_no_categories)
         }
     }
+
+    fun showOrHideAd()= if (sharedPrefs.isAdsEnabled()) view.showAd() else view.hideAd()
 }

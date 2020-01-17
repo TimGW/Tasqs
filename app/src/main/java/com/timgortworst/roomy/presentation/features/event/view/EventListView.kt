@@ -11,7 +11,7 @@ interface EventListView : PageStateView {
     fun presentDeletedEvent(agendaEvent: Event)
     fun presentEmptyView(isVisible: Boolean)
     fun removePendingNotificationReminder(eventId: String)
-    fun enqueuePeriodicNotification(eventId: String, eventMetaData: EventMetaData, categoryName: String, userName: String)
+    fun enqueueNotification(eventId: String, eventMetaData: EventMetaData, categoryName: String, userName: String)
     fun openEventEditActivity(event: Event)
     fun showToast(@StringRes stringRes: Int)
 }

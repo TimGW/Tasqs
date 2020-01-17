@@ -1,6 +1,7 @@
 package com.timgortworst.roomy.data
 
 import androidx.preference.PreferenceManager
+import com.timgortworst.roomy.data.utils.Constants.SHARED_PREF_ADS
 import com.timgortworst.roomy.data.utils.Constants.SHARED_PREF_DARK_MODE
 import com.timgortworst.roomy.data.utils.Constants.SHARED_PREF_FIRST_LAUNCH
 import com.timgortworst.roomy.presentation.base.RoomyApp
@@ -21,6 +22,14 @@ class SharedPrefs
 
     fun setFirstLaunch(setFirstLaunch: Boolean) {
         setBoolValue(SHARED_PREF_FIRST_LAUNCH, setFirstLaunch)
+    }
+
+    fun isAdsEnabled(): Boolean {
+        return getBoolValue(SHARED_PREF_ADS, true)
+    }
+
+    fun setAdsEnabled(setAdsEnabled: Boolean) {
+        setBoolValue(SHARED_PREF_ADS, setAdsEnabled)
     }
 
     fun setDisplayModeDark(darkMode : Boolean) {

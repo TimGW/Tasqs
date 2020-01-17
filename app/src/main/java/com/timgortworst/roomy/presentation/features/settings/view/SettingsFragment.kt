@@ -1,11 +1,14 @@
 package com.timgortworst.roomy.presentation.features.settings.view
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -13,13 +16,16 @@ import androidx.preference.SwitchPreferenceCompat
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
+import com.timgortworst.roomy.presentation.features.settings.presenter.SettingsPresenter
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
-class SettingsFragment : PreferenceFragmentCompat() {
-
-    @Inject
-    lateinit var sharedPref: SharedPrefs
+class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
+    @Inject lateinit var sharedPref: SharedPrefs
+    @Inject lateinit var presenter: SettingsPresenter
+    private var toast: Toast? = null
+    private var remainingTimeCounter: CountDownTimer? = null
+    private var counter: Int = 0
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -30,6 +36,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
     }
 
+    @SuppressLint("ShowToast")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -60,7 +67,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
 
         (findPreference("privacy_policy_key") as? Preference)?.setOnPreferenceClickListener {
-            HtmlTextActivity.start(activity, getString(R.string.privacy_policy), "Privacy policy")
+            HtmlTextActivity.start(activity, getString(com.timgortworst.roomy.R.string.privacy_policy), "Privacy policy")
             true
         }
 
@@ -68,10 +75,35 @@ class SettingsFragment : PreferenceFragmentCompat() {
             val intent = try {
                 Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${activity.packageName}"))
             } catch (ex: ActivityNotFoundException) {
-               Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${activity.packageName}"))
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${activity.packageName}"))
             }
             startActivity(intent)
             true
         }
+
+        (findPreference("preferences_app_version_key") as? Preference)?.setOnPreferenceClickListener {
+            presenter.onAppVersionClick(++counter)
+
+            remainingTimeCounter?.cancel()
+            remainingTimeCounter?.start()
+
+            true
+        }
+
+        remainingTimeCounter = object : CountDownTimer(5000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() { counter = 0 }
+        }
+    }
+
+    @SuppressLint("ShowToast")
+    override fun toasti(stringRes: Int, argument: Int?) {
+        val string = getString(stringRes, argument)
+
+        if (toast == null) {
+            toast = Toast.makeText(activity, string, Toast.LENGTH_LONG)
+        }
+        toast?.setText(string)
+        toast?.show()
     }
 }
