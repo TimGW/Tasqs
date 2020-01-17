@@ -12,6 +12,8 @@ import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.data.model.parse
+import com.timgortworst.roomy.data.utils.Constants
 import com.timgortworst.roomy.data.utils.Constants.EVENT_CATEGORY_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_COLLECTION_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_HOUSEHOLD_ID_REF
@@ -36,14 +38,22 @@ class EventRepository @Inject constructor() {
             category: Category,
             user: User,
             householdId: String
-    ) : String {
+    ): String? {
         val document = eventCollectionRef.document()
+        val eventFieldMap = mutableMapOf<String, Any>()
+
+        eventFieldMap[Constants.EVENT_ID_REF] = document.id
+        eventFieldMap[EVENT_META_DATA_REF] = eventMetaData.parse()
+        eventFieldMap[EVENT_CATEGORY_REF] = category
+        eventFieldMap[EVENT_USER_REF] = user
+        eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = householdId
+
         return try {
-            document.set(Event(document.id, eventMetaData, category, user, householdId)).await()
+            document.set(eventFieldMap).await()
             document.id
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
-            ""
+            null
         }
     }
 
@@ -58,7 +68,7 @@ class EventRepository @Inject constructor() {
         }
     }
 
-    fun listenToEventsForHousehold(householdId: String, apiStatus: ApiStatus) {
+    fun listenToEventsForHousehold(householdId: String, apiStatus: ApiStatus<Any?>) {
         val handler = Handler()
         val runnable = Runnable { apiStatus.setState(ApiStatus.Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
@@ -74,10 +84,11 @@ class EventRepository @Inject constructor() {
                             Log.w(TAG, "listen:error", e)
                         }
                         else -> {
-                            val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
-                            val totalDataSetSize = snapshots.documents.toList().size
-                            // todo parse objects here
-                            apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            val changeList = snapshots?.documentChanges ?: return@EventListener
+                            val totalDataSetSize = snapshots.documents.size
+                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(Event::class.java), b.type) }
+
+                            apiStatus.setState(ApiStatus.Response.Success(mappedResponse, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })
@@ -102,7 +113,7 @@ class EventRepository @Inject constructor() {
         val eventFieldMap = mutableMapOf<String, Any>()
         category?.let { eventFieldMap[EVENT_CATEGORY_REF] = it }
         user?.let { eventFieldMap[EVENT_USER_REF] = it }
-        eventMetaData?.let { eventFieldMap[EVENT_META_DATA_REF] = it }
+        eventMetaData?.let { eventFieldMap[EVENT_META_DATA_REF] = it.parse() }
         householdId?.let { eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = it }
 
         try {
@@ -126,12 +137,6 @@ class EventRepository @Inject constructor() {
     fun detachEventListener() {
         registration?.remove()
     }
-
-//    fun Timestamp.toZonedDateTime(zone: ZoneId = ZoneId.systemDefault()): ZonedDateTime {
-//        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(seconds * 1000 + nanoseconds / 1000000), zone)
-//    }
-//
-//    fun ZonedDateTime.toTimestamp() = Timestamp(second.toLong(), nano)
 
     companion object {
         private const val TAG = "EventRepository"

@@ -70,7 +70,7 @@ class CategoryRepository @Inject constructor() {
         }
     }
 
-    fun listenToCategoriesForHousehold(householdId: String, apiStatus: ApiStatus) {
+    fun listenToCategoriesForHousehold(householdId: String, apiStatus: ApiStatus<Any?>) {
         val handler = Handler()
         val runnable = Runnable { apiStatus.setState(ApiStatus.Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
@@ -86,11 +86,11 @@ class CategoryRepository @Inject constructor() {
                             Log.w(TAG, "listen:error", e)
                         }
                         else -> {
-                            val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
-                            val totalDataSetSize = snapshots.documents.toList().size
-                            // todo parse objects here
+                            val changeList = snapshots?.documentChanges ?: return@EventListener
+                            val totalDataSetSize = snapshots.documents.size
+                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(Category::class.java), b.type) }
 
-                            apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            apiStatus.setState(ApiStatus.Response.Success(mappedResponse, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })

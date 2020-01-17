@@ -58,7 +58,7 @@ constructor(private val eventRepository: EventRepository,
     suspend fun createEvent(eventMetaData: EventMetaData,
                             category: Category,
                             user: User,
-                            householdId: String): String {
+                            householdId: String): String? {
         return eventRepository.createEvent(eventMetaData, category, user, householdId)
     }
 

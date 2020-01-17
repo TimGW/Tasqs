@@ -49,14 +49,15 @@ class UserListPresenter @Inject constructor(
         }
     }
 
-    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
+    override fun renderSuccessfulState(dc: List<Pair<*, DocumentChange.Type>>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
         scope.launch {
             view.setLoadingView(false)
             view.setErrorView(false)
 
-            for (docChange in dc) {
-                val user = docChange.document.toObject(User::class.java)
-                when (docChange.type) {
+            dc.forEach {
+                val user = (it.first as? User) ?: return@launch
+
+                when (it.second) {
                     DocumentChange.Type.ADDED -> view.presentAddedUser(user)
                     DocumentChange.Type.MODIFIED -> view.presentEditedUser(user)
                     DocumentChange.Type.REMOVED -> view.presentDeletedUser(user)

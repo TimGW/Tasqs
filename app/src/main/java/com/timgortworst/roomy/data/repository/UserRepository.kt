@@ -67,7 +67,7 @@ class UserRepository @Inject constructor() {
         }
     }
 
-    fun listenToUsersForHousehold(householdId: String?, apiStatus: ApiStatus) {
+    fun listenToUsersForHousehold(householdId: String?, apiStatus: ApiStatus<Any?>) {
         if (householdId.isNullOrEmpty()) return
 
         val handler = Handler()
@@ -85,11 +85,11 @@ class UserRepository @Inject constructor() {
                             Log.w(TAG, "listen:error", e)
                         }
                         else -> {
-                            val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
-                            val totalDataSetSize = snapshots.documents.toList().size
+                            val changeList = snapshots?.documentChanges ?: return@EventListener
+                            val totalDataSetSize = snapshots.documents.size
+                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(User::class.java), b.type) }
 
-                            // todo parse objects here
-                            apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            apiStatus.setState(ApiStatus.Response.Success(mappedResponse, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })

@@ -17,7 +17,7 @@ data class EventMetaData(
         var eventInterval: EventInterval = SINGLE_EVENT
 ) : Parcelable {
 
-    enum class EventInterval(val title : Int) {
+    enum class EventInterval(val title: Int) {
         SINGLE_EVENT(R.string.repeating_interval_single_event),
         DAILY(R.string.repeating_interval_daily_event),
         WEEKLY(R.string.repeating_interval_weekly_event),
@@ -29,3 +29,7 @@ data class EventMetaData(
         }
     }
 }
+
+//fun EventMetaData.parse(): EventMetaDataJson {
+//    return EventMetaDataJson(eventTimestamp.toTimestamp(), eventInterval)
+//}

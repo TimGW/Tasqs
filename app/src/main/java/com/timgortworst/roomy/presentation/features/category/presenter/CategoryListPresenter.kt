@@ -43,14 +43,15 @@ class CategoryListPresenter @Inject constructor(
         categoryUseCase.createCategoryBatch(generatedListOfCategories)
     }
 
-    override fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
+    override fun renderSuccessfulState(dc: List<Pair<*, DocumentChange.Type>>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
         view.setLoadingView(false)
         view.setErrorView(false)
         view.presentEmptyView(totalDataSetSize == 0)
 
         dc.forEach {
-            val category = it.document.toObject(Category::class.java)
-            when (it.type) {
+            val category = (it.first as? Category) ?: return
+
+            when (it.second) {
                 DocumentChange.Type.ADDED -> view.presentAddedCategory(category)
                 DocumentChange.Type.MODIFIED -> view.presentEditedCategory(category)
                 DocumentChange.Type.REMOVED -> view.presentDeletedCategory(category)

@@ -4,7 +4,7 @@ import com.google.firebase.firestore.DocumentChange
 
 abstract class ApiStatus {
 
-    abstract fun renderSuccessfulState(dc: List<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean)
+    abstract fun renderSuccessfulState(dc: List<Pair<*, DocumentChange.Type>>, totalDataSetSize: Int, hasPendingWrites: Boolean)
     abstract fun renderLoadingState()
     abstract fun renderUnsuccessfulState(throwable: Throwable)
 
@@ -18,7 +18,7 @@ abstract class ApiStatus {
 
     sealed class Response {
         object Loading : Response()
-        data class Success(val dc: List<DocumentChange>, val totalDataSetSize: Int, val hasPendingWrites: Boolean) : Response()
+        data class Success(val dc: List<Pair<*, DocumentChange.Type>>, val totalDataSetSize: Int, val hasPendingWrites: Boolean) : Response()
         data class Error(val throwable: Throwable) : Response()
     }
 }

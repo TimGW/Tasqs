@@ -23,6 +23,7 @@ object Constants {
     const val CATEGORY_DESCRIPTION_REF = "description"
     const val CATEGORY_HOUSEHOLDID_REF = "householdId"
 
+    const val EVENT_ID_REF = "eventId"
     const val EVENT_COLLECTION_REF = "events"
     const val EVENT_CATEGORY_REF = "eventCategory"
     const val EVENT_INTERVAL_REF = "eventInterval"
