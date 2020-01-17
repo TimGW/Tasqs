@@ -11,15 +11,19 @@ class SettingsPresenter @Inject constructor(
         private val sharedPrefs: SharedPrefs
 ) {
 
-    fun onAppVersionClick(counter: Int) = when {
-        counter.betweenUntil(CLICKS_FOR_MESSAGE, CLICKS_FOR_EASTER_EGG) -> {
-            view.toasti(R.string.easter_egg_message, CLICKS_FOR_EASTER_EGG - counter)
+    fun onAppVersionClick(counter: Int) {
+        if (sharedPrefs.isAdsEnabled()) {
+            when {
+                counter.betweenUntil(CLICKS_FOR_MESSAGE, CLICKS_FOR_EASTER_EGG) -> {
+                    view.toasti(R.string.easter_egg_message, CLICKS_FOR_EASTER_EGG - counter)
+                }
+                counter == CLICKS_FOR_EASTER_EGG -> {
+                    sharedPrefs.setAdsEnabled(false)
+                    view.toasti(R.string.easter_egg_enabled)
+                }
+                else -> { /* do nothing */ }
+            }
         }
-        counter == CLICKS_FOR_EASTER_EGG -> {
-            sharedPrefs.setAdsEnabled(false)
-            view.toasti(R.string.easter_egg_enabled)
-        }
-        else -> { }
     }
 
     companion object {
