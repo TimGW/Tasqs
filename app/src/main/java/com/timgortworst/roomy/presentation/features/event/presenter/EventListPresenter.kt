@@ -33,6 +33,8 @@ class EventListPresenter @Inject constructor(
     }
 
     fun listenToEvents() = scope.launch {
+        view.presentEmptyView(true)
+
         eventUseCase.listenToEvents(this@EventListPresenter)
     }
 

@@ -26,6 +26,8 @@ class CategoryListPresenter @Inject constructor(
     }
 
     fun listenToCategories() = scope.launch {
+        view.presentEmptyView(true)
+
         categoryUseCase.listenToCategoriesForHousehold(this@CategoryListPresenter)
     }
 
