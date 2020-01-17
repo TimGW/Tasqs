@@ -88,6 +88,8 @@ class CategoryRepository @Inject constructor() {
                         else -> {
                             val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.toList().size
+                            // todo parse objects here
+
                             apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }

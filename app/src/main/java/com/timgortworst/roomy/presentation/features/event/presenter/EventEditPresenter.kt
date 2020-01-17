@@ -6,13 +6,14 @@ import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.data.utils.Constants.DEFAULT_HOUR_OF_DAY_NOTIFICATION
 import com.timgortworst.roomy.domain.usecase.EventUseCase
-import com.timgortworst.roomy.domain.utils.toTimestamp
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventEditView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.TextStyle
 import java.util.*
 import javax.inject.Inject
@@ -69,10 +70,11 @@ class EventEditPresenter @Inject constructor(
                       category: Category,
                       user: User) {
 
+
         val eventMetaData = if (isRepeatBoxChecked) {
-            EventMetaData(eventTimestamp = selectedDate.toTimestamp(), eventInterval = repeatInterval)
+            EventMetaData(eventTimestamp = selectedDate.toZonedDateTime(), eventInterval = repeatInterval)
         } else {
-            EventMetaData(eventTimestamp = selectedDate.toTimestamp(), eventInterval = EventMetaData.EventInterval.SINGLE_EVENT)
+            EventMetaData(eventTimestamp = selectedDate.toZonedDateTime(), eventInterval = EventMetaData.EventInterval.SINGLE_EVENT)
         }
 
         createOrUpdateEvent(
@@ -82,6 +84,8 @@ class EventEditPresenter @Inject constructor(
                 eventMetaData
         )
     }
+
+    private fun LocalDate.toZonedDateTime(timeOfDay: Int = DEFAULT_HOUR_OF_DAY_NOTIFICATION) = atTime(timeOfDay, 0).atZone(ZoneId.systemDefault())
 
     companion object {
         private const val TAG = "EventEditPresenter"

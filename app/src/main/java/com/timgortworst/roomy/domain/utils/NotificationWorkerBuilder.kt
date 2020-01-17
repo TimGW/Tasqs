@@ -21,7 +21,7 @@ class NotificationWorkerBuilder(private val context: Context) {
                             categoryName: String) {
         removePendingNotificationReminder(eventId)
 
-        val upcomingEvent = eventMetaData.eventTimestamp.toInstant()
+        val upcomingEvent = eventMetaData.eventTimestamp
         val futureEvent = upcomingEvent.plusInterval(eventMetaData.eventInterval)
 
         val repeatInterval = Duration.between(upcomingEvent, futureEvent).toMillis()

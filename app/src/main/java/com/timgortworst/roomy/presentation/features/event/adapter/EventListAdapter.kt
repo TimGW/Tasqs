@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.presentation.features.event.adapter
 
+import android.app.Activity
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
@@ -7,15 +8,17 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.domain.utils.TimeOperations
-import com.timgortworst.roomy.domain.utils.toZonedDateTime
+import com.timgortworst.roomy.domain.utils.isDateInPast
 import com.timgortworst.roomy.presentation.base.customview.RepeatIcon
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
+import java.util.*
 
 
 /**
@@ -24,11 +27,10 @@ import com.timgortworst.roomy.presentation.base.customview.RepeatIcon
  * Handles clicks by expanding items to show a more detailed description of the category
  */
 class EventListAdapter(
-        private var activity: AppCompatActivity
+        private val activity: Activity
 ) : RecyclerView.Adapter<EventListAdapter.ViewHolder>(), Filterable {
     private var filteredEvents: MutableList<Event>
     private var events: MutableList<Event> = mutableListOf()
-    private val timeOperations = TimeOperations.Impl()
 
     init {
         filteredEvents = events
@@ -41,10 +43,10 @@ class EventListAdapter(
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val event = filteredEvents[position]
-        val dateTimeEvent = event.eventMetaData.eventTimestamp.toZonedDateTime()
-        val formattedDate = timeOperations.format(dateTimeEvent)
+        val dateTimeEvent = event.eventMetaData.eventTimestamp
+        val formattedDate = formatDate(dateTimeEvent)
 
-        viewHolder.dateTime.text = if (timeOperations.isDateInPast(dateTimeEvent.toInstant())) {
+        viewHolder.dateTime.text = if (dateTimeEvent.isDateInPast()) {
             viewHolder.dateTime.setTextColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.error))
             viewHolder.dateTime.setTypeface(null, Typeface.BOLD)
             activity.getString(R.string.event_overdue, formattedDate)
@@ -136,6 +138,13 @@ class EventListAdapter(
             filteredEvents = results.values as MutableList<Event>
             notifyDataSetChanged()
         }
+    }
+
+    fun formatDate(zonedDateTime: ZonedDateTime) : String {
+        val formatter = DateTimeFormatter
+                .ofLocalizedDate(FormatStyle.MEDIUM)
+                .withLocale(Locale.getDefault())
+        return zonedDateTime.format(formatter)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

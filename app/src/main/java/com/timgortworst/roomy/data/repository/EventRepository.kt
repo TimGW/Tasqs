@@ -76,7 +76,7 @@ class EventRepository @Inject constructor() {
                         else -> {
                             val changeList = snapshots?.documentChanges?.toList() ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.toList().size
-
+                            // todo parse objects here
                             apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
@@ -126,6 +126,12 @@ class EventRepository @Inject constructor() {
     fun detachEventListener() {
         registration?.remove()
     }
+
+//    fun Timestamp.toZonedDateTime(zone: ZoneId = ZoneId.systemDefault()): ZonedDateTime {
+//        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(seconds * 1000 + nanoseconds / 1000000), zone)
+//    }
+//
+//    fun ZonedDateTime.toTimestamp() = Timestamp(second.toLong(), nano)
 
     companion object {
         private const val TAG = "EventRepository"

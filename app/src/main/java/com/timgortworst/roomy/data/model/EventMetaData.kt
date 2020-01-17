@@ -2,19 +2,18 @@ package com.timgortworst.roomy.data.model
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.EventMetaData.EventInterval.SINGLE_EVENT
 import com.timgortworst.roomy.presentation.base.RoomyApp
 import kotlinx.android.parcel.Parcelize
-
+import org.threeten.bp.ZonedDateTime
 
 @IgnoreExtraProperties
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class EventMetaData(
-        var eventTimestamp: Timestamp = Timestamp.now(),
+        var eventTimestamp: ZonedDateTime = ZonedDateTime.now(),
         var eventInterval: EventInterval = SINGLE_EVENT
 ) : Parcelable {
 

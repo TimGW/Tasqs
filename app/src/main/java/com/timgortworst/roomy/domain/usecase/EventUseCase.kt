@@ -7,12 +7,12 @@ import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.repository.CategoryRepository
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.utils.TimeOperations
+import com.timgortworst.roomy.data.utils.Constants
+import com.timgortworst.roomy.domain.utils.isDateInPast
 import com.timgortworst.roomy.domain.utils.plusInterval
-import com.timgortworst.roomy.domain.utils.toInstant
-import com.timgortworst.roomy.domain.utils.toTimestamp
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
-import org.threeten.bp.Instant
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 
 class EventUseCase
@@ -39,14 +39,12 @@ constructor(private val eventRepository: EventRepository,
         eventRepository.deleteEvent(eventId)
     }
 
-    suspend fun markEventAsComplete(event : Event) {
-        val nextEvent = calcNextEventInUTC(event.eventMetaData).toTimestamp()
-
+    suspend fun markEventAsComplete(event: Event) {
         eventRepository.updateEvent(
                 eventId = event.eventId,
                 eventMetaData = EventMetaData(
-                    eventTimestamp = nextEvent,
-                    eventInterval = event.eventMetaData.eventInterval))
+                        eventTimestamp = calcNextEventDate(event.eventMetaData),
+                        eventInterval = event.eventMetaData.eventInterval))
     }
 
     suspend fun updateEvent(eventId: String,
@@ -80,15 +78,13 @@ constructor(private val eventRepository: EventRepository,
         return categoryRepository.getCategories().isNotEmpty()
     }
 
-    private fun calcNextEventInUTC(eventMetaData: EventMetaData): Instant {
-        val timeOperations = TimeOperations.Impl()
-        val dateTimeEvent = eventMetaData.eventTimestamp.toInstant()
-        val dateTimeToday = timeOperations.todayAtEightUTC()
-
-        return if (timeOperations.isDateInPast(dateTimeEvent)) {
-            dateTimeToday.plusInterval(eventMetaData.eventInterval)
+    private fun calcNextEventDate(eventMetaData: EventMetaData): ZonedDateTime {
+        return if (eventMetaData.eventTimestamp.isDateInPast()) {
+            todayAtEight().plusInterval(eventMetaData.eventInterval)
         } else {
-            dateTimeEvent.plusInterval(eventMetaData.eventInterval)
+            eventMetaData.eventTimestamp.plusInterval(eventMetaData.eventInterval)
         }
     }
+
+    private fun todayAtEight() = ZonedDateTime.now().withHour(Constants.DEFAULT_HOUR_OF_DAY_NOTIFICATION).truncatedTo(ChronoUnit.HOURS)
 }
