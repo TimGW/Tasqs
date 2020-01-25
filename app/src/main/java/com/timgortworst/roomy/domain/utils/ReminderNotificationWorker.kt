@@ -17,15 +17,18 @@ import com.timgortworst.roomy.presentation.features.main.view.MainActivity
 class ReminderNotificationWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
 
     override fun doWork() = try {
-        val notificationTitle = inputData.getString(NOTIFICATION_TITLE_KEY) ?: context.getString(R.string.app_name)
-        val notificationMessage = inputData.getString(NOTIFICATION_MSG_KEY) ?: context.getString(R.string.notification_default_msg)
-        triggerNotification(notificationTitle, notificationMessage)
+        val title = inputData.getString(NOTIFICATION_TITLE_KEY) ?: context.getString(R.string.app_name)
+        val text = inputData.getString(NOTIFICATION_MSG_KEY) ?: context.getString(R.string.notification_default_msg)
+        val id = inputData.getInt(NOTIFICATION_ID_KEY, title.plus(text).hashCode())
+
+        triggerNotification(id, title, text)
+
         Result.success()
     } catch (e: Exception) {
         Result.failure()
     }
 
-    private fun triggerNotification(title: String, text: String) {
+    private fun triggerNotification(id: Int, title: String, text: String) {
         createNotificationChannelIfRequired()
         val pendingIntent = PendingIntent.getActivity(
                 context,
@@ -34,7 +37,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
                 PendingIntent.FLAG_UPDATE_CURRENT)
 
         with(NotificationManagerCompat.from(context)) {
-            notify(title.plus(text).hashCode(), buildNotification(title, text, pendingIntent).build())
+            notify(id, buildNotification(title, text, pendingIntent).build())
             notify(NOTIFICATION_GROUP_ID, buildSummaryNotification(title, text).build())
         }
     }
@@ -78,6 +81,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
     }
 
     companion object {
+        const val NOTIFICATION_ID_KEY = "NOTIFICATION_ID_KEY"
         const val NOTIFICATION_TITLE_KEY = "NOTIFICATION_TITLE_KEY"
         const val NOTIFICATION_MSG_KEY = "NOTIFICATION_MSG_KEY"
         const val CHANNEL_ID = "channel_01"

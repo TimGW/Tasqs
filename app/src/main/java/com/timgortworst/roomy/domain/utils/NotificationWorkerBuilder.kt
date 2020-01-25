@@ -33,14 +33,15 @@ class NotificationWorkerBuilder(private val context: Context) {
                     TimeUnit.MILLISECONDS)
                 .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                 .addTag(eventId)
-                .setInputData(buildInputData(userName, categoryName))
+                .setInputData(buildInputData(eventId, userName, categoryName))
                 .build())
     }
 
-    private fun buildInputData(userName: String, categoryName: String): Data {
+    private fun buildInputData(eventId: String, userName: String, categoryName: String): Data {
         val title = context.getString(R.string.notification_title, userName)
         val msg = context.getString(R.string.notification_message, categoryName)
         return Data.Builder()
+                .putInt(ReminderNotificationWorker.NOTIFICATION_ID_KEY, eventId.hashCode())
                 .putString(ReminderNotificationWorker.NOTIFICATION_TITLE_KEY, title)
                 .putString(ReminderNotificationWorker.NOTIFICATION_MSG_KEY, msg)
                 .build()
