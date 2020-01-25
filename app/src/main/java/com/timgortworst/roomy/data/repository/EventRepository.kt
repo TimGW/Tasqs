@@ -23,7 +23,7 @@ import com.timgortworst.roomy.data.utils.Constants.EVENT_META_DATA_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_TIME_ZONE_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_USER_REF
 import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
-import com.timgortworst.roomy.domain.ApiStatus
+import com.timgortworst.roomy.domain.RemoteApi
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -79,9 +79,9 @@ class EventRepository @Inject constructor() {
         }
     }
 
-    fun listenToEventsForHousehold(householdId: String, apiStatus: ApiStatus) {
+    fun listenToEventsForHousehold(householdId: String, remoteApi: RemoteApi) {
         val handler = Handler()
-        val runnable = Runnable { apiStatus.setState(ApiStatus.Response.Loading) }
+        val runnable = Runnable { remoteApi.setState(RemoteApi.Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = eventCollectionRef
@@ -91,7 +91,7 @@ class EventRepository @Inject constructor() {
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
                     when {
                         e != null && snapshots == null -> {
-                            apiStatus.setState(ApiStatus.Response.Error(e))
+                            remoteApi.setState(RemoteApi.Response.Error(e))
                             Log.e(TAG, "listen:error", e)
                         }
                         else -> {
@@ -104,7 +104,7 @@ class EventRepository @Inject constructor() {
 //                                        )
 //                                    }
 
-                            apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            remoteApi.setState(RemoteApi.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })

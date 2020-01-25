@@ -8,7 +8,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventJson
 import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.domain.ApiStatus
+import com.timgortworst.roomy.domain.RemoteApi
 import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventListView
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class EventListPresenter @Inject constructor(
         private val view: EventListView,
         private val eventUseCase: EventUseCase
-) : ApiStatus(), DefaultLifecycleObserver {
+) : RemoteApi, DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {

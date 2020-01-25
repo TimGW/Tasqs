@@ -5,7 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Category
-import com.timgortworst.roomy.domain.ApiStatus
+import com.timgortworst.roomy.domain.RemoteApi
 import com.timgortworst.roomy.domain.usecase.CategoryUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.category.view.CategoryListView
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class CategoryListPresenter @Inject constructor(
         private val view: CategoryListView,
         private val categoryUseCase: CategoryUseCase
-) : ApiStatus(), DefaultLifecycleObserver {
+) : RemoteApi, DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {

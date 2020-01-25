@@ -16,7 +16,7 @@ import com.timgortworst.roomy.data.utils.Constants.USER_EMAIL_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_ROLE_REF
-import com.timgortworst.roomy.domain.ApiStatus
+import com.timgortworst.roomy.domain.RemoteApi
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -67,11 +67,11 @@ class UserRepository @Inject constructor() {
         }
     }
 
-    fun listenToUsersForHousehold(householdId: String?, apiStatus: ApiStatus) {
+    fun listenToUsersForHousehold(householdId: String?, apiStatus: RemoteApi) {
         if (householdId.isNullOrEmpty()) return
 
         val handler = Handler()
-        val runnable = Runnable { apiStatus.setState(ApiStatus.Response.Loading) }
+        val runnable = Runnable { apiStatus.setState(RemoteApi.Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = userCollectionRef
@@ -81,7 +81,7 @@ class UserRepository @Inject constructor() {
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
                     when {
                         e != null && snapshots == null -> {
-                            apiStatus.setState(ApiStatus.Response.Error(e))
+                            apiStatus.setState(RemoteApi.Response.Error(e))
                             Log.w(TAG, "listen:error", e)
                         }
                         else -> {
@@ -89,7 +89,7 @@ class UserRepository @Inject constructor() {
                             val totalDataSetSize = snapshots.documents.size
 //                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(User::class.java), b.type) }
 
-                            apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            apiStatus.setState(RemoteApi.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })
