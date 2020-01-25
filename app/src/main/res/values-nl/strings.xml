@@ -55,8 +55,8 @@
     <string name="invite_title">Deel uitnodigingslink</string>
     <string name="loading">Bezig met laden</string>
     <string name="notification_default_msg">Het is tijd om wat klusjes te doen!</string>
-    <string name="notification_message">Het is tijd om: %1$s</string>
-    <string name="notification_title">Herinnering voor %1$s</string>
+    <string name="notification_message">Het is tijd voor: %1$s</string>
+    <string name="notification_title">Hoi %1$s</string>
     <string name="preferences_analytics">Gebruikers statistieken</string>
     <string name="preferences_analytics_description">Door anonieme gebruikersgegevens te verzenden, helpt u deze applicatie te verbeteren</string>
     <string name="preferences_analytics_header">Privacy</string>

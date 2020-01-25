@@ -12,7 +12,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
-import org.threeten.bp.Instant
 
 
 class ReminderNotificationWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
@@ -26,7 +25,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
         Result.failure()
     }
 
-    private fun triggerNotification(notificationTitle: String, notificationMessage: String) {
+    private fun triggerNotification(title: String, text: String) {
         createNotificationChannelIfRequired()
         val pendingIntent = PendingIntent.getActivity(
                 context,
@@ -35,8 +34,19 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
                 PendingIntent.FLAG_UPDATE_CURRENT)
 
         with(NotificationManagerCompat.from(context)) {
-            notify(Instant.now().toEpochMilli().toInt(), buildNotification(notificationTitle, notificationMessage, pendingIntent).build())
+            notify(title.plus(text).hashCode(), buildNotification(title, text, pendingIntent).build())
+            notify(NOTIFICATION_GROUP_ID, buildSummaryNotification(title, text).build())
         }
+    }
+
+    private fun buildSummaryNotification(title: String, text: String): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.accent_home_icon)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setGroupSummary(true)
+                .setGroup(NOTIFICATION_GROUP_KEY)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(text))
     }
 
     private fun buildNotification(notificationTitle: String,
@@ -48,6 +58,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
             .setContentIntent(notificationPendingIntent)
             .setAutoCancel(true)
             .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
+            .setGroup(NOTIFICATION_GROUP_KEY)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
     private fun createNotificationChannelIfRequired() {
@@ -71,5 +82,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
         const val NOTIFICATION_MSG_KEY = "NOTIFICATION_MSG_KEY"
         const val CHANNEL_ID = "channel_01"
         const val CHANNEL_DESC = "channel for notifications to remind users to perform their tasks"
+        const val NOTIFICATION_GROUP_KEY = "GROUP_1"
+        const val NOTIFICATION_GROUP_ID = 1
     }
 }

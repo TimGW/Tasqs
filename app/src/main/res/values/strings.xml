@@ -55,8 +55,8 @@
     <string name="invite_title">Share invite link</string>
     <string name="loading">loading</string>
     <string name="notification_default_msg">it\'s time do to some chores!</string>
-    <string name="notification_message">It\'s time to: %1$s</string>
-    <string name="notification_title">Reminder for %1$s</string>
+    <string name="notification_message">It\'s time for: %1$s</string>
+    <string name="notification_title">Hi %1$s</string>
     <string name="preferences_analytics">User statistics</string>
     <string name="preferences_analytics_description">By sending anonymous user data, you will help improve this application</string>
     <string name="preferences_analytics_header">Privacy</string>
