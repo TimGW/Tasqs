@@ -24,7 +24,6 @@ import com.timgortworst.roomy.data.utils.Constants.EVENT_TIME_ZONE_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_USER_REF
 import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
 import com.timgortworst.roomy.domain.ApiStatus
-import com.timgortworst.roomy.domain.utils.toZonedDateTime
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -73,14 +72,7 @@ class EventRepository @Inject constructor() {
                     .get()
                     .await()
                     .toObjects(EventJson::class.java)
-                    .map {
-                        Event(
-                                it.eventId,
-                                EventMetaData(it.eventMetaData.eventDateTime.toZonedDateTime(it.eventMetaData.eventTimeZone)),
-                                it.eventCategory,
-                                it.user,
-                                it.householdId)
-                    }
+                    .map { it.toEvent() }
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
             emptyList()

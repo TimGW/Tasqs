@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
+import com.timgortworst.roomy.data.model.EventJson
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.domain.ApiStatus
 import com.timgortworst.roomy.domain.usecase.EventUseCase
@@ -68,7 +69,7 @@ class EventListPresenter @Inject constructor(
         view.presentEmptyView(totalDataSetSize == 0)
 
         dc.forEach {
-            val event = it.document.toObject(Event::class.java)
+            val event = it.document.toObject(EventJson::class.java).toEvent()
             when (it.type) {
                 DocumentChange.Type.ADDED -> {
                     setNotificationReminder(event, hasPendingWrites)
