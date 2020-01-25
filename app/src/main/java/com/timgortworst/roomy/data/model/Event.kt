@@ -5,7 +5,6 @@ import android.os.Parcelable
 import com.google.firebase.firestore.IgnoreExtraProperties
 import kotlinx.android.parcel.Parcelize
 
-
 @IgnoreExtraProperties
 @SuppressLint("ParcelCreator")
 @Parcelize

@@ -12,14 +12,14 @@ import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
-import com.timgortworst.roomy.data.model.parse
 import com.timgortworst.roomy.data.utils.Constants
 import com.timgortworst.roomy.data.utils.Constants.EVENT_CATEGORY_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_COLLECTION_REF
+import com.timgortworst.roomy.data.utils.Constants.EVENT_DATE_TIME_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_INTERVAL_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_META_DATA_REF
-import com.timgortworst.roomy.data.utils.Constants.EVENT_START_DATE_REF
+import com.timgortworst.roomy.data.utils.Constants.EVENT_TIME_ZONE_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_USER_REF
 import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
 import com.timgortworst.roomy.domain.ApiStatus
@@ -43,7 +43,7 @@ class EventRepository @Inject constructor() {
         val eventFieldMap = mutableMapOf<String, Any>()
 
         eventFieldMap[Constants.EVENT_ID_REF] = document.id
-        eventFieldMap[EVENT_META_DATA_REF] = eventMetaData.parse()
+        eventFieldMap[EVENT_META_DATA_REF] = eventMetaData
         eventFieldMap[EVENT_CATEGORY_REF] = category
         eventFieldMap[EVENT_USER_REF] = user
         eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = householdId
@@ -57,14 +57,18 @@ class EventRepository @Inject constructor() {
         }
     }
 
-    suspend fun getEventsForUser(userId: String): MutableList<Event> {
-        if (userId.isBlank()) return mutableListOf()
+    suspend fun getEventsForUser(userId: String): List<Event> {
+        if (userId.isBlank()) return emptyList()
 
         return try {
-            eventCollectionRef.whereEqualTo("user.userId", userId).get().await().toObjects(Event::class.java)
+            eventCollectionRef
+                    .whereEqualTo("user.userId", userId)
+                    .get()
+                    .await()
+                    .toObjects(Event::class.java)
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
-            mutableListOf()
+            emptyList()
         }
     }
 
@@ -81,12 +85,17 @@ class EventRepository @Inject constructor() {
                     when {
                         e != null && snapshots == null -> {
                             apiStatus.setState(ApiStatus.Response.Error(e))
-                            Log.w(TAG, "listen:error", e)
+                            Log.e(TAG, "listen:error", e)
                         }
                         else -> {
                             val changeList = snapshots?.documentChanges ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.size
-                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(Event::class.java), b.type) }
+                            val mappedResponse = changeList
+                                    .zipWithNext { a, b ->
+                                        Pair(a.document
+                                                .toObject(Event::class.java)
+                                                , b.type)
+                                    }
 
                             apiStatus.setState(ApiStatus.Response.Success(mappedResponse, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
@@ -106,14 +115,15 @@ class EventRepository @Inject constructor() {
 
         val eventMetaDataMap = mutableMapOf<String, Any>()
         eventMetaData?.let {
-            eventMetaDataMap[EVENT_START_DATE_REF] = it.eventTimestamp
+            eventMetaDataMap[EVENT_DATE_TIME_REF] = it.eventDateTime
+            eventMetaDataMap[EVENT_TIME_ZONE_REF] = it.eventTimeZone
             eventMetaDataMap[EVENT_INTERVAL_REF] = it.eventInterval.name
         }
 
         val eventFieldMap = mutableMapOf<String, Any>()
         category?.let { eventFieldMap[EVENT_CATEGORY_REF] = it }
         user?.let { eventFieldMap[EVENT_USER_REF] = it }
-        eventMetaData?.let { eventFieldMap[EVENT_META_DATA_REF] = it.parse() }
+        eventMetaData?.let { eventFieldMap[EVENT_META_DATA_REF] = it }
         householdId?.let { eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = it }
 
         try {
