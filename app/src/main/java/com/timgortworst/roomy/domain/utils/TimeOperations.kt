@@ -5,7 +5,7 @@ import org.threeten.bp.ZonedDateTime
 
 fun ZonedDateTime.plusInterval(repeatInterval: EventMetaData.EventInterval): ZonedDateTime {
     return when (repeatInterval) {
-        EventMetaData.EventInterval.SINGLE_EVENT -> plusDays(0)
+        EventMetaData.EventInterval.SINGLE_EVENT -> plusDays(1)
         EventMetaData.EventInterval.DAILY -> plusDays(1)
         EventMetaData.EventInterval.WEEKLY -> plusWeeks(1)
         EventMetaData.EventInterval.MONTHLY -> plusMonths(1)

@@ -7,7 +7,7 @@ import androidx.work.WorkManager
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.EventMetaData
 import org.threeten.bp.Duration
-import org.threeten.bp.Instant
+import org.threeten.bp.ZonedDateTime
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
@@ -25,7 +25,7 @@ class NotificationWorkerBuilder(private val context: Context) {
         val futureEvent = upcomingEvent.plusInterval(eventMetaData.eventInterval)
 
         val repeatInterval = Duration.between(upcomingEvent, futureEvent).toMillis()
-        val initialDelay = max(0L, Duration.between(Instant.now(), upcomingEvent).toMillis())
+        val initialDelay = max(0L, Duration.between(ZonedDateTime.now(), upcomingEvent).toMillis())
 
         workManager.enqueue(PeriodicWorkRequest.Builder(
                     ReminderNotificationWorker::class.java,

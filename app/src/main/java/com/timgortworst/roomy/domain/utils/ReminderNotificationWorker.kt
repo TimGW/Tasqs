@@ -12,8 +12,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
-import java.text.SimpleDateFormat
-import java.util.*
+import org.threeten.bp.Instant
 
 
 class ReminderNotificationWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
@@ -36,7 +35,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
                 PendingIntent.FLAG_UPDATE_CURRENT)
 
         with(NotificationManagerCompat.from(context)) {
-            notify(createNotificationID(), buildNotification(notificationTitle, notificationMessage, pendingIntent).build())
+            notify(Instant.now().toEpochMilli().toInt(), buildNotification(notificationTitle, notificationMessage, pendingIntent).build())
         }
     }
 
@@ -48,8 +47,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
             .setContentText(notificationMessage)
             .setContentIntent(notificationPendingIntent)
             .setAutoCancel(true)
-            .setStyle(NotificationCompat.BigTextStyle()
-                    .bigText(notificationMessage))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
     private fun createNotificationChannelIfRequired() {
@@ -66,11 +64,6 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
-    }
-
-    private fun createNotificationID(): Int {
-        val now = Date()
-        return Integer.parseInt(SimpleDateFormat("ddHHmmssSS", Locale.getDefault()).format(now))
     }
 
     companion object {
