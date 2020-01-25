@@ -16,7 +16,7 @@ data class EventJson(
 ) {
     fun toEvent() = Event(
             eventId,
-            EventMetaData(toZonedDateTime(eventMetaData.eventTimeZone)),
+            EventMetaData(toZonedDateTime(eventMetaData.eventTimeZone), eventMetaData.eventInterval),
             eventCategory,
             user,
             householdId)

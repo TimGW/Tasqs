@@ -130,7 +130,7 @@ class EventRepository @Inject constructor() {
         val eventFieldMap = mutableMapOf<String, Any>()
         category?.let { eventFieldMap[EVENT_CATEGORY_REF] = it }
         user?.let { eventFieldMap[EVENT_USER_REF] = it }
-        eventMetaData?.let { eventFieldMap[EVENT_META_DATA_REF] = it }
+        eventMetaData?.let { eventFieldMap[EVENT_META_DATA_REF] = eventMetaDataMap }
         householdId?.let { eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = it }
 
         try {
