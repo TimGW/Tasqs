@@ -88,9 +88,9 @@ class CategoryRepository @Inject constructor() {
                         else -> {
                             val changeList = snapshots?.documentChanges ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.size
-                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(Category::class.java), b.type) }
+//                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(Category::class.java), b.type) }
 
-                            apiStatus.setState(ApiStatus.Response.Success(mappedResponse, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })

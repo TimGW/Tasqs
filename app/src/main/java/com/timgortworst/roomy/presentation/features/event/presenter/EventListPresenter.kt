@@ -62,14 +62,14 @@ class EventListPresenter @Inject constructor(
         view.removePendingNotificationReminder(event.eventId)
     }
 
-    override fun renderSuccessfulState(dc: List<Pair<*, DocumentChange.Type>>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
+    override fun renderSuccessfulState(dc: MutableList<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
         view.setLoadingView(false)
         view.setErrorView(false)
         view.presentEmptyView(totalDataSetSize == 0)
 
         dc.forEach {
-            val event = (it.first as? Event) ?: return
-            when (it.second) {
+            val event = it.document.toObject(Event::class.java)
+            when (it.type) {
                 DocumentChange.Type.ADDED -> {
                     setNotificationReminder(event, hasPendingWrites)
                     view.presentAddedEvent(event)

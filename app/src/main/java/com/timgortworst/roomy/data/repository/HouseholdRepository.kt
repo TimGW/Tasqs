@@ -45,7 +45,7 @@ class HouseholdRepository @Inject constructor() {
                 .whereEqualTo(Constants.USER_HOUSEHOLDID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     if (e != null && snapshots == null) {
-                        Log.w(TAG, "listen:error", e)
+                        Log.e(TAG, "listen:error", e)
                         return@EventListener
                     }
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")

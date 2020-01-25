@@ -10,6 +10,7 @@ import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.Event
+import com.timgortworst.roomy.data.model.EventJson
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.utils.Constants
@@ -23,6 +24,7 @@ import com.timgortworst.roomy.data.utils.Constants.EVENT_TIME_ZONE_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_USER_REF
 import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
 import com.timgortworst.roomy.domain.ApiStatus
+import com.timgortworst.roomy.domain.utils.toZonedDateTime
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,9 +43,14 @@ class EventRepository @Inject constructor() {
     ): String? {
         val document = eventCollectionRef.document()
         val eventFieldMap = mutableMapOf<String, Any>()
+        val eventMetaDataMap = mutableMapOf<String, Any>()
+
+        eventMetaDataMap[EVENT_DATE_TIME_REF] = eventMetaData.eventTimestamp.toInstant().toEpochMilli()
+        eventMetaDataMap[EVENT_TIME_ZONE_REF] = eventMetaData.eventTimestamp.zone.id
+        eventMetaDataMap[EVENT_INTERVAL_REF] = eventMetaData.eventInterval.name
 
         eventFieldMap[Constants.EVENT_ID_REF] = document.id
-        eventFieldMap[EVENT_META_DATA_REF] = eventMetaData
+        eventFieldMap[EVENT_META_DATA_REF] = eventMetaDataMap
         eventFieldMap[EVENT_CATEGORY_REF] = category
         eventFieldMap[EVENT_USER_REF] = user
         eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = householdId
@@ -65,7 +72,15 @@ class EventRepository @Inject constructor() {
                     .whereEqualTo("user.userId", userId)
                     .get()
                     .await()
-                    .toObjects(Event::class.java)
+                    .toObjects(EventJson::class.java)
+                    .map {
+                        Event(
+                                it.eventId,
+                                EventMetaData(it.eventMetaData.eventDateTime.toZonedDateTime(it.eventMetaData.eventTimeZone)),
+                                it.eventCategory,
+                                it.user,
+                                it.householdId)
+                    }
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
             emptyList()
@@ -90,14 +105,14 @@ class EventRepository @Inject constructor() {
                         else -> {
                             val changeList = snapshots?.documentChanges ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.size
-                            val mappedResponse = changeList
-                                    .zipWithNext { a, b ->
-                                        Pair(a.document
-                                                .toObject(Event::class.java)
-                                                , b.type)
-                                    }
+//                            val mappedResponse = changeList.zipWithNext { a, b ->
+//                                        Pair(
+//                                                a.document.toObject(EventJson::class.java).toEvent(),
+//                                                b.type
+//                                        )
+//                                    }
 
-                            apiStatus.setState(ApiStatus.Response.Success(mappedResponse, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            apiStatus.setState(ApiStatus.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })
@@ -115,8 +130,8 @@ class EventRepository @Inject constructor() {
 
         val eventMetaDataMap = mutableMapOf<String, Any>()
         eventMetaData?.let {
-            eventMetaDataMap[EVENT_DATE_TIME_REF] = it.eventDateTime
-            eventMetaDataMap[EVENT_TIME_ZONE_REF] = it.eventTimeZone
+            eventMetaDataMap[EVENT_DATE_TIME_REF] = it.eventTimestamp.toInstant().toEpochMilli()
+            eventMetaDataMap[EVENT_TIME_ZONE_REF] = it.eventTimestamp.zone.id
             eventMetaDataMap[EVENT_INTERVAL_REF] = it.eventInterval.name
         }
 

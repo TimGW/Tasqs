@@ -7,15 +7,13 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.EventMetaData.EventInterval.SINGLE_EVENT
 import com.timgortworst.roomy.presentation.base.RoomyApp
 import kotlinx.android.parcel.Parcelize
-import org.threeten.bp.Instant
-import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 
 @IgnoreExtraProperties
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class EventMetaData(
-        var eventDateTime: Long = Instant.now().toEpochMilli(),
-        var eventTimeZone: String = ZoneId.systemDefault().id,
+        var eventTimestamp: ZonedDateTime = ZonedDateTime.now(),
         var eventInterval: EventInterval = SINGLE_EVENT
 ) : Parcelable {
 
