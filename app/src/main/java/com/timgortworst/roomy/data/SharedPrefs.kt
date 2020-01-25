@@ -32,12 +32,20 @@ class SharedPrefs
         setBoolValue(SHARED_PREF_ADS, setAdsEnabled)
     }
 
-    fun setDisplayModeDark(darkMode : Boolean) {
-        setBoolValue(SHARED_PREF_DARK_MODE, darkMode)
+    fun setDarkModeSetting(darkMode : Int) {
+        setIntValue(SHARED_PREF_DARK_MODE, darkMode)
     }
 
-    fun isDisplayModeDark(): Boolean {
-        return getBoolValue(SHARED_PREF_DARK_MODE)
+    fun getDarkModeSetting(): Int {
+        return getIntValue(SHARED_PREF_DARK_MODE)
+    }
+
+    private fun getIntValue(key: String, default: Int = 0): Int {
+        return sharedPreferences.getInt(key, default)
+    }
+
+    private fun setIntValue(key: String, value: Int) {
+        return sharedPreferences.edit().putInt(key, value).apply()
     }
 
     private fun getBoolValue(key: String, default: Boolean = false): Boolean {

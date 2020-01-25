@@ -5,10 +5,13 @@
         app:iconSpaceReserved="false"
         app:title="@string/preferences_display_header">
 
-        <SwitchPreferenceCompat
+        <ListPreference
             app:iconSpaceReserved="false"
             app:key="dark_mode_key"
-            app:title="@string/preferences_display_dark_mode" />
+            app:title="@string/preferences_display_dark_mode"
+            android:defaultValue="0"
+            android:entries="@array/night_mode_items"
+            android:entryValues="@array/night_mode_values"/>
 
     </PreferenceCategory>
 

@@ -10,6 +10,7 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
@@ -42,22 +43,22 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
 
         val activity = activity ?: return
 
-        (findPreference("dark_mode_key") as? SwitchPreferenceCompat)?.onPreferenceChangeListener =
+        val darkModePref = (findPreference("dark_mode_key") as? ListPreference)
+        darkModePref?.summary = resources.getStringArray(R.array.night_mode_items)[sharedPref.getDarkModeSetting()]
+        darkModePref?.onPreferenceChangeListener =
                 Preference.OnPreferenceChangeListener { _, newValue ->
-                    val isDarkModeOn = newValue as Boolean
-
-                    AppCompatDelegate.setDefaultNightMode(
-                            if (isDarkModeOn) {
-                                AppCompatDelegate.MODE_NIGHT_YES
-                            } else {
-                                AppCompatDelegate.MODE_NIGHT_NO
-                            }
-                    )
-                    sharedPref.setDisplayModeDark(isDarkModeOn)
-                    activity.recreate()
+                    val darkModeSetting = (newValue as String).toIntOrNull() ?: return@OnPreferenceChangeListener false
+                    val nightMode = when(darkModeSetting) {
+                        0 -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                        1 -> AppCompatDelegate.MODE_NIGHT_NO
+                        2 -> AppCompatDelegate.MODE_NIGHT_YES
+                        else -> AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
+                    }
+                    AppCompatDelegate.setDefaultNightMode(nightMode)
+                    sharedPref.setDarkModeSetting(darkModeSetting)
+                    darkModePref?.summary = resources.getStringArray(R.array.night_mode_items)[darkModeSetting]
                     true
                 }
-
 
         (findPreference("analytics_key") as? SwitchPreferenceCompat)?.onPreferenceChangeListener =
                 Preference.OnPreferenceChangeListener { _, newValue ->

@@ -93,4 +93,18 @@
     <string name="toolbar_title_users">Users</string>
     <string name="easter_egg_enabled">Ads are now disabled!</string>
     <string name="easter_egg_message">Click %1$d more time(s) to remove ads</string>
+
+    <string-array name="night_mode_items">
+        <item>@string/night_mode_label_auto</item>
+        <item>@string/night_mode_label_off</item>
+        <item>@string/night_mode_label_on</item>
+    </string-array>
+    <string-array name="night_mode_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string name="night_mode_label_auto">Follow system</string>
+    <string name="night_mode_label_off">Off</string>
+    <string name="night_mode_label_on">On</string>
 </resources>

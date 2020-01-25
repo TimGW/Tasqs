@@ -46,12 +46,13 @@ class RoomyApp : Application(), HasActivityInjector {
             FirebaseFirestore.setLoggingEnabled(true)
         }
 
-        AppCompatDelegate.setDefaultNightMode(
-            if (sharedPref.isDisplayModeDark())
-                AppCompatDelegate.MODE_NIGHT_YES
-            else
-                AppCompatDelegate.MODE_NIGHT_NO
-        )
+        val nightMode = when(sharedPref.getDarkModeSetting()) {
+            0 -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            1 -> AppCompatDelegate.MODE_NIGHT_NO
+            2 -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
+        }
+        AppCompatDelegate.setDefaultNightMode(nightMode)
 
         MobileAds.initialize(this, getString(R.string.ad_app_id))
     }
