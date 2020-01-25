@@ -67,7 +67,7 @@ class UserRepository @Inject constructor() {
         }
     }
 
-    fun listenToUsersForHousehold(householdId: String?, apiStatus: ApiStatus<Any?>) {
+    fun listenToUsersForHousehold(householdId: String?, apiStatus: ApiStatus) {
         if (householdId.isNullOrEmpty()) return
 
         val handler = Handler()

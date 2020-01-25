@@ -29,7 +29,3 @@ data class EventMetaData(
         }
     }
 }
-
-//fun EventMetaData.parse(): EventMetaDataJson {
-//    return EventMetaDataJson(eventTimestamp.toTimestamp(), eventInterval)
-//}

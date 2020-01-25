@@ -68,7 +68,7 @@ class EventRepository @Inject constructor() {
         }
     }
 
-    fun listenToEventsForHousehold(householdId: String, apiStatus: ApiStatus<Any?>) {
+    fun listenToEventsForHousehold(householdId: String, apiStatus: ApiStatus) {
         val handler = Handler()
         val runnable = Runnable { apiStatus.setState(ApiStatus.Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
