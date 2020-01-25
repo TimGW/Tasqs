@@ -84,7 +84,7 @@ class CategoryRepository @Inject constructor() {
                     when {
                         e != null && snapshots == null -> {
                             apiStatus.setState(Response.Error)
-                            Log.w(TAG, "listen:error", e)
+                            Log.e(TAG, "listen:error", e)
                         }
                         else -> {
                             val changeList = snapshots?.documentChanges ?: return@EventListener
