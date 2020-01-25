@@ -17,7 +17,7 @@ import javax.inject.Inject
 class UserListPresenter @Inject constructor(
         private val view: UserListView,
         private val userUseCase: UserUseCase
-) : RemoteApi, DefaultLifecycleObserver {
+) : RemoteApi<User>, DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -49,17 +49,18 @@ class UserListPresenter @Inject constructor(
         }
     }
 
-    override fun renderSuccessfulState(dc: MutableList<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
+    override fun renderSuccessfulState(changeSet: List<Pair<User, DocumentChange.Type>>,
+                                       totalDataSetSize: Int,
+                                       hasPendingWrites: Boolean) {
         scope.launch {
             view.setLoadingView(false)
             view.setErrorView(false)
 
-            dc.forEach {
-                val user = it.document.toObject(User::class.java)
-                when (it.type) {
-                    DocumentChange.Type.ADDED -> view.presentAddedUser(user)
-                    DocumentChange.Type.MODIFIED -> view.presentEditedUser(user)
-                    DocumentChange.Type.REMOVED -> view.presentDeletedUser(user)
+            changeSet.forEach {
+                when (it.second) {
+                    DocumentChange.Type.ADDED -> view.presentAddedUser(it.first)
+                    DocumentChange.Type.MODIFIED -> view.presentEditedUser(it.first)
+                    DocumentChange.Type.REMOVED -> view.presentDeletedUser(it.first)
                 }
             }
         }

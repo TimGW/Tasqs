@@ -16,7 +16,7 @@ import javax.inject.Inject
 class CategoryListPresenter @Inject constructor(
         private val view: CategoryListView,
         private val categoryUseCase: CategoryUseCase
-) : RemoteApi, DefaultLifecycleObserver {
+) : RemoteApi<Category>, DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -43,17 +43,16 @@ class CategoryListPresenter @Inject constructor(
         categoryUseCase.createCategoryBatch(generatedListOfCategories)
     }
 
-    override fun renderSuccessfulState(dc: MutableList<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
+    override fun renderSuccessfulState(changeSet: List<Pair<Category, DocumentChange.Type>>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
         view.setLoadingView(false)
         view.setErrorView(false)
         view.presentEmptyView(totalDataSetSize == 0)
 
-        dc.forEach {
-            val category = it.document.toObject(Category::class.java)
-            when (it.type) {
-                DocumentChange.Type.ADDED -> view.presentAddedCategory(category)
-                DocumentChange.Type.MODIFIED -> view.presentEditedCategory(category)
-                DocumentChange.Type.REMOVED -> view.presentDeletedCategory(category)
+        changeSet.forEach {
+            when (it.second) {
+                DocumentChange.Type.ADDED -> view.presentAddedCategory(it.first)
+                DocumentChange.Type.MODIFIED -> view.presentEditedCategory(it.first)
+                DocumentChange.Type.REMOVED -> view.presentDeletedCategory(it.first)
             }
         }
     }

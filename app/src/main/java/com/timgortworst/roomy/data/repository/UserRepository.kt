@@ -3,6 +3,7 @@ package com.timgortworst.roomy.data.repository
 import android.os.Handler
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -68,7 +69,7 @@ class UserRepository @Inject constructor() {
         }
     }
 
-    fun listenToUsersForHousehold(householdId: String?, apiStatus: RemoteApi) {
+    fun listenToUsersForHousehold(householdId: String?, apiStatus: RemoteApi<User>) {
         if (householdId.isNullOrEmpty()) return
 
         val handler = Handler()
@@ -80,19 +81,22 @@ class UserRepository @Inject constructor() {
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-                    when {
+                    val result = when {
                         e != null && snapshots == null -> {
-                            apiStatus.setState(Response.Error)
                             Log.e(TAG, "listen:error", e)
+                            Response.Error
                         }
                         else -> {
-                            val changeList = snapshots?.documentChanges ?: return@EventListener
+                            val documentChanges = snapshots?.documentChanges ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.size
-//                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(User::class.java), b.type) }
-
-                            apiStatus.setState(Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            val result = mutableListOf<Pair<User, DocumentChange.Type>>()
+                            documentChanges.forEach {
+                                result.add(Pair(it.document.toObject(User::class.java), it.type))
+                            }
+                            Response.Success(result, totalDataSetSize, snapshots.metadata.hasPendingWrites())
                         }
                     }
+                    apiStatus.setState(result)
                 })
     }
 

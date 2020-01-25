@@ -2,6 +2,7 @@ package com.timgortworst.roomy.data.repository
 
 import android.os.Handler
 import android.util.Log
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -71,7 +72,7 @@ class CategoryRepository @Inject constructor() {
         }
     }
 
-    fun listenToCategoriesForHousehold(householdId: String, apiStatus: RemoteApi) {
+    fun listenToCategoriesForHousehold(householdId: String, apiStatus: RemoteApi<Category>) {
         val handler = Handler()
         val runnable = Runnable { apiStatus.setState(Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
@@ -81,19 +82,22 @@ class CategoryRepository @Inject constructor() {
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-                    when {
+                    val result = when {
                         e != null && snapshots == null -> {
-                            apiStatus.setState(Response.Error)
                             Log.e(TAG, "listen:error", e)
+                            Response.Error
                         }
                         else -> {
-                            val changeList = snapshots?.documentChanges ?: return@EventListener
+                            val documentChanges = snapshots?.documentChanges ?: return@EventListener
                             val totalDataSetSize = snapshots.documents.size
-//                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(Category::class.java), b.type) }
-
-                            apiStatus.setState(Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            val result = mutableListOf<Pair<Category, DocumentChange.Type>>()
+                            documentChanges.forEach {
+                                result.add(Pair(it.document.toObject(Category::class.java), it.type))
+                            }
+                            Response.Success(result, totalDataSetSize, snapshots.metadata.hasPendingWrites())
                         }
                     }
+                    apiStatus.setState(result)
                 })
     }
 

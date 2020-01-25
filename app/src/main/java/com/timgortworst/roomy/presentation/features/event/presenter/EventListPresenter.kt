@@ -6,7 +6,6 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventJson
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.domain.RemoteApi
 import com.timgortworst.roomy.domain.usecase.EventUseCase
@@ -20,7 +19,7 @@ import javax.inject.Inject
 class EventListPresenter @Inject constructor(
         private val view: EventListView,
         private val eventUseCase: EventUseCase
-) : RemoteApi, DefaultLifecycleObserver {
+) : RemoteApi<Event>, DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -63,26 +62,26 @@ class EventListPresenter @Inject constructor(
         view.removePendingNotificationReminder(event.eventId)
     }
 
-    override fun renderSuccessfulState(dc: MutableList<DocumentChange>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
+    override fun renderSuccessfulState(changeSet: List<Pair<Event, DocumentChange.Type>>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
         view.setLoadingView(false)
         view.setErrorView(false)
         view.presentEmptyView(totalDataSetSize == 0)
 
-        dc.forEach {
-            val event = it.document.toObject(EventJson::class.java).toEvent()
-            when (it.type) {
+        changeSet.forEach {
+            when (it.second) {
                 DocumentChange.Type.ADDED -> {
-                    setNotificationReminder(event, hasPendingWrites)
-                    view.presentAddedEvent(event)
+                    setNotificationReminder(it.first, hasPendingWrites)
+                    view.presentAddedEvent(it.first)
                 }
                 DocumentChange.Type.MODIFIED -> {
-                    setNotificationReminder(event, hasPendingWrites)
-                    view.presentEditedEvent(event)
+                    setNotificationReminder(it.first, hasPendingWrites)
+                    view.presentEditedEvent(it.first)
                 }
-                DocumentChange.Type.REMOVED -> view.presentDeletedEvent(event)
+                DocumentChange.Type.REMOVED -> view.presentDeletedEvent(it.first)
             }
         }
     }
+
 
     override fun renderLoadingState() {
         view.setLoadingView(true)

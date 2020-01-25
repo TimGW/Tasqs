@@ -2,6 +2,7 @@ package com.timgortworst.roomy.data.repository
 
 import android.os.Handler
 import android.util.Log
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -80,7 +81,7 @@ class EventRepository @Inject constructor() {
         }
     }
 
-    fun listenToEventsForHousehold(householdId: String, remoteApi: RemoteApi) {
+    fun listenToEventsForHousehold(householdId: String, remoteApi: RemoteApi<Event>) {
         val handler = Handler()
         val runnable = Runnable { remoteApi.setState(Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
@@ -90,24 +91,22 @@ class EventRepository @Inject constructor() {
                 .addSnapshotListener(MetadataChanges.INCLUDE, EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-                    when {
+                    val result = when {
                         e != null && snapshots == null -> {
-                            remoteApi.setState(Response.Error)
                             Log.e(TAG, "listen:error", e)
+                            Response.Error
                         }
                         else -> {
                             val changeList = snapshots?.documentChanges ?: return@EventListener
-                            val totalDataSetSize = snapshots.documents.size
-//                            val mappedResponse = changeList.zipWithNext { a, b ->
-//                                        Pair(
-//                                                a.document.toObject(EventJson::class.java).toEvent(),
-//                                                b.type
-//                                        )
-//                                    }
+                            val result = mutableListOf<Pair<Event, DocumentChange.Type>>()
+                            changeList.forEach {
+                                result.add(Pair(it.document.toObject(EventJson::class.java).toEvent(), it.type))
+                            }
 
-                            remoteApi.setState(Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            Response.Success(result, snapshots.documents.size, snapshots.metadata.hasPendingWrites())
                         }
                     }
+                    remoteApi.setState(result)
                 })
     }
 
