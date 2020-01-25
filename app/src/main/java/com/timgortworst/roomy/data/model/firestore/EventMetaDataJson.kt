@@ -1,5 +1,6 @@
-package com.timgortworst.roomy.data.model
+package com.timgortworst.roomy.data.model.firestore
 
+import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.EventMetaData.EventInterval.SINGLE_EVENT
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId

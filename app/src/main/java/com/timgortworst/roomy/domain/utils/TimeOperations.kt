@@ -1,8 +1,6 @@
 package com.timgortworst.roomy.domain.utils
 
 import com.timgortworst.roomy.data.model.EventMetaData
-import org.threeten.bp.Instant
-import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 
 fun ZonedDateTime.plusInterval(repeatInterval: EventMetaData.EventInterval): ZonedDateTime {
@@ -16,5 +14,3 @@ fun ZonedDateTime.plusInterval(repeatInterval: EventMetaData.EventInterval): Zon
 }
 
 fun ZonedDateTime.isDateInPast() = this.isBefore(ZonedDateTime.now())
-
-fun Long.toZonedDateTime(zoneId: String) = Instant.ofEpochMilli(this).atZone(ZoneId.of(zoneId))

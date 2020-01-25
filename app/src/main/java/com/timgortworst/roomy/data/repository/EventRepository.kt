@@ -11,9 +11,9 @@ import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventJson
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.data.model.firestore.EventJson
 import com.timgortworst.roomy.data.utils.Constants
 import com.timgortworst.roomy.data.utils.Constants.EVENT_CATEGORY_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_COLLECTION_REF
