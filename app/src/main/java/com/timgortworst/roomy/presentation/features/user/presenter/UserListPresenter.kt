@@ -69,7 +69,7 @@ class UserListPresenter @Inject constructor(
         view.setLoadingView(true)
     }
 
-    override fun renderUnsuccessfulState(throwable: Throwable) {
+    override fun renderUnsuccessfulState() {
         view.setLoadingView(false)
         view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
     }

@@ -17,6 +17,7 @@ import com.timgortworst.roomy.data.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_ROLE_REF
 import com.timgortworst.roomy.domain.RemoteApi
+import com.timgortworst.roomy.domain.Response
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -71,7 +72,7 @@ class UserRepository @Inject constructor() {
         if (householdId.isNullOrEmpty()) return
 
         val handler = Handler()
-        val runnable = Runnable { apiStatus.setState(RemoteApi.Response.Loading) }
+        val runnable = Runnable { apiStatus.setState(Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = userCollectionRef
@@ -81,7 +82,7 @@ class UserRepository @Inject constructor() {
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
                     when {
                         e != null && snapshots == null -> {
-                            apiStatus.setState(RemoteApi.Response.Error(e))
+                            apiStatus.setState(Response.Error)
                             Log.w(TAG, "listen:error", e)
                         }
                         else -> {
@@ -89,7 +90,7 @@ class UserRepository @Inject constructor() {
                             val totalDataSetSize = snapshots.documents.size
 //                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(User::class.java), b.type) }
 
-                            apiStatus.setState(RemoteApi.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            apiStatus.setState(Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })

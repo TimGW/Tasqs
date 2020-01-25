@@ -16,6 +16,7 @@ import com.timgortworst.roomy.data.utils.Constants.CATEGORY_ID_REF
 import com.timgortworst.roomy.data.utils.Constants.CATEGORY_NAME_REF
 import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
 import com.timgortworst.roomy.domain.RemoteApi
+import com.timgortworst.roomy.domain.Response
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -72,7 +73,7 @@ class CategoryRepository @Inject constructor() {
 
     fun listenToCategoriesForHousehold(householdId: String, apiStatus: RemoteApi) {
         val handler = Handler()
-        val runnable = Runnable { apiStatus.setState(RemoteApi.Response.Loading) }
+        val runnable = Runnable { apiStatus.setState(Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = categoryCollectionRef
@@ -82,7 +83,7 @@ class CategoryRepository @Inject constructor() {
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
                     when {
                         e != null && snapshots == null -> {
-                            apiStatus.setState(RemoteApi.Response.Error(e))
+                            apiStatus.setState(Response.Error)
                             Log.w(TAG, "listen:error", e)
                         }
                         else -> {
@@ -90,7 +91,7 @@ class CategoryRepository @Inject constructor() {
                             val totalDataSetSize = snapshots.documents.size
 //                            val mappedResponse = changeList.zipWithNext { a, b -> Pair(a.document.toObject(Category::class.java), b.type) }
 
-                            apiStatus.setState(RemoteApi.Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
+                            apiStatus.setState(Response.Success(changeList, totalDataSetSize, snapshots.metadata.hasPendingWrites()))
                         }
                     }
                 })
