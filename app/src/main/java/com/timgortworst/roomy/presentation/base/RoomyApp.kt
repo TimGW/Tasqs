@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.work.Configuration
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -20,8 +21,7 @@ import javax.inject.Inject
 /**
  * Created by tim.gortworst on 17/02/2018.
  */
-class RoomyApp : Application(), HasActivityInjector {
-
+class RoomyApp : Application(), HasActivityInjector, Configuration.Provider {
     @Inject
     internal lateinit var activityInjector: DispatchingAndroidInjector<Activity>
 
@@ -55,6 +55,16 @@ class RoomyApp : Application(), HasActivityInjector {
         AppCompatDelegate.setDefaultNightMode(nightMode)
 
         MobileAds.initialize(this, getString(R.string.ad_app_id))
+    }
+
+    override fun getWorkManagerConfiguration(): Configuration {
+        val builder = Configuration.Builder()
+         if (BuildConfig.DEBUG) {
+             builder.setMinimumLoggingLevel(android.util.Log.DEBUG)
+         } else {
+             builder.setMinimumLoggingLevel(android.util.Log.INFO)
+        }
+        return builder.build()
     }
 
     override fun activityInjector(): AndroidInjector<Activity>? {
