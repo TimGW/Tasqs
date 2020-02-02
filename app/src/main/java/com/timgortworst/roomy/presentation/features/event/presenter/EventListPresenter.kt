@@ -62,6 +62,13 @@ class EventListPresenter @Inject constructor(
         view.removePendingNotificationReminder(event.eventId)
     }
 
+    fun deleteEvents(events: List<Event>) = scope.launch {
+        eventUseCase.deleteEvents(events)
+        events.forEach {
+            view.removePendingNotificationReminder(it.eventId)
+        }
+    }
+
     override fun renderSuccessfulState(changeSet: List<Pair<Event, DocumentChange.Type>>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
         view.setLoadingView(false)
         view.setErrorView(false)

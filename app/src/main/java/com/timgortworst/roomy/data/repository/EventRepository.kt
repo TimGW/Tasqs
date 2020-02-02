@@ -151,6 +151,17 @@ class EventRepository @Inject constructor() {
         }
     }
 
+    suspend fun deleteEvents(events: List<Event>) {
+        try {
+            // Get a new write batch and commit all write operations
+            val batch = FirebaseFirestore.getInstance().batch()
+            events.forEach { batch.delete(eventCollectionRef.document(it.eventId)) }
+            batch.commit().await()
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+        }
+    }
+
     fun detachEventListener() {
         registration?.remove()
     }

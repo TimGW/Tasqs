@@ -2,25 +2,28 @@ package com.timgortworst.roomy.presentation.features.event.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.BottomMenuItem
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
-import com.timgortworst.roomy.domain.utils.RecyclerTouchListener
-import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
+import com.timgortworst.roomy.presentation.features.event.adapter.ActionModeCallback
+import com.timgortworst.roomy.presentation.features.event.adapter.EventItemDetailsLookup
+import com.timgortworst.roomy.presentation.features.event.adapter.EventItemKeyProvider
 import com.timgortworst.roomy.presentation.features.event.adapter.EventListAdapter
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
@@ -30,21 +33,37 @@ import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
 import kotlinx.android.synthetic.main.layout_list_state.view.*
 import javax.inject.Inject
 
-
-class EventListFragment : Fragment(), EventListView {
-    private var recyclerView: RecyclerView? = null
-    private lateinit var touchListener: RecyclerTouchListener
+class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionItemListener {
     private lateinit var activityContext: AppCompatActivity
     private lateinit var eventListAdapter: EventListAdapter
     private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
+    private lateinit var tracker: SelectionTracker<Event>
+    private var actionMode: ActionMode? = null
 
     @Inject
     lateinit var presenter: EventListPresenter
 
     companion object {
+        const val EVENT_SELECTION_ID = "Event-selection"
+        const val IS_IN_ACTION_MODE_KEY = "ActionMode"
+
         fun newInstance(): EventListFragment {
             return EventListFragment()
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        savedInstanceState?.let {
+            tracker.onRestoreInstanceState(it)
+            if (it.getBoolean(IS_IN_ACTION_MODE_KEY, false)) startActionMode(tracker)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        tracker.onSaveInstanceState(outState)
+        outState.putBoolean(IS_IN_ACTION_MODE_KEY, actionMode != null)
     }
 
     override fun onAttach(context: Context) {
@@ -53,41 +72,18 @@ class EventListFragment : Fragment(), EventListView {
         activityContext = (activity as? MainActivity) ?: return
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_recycler_view, container, false)
         notificationWorkerBuilder = NotificationWorkerBuilder(activityContext)
-        eventListAdapter = EventListAdapter(activityContext)
-        recyclerView = view.recycler_view
+        eventListAdapter = EventListAdapter()
         view.swipe_container?.isEnabled = false
 
-        touchListener = RecyclerTouchListener(activityContext, recyclerView)
-        touchListener
-                .setLongClickable(false) { showContextMenuFor(eventListAdapter.getEvent(it)) }
-                .setClickable(object : RecyclerTouchListener.OnRowClickListener {
-                    override fun onRowClicked(position: Int) {
-                        touchListener.openSwipeOptions(position)
-                    }
-
-                    override fun onIndependentViewClicked(independentViewID: Int, position: Int) {}
-                })
-                .setSwipeOptionViews(R.id.task_done)
-                .setSwipeable(R.id.rowFG, R.id.rowBG) { viewID, position ->
-                    when (viewID) {
-                        R.id.task_done -> presenter.markEventAsCompleted(eventListAdapter.getEvent(position))
-                    }
-                }
-
-        recyclerView?.apply {
+        view.recycler_view.apply {
             val linearLayoutManager = LinearLayoutManager(activityContext)
             layoutManager = linearLayoutManager
             adapter = eventListAdapter
             addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
-            addOnItemTouchListener(touchListener)
+            setupSelectionTracker(this)
         }
 
         return view
@@ -103,41 +99,61 @@ class EventListFragment : Fragment(), EventListView {
         super.onDestroy()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+    private fun setupSelectionTracker(recyclerView: RecyclerView) {
+        tracker = SelectionTracker.Builder<Event>(
+                EVENT_SELECTION_ID,
+                recyclerView,
+                EventItemKeyProvider(recyclerView.adapter),
+                EventItemDetailsLookup(recyclerView),
+                StorageStrategy.createParcelableStorage(Event::class.java)
+        ).withSelectionPredicate(
+                SelectionPredicates.createSelectAnything()
+        ).withOnDragInitiatedListener {
+            true
+        }.build()
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.filter_all -> {
-                eventListAdapter.clearFilter()
-                true
-            }
-            R.id.filter_me -> {
-                presenter.filterMe(eventListAdapter.filter)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+        eventListAdapter.tracker = tracker
 
-    private fun showContextMenuFor(event: Event) {
-        var bottomSheetMenu: BottomSheetMenu? = null
+        tracker.addObserver(object : SelectionTracker.SelectionObserver<Event>() {
+            override fun onSelectionChanged() {
+                super.onSelectionChanged()
 
-        val items = arrayListOf(
-                BottomMenuItem(R.drawable.ic_edit, "Edit") {
-                    presenter.checkIfUserCanEditEvent(event)
-                    bottomSheetMenu?.dismiss()
-                },
-                BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                    presenter.deleteEvent(event)
-                    bottomSheetMenu?.dismiss()
+                if (tracker.hasSelection() && actionMode == null) {
+                    startActionMode(tracker)
+                    setActionModeTitle(tracker.selection.size())
+                } else if (!tracker.hasSelection()&& actionMode != null) {
+                    stopActionMode()
+                } else {
+                    setActionModeTitle(tracker.selection.size())
                 }
-        )
+                val itemIterable = tracker.selection?.iterator()
 
-        bottomSheetMenu = BottomSheetMenu(activityContext, event.eventCategory.name, items)
-        bottomSheetMenu.show()
+                while (itemIterable?.hasNext() == true) {
+                    Log.i("TIMTIM", itemIterable.next().eventId)
+                }
+            }
+        })
+    }
+
+    private fun startActionMode(tracker: SelectionTracker<Event>) {
+        actionMode = activityContext.startSupportActionMode(ActionModeCallback(this@EventListFragment, tracker))
+    }
+
+    private fun stopActionMode() {
+        actionMode?.finish()
+        actionMode = null
+    }
+
+    private fun setActionModeTitle(size: Int) {
+        actionMode?.title = activityContext.getString(R.string.action_mode_title, size)
+    }
+
+    override fun onActionItemDelete(selectedEvents: List<Event>) {
+        presenter.deleteEvents(selectedEvents)
+    }
+
+    override fun onActionItemEdit(selectedEvents: List<Event>) {
+        presenter.checkIfUserCanEditEvent(selectedEvents.first())
     }
 
     override fun presentAddedEvent(agendaEvent: Event) {

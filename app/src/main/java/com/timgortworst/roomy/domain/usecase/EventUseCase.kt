@@ -39,6 +39,10 @@ constructor(private val eventRepository: EventRepository,
         eventRepository.deleteEvent(eventId)
     }
 
+    suspend fun deleteEvents(events: List<Event>) {
+        eventRepository.deleteEvents(events)
+    }
+
     suspend fun markEventAsComplete(event: Event) {
         eventRepository.updateEvent(
                 eventId = event.eventId,

@@ -93,6 +93,8 @@
     <string name="toolbar_title_users">Gebruikers</string>
     <string name="easter_egg_enabled">Advertenties zijn nu uitgeschakeld!</string>
     <string name="easter_egg_message">Klik nog %1$d keer om advertenties te verwijderen</string>
+    <string name="action_mode_title">%1$d geselecteerd</string>
+
     <string-array name="night_mode_items">
         <item>@string/night_mode_label_auto</item>
         <item>@string/night_mode_label_off</item>
