@@ -11,12 +11,14 @@ class ActionModeCallback(private var actionItemListener: ActionItemListener?,
                          private val tracker: SelectionTracker<Event>) : ActionMode.Callback {
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        mode.menuInflater.inflate(R.menu.multi_select_menu, menu)
+        mode.menuInflater.inflate(R.menu.action_mode_menu, menu)
         return true
     }
 
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-        return false
+        val selectedEvents = tracker.selection.map { it }.toList()
+        menu.findItem(R.id.edit).isVisible = selectedEvents.size == 1
+        return true
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {

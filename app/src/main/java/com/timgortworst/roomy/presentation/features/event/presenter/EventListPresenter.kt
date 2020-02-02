@@ -1,8 +1,10 @@
 package com.timgortworst.roomy.presentation.features.event.presenter
 
 import android.widget.Filter
+import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.selection.SelectionTracker
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
@@ -104,6 +106,18 @@ class EventListPresenter @Inject constructor(
             view.openEventEditActivity(event)
         } else {
             view.showToast(R.string.error_no_categories)
+        }
+    }
+
+    fun onSelectionChanged(tracker: SelectionTracker<Event>, actionMode: ActionMode?) {
+        if (tracker.hasSelection() && actionMode == null) {
+            view.startActionMode(tracker)
+            view.setActionModeTitle(tracker.selection.size())
+        } else if (!tracker.hasSelection() && actionMode != null) {
+            view.stopActionMode()
+        } else {
+            view.setActionModeTitle(tracker.selection.size())
+            view.invalidateActionMode()
         }
     }
 }

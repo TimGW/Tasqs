@@ -117,34 +117,25 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
         tracker.addObserver(object : SelectionTracker.SelectionObserver<Event>() {
             override fun onSelectionChanged() {
                 super.onSelectionChanged()
-
-                if (tracker.hasSelection() && actionMode == null) {
-                    startActionMode(tracker)
-                    setActionModeTitle(tracker.selection.size())
-                } else if (!tracker.hasSelection()&& actionMode != null) {
-                    stopActionMode()
-                } else {
-                    setActionModeTitle(tracker.selection.size())
-                }
-                val itemIterable = tracker.selection?.iterator()
-
-                while (itemIterable?.hasNext() == true) {
-                    Log.i("TIMTIM", itemIterable.next().eventId)
-                }
+                presenter.onSelectionChanged(tracker, actionMode)
             }
         })
     }
 
-    private fun startActionMode(tracker: SelectionTracker<Event>) {
+    override fun startActionMode(tracker: SelectionTracker<Event>) {
         actionMode = activityContext.startSupportActionMode(ActionModeCallback(this@EventListFragment, tracker))
     }
 
-    private fun stopActionMode() {
+    override fun stopActionMode() {
         actionMode?.finish()
         actionMode = null
     }
 
-    private fun setActionModeTitle(size: Int) {
+    override fun invalidateActionMode() {
+        actionMode?.invalidate()
+    }
+
+    override fun setActionModeTitle(size: Int) {
         actionMode?.title = activityContext.getString(R.string.action_mode_title, size)
     }
 
