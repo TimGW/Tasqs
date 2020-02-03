@@ -11,12 +11,10 @@ import android.widget.CompoundButton
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
-import com.timgortworst.roomy.presentation.features.event.adapter.SpinnerCategoryAdapter
 import com.timgortworst.roomy.presentation.features.event.adapter.SpinnerUserAdapter
 import com.timgortworst.roomy.presentation.features.event.presenter.EventEditPresenter
 import dagger.android.AndroidInjection
@@ -27,7 +25,6 @@ import javax.inject.Inject
 
 class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
     private var event: Event? = null
-    private lateinit var spinnerAdapterCategories: SpinnerCategoryAdapter
     private lateinit var spinnerAdapterUsers: SpinnerUserAdapter
     private lateinit var spinnerAdapterRepeat: ArrayAdapter<EventMetaData.EventInterval>
     private lateinit var datePickerDialog: DatePickerDialog
@@ -58,31 +55,30 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_event)
 
-        event = intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT)
-
         supportActionBar?.apply {
             title = getString(R.string.toolbar_title_new_event)
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
 
-        setupCategorySpinner()
         setupUserSpinner()
         setupEventRepeatSpinner()
         setupCalenderDialog()
         setupClickListeners()
 
-        presenter.getCategories()
         presenter.getUsers()
         presenter.formatDateAndSetUI(localDate)
 
-        event?.let {
-            localDate = it.eventMetaData.eventTimestamp.toLocalDate()
-            supportActionBar?.title = getString(R.string.toolbar_title_edit_event, it.eventCategory.name)
-            presenter.formatDateAndSetUI(localDate)
-            event_repeat_checkbox.isChecked = it.eventMetaData.eventInterval != EventMetaData.EventInterval.SINGLE_EVENT
-            val repeatPos = spinnerAdapterRepeat.getPosition(it.eventMetaData.eventInterval)
-            spinner_repeat.setSelection(repeatPos)
+        if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT)) {
+            event = (intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) as? Event)?.also {
+                agenda_item_description_input.setText(it.description)
+                localDate = it.eventMetaData.eventTimestamp.toLocalDate()
+                supportActionBar?.title = getString(R.string.toolbar_title_edit_event, it.description)
+                presenter.formatDateAndSetUI(localDate)
+                event_repeat_checkbox.isChecked = it.eventMetaData.eventInterval != EventMetaData.EventInterval.SINGLE_EVENT
+                val repeatPos = spinnerAdapterRepeat.getPosition(it.eventMetaData.eventInterval)
+                spinner_repeat.setSelection(repeatPos)
+            }
         }
     }
 
@@ -102,16 +98,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         }
     }
 
-    private fun setupCategorySpinner(){
-        spinnerAdapterCategories = SpinnerCategoryAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                mutableListOf()
-        )
-        spinner_categories.adapter = spinnerAdapterCategories
-    }
-
-    private fun setupUserSpinner(){
+    private fun setupUserSpinner() {
         spinnerAdapterUsers = SpinnerUserAdapter(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -155,11 +142,11 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             R.id.action_edit_done -> {
                 presenter.editEventDone(
                         event_repeat_checkbox.isChecked,
-                        spinner_repeat.selectedItem as EventMetaData.EventInterval,
+                        spinner_repeat?.selectedItem as? EventMetaData.EventInterval,
                         localDate,
-                        event,
-                        spinner_categories.selectedItem as Category,
-                        spinner_users.selectedItem as User)
+                        event?.eventId,
+                        spinner_users.selectedItem as User,
+                        agenda_item_description_input.text.toString())
 
                 finish()
                 true
@@ -178,24 +165,14 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         spinnerAdapterUsers.addAll(users)
         spinnerAdapterUsers.notifyDataSetChanged()
 
-        event?.let {
-            val userPos = spinnerAdapterUsers.getPosition(it.user)
+        if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT)) {
+            val userPos = spinnerAdapterUsers.getPosition(event?.user)
             spinner_users.setSelection(userPos)
         }
     }
 
-    override fun presentCategoryList(categories: MutableList<Category>) {
-        spinnerAdapterCategories.addAll(categories)
-        spinnerAdapterCategories.notifyDataSetChanged()
-
-        event?.let {
-            val categoryPos = spinnerAdapterCategories.getPosition(it.eventCategory)
-            spinner_categories.setSelection(categoryPos)
-        }
-    }
-
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        localDate = LocalDate.of(year,month + 1, dayOfMonth )
+        localDate = LocalDate.of(year, month + 1, dayOfMonth)
         presenter.formatDateAndSetUI(localDate)
     }
 

@@ -5,28 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/event_category_spinner_hint"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/agenda_item_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/edit_event_category_hint"
+        android:hint="@string/edit_event_description_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <Spinner
-        android:id="@+id/spinner_categories"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:minHeight="50dp"
-        android:spinnerMode="dialog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_category_spinner_hint" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/agenda_item_description_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="5"
+            android:maxLength="500"
+            android:scrollbars="vertical"
+            android:inputType="textMultiLine" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/event_users_spinner_hint"
@@ -38,7 +37,7 @@
         android:text="@string/edit_event_user_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_categories" />
+        app:layout_constraintTop_toBottomOf="@+id/agenda_item_description" />
 
     <Spinner
         android:id="@+id/spinner_users"
@@ -58,7 +57,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="@string/edit_category_date_hint"
+        android:hint="@string/edit_event_date_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_users">

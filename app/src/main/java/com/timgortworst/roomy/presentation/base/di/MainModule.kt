@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.presentation.base.di
 
-import com.timgortworst.roomy.presentation.features.category.view.CategoryListFragment
 import com.timgortworst.roomy.presentation.features.event.view.EventListFragment
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
 import com.timgortworst.roomy.presentation.features.main.view.MainView
@@ -17,9 +16,6 @@ abstract class MainModule {
 
     @ContributesAndroidInjector(modules = [(EventListModule::class)])
     internal abstract fun provideAgendaFragment(): EventListFragment
-
-    @ContributesAndroidInjector(modules = [(CategoryListModule::class)])
-    internal abstract fun provideCategoriesFragment(): CategoryListFragment
 
     @ContributesAndroidInjector(modules = [(UserListModule::class)])
     internal abstract fun provideUserListFragment(): UserListFragment

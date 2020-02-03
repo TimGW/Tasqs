@@ -17,8 +17,8 @@
     <string name="dialog_household_overwrite_title">Household overwrite</string>
     <string name="dialog_household_similar_text">You\'re already in this household. Press \'OK\' to continue</string>
     <string name="dialog_household_similar_title">Same household!</string>
-    <string name="edit_category_date_hint">Date</string>
-    <string name="edit_category_description_hint">Description</string>
+    <string name="edit_event_date_hint">Date</string>
+    <string name="edit_event_description_hint">Description</string>
     <string name="edit_category_name_hint">Title</string>
     <string name="edit_event_category_hint">Category</string>
     <string name="edit_event_user_hint">Persoon</string>

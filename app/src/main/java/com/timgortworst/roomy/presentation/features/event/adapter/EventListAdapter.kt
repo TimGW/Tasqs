@@ -104,7 +104,7 @@ class EventListAdapter : RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
             }
 
             user.text = event.user.name.capitalize()
-            description.text = event.eventCategory.name
+            description.text = event.description
 
             repeatIcon.setRepeatLabelText(event.eventMetaData.eventInterval)
             if (event.eventMetaData.eventInterval != EventMetaData.EventInterval.SINGLE_EVENT) {

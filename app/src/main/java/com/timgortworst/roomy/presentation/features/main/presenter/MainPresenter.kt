@@ -58,13 +58,5 @@ class MainPresenter
         }
     }
 
-    fun checkIfUserCanCreateEvent() = scope.launch {
-        if (mainUseCase.isUserAbleToCreateEvent()) {
-            view.openEventEditActivity()
-        } else {
-            view.showToast(R.string.error_no_categories)
-        }
-    }
-
     fun showOrHideAd()= if (sharedPrefs.isAdsEnabled()) view.showAd() else view.hideAd()
 }

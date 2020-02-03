@@ -9,15 +9,14 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
-import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.model.firestore.EventJson
 import com.timgortworst.roomy.data.utils.Constants
-import com.timgortworst.roomy.data.utils.Constants.EVENT_CATEGORY_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_COLLECTION_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_DATE_TIME_REF
+import com.timgortworst.roomy.data.utils.Constants.EVENT_DESCRIPTION_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_INTERVAL_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_META_DATA_REF
@@ -30,15 +29,14 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class EventRepository @Inject constructor() {
     private val eventCollectionRef = FirebaseFirestore.getInstance().collection(EVENT_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 
     suspend fun createEvent(
+            eventDescription: String,
             eventMetaData: EventMetaData,
-            category: Category,
             user: User,
             householdId: String
     ): String? {
@@ -51,8 +49,8 @@ class EventRepository @Inject constructor() {
         eventMetaDataMap[EVENT_INTERVAL_REF] = eventMetaData.eventInterval.name
 
         eventFieldMap[Constants.EVENT_ID_REF] = document.id
+        eventFieldMap[EVENT_DESCRIPTION_REF] = eventDescription
         eventFieldMap[EVENT_META_DATA_REF] = eventMetaDataMap
-        eventFieldMap[EVENT_CATEGORY_REF] = category
         eventFieldMap[EVENT_USER_REF] = user
         eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = householdId
 
@@ -112,8 +110,8 @@ class EventRepository @Inject constructor() {
 
     suspend fun updateEvent(
             eventId: String,
+            eventDescription: String? = null,
             eventMetaData: EventMetaData? = null,
-            category: Category? = null,
             user: User? = null,
             householdId: String? = null
     ) {
@@ -128,7 +126,7 @@ class EventRepository @Inject constructor() {
         }
 
         val eventFieldMap = mutableMapOf<String, Any>()
-        category?.let { eventFieldMap[EVENT_CATEGORY_REF] = it }
+        eventDescription?.let { eventFieldMap[EVENT_DESCRIPTION_REF] = it }
         user?.let { eventFieldMap[EVENT_USER_REF] = it }
         eventMetaData?.let { eventFieldMap[EVENT_META_DATA_REF] = eventMetaDataMap }
         householdId?.let { eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = it }

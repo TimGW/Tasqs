@@ -1,10 +1,8 @@
 package com.timgortworst.roomy.domain.usecase
 
-import com.timgortworst.roomy.data.model.Category
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
-import com.timgortworst.roomy.data.repository.CategoryRepository
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.data.utils.Constants
@@ -18,8 +16,7 @@ import javax.inject.Inject
 class EventUseCase
 @Inject
 constructor(private val eventRepository: EventRepository,
-            private val userRepository: UserRepository,
-            private val categoryRepository: CategoryRepository) {
+            private val userRepository: UserRepository) {
 
     suspend fun listenToEvents(eventListPresenter: EventListPresenter) {
         eventRepository.listenToEventsForHousehold(
@@ -53,17 +50,20 @@ constructor(private val eventRepository: EventRepository,
 
     suspend fun updateEvent(eventId: String,
                             eventMetaData: EventMetaData? = null,
-                            category: Category? = null,
                             user: User? = null,
-                            householdId: String? = null) {
-        eventRepository.updateEvent(eventId, eventMetaData = eventMetaData)
+                            eventDescription: String? = null) {
+        eventRepository.updateEvent(
+                eventId = eventId,
+                eventMetaData = eventMetaData,
+                user = user,
+                eventDescription = eventDescription)
     }
 
     suspend fun createEvent(eventMetaData: EventMetaData,
-                            category: Category,
                             user: User,
-                            householdId: String): String? {
-        return eventRepository.createEvent(eventMetaData, category, user, householdId)
+                            householdId: String,
+                            eventDescription: String): String? {
+        return eventRepository.createEvent(eventDescription, eventMetaData, user, householdId)
     }
 
     suspend fun getHouseholdIdForUser(): String {
@@ -72,14 +72,6 @@ constructor(private val eventRepository: EventRepository,
 
     suspend fun getUserListForCurrentHousehold(): List<User>? {
         return userRepository.getUserListForHousehold(userRepository.getHouseholdIdForUser())
-    }
-
-    suspend fun getCategories(): List<Category> {
-        return categoryRepository.getCategories()
-    }
-
-    suspend fun isUserAbleToCreateEvent(): Boolean {
-        return categoryRepository.getCategories().isNotEmpty()
     }
 
     private fun calcNextEventDate(eventMetaData: EventMetaData): ZonedDateTime {

@@ -142,19 +142,19 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     }
 
     override fun onActionItemEdit(selectedEvents: List<Event>) {
-        presenter.checkIfUserCanEditEvent(selectedEvents.first())
+        openEventEditActivity(selectedEvents.first())
     }
 
-    override fun presentAddedEvent(agendaEvent: Event) {
-        eventListAdapter.addEvent(agendaEvent)
+    override fun presentAddedEvent(event: Event) {
+        eventListAdapter.addEvent(event)
     }
 
-    override fun presentEditedEvent(agendaEvent: Event) {
-        eventListAdapter.updateEvent(agendaEvent)
+    override fun presentEditedEvent(event: Event) {
+        eventListAdapter.updateEvent(event)
     }
 
-    override fun presentDeletedEvent(agendaEvent: Event) {
-        eventListAdapter.removeEvent(agendaEvent)
+    override fun presentDeletedEvent(event: Event) {
+        eventListAdapter.removeEvent(event)
     }
 
     override fun setLoadingView(isLoading: Boolean) {
@@ -187,13 +187,13 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
 
     override fun enqueueNotification(eventId: String,
                                      eventMetaData: EventMetaData,
-                                     categoryName: String,
+                                     eventName: String,
                                      userName: String) {
         notificationWorkerBuilder.enqueueNotification(
                 eventId,
                 eventMetaData,
                 userName,
-                categoryName)
+                eventName)
     }
 
     override fun removePendingNotificationReminder(eventId: String) {

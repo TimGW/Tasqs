@@ -13,8 +13,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
-import com.timgortworst.roomy.presentation.features.category.view.CategoryEditActivity
-import com.timgortworst.roomy.presentation.features.category.view.CategoryListFragment
 import com.timgortworst.roomy.presentation.features.event.view.EventEditActivity
 import com.timgortworst.roomy.presentation.features.event.view.EventListFragment
 import com.timgortworst.roomy.presentation.features.main.NetworkChangeReceiver
@@ -39,7 +37,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
 
     private var adRequest: AdRequest? = null
     private val eventListFragment: Fragment by lazy { EventListFragment.newInstance() }
-    private val categoryListFragment: Fragment by lazy { CategoryListFragment.newInstance() }
     private val userListFragment: Fragment by lazy { UserListFragment.newInstance() }
     private var activeFragment: Fragment? = null
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
@@ -101,7 +98,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
 
     private fun setClickListeners(activeFragment: Fragment?) {
         main_agenda.setOnClickListener { openFragment(eventListFragment, eventListFragment::class.java.toString()) }
-        main_categories.setOnClickListener { openFragment(categoryListFragment, categoryListFragment::class.java.toString()) }
         main_housemates.setOnClickListener { openFragment(userListFragment, userListFragment::class.java.toString()) }
         main_settings.setOnClickListener { SettingsActivity.start(this) }
         activeFragment?.let { fragment ->
@@ -132,7 +128,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     private fun setToolbarTitleFor(tag: String) {
         supportActionBar?.title = when (tag) {
             eventListFragment::class.java.toString() -> getString(R.string.toolbar_title_schema)
-            categoryListFragment::class.java.toString() -> getString(R.string.toolbar_title_categories)
             userListFragment::class.java.toString() -> getString(R.string.toolbar_title_users)
             else -> getString(R.string.app_name)
         }
@@ -141,10 +136,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     private fun setFabClickListenerFor(fragment: Fragment?) {
         val clickEvent: (View) -> Unit = when (fragment?.tag) {
             eventListFragment::class.java.toString() -> { _ ->
-                presenter.checkIfUserCanCreateEvent()
-            }
-            categoryListFragment::class.java.toString() -> { _ ->
-                CategoryEditActivity.start(this)
+                openEventEditActivity()
             }
             userListFragment::class.java.toString() -> { _ ->
                 showProgressDialog()

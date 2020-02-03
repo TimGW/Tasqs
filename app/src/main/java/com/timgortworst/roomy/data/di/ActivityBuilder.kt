@@ -1,8 +1,6 @@
 package com.timgortworst.roomy.data.di
 
 
-import com.timgortworst.roomy.presentation.base.di.CategoryEditModule
-import com.timgortworst.roomy.presentation.features.category.view.CategoryEditActivity
 import com.timgortworst.roomy.presentation.base.di.EventEditModule
 import com.timgortworst.roomy.presentation.features.event.view.EventEditActivity
 import com.timgortworst.roomy.presentation.base.di.GoogleSignInModule
@@ -26,9 +24,6 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = [MainModule::class])
     internal abstract fun bindMainActivity(): MainActivity
-
-    @ContributesAndroidInjector(modules = [CategoryEditModule::class])
-    internal abstract fun bindEditTaskActivity(): CategoryEditActivity
 
     @ContributesAndroidInjector(modules = [EventEditModule::class])
     internal abstract fun bindEditAgendaEventActivity(): EventEditActivity

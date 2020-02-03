@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.presentation.features.event.presenter
 
-import android.widget.Filter
 import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -40,10 +39,6 @@ class EventListPresenter @Inject constructor(
         eventUseCase.listenToEvents(this@EventListPresenter)
     }
 
-    fun filterMe(filter: Filter) {
-        filter.filter(eventUseCase.getCurrentUserId())
-    }
-
     fun markEventAsCompleted(event: Event) = scope.launch {
         if (event.eventMetaData.eventInterval == EventMetaData.EventInterval.SINGLE_EVENT) {
             eventUseCase.deleteEvent(event.eventId)
@@ -55,7 +50,7 @@ class EventListPresenter @Inject constructor(
 
     private fun setNotificationReminder(event: Event, hasPendingWrites: Boolean) {
         if (hasPendingWrites && event.user.userId == eventUseCase.getCurrentUserId()) {
-            view.enqueueNotification(event.eventId, event.eventMetaData, event.eventCategory.name, event.user.name)
+            view.enqueueNotification(event.eventId, event.eventMetaData, event.description, event.user.name)
         }
     }
 
@@ -99,14 +94,6 @@ class EventListPresenter @Inject constructor(
     override fun renderUnsuccessfulState() {
         view.setLoadingView(false)
         view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
-    }
-
-    fun checkIfUserCanEditEvent(event: Event) = scope.launch {
-        if (eventUseCase.isUserAbleToCreateEvent()) {
-            view.openEventEditActivity(event)
-        } else {
-            view.showToast(R.string.error_no_categories)
-        }
     }
 
     fun onSelectionChanged(tracker: SelectionTracker<Event>, actionMode: ActionMode?) {

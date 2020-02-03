@@ -2,8 +2,6 @@ package com.timgortworst.roomy.presentation.features.event.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.timgortworst.roomy.data.model.Category
-import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.utils.Constants.DEFAULT_HOUR_OF_DAY_NOTIFICATION
@@ -34,26 +32,21 @@ class EventEditPresenter @Inject constructor(
 
     fun createOrUpdateEvent(
             eventId: String?,
-            category: Category,
             user: User,
-            eventMetaData: EventMetaData
+            eventMetaData: EventMetaData,
+            eventDescription: String
     ) = scope.launch {
         if (!eventId.isNullOrEmpty()) {
-            eventUseCase.updateEvent(eventId, eventMetaData, category, user)
+            eventUseCase.updateEvent(eventId, eventMetaData, user, eventDescription)
         } else {
             val householdId = eventUseCase.getHouseholdIdForUser()
-            eventUseCase.createEvent(eventMetaData, category, user, householdId)
+            eventUseCase.createEvent(eventMetaData, user, householdId, eventDescription)
         }
     }
 
     fun getUsers() = scope.launch {
         val userList = eventUseCase.getUserListForCurrentHousehold()
         view.presentUserList(userList?.toMutableList() ?: mutableListOf())
-    }
-
-    fun getCategories() = scope.launch {
-        val categories = eventUseCase.getCategories()
-        view.presentCategoryList(categories.toMutableList())
     }
 
     fun formatDateAndSetUI(localDateTime: LocalDate) {
@@ -64,24 +57,28 @@ class EventEditPresenter @Inject constructor(
     }
 
     fun editEventDone(isRepeatBoxChecked: Boolean,
-                      repeatInterval: EventMetaData.EventInterval,
+                      repeatInterval: EventMetaData.EventInterval?,
                       selectedDate: LocalDate,
-                      event: Event?,
-                      category: Category,
-                      user: User) {
-
+                      eventId: String?,
+                      user: User,
+                      eventDescription: String) {
 
         val eventMetaData = if (isRepeatBoxChecked) {
-            EventMetaData(eventTimestamp = selectedDate.toZonedDateTime(), eventInterval = repeatInterval)
+            EventMetaData(
+                    eventTimestamp = selectedDate.toZonedDateTime(),
+                    eventInterval = repeatInterval ?: EventMetaData.EventInterval.SINGLE_EVENT
+            )
         } else {
-            EventMetaData(eventTimestamp = selectedDate.toZonedDateTime(), eventInterval = EventMetaData.EventInterval.SINGLE_EVENT)
+            EventMetaData(
+                    eventTimestamp = selectedDate.toZonedDateTime(),
+                    eventInterval = EventMetaData.EventInterval.SINGLE_EVENT)
         }
 
         createOrUpdateEvent(
-                event?.eventId,
-                category,
+                eventId,
                 user,
-                eventMetaData
+                eventMetaData,
+                eventDescription
         )
     }
 

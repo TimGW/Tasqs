@@ -17,8 +17,8 @@
     <string name="dialog_household_overwrite_title">Huishouden overschrijven</string>
     <string name="dialog_household_similar_text">Je bent al in dit huishouden. Druk op \'OK\' om door te gaan</string>
     <string name="dialog_household_similar_title">Hetzelfde huishouden!</string>
-    <string name="edit_category_date_hint">Datum</string>
-    <string name="edit_category_description_hint">Omschrijving</string>
+    <string name="edit_event_date_hint">Datum</string>
+    <string name="edit_event_description_hint">Omschrijving</string>
     <string name="edit_category_name_hint">Titel</string>
     <string name="edit_event_category_hint">Categorie</string>
     <string name="edit_event_user_hint">Persoon</string>
