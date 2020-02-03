@@ -57,7 +57,6 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".presentation.features.setup.view.SetupActivity"
-            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".presentation.features.settings.view.HtmlTextActivity"
