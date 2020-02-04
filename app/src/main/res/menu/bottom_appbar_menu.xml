@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/home"
-          android:title="home"
-          app:showAsAction="always"
-          android:icon="@drawable/ic_calendar"/>
-    <item android:id="@+id/household_task_list"
-          android:title="events"
-          app:showAsAction="ifRoom"
-          android:icon="@drawable/ic_list"/>
-    <item android:id="@+id/profile"
-          android:title="profiel"
-          app:showAsAction="ifRoom"
-          android:icon="@drawable/ic_group"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/appbar_events_id"
+        android:icon="@drawable/ic_calendar"
+        android:title="@string/toolbar_title_schema"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/appbar_users_id"
+        android:icon="@drawable/ic_person_add"
+        android:title="@string/toolbar_title_users"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/appbar_settings_id"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/title_activity_settings"
+        app:showAsAction="ifRoom" />
 </menu>

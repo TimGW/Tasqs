@@ -70,7 +70,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
             activeFragment?.let { openFragment(it, it::class.java.toString()) }
         }
 
-        setClickListeners(activeFragment)
+        setupBottomAppBar()
 
         presenter.listenToHousehold()
 
@@ -96,13 +96,22 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         super.onDestroy()
     }
 
-    private fun setClickListeners(activeFragment: Fragment?) {
-        main_agenda.setOnClickListener { openFragment(eventListFragment, eventListFragment::class.java.toString()) }
-        main_housemates.setOnClickListener { openFragment(userListFragment, userListFragment::class.java.toString()) }
-        main_settings.setOnClickListener { SettingsActivity.start(this) }
-        activeFragment?.let { fragment ->
-            setFabClickListenerFor(fragment)
-            setToolbarTitleFor(fragment.tag.orEmpty())
+    private fun setupBottomAppBar() {
+        bottom_appbar.replaceMenu(R.menu.bottom_appbar_menu)
+        bottom_appbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.appbar_events_id -> openFragment(eventListFragment, eventListFragment::class.java.toString())
+                R.id.appbar_users_id -> openFragment(userListFragment, userListFragment::class.java.toString())
+                R.id.appbar_settings_id -> SettingsActivity.start(this)
+            }
+            true
+        }
+    }
+
+    private fun setFabActionAndTitleFor(activeFragment: Fragment?) {
+        activeFragment?.let {
+            setFabClickListenerFor(it)
+            setToolbarTitleFor(it.tag.orEmpty())
         }
     }
 
@@ -122,7 +131,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
             activeFragment = fragment
         }
 
-        setClickListeners(activeFragment)
+        setFabActionAndTitleFor(activeFragment)
     }
 
     private fun setToolbarTitleFor(tag: String) {
@@ -165,7 +174,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         }
     }
 
-    fun setupAds() {
+    private fun setupAds() {
         val builder = AdRequest.Builder()
         adRequest = builder.build()
         adView?.adListener = object : AdListener() {
