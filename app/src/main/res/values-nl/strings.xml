@@ -105,4 +105,5 @@
     <string name="night_mode_label_auto">Volg systeem</string>
     <string name="night_mode_label_off">Uit</string>
     <string name="night_mode_label_on">Aan</string>
+    <string name="event_edit_error_empty_description">Voer een beschrijving in</string>
 </resources>

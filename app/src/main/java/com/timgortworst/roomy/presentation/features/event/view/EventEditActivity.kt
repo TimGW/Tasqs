@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
@@ -61,25 +62,30 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             setDisplayShowHomeEnabled(true)
         }
 
-        setupUserSpinner()
-        setupEventRepeatSpinner()
-        setupCalenderDialog()
-        setupClickListeners()
+        setupUI()
 
         presenter.getUsers()
-        presenter.formatDateAndSetUI(localDate)
 
         if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT)) {
             event = (intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) as? Event)?.also {
                 agenda_item_description_input.setText(it.description)
                 localDate = it.eventMetaData.eventTimestamp.toLocalDate()
                 supportActionBar?.title = getString(R.string.toolbar_title_edit_event, it.description)
-                presenter.formatDateAndSetUI(localDate)
+                presenter.formatDate(localDate)
                 event_repeat_checkbox.isChecked = it.eventMetaData.eventInterval != EventMetaData.EventInterval.SINGLE_EVENT
                 val repeatPos = spinnerAdapterRepeat.getPosition(it.eventMetaData.eventInterval)
                 spinner_repeat.setSelection(repeatPos)
             }
         }
+    }
+
+    private fun setupUI() {
+        setupUserSpinner()
+        setupEventRepeatSpinner()
+        setupCalenderDialog()
+        setupClickListeners()
+        agenda_item_description_input.doAfterTextChanged { if (it?.isNotEmpty() == true) agenda_item_description.error = null }
+        presenter.formatDate(localDate)
     }
 
     private fun setupClickListeners() {
@@ -147,8 +153,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                         event?.eventId,
                         spinner_users.selectedItem as User,
                         agenda_item_description_input.text.toString())
-
-                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -173,10 +177,18 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         localDate = LocalDate.of(year, month + 1, dayOfMonth)
-        presenter.formatDateAndSetUI(localDate)
+        presenter.formatDate(localDate)
     }
 
     override fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String) {
         agenda_item_date_input.setText("$formattedDayOfMonth $formattedMonth $formattedYear")
+    }
+
+    override fun presentEmptyDescriptionError(errorMessage: Int) {
+        agenda_item_description.error = getString(errorMessage)
+    }
+
+    override fun finishActivity() {
+        finish()
     }
 }

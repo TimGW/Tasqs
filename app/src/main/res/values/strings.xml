@@ -110,4 +110,5 @@
     <string name="night_mode_label_auto">Follow system</string>
     <string name="night_mode_label_off">Off</string>
     <string name="night_mode_label_on">On</string>
+    <string name="event_edit_error_empty_description">Please enter a description</string>
 </resources>

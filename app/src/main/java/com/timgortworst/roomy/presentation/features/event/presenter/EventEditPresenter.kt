@@ -1,7 +1,9 @@
 package com.timgortworst.roomy.presentation.features.event.presenter
 
+import android.text.Editable
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.utils.Constants.DEFAULT_HOUR_OF_DAY_NOTIFICATION
@@ -35,7 +37,7 @@ class EventEditPresenter @Inject constructor(
         view.presentUserList(userList?.toMutableList() ?: mutableListOf())
     }
 
-    fun formatDateAndSetUI(localDateTime: LocalDate) {
+    fun formatDate(localDateTime: LocalDate) {
         val formattedDayOfMonth = localDateTime.dayOfMonth.toString()
         val formattedMonth = localDateTime.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         val formattedYear = localDateTime.year.toString()
@@ -48,6 +50,10 @@ class EventEditPresenter @Inject constructor(
                       eventId: String?,
                       user: User,
                       eventDescription: String)= scope.launch {
+        if (eventDescription.isEmpty()) {
+            view.presentEmptyDescriptionError(R.string.event_edit_error_empty_description)
+            return@launch
+        }
 
         val eventMetaData = if (isRepeatBoxChecked && repeatInterval != null) {
             EventMetaData(
@@ -66,6 +72,8 @@ class EventEditPresenter @Inject constructor(
             val householdId = eventUseCase.getHouseholdIdForUser()
             eventUseCase.createEvent(eventMetaData, user, householdId, eventDescription)
         }
+
+        view.finishActivity()
     }
 
     private fun LocalDate.toZonedDateTime(timeOfDay: Int = DEFAULT_HOUR_OF_DAY_NOTIFICATION) = atTime(timeOfDay, 0).atZone(ZoneId.systemDefault())
