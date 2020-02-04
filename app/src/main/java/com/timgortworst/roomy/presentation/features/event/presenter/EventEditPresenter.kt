@@ -30,20 +30,6 @@ class EventEditPresenter @Inject constructor(
         }
     }
 
-    fun createOrUpdateEvent(
-            eventId: String?,
-            user: User,
-            eventMetaData: EventMetaData,
-            eventDescription: String
-    ) = scope.launch {
-        if (!eventId.isNullOrEmpty()) {
-            eventUseCase.updateEvent(eventId, eventMetaData, user, eventDescription)
-        } else {
-            val householdId = eventUseCase.getHouseholdIdForUser()
-            eventUseCase.createEvent(eventMetaData, user, householdId, eventDescription)
-        }
-    }
-
     fun getUsers() = scope.launch {
         val userList = eventUseCase.getUserListForCurrentHousehold()
         view.presentUserList(userList?.toMutableList() ?: mutableListOf())
@@ -61,12 +47,12 @@ class EventEditPresenter @Inject constructor(
                       selectedDate: LocalDate,
                       eventId: String?,
                       user: User,
-                      eventDescription: String) {
+                      eventDescription: String)= scope.launch {
 
-        val eventMetaData = if (isRepeatBoxChecked) {
+        val eventMetaData = if (isRepeatBoxChecked && repeatInterval != null) {
             EventMetaData(
                     eventTimestamp = selectedDate.toZonedDateTime(),
-                    eventInterval = repeatInterval ?: EventMetaData.EventInterval.SINGLE_EVENT
+                    eventInterval = repeatInterval
             )
         } else {
             EventMetaData(
@@ -74,12 +60,12 @@ class EventEditPresenter @Inject constructor(
                     eventInterval = EventMetaData.EventInterval.SINGLE_EVENT)
         }
 
-        createOrUpdateEvent(
-                eventId,
-                user,
-                eventMetaData,
-                eventDescription
-        )
+        if (!eventId.isNullOrEmpty()) {
+            eventUseCase.updateEvent(eventId, eventMetaData, user, eventDescription)
+        } else {
+            val householdId = eventUseCase.getHouseholdIdForUser()
+            eventUseCase.createEvent(eventMetaData, user, householdId, eventDescription)
+        }
     }
 
     private fun LocalDate.toZonedDateTime(timeOfDay: Int = DEFAULT_HOUR_OF_DAY_NOTIFICATION) = atTime(timeOfDay, 0).atZone(ZoneId.systemDefault())
