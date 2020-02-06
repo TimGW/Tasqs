@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/state_title"
-        style="@style/Text.Title"
+        style="@style/TextAppearance.MaterialComponents.Headline4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -24,7 +24,6 @@
 
     <TextView
         android:id="@+id/state_message"
-        style="@style/Text.Body1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -38,14 +37,12 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/state_button"
-        style="@style/Buton.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:text="@string/generate_categories_button_text"
-        android:textColor="@color/white"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

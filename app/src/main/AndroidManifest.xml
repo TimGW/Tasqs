@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/MyTheme.DayNight"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
             android:name=".presentation.features.settings.view.SettingsActivity"
@@ -24,7 +24,7 @@
         <activity
             android:name=".presentation.features.splash.view.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Launcher">
+            android:theme="@style/Theme.MaterialComponents.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,10 +48,7 @@
         <activity android:name=".presentation.base.view.BaseActivity" />
         <activity
             android:name=".presentation.features.googlesignin.view.GoogleSignInActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".presentation.features.category.view.CategoryEditActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:theme="@style/Theme.MaterialComponents.NoActionBar" />
         <activity
             android:name=".presentation.features.event.view.EventEditActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />

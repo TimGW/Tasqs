@@ -7,6 +7,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/agenda_item_description"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -15,16 +16,16 @@
         android:hint="@string/edit_event_description_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/agenda_item_description_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:maxLines="5"
+            android:inputType="textMultiLine"
             android:maxLength="500"
-            android:scrollbars="vertical"
-            android:inputType="textMultiLine" />
+            android:maxLines="5"
+            android:scrollbars="vertical" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -52,6 +53,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/agenda_item_date"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"

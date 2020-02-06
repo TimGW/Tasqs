@@ -94,12 +94,10 @@ class EventListAdapter : RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
             val dateTimeEvent = event.eventMetaData.eventTimestamp
 
             dateTime.text = if (dateTimeEvent.isDateInPast()) {
-                dateTime.setTextColor(ContextCompat.getColor(itemView.context, R.color.error))
-                dateTime.setTypeface(null, Typeface.BOLD)
+                dateTime.setTextColor(ContextCompat.getColor(itemView.context, R.color.color_error))
                 dateTime.context.getString(R.string.event_overdue, formatDate(dateTimeEvent))
             } else {
                 dateTime.setTextColor(description.currentTextColor)
-                dateTime.setTypeface(null, Typeface.NORMAL)
                 dateTime.context.getString(R.string.event_next, formatDate(dateTimeEvent))
             }
 

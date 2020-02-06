@@ -34,7 +34,7 @@ class SplashActivity : AppCompatActivity(), SplashView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
-        setTheme(R.style.AppTheme_Launcher)
+        setTheme(R.style.MyTheme_Launcher)
         super.onCreate(savedInstanceState)
 
         FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnCompleteListener {
