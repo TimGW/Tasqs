@@ -15,24 +15,36 @@
         style="@style/TextAppearance.MyTheme.Headline5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/keyline_2"
-        app:layout_constraintEnd_toStartOf="@id/event_repeat_label"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/event_done"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Tim Gortworst" />
+
+    <com.timgortworst.roomy.presentation.base.customview.RepeatIcon
+        android:id="@+id/event_repeat_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/event_date_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/event_date_time"
+        tools:visibility="visible" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/event_date_time"
         style="@style/TextAppearance.MyTheme.Subtitle1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/keyline_2"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/event_next"
         app:layout_constraintBottom_toTopOf="@+id/event_name"
-        app:layout_constraintEnd_toStartOf="@id/event_repeat_label"
+        app:layout_constraintEnd_toStartOf="@+id/event_done"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/event_repeat_label"
         app:layout_constraintTop_toBottomOf="@+id/event_user"
+        app:layout_goneMarginStart="0dp"
         tools:text="20:00 - 21:00" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -41,24 +53,24 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/keyline_2"
-        android:layout_marginEnd="@dimen/keyline_2"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="2"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/event_repeat_label"
+        app:layout_constraintEnd_toStartOf="@+id/event_done"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_date_time"
         tools:text="Stofzuigen" />
 
-    <com.timgortworst.roomy.presentation.base.customview.RepeatIcon
-        android:id="@+id/event_repeat_label"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/event_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:padding="@dimen/keyline_2"
+        android:text="@string/button_done_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
 import kotlinx.android.synthetic.main.layout_list_state.view.*
 import javax.inject.Inject
 
-class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionItemListener {
+class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionItemListener, EventListAdapter.EventDoneClickListener {
     private lateinit var activityContext: AppCompatActivity
     private lateinit var eventListAdapter: EventListAdapter
     private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
@@ -73,7 +73,7 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_recycler_view, container, false)
         notificationWorkerBuilder = NotificationWorkerBuilder(activityContext)
-        eventListAdapter = EventListAdapter()
+        eventListAdapter = EventListAdapter(this)
         view.swipe_container?.isEnabled = false
 
         view.recycler_view.apply {
@@ -183,6 +183,10 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
 
     override fun openEventEditActivity(event: Event) {
         EventEditActivity.start(activityContext, event)
+    }
+
+    override fun onEventDoneClicked(position: Int) {
+        presenter.markEventAsCompleted(eventListAdapter.getEvent(position))
     }
 
     override fun enqueueNotification(eventId: String,

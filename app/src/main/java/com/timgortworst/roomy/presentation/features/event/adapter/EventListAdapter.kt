@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.presentation.features.event.adapter
 
-import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
@@ -24,7 +24,10 @@ import java.util.*
  *
  * Handles clicks by expanding items to show a more detailed description of the category
  */
-class EventListAdapter : RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
+class EventListAdapter(
+        private val eventDoneClickListener: EventDoneClickListener
+) : RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
+
     private var eventList: MutableList<Event> = mutableListOf()
     var tracker: SelectionTracker<Event>? = null
 
@@ -89,9 +92,11 @@ class EventListAdapter : RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
         private val dateTime: TextView = view.findViewById(R.id.event_date_time)
         private val description: TextView = view.findViewById(R.id.event_name)
         private val repeatIcon: RepeatIcon = view.findViewById(R.id.event_repeat_label)
+        private val eventDone: MaterialButton = view.findViewById(R.id.event_done)
 
         fun bind(event: Event, isActivated: Boolean) {
             val dateTimeEvent = event.eventMetaData.eventTimestamp
+            eventDone.setOnClickListener { eventDoneClickListener.onEventDoneClicked(adapterPosition) }
 
             dateTime.text = if (dateTimeEvent.isDateInPast()) {
                 dateTime.setTextColor(ContextCompat.getColor(itemView.context, R.color.color_error))
@@ -125,5 +130,9 @@ class EventListAdapter : RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
                     override fun getPosition(): Int = adapterPosition
                     override fun getSelectionKey(): Event? = eventList[adapterPosition]
                 }
+    }
+
+    interface EventDoneClickListener {
+        fun onEventDoneClicked(position: Int)
     }
 }

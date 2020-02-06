@@ -3,6 +3,7 @@
     <dimen name="text_18">18sp</dimen>
     <dimen name="text_14">14sp</dimen>
     <dimen name="text_10">10sp</dimen>
+    <dimen name="text_8">8sp</dimen>
     <dimen name="card_corner_radius">4dp</dimen>
 
     <dimen name="keyline_0">2dp</dimen>
