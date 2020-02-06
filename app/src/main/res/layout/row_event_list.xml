@@ -4,20 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/keyline_2"
-    android:layout_marginBottom="@dimen/keyline_2"
     android:background="@drawable/row_selector_background"
     android:checkable="true"
     android:clickable="true"
     android:focusable="true"
-    android:paddingStart="@dimen/keyline_4"
-    android:paddingTop="@dimen/keyline_2"
-    android:paddingEnd="@dimen/keyline_4"
-    android:paddingBottom="@dimen/keyline_2">
+    android:padding="@dimen/keyline_4">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/event_user"
-        style="@style/TextAppearance.MyTheme.Headline6"
+        style="@style/TextAppearance.MyTheme.Headline5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/keyline_2"
@@ -28,7 +23,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/event_date_time"
-        style="@style/TextAppearance.MyTheme.Subtitle2"
+        style="@style/TextAppearance.MyTheme.Subtitle1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/keyline_2"
