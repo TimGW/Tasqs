@@ -64,7 +64,6 @@
     <string name="toolbar_title_users">Users</string>
     <string name="easter_egg_enabled">Ads are now disabled!</string>
     <string name="easter_egg_message">Click %1$d more time(s) to remove ads</string>
-    <string name="action_mode_title">%1$d selected</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 

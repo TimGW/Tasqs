@@ -134,7 +134,7 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     }
 
     override fun setActionModeTitle(size: Int) {
-        actionMode?.title = activityContext.getString(R.string.action_mode_title, size)
+        actionMode?.title = size.toString()
     }
 
     override fun onActionItemDelete(selectedEvents: List<Event>) {
