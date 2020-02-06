@@ -44,7 +44,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
 
     private fun buildSummaryNotification(title: String, text: String): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.accent_home_icon)
+                .setSmallIcon(R.drawable.ic_home)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setGroupSummary(true)
@@ -55,7 +55,7 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
     private fun buildNotification(notificationTitle: String,
                                   notificationMessage: String,
                                   notificationPendingIntent: PendingIntent) = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.accent_home_icon)
+            .setSmallIcon(R.drawable.ic_home)
             .setContentTitle(notificationTitle)
             .setContentText(notificationMessage)
             .setContentIntent(notificationPendingIntent)

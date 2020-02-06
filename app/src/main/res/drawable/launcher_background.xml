@@ -3,11 +3,11 @@
 
     <item android:drawable="@color/color_surface" />
 
-    <item>
-        <bitmap
-            android:gravity="center"
-            android:tint="@color/color_secondary"
-            android:src="@drawable/white_home_icon" />
-    </item>
+    <item
+        android:drawable="@drawable/ic_home"
+        android:gravity="center"
+        android:width="150dp"
+        android:height="150dp"
+        android:tint="@color/color_secondary" />
 
 </layer-list>
