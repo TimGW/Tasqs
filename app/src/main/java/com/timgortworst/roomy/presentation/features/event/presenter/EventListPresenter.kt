@@ -39,24 +39,14 @@ class EventListPresenter @Inject constructor(
         eventUseCase.listenToEvents(this@EventListPresenter)
     }
 
-    fun markEventAsCompleted(event: Event) = scope.launch {
-        if (event.eventMetaData.eventInterval == EventMetaData.EventInterval.SINGLE_EVENT) {
-            eventUseCase.deleteEvent(event.eventId)
-            return@launch
-        }
-
-        eventUseCase.markEventAsComplete(event)
+    fun eventsCompleted(events: List<Event>) = scope.launch {
+        eventUseCase.eventsCompleted(events)
     }
 
     private fun setNotificationReminder(event: Event, hasPendingWrites: Boolean) {
         if (hasPendingWrites && event.user.userId == eventUseCase.getCurrentUserId()) {
             view.enqueueNotification(event.eventId, event.eventMetaData, event.description, event.user.name)
         }
-    }
-
-    fun deleteEvent(event: Event) = scope.launch {
-        eventUseCase.deleteEvent(event.eventId)
-        view.removePendingNotificationReminder(event.eventId)
     }
 
     fun deleteEvents(events: List<Event>) = scope.launch {

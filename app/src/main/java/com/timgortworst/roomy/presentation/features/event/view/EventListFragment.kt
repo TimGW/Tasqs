@@ -145,6 +145,10 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
         openEventEditActivity(selectedEvents.first())
     }
 
+    override fun onActionItemDone(selectedEvents: List<Event>) {
+        presenter.eventsCompleted(selectedEvents)
+    }
+
     override fun presentAddedEvent(event: Event) {
         eventListAdapter.addEvent(event)
     }
@@ -186,7 +190,7 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     }
 
     override fun onEventDoneClicked(position: Int) {
-        presenter.markEventAsCompleted(eventListAdapter.getEvent(position))
+        presenter.eventsCompleted(listOf(eventListAdapter.getEvent(position)))
     }
 
     override fun enqueueNotification(eventId: String,

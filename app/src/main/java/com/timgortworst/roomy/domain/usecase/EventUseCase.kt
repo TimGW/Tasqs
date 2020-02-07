@@ -32,20 +32,29 @@ constructor(private val eventRepository: EventRepository,
         return userRepository.getCurrentUserId()
     }
 
-    suspend fun deleteEvent(eventId: String) {
-        eventRepository.deleteEvent(eventId)
-    }
-
     suspend fun deleteEvents(events: List<Event>) {
         eventRepository.deleteEvents(events)
     }
 
-    suspend fun markEventAsComplete(event: Event) {
-        eventRepository.updateEvent(
-                eventId = event.eventId,
-                eventMetaData = EventMetaData(
-                        eventTimestamp = calcNextEventDate(event.eventMetaData),
-                        eventInterval = event.eventMetaData.eventInterval))
+    suspend fun eventsCompleted(events: List<Event>) {
+        events.filter {
+            it.eventMetaData.eventInterval == EventMetaData.EventInterval.SINGLE_EVENT
+        }.run {
+            deleteEvents(this)
+        }
+
+        events.filterNot {
+            it.eventMetaData.eventInterval == EventMetaData.EventInterval.SINGLE_EVENT
+        }.run {
+            updateNextEventDate(this)
+        }
+    }
+
+    private suspend fun updateNextEventDate(events: List<Event>) {
+        events.forEach {
+            it.eventMetaData.eventTimestamp = calcNextEventDate(it.eventMetaData)
+        }
+        eventRepository.updateEvents(events)
     }
 
     suspend fun updateEvent(eventId: String,

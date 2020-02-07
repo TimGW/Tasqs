@@ -138,6 +138,29 @@ class EventRepository @Inject constructor() {
         }
     }
 
+    suspend fun updateEvents(events: List<Event>) {
+        try {
+            val batch = FirebaseFirestore.getInstance().batch()
+            events.forEach {
+                val eventMetaDataMap = mutableMapOf<String, Any>()
+                it.eventMetaData.let { metaData ->
+                    eventMetaDataMap[EVENT_DATE_TIME_REF] = metaData.eventTimestamp.toInstant().toEpochMilli()
+                    eventMetaDataMap[EVENT_TIME_ZONE_REF] = metaData.eventTimestamp.zone.id
+                    eventMetaDataMap[EVENT_INTERVAL_REF] = metaData.eventInterval.name
+                }
+                val eventFieldMap = mutableMapOf<String, Any>()
+                eventFieldMap[EVENT_META_DATA_REF] = eventMetaDataMap
+                eventFieldMap[EVENT_DESCRIPTION_REF] = it.description
+                eventFieldMap[EVENT_USER_REF] = it.user
+                eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = it.householdId
+                batch.update(eventCollectionRef.document(it.eventId), eventFieldMap)
+            }
+            batch.commit().await()
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+        }
+    }
+
     suspend fun deleteEvent(eventId: String) {
         try {
             eventCollectionRef

@@ -35,6 +35,11 @@ class ActionModeCallback(private var actionItemListener: ActionItemListener?,
                 mode.finish()
                 true
             }
+            R.id.done -> {
+                actionItemListener?.onActionItemDone(selectedEvents)
+                mode.finish()
+                true
+            }
             else -> false
         }
     }
@@ -47,5 +52,6 @@ class ActionModeCallback(private var actionItemListener: ActionItemListener?,
     interface ActionItemListener {
         fun onActionItemDelete(selectedEvents: List<Event>)
         fun onActionItemEdit(selectedEvents: List<Event>)
+        fun onActionItemDone(selectedEvents: List<Event>)
     }
 }
