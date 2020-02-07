@@ -22,6 +22,8 @@
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">@color/color_surface</item>
+<!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
+<!--        <item name="android:navigationBarDividerColor" tools:ignore="NewApi">?colorControlHighlight</item>-->
     </style>
 
 </resources>
