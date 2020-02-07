@@ -6,7 +6,7 @@ import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Role
 import com.timgortworst.roomy.data.model.User
-import com.timgortworst.roomy.domain.RemoteApi
+import com.timgortworst.roomy.domain.UIState
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.user.view.UserListView
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class UserListPresenter @Inject constructor(
         private val view: UserListView,
         private val userUseCase: UserUseCase
-) : RemoteApi<User>, DefaultLifecycleObserver {
+) : UIState<User>, DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -53,8 +53,7 @@ class UserListPresenter @Inject constructor(
                                        totalDataSetSize: Int,
                                        hasPendingWrites: Boolean) {
         scope.launch {
-            view.setLoadingView(false)
-            view.setErrorView(false)
+            view.setMsgView(totalDataSetSize == 0)
 
             changeSet.forEach {
                 when (it.second) {
@@ -66,12 +65,11 @@ class UserListPresenter @Inject constructor(
         }
     }
 
-    override fun renderLoadingState() {
-        view.setLoadingView(true)
+    override fun renderLoadingState(isLoading: Boolean) {
+        view.setLoadingView(isLoading)
     }
 
-    override fun renderUnsuccessfulState() {
-        view.setLoadingView(false)
-        view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
+    override fun renderErrorState(hasError: Boolean) {
+        view.setMsgView(hasError, R.string.error_list_state_title, R.string.error_list_state_text)
     }
 }

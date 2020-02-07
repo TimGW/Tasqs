@@ -103,8 +103,8 @@ class UserListFragment : Fragment(), UserListView {
         swipe_container?.isRefreshing = isLoading
     }
 
-    override fun setErrorView(isVisible: Boolean, title: Int?, text: Int?) {
-        layout_list_state_error?.apply {
+    override fun setMsgView(isVisible: Boolean, title: Int?, text: Int?) {
+        layout_list_state?.apply {
             title?.let { this.state_title.text = activityContext.getString(it) }
             text?.let { this.state_message.text = activityContext.getString(it) }
             visibility = if (isVisible) View.VISIBLE else View.GONE

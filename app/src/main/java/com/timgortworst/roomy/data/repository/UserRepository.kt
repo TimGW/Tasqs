@@ -17,7 +17,7 @@ import com.timgortworst.roomy.data.utils.Constants.USER_EMAIL_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_HOUSEHOLDID_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_NAME_REF
 import com.timgortworst.roomy.data.utils.Constants.USER_ROLE_REF
-import com.timgortworst.roomy.domain.RemoteApi
+import com.timgortworst.roomy.domain.UIState
 import com.timgortworst.roomy.domain.Response
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -69,7 +69,7 @@ class UserRepository @Inject constructor() {
         }
     }
 
-    fun listenToUsersForHousehold(householdId: String?, apiStatus: RemoteApi<User>) {
+    fun listenToUsersForHousehold(householdId: String?, apiStatus: UIState<User>) {
         if (householdId.isNullOrEmpty()) return
 
         val handler = Handler()
@@ -93,7 +93,7 @@ class UserRepository @Inject constructor() {
                             documentChanges.forEach {
                                 result.add(Pair(it.document.toObject(User::class.java), it.type))
                             }
-                            Response.Success(result, totalDataSetSize, snapshots.metadata.hasPendingWrites())
+                            Response.HasData(result, totalDataSetSize, snapshots.metadata.hasPendingWrites())
                         }
                     }
                     apiStatus.setState(result)

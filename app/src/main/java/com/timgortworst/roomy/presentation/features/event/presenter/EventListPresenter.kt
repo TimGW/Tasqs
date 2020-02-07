@@ -7,8 +7,7 @@ import androidx.recyclerview.selection.SelectionTracker
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.domain.RemoteApi
+import com.timgortworst.roomy.domain.UIState
 import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventListView
@@ -20,7 +19,7 @@ import javax.inject.Inject
 class EventListPresenter @Inject constructor(
         private val view: EventListView,
         private val eventUseCase: EventUseCase
-) : RemoteApi<Event>, DefaultLifecycleObserver {
+) : UIState<Event>, DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -34,7 +33,10 @@ class EventListPresenter @Inject constructor(
     }
 
     fun listenToEvents() = scope.launch {
-        view.presentEmptyView(true)
+        //        view.setMsgView(true,
+//                R.string.empty_list_state_title_events,
+//                R.string.empty_list_state_text_events
+//        )
 
         eventUseCase.listenToEvents(this@EventListPresenter)
     }
@@ -57,9 +59,7 @@ class EventListPresenter @Inject constructor(
     }
 
     override fun renderSuccessfulState(changeSet: List<Pair<Event, DocumentChange.Type>>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
-        view.setLoadingView(false)
-        view.setErrorView(false)
-        view.presentEmptyView(totalDataSetSize == 0)
+        view.setMsgView(totalDataSetSize == 0, R.string.empty_list_state_title_events, R.string.empty_list_state_text_events)
 
         changeSet.forEach {
             when (it.second) {
@@ -77,13 +77,12 @@ class EventListPresenter @Inject constructor(
     }
 
 
-    override fun renderLoadingState() {
-        view.setLoadingView(true)
+    override fun renderLoadingState(isLoading: Boolean) {
+        view.setLoadingView(isLoading)
     }
 
-    override fun renderUnsuccessfulState() {
-        view.setLoadingView(false)
-        view.setErrorView(true, R.string.error_list_state_title, R.string.error_list_state_text)
+    override fun renderErrorState(hasError: Boolean) {
+        view.setMsgView(hasError, R.string.error_list_state_title, R.string.error_list_state_text)
     }
 
     fun onSelectionChanged(tracker: SelectionTracker<Event>, actionMode: ActionMode?) {

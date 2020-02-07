@@ -23,7 +23,7 @@ import com.timgortworst.roomy.data.utils.Constants.EVENT_META_DATA_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_TIME_ZONE_REF
 import com.timgortworst.roomy.data.utils.Constants.EVENT_USER_REF
 import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
-import com.timgortworst.roomy.domain.RemoteApi
+import com.timgortworst.roomy.domain.UIState
 import com.timgortworst.roomy.domain.Response
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -79,7 +79,7 @@ class EventRepository @Inject constructor() {
         }
     }
 
-    fun listenToEventsForHousehold(householdId: String, remoteApi: RemoteApi<Event>) {
+    fun listenToEventsForHousehold(householdId: String, remoteApi: UIState<Event>) {
         val handler = Handler()
         val runnable = Runnable { remoteApi.setState(Response.Loading) }
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
@@ -101,7 +101,7 @@ class EventRepository @Inject constructor() {
                                 result.add(Pair(it.document.toObject(EventJson::class.java).toEvent(), it.type))
                             }
 
-                            Response.Success(result, snapshots.documents.size, snapshots.metadata.hasPendingWrites())
+                            Response.HasData(result, snapshots.documents.size, snapshots.metadata.hasPendingWrites())
                         }
                     }
                     remoteApi.setState(result)

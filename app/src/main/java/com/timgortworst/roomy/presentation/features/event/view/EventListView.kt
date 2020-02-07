@@ -10,7 +10,6 @@ interface EventListView : PageStateView {
     fun presentAddedEvent(event: Event)
     fun presentEditedEvent(event: Event)
     fun presentDeletedEvent(event: Event)
-    fun presentEmptyView(isVisible: Boolean)
     fun removePendingNotificationReminder(eventId: String)
     fun enqueueNotification(eventId: String, eventMetaData: EventMetaData, eventName: String, userName: String)
     fun openEventEditActivity(event: Event)
