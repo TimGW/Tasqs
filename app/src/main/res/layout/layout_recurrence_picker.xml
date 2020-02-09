@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/picker_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/is_repeated_for_every"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/recurrence_picker_hint"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        app:hintEnabled="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/picker_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/recurrence_picker_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="2"
+            android:text="@string/default_custom_recurrence" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/recurrence_picker_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:drawableEnd="@drawable/ic_arrow_drop_down"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/day"
+        app:iconPadding="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/recurrence_picker_hint"
+        app:layout_constraintStart_toEndOf="@+id/recurrence_picker_hint"
+        app:layout_constraintTop_toTopOf="@+id/recurrence_picker_hint" />
+
+    <include
+        android:id="@+id/recurrence_week_picker"
+        layout="@layout/layout_week_picker"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recurrence_picker_button"
+        tools:visibility="visible" />
+
+    <include
+        android:id="@+id/recurrence_month_picker"
+        layout="@layout/layout_month_picker"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recurrence_picker_button"
+        tools:visibility="visible" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

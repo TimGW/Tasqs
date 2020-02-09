@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
@@ -27,6 +26,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
@@ -72,7 +72,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         }
 
         setupBottomAppBar()
-        setFabActionAndTitleFor(activeFragment)
+        updateFabAndTitle(activeFragment)
 
         presenter.listenToHousehold()
 
@@ -110,16 +110,25 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
         }
     }
 
-    private fun setFabActionAndTitleFor(activeFragment: Fragment?) {
+    private fun updateFabAndTitle(activeFragment: Fragment?) {
         activeFragment?.let {
             setFabClickListenerFor(it)
             setToolbarTitleFor(it.tag.orEmpty())
+
+            fab.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
+                override fun onShown(floatingActionButton: FloatingActionButton?) {
+                    super.onShown(fab)
+                }
+                override fun onHidden(floatingActionButton: FloatingActionButton?) {
+                    super.onHidden(fab)
+                    fab.show()
+                }
+            })
         }
     }
 
     private fun openFragment(fragment: Fragment, tag: String) {
         if(tag == activeFragment?.tag) return
-
         supportFragmentManager.beginTransaction().apply {
             setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             activeFragment?.let { hide(it) }
@@ -133,7 +142,7 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
             activeFragment = fragment
         }
 
-        setFabActionAndTitleFor(activeFragment)
+        updateFabAndTitle(activeFragment)
     }
 
     private fun setToolbarTitleFor(tag: String) {

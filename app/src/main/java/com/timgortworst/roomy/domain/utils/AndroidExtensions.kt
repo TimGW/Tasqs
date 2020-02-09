@@ -14,6 +14,10 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputEditText
+import androidx.core.content.ContextCompat.getSystemService
+import android.app.Activity
+import kotlinx.android.synthetic.main.layout_recurrence_picker.*
+
 
 fun Context.showToast(stringResource: Int, length: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, getString(stringResource), length).show()
@@ -33,6 +37,11 @@ fun Context.closeKeyboard(windowToken: IBinder) {
     imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
+fun Activity.clearFocus(view: View) {
+    view.clearFocus()
+    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(view.applicationWindowToken, 0)
+}
 
 fun Context.dpToPx(dp: Float): Int {
     return (dp * resources.displayMetrics.density + 0.5f).toInt()

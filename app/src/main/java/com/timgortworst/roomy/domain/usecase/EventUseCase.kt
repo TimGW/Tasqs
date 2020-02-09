@@ -38,13 +38,13 @@ constructor(private val eventRepository: EventRepository,
 
     suspend fun eventsCompleted(events: List<Event>) {
         events.filter {
-            it.eventMetaData.eventInterval == EventMetaData.EventInterval.SINGLE_EVENT
+            it.eventMetaData.eventInterval == EventMetaData.EventInterval.SingleEvent
         }.run {
             deleteEvents(this)
         }
 
         events.filterNot {
-            it.eventMetaData.eventInterval == EventMetaData.EventInterval.SINGLE_EVENT
+            it.eventMetaData.eventInterval == EventMetaData.EventInterval.SingleEvent
         }.run {
             updateNextEventDate(this)
         }

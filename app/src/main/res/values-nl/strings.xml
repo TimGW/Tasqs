@@ -52,11 +52,6 @@
     <string name="repeat_label_interval_text_month">M</string>
     <string name="repeat_label_interval_text_week">W</string>
     <string name="repeat_label_interval_text_year">J</string>
-    <string name="repeating_interval_annually_event">Jaarlijks</string>
-    <string name="repeating_interval_daily_event">Dagelijks</string>
-    <string name="repeating_interval_monthly_event">Maandelijks</string>
-    <string name="repeating_interval_single_event">Eenmalig evenement</string>
-    <string name="repeating_interval_weekly_event">Wekelijks</string>
     <string name="title_activity_settings">Instellingen</string>
     <string name="toolbar_title_edit_event">%1$s aanpassen</string>
     <string name="toolbar_title_new_event">Nieuw evenement</string>
@@ -77,4 +72,25 @@
     <string name="night_mode_label_on">Aan</string>
     <string name="event_edit_error_empty_description">Voer een beschrijving in</string>
     <string name="button_done_text">Klaar</string>
+    <string name="empty_string"/>
+
+    <string name="repeat_weekday_mo">M</string>
+    <string name="repeat_weekday_tu">D</string>
+    <string name="repeat_weekday_we">W</string>
+    <string name="repeat_weekday_th">D</string>
+    <string name="repeat_weekday_fr">V</string>
+    <string name="repeat_weekday_sa">Z</string>
+    <string name="repeat_weekday_su">Z</string>
+    <string name="is_repeated_for_every">Wordt herhaald voor elke</string>
+    <string name="is_repeated_on">Wordt herhaald op</string>
+    <string name="default_custom_recurrence">1</string>
+    <string name="day">dag</string>
+    <string name="days">dagen</string>
+    <string name="week">week</string>
+    <string name="weeks">weken</string>
+    <string name="month">maand</string>
+    <string name="months">maanden</string>
+    <string name="year">jaar</string>
+    <string name="years">jaren</string>
+
 </resources>

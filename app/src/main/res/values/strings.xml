@@ -52,11 +52,6 @@
     <string name="repeat_label_interval_text_month">M</string>
     <string name="repeat_label_interval_text_week">W</string>
     <string name="repeat_label_interval_text_year">Y</string>
-    <string name="repeating_interval_annually_event">Annually</string>
-    <string name="repeating_interval_daily_event">Daily</string>
-    <string name="repeating_interval_monthly_event">Monthly</string>
-    <string name="repeating_interval_single_event">Single event</string>
-    <string name="repeating_interval_weekly_event">Weekly</string>
     <string name="title_activity_settings">Settings</string>
     <string name="toolbar_title_edit_event">Edit %1$s</string>
     <string name="toolbar_title_new_event">New event</string>
@@ -82,4 +77,25 @@
     <string name="night_mode_label_on">On</string>
     <string name="event_edit_error_empty_description">Please enter a description</string>
     <string name="button_done_text">Done</string>
+    <string name="empty_string"/>
+
+    <string name="repeat_weekday_mo">M</string>
+    <string name="repeat_weekday_tu">T</string>
+    <string name="repeat_weekday_we">W</string>
+    <string name="repeat_weekday_th">T</string>
+    <string name="repeat_weekday_fr">F</string>
+    <string name="repeat_weekday_sa">S</string>
+    <string name="repeat_weekday_su">S</string>
+    <string name="is_repeated_for_every">Is repeated for every</string>
+    <string name="is_repeated_on">Is repeated on</string>
+    <string name="default_custom_recurrence">1</string>
+    <string name="day">day</string>
+    <string name="days">days</string>
+    <string name="week">week</string>
+    <string name="weeks">weeks</string>
+    <string name="month">month</string>
+    <string name="months">months</string>
+    <string name="year">year</string>
+    <string name="years">years</string>
+
 </resources>

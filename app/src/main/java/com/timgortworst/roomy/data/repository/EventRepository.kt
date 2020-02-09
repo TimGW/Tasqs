@@ -46,7 +46,7 @@ class EventRepository @Inject constructor() {
 
         eventMetaDataMap[EVENT_DATE_TIME_REF] = eventMetaData.eventTimestamp.toInstant().toEpochMilli()
         eventMetaDataMap[EVENT_TIME_ZONE_REF] = eventMetaData.eventTimestamp.zone.id
-        eventMetaDataMap[EVENT_INTERVAL_REF] = eventMetaData.eventInterval.name
+//        eventMetaDataMap[EVENT_INTERVAL_REF] = eventMetaData.eventInterval.name todo
 
         eventFieldMap[Constants.EVENT_ID_REF] = document.id
         eventFieldMap[EVENT_DESCRIPTION_REF] = eventDescription
@@ -122,7 +122,7 @@ class EventRepository @Inject constructor() {
         eventMetaData?.let {
             eventMetaDataMap[EVENT_DATE_TIME_REF] = it.eventTimestamp.toInstant().toEpochMilli()
             eventMetaDataMap[EVENT_TIME_ZONE_REF] = it.eventTimestamp.zone.id
-            eventMetaDataMap[EVENT_INTERVAL_REF] = it.eventInterval.name
+            eventMetaDataMap[EVENT_INTERVAL_REF] = it.eventInterval.toString()
         }
 
         val eventFieldMap = mutableMapOf<String, Any>()
@@ -146,7 +146,7 @@ class EventRepository @Inject constructor() {
                 it.eventMetaData.let { metaData ->
                     eventMetaDataMap[EVENT_DATE_TIME_REF] = metaData.eventTimestamp.toInstant().toEpochMilli()
                     eventMetaDataMap[EVENT_TIME_ZONE_REF] = metaData.eventTimestamp.zone.id
-                    eventMetaDataMap[EVENT_INTERVAL_REF] = metaData.eventInterval.name
+//                    eventMetaDataMap[EVENT_INTERVAL_REF] = metaData.eventInterval.name todo
                 }
                 val eventFieldMap = mutableMapOf<String, Any>()
                 eventFieldMap[EVENT_META_DATA_REF] = eventMetaDataMap

@@ -20,11 +20,11 @@ constructor(context: Context,
 
     fun setRepeatLabelText(interval: EventMetaData.EventInterval) {
         val label = when (interval) {
-            SINGLE_EVENT -> ""
-            DAILY -> context.getString(R.string.repeat_label_interval_text_day)
-            WEEKLY -> context.getString(R.string.repeat_label_interval_text_week)
-            MONTHLY -> context.getString(R.string.repeat_label_interval_text_month)
-            ANNUALLY -> context.getString(R.string.repeat_label_interval_text_year)
+            is SingleEvent -> context.getString(R.string.empty_string)
+            is Daily -> context.getString(R.string.repeat_label_interval_text_day)
+            is Weekly -> context.getString(R.string.repeat_label_interval_text_week)
+            is Monthly -> context.getString(R.string.repeat_label_interval_text_month)
+            is Annually -> context.getString(R.string.repeat_label_interval_text_year)
         }
         event_repeat_text.text = label.toUpperCase()
     }

@@ -110,7 +110,7 @@ class EventListAdapter(
             description.text = event.description
 
             repeatIcon.setRepeatLabelText(event.eventMetaData.eventInterval)
-            if (event.eventMetaData.eventInterval != EventMetaData.EventInterval.SINGLE_EVENT) {
+            if (event.eventMetaData.eventInterval != EventMetaData.EventInterval.SingleEvent) {
                 repeatIcon.visibility = View.VISIBLE
             } else {
                 repeatIcon.visibility = View.GONE
