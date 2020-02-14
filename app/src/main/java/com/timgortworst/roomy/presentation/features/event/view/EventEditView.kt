@@ -12,5 +12,5 @@ interface EventEditView {
     fun finishActivity()
     fun inflatePopUpMenu(@MenuRes menuId: Int)
     fun updateRecurrenceButtonText(currentSelectedMenuItemId: Int)
-    fun presentRecurrenceInterval(recurrenceInterval: EventMetaData.EventInterval)
+//    fun presentRecurrenceInterval(recurrenceInterval: EventMetaData.EventInterval)
 }

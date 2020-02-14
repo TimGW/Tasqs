@@ -10,21 +10,12 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.model.firestore.EventJson
-import com.timgortworst.roomy.data.utils.Constants
-import com.timgortworst.roomy.data.utils.Constants.EVENT_COLLECTION_REF
-import com.timgortworst.roomy.data.utils.Constants.EVENT_DATE_TIME_REF
-import com.timgortworst.roomy.data.utils.Constants.EVENT_DESCRIPTION_REF
-import com.timgortworst.roomy.data.utils.Constants.EVENT_HOUSEHOLD_ID_REF
-import com.timgortworst.roomy.data.utils.Constants.EVENT_INTERVAL_REF
-import com.timgortworst.roomy.data.utils.Constants.EVENT_META_DATA_REF
-import com.timgortworst.roomy.data.utils.Constants.EVENT_TIME_ZONE_REF
-import com.timgortworst.roomy.data.utils.Constants.EVENT_USER_REF
+import com.timgortworst.roomy.data.model.firestore.EventJson.Companion.EVENT_COLLECTION_REF
+import com.timgortworst.roomy.data.model.firestore.EventJson.Companion.EVENT_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
-import com.timgortworst.roomy.domain.UIState
 import com.timgortworst.roomy.domain.Response
+import com.timgortworst.roomy.domain.UIState
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,28 +25,11 @@ class EventRepository @Inject constructor() {
     private val eventCollectionRef = FirebaseFirestore.getInstance().collection(EVENT_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 
-    suspend fun createEvent(
-            eventDescription: String,
-            eventMetaData: EventMetaData,
-            user: User,
-            householdId: String
-    ): String? {
+    suspend fun createEvent(event: Event): String? {
         val document = eventCollectionRef.document()
-        val eventFieldMap = mutableMapOf<String, Any>()
-        val eventMetaDataMap = mutableMapOf<String, Any>()
-
-        eventMetaDataMap[EVENT_DATE_TIME_REF] = eventMetaData.eventTimestamp.toInstant().toEpochMilli()
-        eventMetaDataMap[EVENT_TIME_ZONE_REF] = eventMetaData.eventTimestamp.zone.id
-//        eventMetaDataMap[EVENT_INTERVAL_REF] = eventMetaData.eventInterval.name todo
-
-        eventFieldMap[Constants.EVENT_ID_REF] = document.id
-        eventFieldMap[EVENT_DESCRIPTION_REF] = eventDescription
-        eventFieldMap[EVENT_META_DATA_REF] = eventMetaDataMap
-        eventFieldMap[EVENT_USER_REF] = user
-        eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = householdId
 
         return try {
-            document.set(eventFieldMap).await()
+            document.set(CustomMapper.convertToMap(event.apply { eventId = document.id })).await()
             document.id
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
@@ -72,7 +46,7 @@ class EventRepository @Inject constructor() {
                     .get()
                     .await()
                     .toObjects(EventJson::class.java)
-                    .map { it.toEvent() }
+                    .mapNotNull { CustomMapper.toEvent(it) }
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
             emptyList()
@@ -98,7 +72,7 @@ class EventRepository @Inject constructor() {
                             val changeList = snapshots?.documentChanges ?: return@EventListener
                             val result = mutableListOf<Pair<Event, DocumentChange.Type>>()
                             changeList.forEach {
-                                result.add(Pair(it.document.toObject(EventJson::class.java).toEvent(), it.type))
+                                result.add(Pair(CustomMapper.toEvent(it.document.toObject(EventJson::class.java))!!, it.type))
                             }
 
                             Response.HasData(result, snapshots.documents.size, snapshots.metadata.hasPendingWrites())
@@ -108,31 +82,10 @@ class EventRepository @Inject constructor() {
                 })
     }
 
-    suspend fun updateEvent(
-            eventId: String,
-            eventDescription: String? = null,
-            eventMetaData: EventMetaData? = null,
-            user: User? = null,
-            householdId: String? = null
-    ) {
-        if (eventId.isBlank()) return
-        val document = eventCollectionRef.document(eventId)
-
-        val eventMetaDataMap = mutableMapOf<String, Any>()
-        eventMetaData?.let {
-            eventMetaDataMap[EVENT_DATE_TIME_REF] = it.eventTimestamp.toInstant().toEpochMilli()
-            eventMetaDataMap[EVENT_TIME_ZONE_REF] = it.eventTimestamp.zone.id
-            eventMetaDataMap[EVENT_INTERVAL_REF] = it.eventInterval.toString()
-        }
-
-        val eventFieldMap = mutableMapOf<String, Any>()
-        eventDescription?.let { eventFieldMap[EVENT_DESCRIPTION_REF] = it }
-        user?.let { eventFieldMap[EVENT_USER_REF] = it }
-        eventMetaData?.let { eventFieldMap[EVENT_META_DATA_REF] = eventMetaDataMap }
-        householdId?.let { eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = it }
-
+    suspend fun updateEvent(event: Event) {
+        val document = eventCollectionRef.document(event.eventId)
         try {
-            document.update(eventFieldMap).await()
+            document.update(CustomMapper.convertToMap(event)).await()
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
         }
@@ -142,18 +95,7 @@ class EventRepository @Inject constructor() {
         try {
             val batch = FirebaseFirestore.getInstance().batch()
             events.forEach {
-                val eventMetaDataMap = mutableMapOf<String, Any>()
-                it.eventMetaData.let { metaData ->
-                    eventMetaDataMap[EVENT_DATE_TIME_REF] = metaData.eventTimestamp.toInstant().toEpochMilli()
-                    eventMetaDataMap[EVENT_TIME_ZONE_REF] = metaData.eventTimestamp.zone.id
-//                    eventMetaDataMap[EVENT_INTERVAL_REF] = metaData.eventInterval.name todo
-                }
-                val eventFieldMap = mutableMapOf<String, Any>()
-                eventFieldMap[EVENT_META_DATA_REF] = eventMetaDataMap
-                eventFieldMap[EVENT_DESCRIPTION_REF] = it.description
-                eventFieldMap[EVENT_USER_REF] = it.user
-                eventFieldMap[EVENT_HOUSEHOLD_ID_REF] = it.householdId
-                batch.update(eventCollectionRef.document(it.eventId), eventFieldMap)
+                batch.update(eventCollectionRef.document(it.eventId), CustomMapper.convertToMap(it))
             }
             batch.commit().await()
         } catch (e: FirebaseFirestoreException) {

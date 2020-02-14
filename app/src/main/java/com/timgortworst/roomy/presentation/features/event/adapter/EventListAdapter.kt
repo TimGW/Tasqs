@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
+import com.timgortworst.roomy.data.model.EventInterval
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.domain.utils.isDateInPast
 import com.timgortworst.roomy.presentation.base.customview.RepeatIcon
@@ -110,7 +111,7 @@ class EventListAdapter(
             description.text = event.description
 
             repeatIcon.setRepeatLabelText(event.eventMetaData.eventInterval)
-            if (event.eventMetaData.eventInterval != EventMetaData.EventInterval.SingleEvent) {
+            if (event.eventMetaData.eventInterval != EventInterval.SingleEvent) {
                 repeatIcon.visibility = View.VISIBLE
             } else {
                 repeatIcon.visibility = View.GONE

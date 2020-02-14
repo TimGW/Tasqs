@@ -5,8 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.data.model.EventMetaData.EventInterval.*
+import com.timgortworst.roomy.data.model.EventInterval
 import kotlinx.android.synthetic.main.custom_repeat_icon.view.*
 
 class RepeatIcon
@@ -18,13 +17,13 @@ constructor(context: Context,
         LayoutInflater.from(context).inflate(R.layout.custom_repeat_icon, this, true)
     }
 
-    fun setRepeatLabelText(interval: EventMetaData.EventInterval) {
+    fun setRepeatLabelText(interval: EventInterval) {
         val label = when (interval) {
-            is SingleEvent -> context.getString(R.string.empty_string)
-            is Daily -> context.getString(R.string.repeat_label_interval_text_day)
-            is Weekly -> context.getString(R.string.repeat_label_interval_text_week)
-            is Monthly -> context.getString(R.string.repeat_label_interval_text_month)
-            is Annually -> context.getString(R.string.repeat_label_interval_text_year)
+            is EventInterval.SingleEvent -> context.getString(R.string.empty_string)
+            is EventInterval.Daily -> context.getString(R.string.repeat_label_interval_text_day)
+            is EventInterval.Weekly -> context.getString(R.string.repeat_label_interval_text_week)
+            is EventInterval.Monthly -> context.getString(R.string.repeat_label_interval_text_month)
+            is EventInterval.Annually -> context.getString(R.string.repeat_label_interval_text_year)
         }
         event_repeat_text.text = label.toUpperCase()
     }

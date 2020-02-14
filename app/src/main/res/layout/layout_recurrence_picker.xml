@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/recurrence_picker_hint"
+        android:id="@+id/recurrence_frequency_hint"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         app:layout_constraintTop_toBottomOf="@id/picker_title">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/recurrence_picker_input"
+            android:id="@+id/recurrence_frequency"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -36,7 +36,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/recurrence_picker_button"
+        android:id="@+id/recurrence_type_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -45,9 +45,9 @@
         android:insetBottom="0dp"
         android:text="@string/day"
         app:iconPadding="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/recurrence_picker_hint"
-        app:layout_constraintStart_toEndOf="@+id/recurrence_picker_hint"
-        app:layout_constraintTop_toTopOf="@+id/recurrence_picker_hint" />
+        app:layout_constraintBottom_toBottomOf="@+id/recurrence_frequency_hint"
+        app:layout_constraintStart_toEndOf="@+id/recurrence_frequency_hint"
+        app:layout_constraintTop_toTopOf="@+id/recurrence_frequency_hint" />
 
     <include
         android:id="@+id/recurrence_week_picker"
@@ -58,20 +58,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recurrence_picker_button"
+        app:layout_constraintTop_toBottomOf="@+id/recurrence_type_button"
         tools:visibility="visible" />
-
-    <include
-        android:id="@+id/recurrence_month_picker"
-        layout="@layout/layout_month_picker"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recurrence_picker_button"
-        tools:visibility="visible" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

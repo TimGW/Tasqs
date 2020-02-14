@@ -9,6 +9,9 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.data.model.Household
+import com.timgortworst.roomy.data.model.Household.Companion.HOUSEHOLD_BLACKLIST_REF
+import com.timgortworst.roomy.data.model.Household.Companion.HOUSEHOLD_COLLECTION_REF
+import com.timgortworst.roomy.data.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.data.utils.Constants
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -16,7 +19,7 @@ import javax.inject.Singleton
 
 @Singleton
 class HouseholdRepository @Inject constructor() {
-    private val householdsCollectionRef = FirebaseFirestore.getInstance().collection(Constants.HOUSEHOLD_COLLECTION_REF)
+    private val householdsCollectionRef = FirebaseFirestore.getInstance().collection(HOUSEHOLD_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 
     suspend fun createHousehold(): String? {
@@ -42,7 +45,7 @@ class HouseholdRepository @Inject constructor() {
         if (householdId.isNullOrEmpty()) return
 
         registration = householdsCollectionRef
-                .whereEqualTo(Constants.USER_HOUSEHOLDID_REF, householdId)
+                .whereEqualTo(USER_HOUSEHOLD_ID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     if (e != null && snapshots == null) {
                         Log.e(TAG, "listen:error", e)
@@ -67,8 +70,8 @@ class HouseholdRepository @Inject constructor() {
         val householdDocRef = householdsCollectionRef.document(householdId)
 
         val fieldMap = mutableMapOf<String, Any>()
-        fieldMap[Constants.HOUSEHOLD_ID_REF] = householdId
-        blackList?.let { fieldMap[Constants.HOUSEHOLD_BLACKLIST_REF] = it }
+        fieldMap[USER_HOUSEHOLD_ID_REF] = householdId
+        blackList?.let { fieldMap[HOUSEHOLD_BLACKLIST_REF] = it }
 
         try {
             householdDocRef.set(fieldMap, SetOptions.merge()).await()

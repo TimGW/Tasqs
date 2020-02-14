@@ -1,16 +1,21 @@
 package com.timgortworst.roomy.domain.usecase
 
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
+import com.timgortworst.roomy.data.model.EventInterval
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.data.utils.Constants
 import com.timgortworst.roomy.domain.utils.isDateInPast
 import com.timgortworst.roomy.domain.utils.plusInterval
+import com.timgortworst.roomy.domain.utils.toIntOrOne
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalTime
+import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
-import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 
 class EventUseCase
@@ -38,13 +43,13 @@ constructor(private val eventRepository: EventRepository,
 
     suspend fun eventsCompleted(events: List<Event>) {
         events.filter {
-            it.eventMetaData.eventInterval == EventMetaData.EventInterval.SingleEvent
+            it.eventMetaData.eventInterval == EventInterval.SingleEvent
         }.run {
             deleteEvents(this)
         }
 
         events.filterNot {
-            it.eventMetaData.eventInterval == EventMetaData.EventInterval.SingleEvent
+            it.eventMetaData.eventInterval == EventInterval.SingleEvent
         }.run {
             updateNextEventDate(this)
         }
@@ -57,24 +62,6 @@ constructor(private val eventRepository: EventRepository,
         eventRepository.updateEvents(events)
     }
 
-    suspend fun updateEvent(eventId: String,
-                            eventMetaData: EventMetaData? = null,
-                            user: User? = null,
-                            eventDescription: String? = null) {
-        eventRepository.updateEvent(
-                eventId = eventId,
-                eventMetaData = eventMetaData,
-                user = user,
-                eventDescription = eventDescription)
-    }
-
-    suspend fun createEvent(eventMetaData: EventMetaData,
-                            user: User,
-                            householdId: String,
-                            eventDescription: String): String? {
-        return eventRepository.createEvent(eventDescription, eventMetaData, user, householdId)
-    }
-
     suspend fun getHouseholdIdForUser(): String {
         return userRepository.getHouseholdIdForUser()
     }
@@ -85,11 +72,52 @@ constructor(private val eventRepository: EventRepository,
 
     private fun calcNextEventDate(eventMetaData: EventMetaData): ZonedDateTime {
         return if (eventMetaData.eventTimestamp.isDateInPast()) {
-            todayAtEight().plusInterval(eventMetaData.eventInterval)
+            LocalDate.now().toZonedNoonDateTime().plusInterval(eventMetaData.eventInterval)
         } else {
             eventMetaData.eventTimestamp.plusInterval(eventMetaData.eventInterval)
         }
     }
 
-    private fun todayAtEight() = ZonedDateTime.now().withHour(Constants.DEFAULT_HOUR_OF_DAY_NOTIFICATION).truncatedTo(ChronoUnit.HOURS)
+    suspend fun createOrUpdateEvent(eventId: String?,
+                                    eventDescription: String,
+                                    user: User,
+                                    selectedDate: LocalDate,
+                                    recurrenceFrequency: String,
+                                    recurrenceTypeId: Int, selectedWeekDays: List<Int>) {
+
+        val eventMetaData = buildEventMetaData(recurrenceFrequency,
+                recurrenceTypeId, selectedWeekDays, selectedDate)
+
+        if (!eventId.isNullOrEmpty()) {
+            eventRepository.updateEvent(Event(eventId, eventDescription, eventMetaData, user))
+        } else {
+            eventRepository.createEvent(
+                    Event(
+                            description = eventDescription,
+                            eventMetaData = eventMetaData,
+                            user = user,
+                            householdId = getHouseholdIdForUser()
+                    )
+            )
+        }
+    }
+
+    private fun buildEventMetaData(recurrenceFrequency: String,
+                                   recurrenceTypeId: Int,
+                                   selectedWeekDays: List<Int>,
+                                   selectedDate: LocalDate): EventMetaData {
+        val frequency = recurrenceFrequency.toIntOrOne()
+
+        val eventInterval = when (recurrenceTypeId) {
+            R.id.days -> EventInterval.Daily(frequency)
+            R.id.weeks -> EventInterval.Weekly(frequency, selectedWeekDays)
+            R.id.months -> EventInterval.Monthly(frequency)
+            R.id.year -> EventInterval.Annually(frequency)
+            else -> EventInterval.SingleEvent
+        }
+
+        return EventMetaData(selectedDate.toZonedNoonDateTime(), eventInterval)
+    }
+
+    private fun LocalDate.toZonedNoonDateTime() = LocalDateTime.of(this, LocalTime.NOON).atZone(ZoneId.systemDefault())
 }

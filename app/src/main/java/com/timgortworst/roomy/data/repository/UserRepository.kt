@@ -11,14 +11,14 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.data.model.User.Companion.USER_COLLECTION_REF
+import com.timgortworst.roomy.data.model.User.Companion.USER_EMAIL_REF
+import com.timgortworst.roomy.data.model.User.Companion.USER_HOUSEHOLD_ID_REF
+import com.timgortworst.roomy.data.model.User.Companion.USER_NAME_REF
+import com.timgortworst.roomy.data.model.User.Companion.USER_ROLE_REF
 import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
-import com.timgortworst.roomy.data.utils.Constants.USER_COLLECTION_REF
-import com.timgortworst.roomy.data.utils.Constants.USER_EMAIL_REF
-import com.timgortworst.roomy.data.utils.Constants.USER_HOUSEHOLDID_REF
-import com.timgortworst.roomy.data.utils.Constants.USER_NAME_REF
-import com.timgortworst.roomy.data.utils.Constants.USER_ROLE_REF
-import com.timgortworst.roomy.domain.UIState
 import com.timgortworst.roomy.domain.Response
+import com.timgortworst.roomy.domain.UIState
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -77,7 +77,7 @@ class UserRepository @Inject constructor() {
         handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
 
         registration = userCollectionRef
-                .whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
+                .whereEqualTo(USER_HOUSEHOLD_ID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
                     Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
@@ -105,7 +105,7 @@ class UserRepository @Inject constructor() {
 
         return try {
             userCollectionRef
-                    .whereEqualTo(USER_HOUSEHOLDID_REF, householdId)
+                    .whereEqualTo(USER_HOUSEHOLD_ID_REF, householdId)
                     .get()
                     .await()
                     .toObjects(User::class.java)
@@ -142,7 +142,7 @@ class UserRepository @Inject constructor() {
         val userFieldMap = mutableMapOf<String, Any>()
         name?.let { userFieldMap[USER_NAME_REF] = it }
         email?.let { userFieldMap[USER_EMAIL_REF] = it }
-        householdId?.let { userFieldMap[USER_HOUSEHOLDID_REF] = it }
+        householdId?.let { userFieldMap[USER_HOUSEHOLD_ID_REF] = it }
         role?.let { userFieldMap[USER_ROLE_REF] = it }
 
         try {

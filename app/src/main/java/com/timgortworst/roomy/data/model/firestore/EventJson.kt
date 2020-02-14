@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.data.model.firestore
 
+import com.google.firebase.firestore.PropertyName
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
 import com.timgortworst.roomy.data.model.User
@@ -7,18 +8,18 @@ import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 
 data class EventJson(
-        var eventId: String = "",
-        var description: String = "",
-        var eventMetaData: EventMetaDataJson = EventMetaDataJson(),
-        var user: User = User(),
-        var householdId: String = ""
+        @JvmField @PropertyName(EVENT_ID_REF) var eventId: String? = null,
+        @JvmField @PropertyName(EVENT_DESCRIPTION_REF) var description: String? = null,
+        @JvmField @PropertyName(EVENT_META_DATA_REF) var eventMetaData: EventMetaDataJson? = null,
+        @JvmField @PropertyName(EVENT_USER_REF) var user: User? = null,
+        @JvmField @PropertyName(EVENT_HOUSEHOLD_ID_REF) var householdId: String? = null
 ) {
-    fun toEvent() = Event(
-            eventId,
-            description,
-            EventMetaData(toZonedDateTime(eventMetaData.eventTimeZone), eventMetaData.eventInterval),
-            user,
-            householdId)
-
-    private fun toZonedDateTime(zoneId: String) = Instant.ofEpochMilli(eventMetaData.eventDateTime).atZone(ZoneId.of(zoneId))
+    companion object {
+        const val EVENT_ID_REF = "id"
+        const val EVENT_COLLECTION_REF = "events"
+        const val EVENT_USER_REF = "user"
+        const val EVENT_DESCRIPTION_REF = "description"
+        const val EVENT_META_DATA_REF = "meta_data"
+        const val EVENT_HOUSEHOLD_ID_REF = "household_id"
+    }
 }
