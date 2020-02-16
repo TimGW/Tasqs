@@ -60,12 +60,13 @@ class EventEditPresenter @Inject constructor(
         view.finishActivity()
     }
 
-    fun checkForPluralUI(numberInput: String) {
+    fun checkForPluralRecurrenceType(numberInput: String, selectedRecurrenceType: Int) {
         when {
             numberInput.toIntOrNull()?.equals(1) == true || numberInput.isBlank() ->
                 view.inflatePopUpMenu(R.menu.recurrence_popup_menu)
             else -> view.inflatePopUpMenu(R.menu.recurrence_popup_menu_plural)
         }
+        view.updateRecurrenceButtonText(selectedRecurrenceType)
     }
 
     fun disableInputZero(editable: Editable?) {

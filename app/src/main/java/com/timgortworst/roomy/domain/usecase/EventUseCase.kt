@@ -89,7 +89,7 @@ constructor(private val eventRepository: EventRepository,
                 recurrenceTypeId, selectedWeekDays, selectedDate)
 
         if (!eventId.isNullOrEmpty()) {
-            eventRepository.updateEvent(Event(eventId, eventDescription, eventMetaData, user))
+            eventRepository.updateEvent(Event(eventId, eventDescription, eventMetaData, user, getHouseholdIdForUser()))
         } else {
             eventRepository.createEvent(
                     Event(

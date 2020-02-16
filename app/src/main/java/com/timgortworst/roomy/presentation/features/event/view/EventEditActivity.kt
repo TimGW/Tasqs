@@ -191,8 +191,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
         recurrence_frequency.doAfterTextChanged {
             presenter.disableInputZero(it)
-            presenter.checkForPluralUI(recurrence_frequency.text.toString())
-            updateRecurrenceButtonText(selectedRecurrenceType)
+            presenter.checkForPluralRecurrenceType(recurrence_frequency.text.toString(), selectedRecurrenceType)
         }
     }
 
@@ -238,9 +237,9 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         }
     }
 
-    private fun updateRecurrenceButtonText(currentSelectedMenuItemId: Int) {
-        recurrence_type_button?.text = if (currentSelectedMenuItemId != NO_RECURRENCE) {
-            popup.menu.findItem(currentSelectedMenuItemId).title
+    override fun updateRecurrenceButtonText(selectedRecurrenceType: Int) {
+        recurrence_type_button?.text = if (selectedRecurrenceType != NO_RECURRENCE) {
+            popup.menu.findItem(selectedRecurrenceType).title
         } else {
             popup.menu.findItem(R.id.days).title
         }
