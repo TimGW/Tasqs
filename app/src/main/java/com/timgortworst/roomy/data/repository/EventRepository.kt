@@ -42,7 +42,7 @@ class EventRepository @Inject constructor() {
 
         return try {
             eventCollectionRef
-                    .whereEqualTo("user.userId", userId)
+                    .whereEqualTo("user.id", userId)
                     .get()
                     .await()
                     .toObjects(EventJson::class.java)

@@ -30,16 +30,31 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 
 class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
     private var event: Event? = null
-    private lateinit var spinnerAdapterUsers: SpinnerUserAdapter
-    private var selectedDate = LocalDate.now()
+    private lateinit var userAdapter: SpinnerUserAdapter
     private lateinit var popup: PopupMenu
-    private var selectedRecurrenceType: Int = NO_RECURRENCE
+    private var startDate by Delegates.observable(LocalDate.now()) { d, old, new ->
+        presenter.formatDate(new)
+    }
+    private var selectedRecurrenceType: Int by Delegates.observable(NO_RECURRENCE) { d, old, new ->
+        updateRecurrenceButtonText(new)
+        recurrence_week_picker?.visibility = if (new == R.id.weeks) View.VISIBLE else View.GONE
+        if (new == NO_RECURRENCE) {
+            weekday_button_group.clearChecked()
+            recurrence_frequency.setText("1")
+            event_repeat_checkbox.isChecked = false
+        } else {
+            if (weekday_button_group.checkedButtonIds.isEmpty()) checkWeekdayToday()
+            event_repeat_checkbox.isChecked = true
+        }
+    }
 
-    @Inject lateinit var presenter: EventEditPresenter
+    @Inject
+    lateinit var presenter: EventEditPresenter
 
     companion object {
         const val INTENT_EXTRA_EDIT_EVENT = "INTENT_EXTRA_EDIT_EVENT"
@@ -72,54 +87,66 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
         setupUI()
 
-        presenter.getUsers()
+        event = (intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) as? Event)?.apply {
+            preFillUI(this)
+        }
+    }
 
-        if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT)) {
-            event = (intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) as? Event)?.also {
-                event_description.setText(it.description)
-                selectedDate = it.eventMetaData.eventTimestamp.toLocalDate()
-                supportActionBar?.title = getString(R.string.toolbar_title_edit_event, it.description)
-                presenter.formatDate(selectedDate)
-                event_repeat_checkbox.isChecked = it.eventMetaData.eventInterval != EventInterval.SingleEvent
-//                selectedRecurrence = it.eventMetaData.eventInterval
-                // todo set values when editing
-//                val repeatPos = spinnerAdapterRepeat.getPosition(it.eventMetaData.eventInterval)
-                //spinner_repeat.setSelection(repeatPos) todo
+    private fun preFillUI(event: Event) {
+        supportActionBar?.title = getString(R.string.toolbar_title_edit_event, event.description)
+        event_description.setText(event.description)
+        startDate  = event.eventMetaData.eventTimestamp.toLocalDate()
+
+        event.eventMetaData.eventInterval.apply {
+            weekday_button_group.clearChecked()
+            selectedRecurrenceType = when (this) {
+                is EventInterval.SingleEvent -> NO_RECURRENCE
+                is EventInterval.Daily -> {
+                    recurrence_frequency.setText(everyXDays.toString())
+                    R.id.days
+                }
+                is EventInterval.Weekly -> {
+                    recurrence_frequency.setText(everyXWeeks.toString())
+                    onDaysOfWeek.forEach {
+                        weekday_button_group.check(weekday_button_group[it].id)
+                    }
+                    R.id.weeks
+                }
+                is EventInterval.Monthly -> {
+                    recurrence_frequency.setText(everyXMonths.toString())
+                    R.id.months
+                }
+                is EventInterval.Annually -> {
+                    recurrence_frequency.setText(everyXYears.toString())
+                    R.id.year
+                }
             }
         }
     }
 
     private fun setupUI() {
-        setupUserSpinner()
-        setupClickListeners()
-
-        presenter.formatDate(selectedDate)
+        startDate = ZonedDateTime.now().toLocalDate()
 
         popup = PopupMenu(this, recurrence_type_button)
         inflatePopUpMenu(R.menu.recurrence_popup_menu)
 
-        val weekDay = ZonedDateTime.now().get(ChronoField.DAY_OF_WEEK) - 1
-        weekday_button_group.check(weekday_button_group[weekDay].id)
-
-        recurrence_frequency.setOnFocusChangeListener { v, hasFocus ->
-            presenter.disableEmptyInput(recurrence_frequency, hasFocus)
-        }
-
-        event_description.doAfterTextChanged { if (it?.isNotEmpty() == true) event_description_hint.error = null }
-
-        recurrence_frequency.doAfterTextChanged {
-            presenter.disableInputZero(it)
-            presenter.checkForPluralUI(recurrence_frequency.text.toString(), selectedRecurrenceType)
-        }
+        checkWeekdayToday()
+        setupUserSpinner()
+        setupListeners()
     }
 
-    private fun setupClickListeners() {
+    private fun checkWeekdayToday() {
+        val weekDay = ZonedDateTime.now().get(ChronoField.DAY_OF_WEEK) - 1
+        weekday_button_group?.check(weekday_button_group[weekDay].id)
+    }
+
+    private fun setupListeners() {
         agenda_item_date_input.setOnClickListener {
             DatePickerDialog(
                     this, this,
-                    selectedDate.year,
-                    selectedDate.monthValue - 1,
-                    selectedDate.dayOfMonth
+                    startDate.year,
+                    startDate.monthValue - 1,
+                    startDate.dayOfMonth
             ).apply {
                 datePicker.minDate = Instant.now().toEpochMilli()
                 show()
@@ -134,7 +161,13 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         event_repeat_checkbox.setOnCheckedChangeListener { _: CompoundButton, ischecked: Boolean ->
             clearFocus(recurrence_frequency)
             clearFocus(event_description)
-            event_repeat_view.visibility = if (ischecked) View.VISIBLE else View.GONE
+
+            event_repeat_view.visibility = if (ischecked) {
+                View.VISIBLE
+            } else {
+                selectedRecurrenceType = NO_RECURRENCE
+                View.GONE
+            }
         }
 
         recurrence_type_button.setOnClickListener {
@@ -143,24 +176,34 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
             popup.setOnMenuItemClickListener { item ->
                 selectedRecurrenceType = item.itemId
-
-                recurrence_week_picker.visibility = if (item.itemId == R.id.weeks) View.VISIBLE else View.GONE
-//                recurrence_month_picker.visibility = if (item.itemId == R.id.months) View.VISIBLE else View.GONE
-
-                updateRecurrenceButtonText(selectedRecurrenceType)
                 true
             }
             popup.show()
         }
+
+        recurrence_frequency.setOnFocusChangeListener { v, hasFocus ->
+            presenter.disableEmptyInput(recurrence_frequency, hasFocus)
+        }
+
+        event_description.doAfterTextChanged {
+            if (it?.isNotEmpty() == true) event_description_hint.error = null
+        }
+
+        recurrence_frequency.doAfterTextChanged {
+            presenter.disableInputZero(it)
+            presenter.checkForPluralUI(recurrence_frequency.text.toString())
+            updateRecurrenceButtonText(selectedRecurrenceType)
+        }
     }
 
     private fun setupUserSpinner() {
-        spinnerAdapterUsers = SpinnerUserAdapter(
+        userAdapter = SpinnerUserAdapter(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
                 mutableListOf()
         )
-        spinner_users.adapter = spinnerAdapterUsers
+        spinner_users.adapter = userAdapter
+        presenter.getUsers()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -176,7 +219,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             }
             R.id.action_edit_done -> {
                 presenter.editEventDone(
-                        selectedDate,
+                        startDate,
                         event?.eventId,
                         spinner_users.selectedItem as User,
                         event_description.text.toString(),
@@ -188,15 +231,19 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                                     val btn = weekday_button_group.findViewById<MaterialButton>(buttonId)
                                     weekday_button_group.indexOfChild(btn)
                                 } // map checked buttons to weekday index 0..6 (mo - su)
-                        )
+                )
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    override fun updateRecurrenceButtonText(currentSelectedMenuItemId: Int) {
-        recurrence_type_button.text = popup.menu.findItem(selectedRecurrenceType).title
+    private fun updateRecurrenceButtonText(currentSelectedMenuItemId: Int) {
+        recurrence_type_button?.text = if (currentSelectedMenuItemId != NO_RECURRENCE) {
+            popup.menu.findItem(currentSelectedMenuItemId).title
+        } else {
+            popup.menu.findItem(R.id.days).title
+        }
     }
 
     override fun onBackPressed() {
@@ -206,18 +253,17 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     }
 
     override fun presentUserList(users: MutableList<User>) {
-        spinnerAdapterUsers.addAll(users)
-        spinnerAdapterUsers.notifyDataSetChanged()
+        userAdapter.addAll(users)
+        userAdapter.notifyDataSetChanged()
 
         if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT)) {
-            val userPos = spinnerAdapterUsers.getPosition(event?.user)
+            val userPos = userAdapter.getPosition(event?.user)
             spinner_users.setSelection(userPos)
         }
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
-        presenter.formatDate(selectedDate)
+        startDate = LocalDate.of(year, month + 1, dayOfMonth)
     }
 
     override fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String) {

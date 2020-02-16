@@ -17,7 +17,7 @@ data class Household(
 
     companion object {
         const val HOUSEHOLD_COLLECTION_REF = "households"
-        const val HOUSEHOLD_ID_REF = "household_id"
+        const val HOUSEHOLD_ID_REF = "id"
         const val HOUSEHOLD_BLACKLIST_REF = "user_id_blacklist"
     }
 }
