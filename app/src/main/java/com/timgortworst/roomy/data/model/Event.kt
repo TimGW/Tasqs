@@ -11,7 +11,7 @@ import kotlinx.android.parcel.Parcelize
 data class Event(
         var eventId: String = "",
         var description: String = "",
-        var eventMetaData: EventMetaData = EventMetaData(),
+        var metaData: EventMetaData = EventMetaData(),
         var user: User = User(),
         var householdId: String = ""
 ) : Parcelable

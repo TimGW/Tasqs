@@ -2,7 +2,7 @@ package com.timgortworst.roomy.data.model.firestore
 
 import com.google.firebase.firestore.PropertyName
 
-data class EventIntervalJson(
+data class EventRecurrenceJson(
         @JvmField @PropertyName(EVENT_INTERVAL_NONE) val singleEvent: Boolean? = null,
         @JvmField @PropertyName(EVENT_INTERVAL_DAYS) val everyXDays: Int? = null,
         @JvmField @PropertyName(EVENT_INTERVAL_WEEKS) val everyXWeeks: Int? = null,

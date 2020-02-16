@@ -11,5 +11,4 @@ interface EventEditView {
     fun presentEmptyDescriptionError(@StringRes errorMessage: Int)
     fun finishActivity()
     fun inflatePopUpMenu(@MenuRes menuId: Int)
-    fun updateRecurrenceButtonText(selectedRecurrenceType: Int)
 }

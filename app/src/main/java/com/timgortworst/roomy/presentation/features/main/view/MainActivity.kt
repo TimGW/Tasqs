@@ -27,6 +27,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.timgortworst.roomy.data.model.Event
 
 
 class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {

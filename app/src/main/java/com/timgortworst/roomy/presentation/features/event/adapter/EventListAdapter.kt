@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventInterval
-import com.timgortworst.roomy.data.model.EventMetaData
+import com.timgortworst.roomy.data.model.EventRecurrence
 import com.timgortworst.roomy.domain.utils.isDateInPast
 import com.timgortworst.roomy.presentation.base.customview.RepeatIcon
 import org.threeten.bp.ZonedDateTime
@@ -59,7 +58,7 @@ class EventListAdapter(
 
     fun addEvent(event: Event) {
         val newAddIndex = eventList.indexOfLast {
-            it.eventMetaData.eventTimestamp <= event.eventMetaData.eventTimestamp
+            it.metaData.startDateTime <= event.metaData.startDateTime
         } + 1
         eventList.add(newAddIndex, event)
         notifyItemInserted(newAddIndex)
@@ -70,7 +69,7 @@ class EventListAdapter(
         eventList[fromPosition] = event
         notifyItemChanged(fromPosition)
 
-        val toPosition = eventList.indexOfLast { event.eventMetaData.eventTimestamp > it.eventMetaData.eventTimestamp }
+        val toPosition = eventList.indexOfLast { event.metaData.startDateTime > it.metaData.startDateTime }
 
         // update data array if item is not on first or last position
         if (toPosition != RecyclerView.NO_POSITION &&
@@ -96,7 +95,7 @@ class EventListAdapter(
         private val eventDone: MaterialButton = view.findViewById(R.id.event_done)
 
         fun bind(event: Event, isActivated: Boolean) {
-            val dateTimeEvent = event.eventMetaData.eventTimestamp
+            val dateTimeEvent = event.metaData.startDateTime
             eventDone.setOnClickListener { eventDoneClickListener.onEventDoneClicked(adapterPosition) }
 
             dateTime.text = if (dateTimeEvent.isDateInPast()) {
@@ -110,8 +109,8 @@ class EventListAdapter(
             user.text = event.user.name.capitalize()
             description.text = event.description
 
-            repeatIcon.setRepeatLabelText(event.eventMetaData.eventInterval)
-            if (event.eventMetaData.eventInterval != EventInterval.SingleEvent) {
+            repeatIcon.setRepeatLabelText(event.metaData.recurrence)
+            if (event.metaData.recurrence != EventRecurrence.SingleEvent) {
                 repeatIcon.visibility = View.VISIBLE
             } else {
                 repeatIcon.visibility = View.GONE

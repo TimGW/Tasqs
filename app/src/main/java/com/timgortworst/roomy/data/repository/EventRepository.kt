@@ -37,6 +37,15 @@ class EventRepository @Inject constructor() {
         }
     }
 
+    suspend fun updateEvent(event: Event) {
+        val document = eventCollectionRef.document(event.eventId)
+        try {
+            document.update(CustomMapper.convertToMap(event)).await()
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+        }
+    }
+
     suspend fun getEventsForUser(userId: String): List<Event> {
         if (userId.isBlank()) return emptyList()
 
@@ -80,15 +89,6 @@ class EventRepository @Inject constructor() {
                     }
                     remoteApi.setState(result)
                 })
-    }
-
-    suspend fun updateEvent(event: Event) {
-        val document = eventCollectionRef.document(event.eventId)
-        try {
-            document.update(CustomMapper.convertToMap(event)).await()
-        } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage.orEmpty())
-        }
     }
 
     suspend fun updateEvents(events: List<Event>) {

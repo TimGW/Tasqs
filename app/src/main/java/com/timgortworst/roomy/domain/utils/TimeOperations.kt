@@ -1,15 +1,15 @@
 package com.timgortworst.roomy.domain.utils
 
-import com.timgortworst.roomy.data.model.EventInterval
+import com.timgortworst.roomy.data.model.EventRecurrence
 import org.threeten.bp.ZonedDateTime
 
-fun ZonedDateTime.plusInterval(repeatInterval: EventInterval): ZonedDateTime {
-    return when (repeatInterval) {
-        is EventInterval.SingleEvent -> plusDays(1)
-        is EventInterval.Daily -> plusDays(1)
-        is EventInterval.Weekly -> plusWeeks(1)
-        is EventInterval.Monthly -> plusMonths(1)
-        is EventInterval.Annually -> plusYears(1)
+fun ZonedDateTime.plusInterval(recurrence: EventRecurrence): ZonedDateTime {
+    return when (recurrence) {
+        is EventRecurrence.SingleEvent -> plusDays(1)
+        is EventRecurrence.Daily -> plusDays(1)
+        is EventRecurrence.Weekly -> plusWeeks(1)
+        is EventRecurrence.Monthly -> plusMonths(1)
+        is EventRecurrence.Annually -> plusYears(1)
     }
 }
 

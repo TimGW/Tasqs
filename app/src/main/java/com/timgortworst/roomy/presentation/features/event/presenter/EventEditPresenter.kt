@@ -5,6 +5,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.textfield.TextInputEditText
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.data.model.Event
+import com.timgortworst.roomy.data.model.EventRecurrence
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
@@ -12,6 +14,7 @@ import com.timgortworst.roomy.presentation.features.event.view.EventEditView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.*
 import javax.inject.Inject
@@ -35,38 +38,30 @@ class EventEditPresenter @Inject constructor(
         view.presentUserList(userList?.toMutableList() ?: mutableListOf())
     }
 
-    fun formatDate(localDateTime: LocalDate) {
-        val formattedDayOfMonth = localDateTime.dayOfMonth.toString()
-        val formattedMonth = localDateTime.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-        val formattedYear = localDateTime.year.toString()
+    fun formatDate(zonedDateTime: ZonedDateTime) {
+        val formattedDayOfMonth = zonedDateTime.dayOfMonth.toString()
+        val formattedMonth = zonedDateTime.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        val formattedYear = zonedDateTime.year.toString()
         view.presentFormattedDate(formattedDayOfMonth, formattedMonth, formattedYear)
     }
 
-    fun editEventDone(selectedDate: LocalDate,
-                      eventId: String?,
-                      user: User,
-                      eventDescription: String,
-                      recurrenceFrequency: String,
-                      recurrenceTypeId: Int,
-                      selectedWeekDays: List<Int>)= scope.launch {
-        if (eventDescription.isEmpty()) {
+    fun editEventDone(event: Event)= scope.launch {
+        if (event.description.isEmpty()) {
             view.presentEmptyDescriptionError(R.string.event_edit_error_empty_description)
             return@launch
         }
 
-        eventUseCase.createOrUpdateEvent(eventId, eventDescription, user, selectedDate,
-                recurrenceFrequency, recurrenceTypeId, selectedWeekDays)
+        eventUseCase.createOrUpdateEvent(event)
 
         view.finishActivity()
     }
 
-    fun checkForPluralRecurrenceType(numberInput: String, selectedRecurrenceType: Int) {
+    fun checkForPluralRecurrenceType(numberInput: String) {
         when {
             numberInput.toIntOrNull()?.equals(1) == true || numberInput.isBlank() ->
                 view.inflatePopUpMenu(R.menu.recurrence_popup_menu)
             else -> view.inflatePopUpMenu(R.menu.recurrence_popup_menu_plural)
         }
-        view.updateRecurrenceButtonText(selectedRecurrenceType)
     }
 
     fun disableInputZero(editable: Editable?) {
