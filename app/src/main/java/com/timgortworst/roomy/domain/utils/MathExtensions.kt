@@ -1,5 +1,7 @@
 package com.timgortworst.roomy.domain.utils
 
+import android.text.Editable
+
 fun Int.betweenUntil(x: Int, y: Int): Boolean = (this in x until y)
 
-fun String.toIntOrOne(): Int = toIntOrNull() ?: 1
+fun Editable?.toIntOrOne(): Int = toString().toIntOrNull() ?: 1

@@ -31,6 +31,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.temporal.ChronoField
 import javax.inject.Inject
 
 
@@ -38,6 +39,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     private lateinit var event: Event
     private lateinit var userAdapter: SpinnerUserAdapter
     private lateinit var popup: PopupMenu
+    private var recurrenceMenuId = R.id.days
 
     @Inject
     lateinit var presenter: EventEditPresenter
@@ -108,7 +110,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     }
 
     private fun setupListeners() {
-        var itemId = R.id.days
         event_description.doAfterTextChanged {
             if (it?.isNotEmpty() == true) event_description_hint.error = null
             event.description = event_description.text.toString()
@@ -133,7 +134,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             clearFocus(event_description)
 
             event_repeat_view.visibility = if (ischecked) {
-                event.metaData.recurrence = EventRecurrence.Daily(recurrence_frequency.text.toString().toIntOrOne())
+                event.metaData.recurrence = EventRecurrence.Daily(recurrence_frequency.text.toIntOrOne())
                 View.VISIBLE
             } else {
                 clearRecurrence()
@@ -148,8 +149,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         recurrence_frequency.doAfterTextChanged {
             presenter.disableInputZero(it)
             presenter.checkForPluralRecurrenceType(recurrence_frequency.text.toString())
-            event.metaData.recurrence = buildRecurrence(recurrenceFrequency = recurrence_frequency.text.toString())
-            recurrence_type_button?.text = popup.menu.findItem(itemId).title
+            recurrence_type_button?.text = popup.menu.findItem(recurrenceMenuId).title
         }
 
         recurrence_type_button.setOnClickListener {
@@ -157,10 +157,9 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             clearFocus(event_description)
 
             popup.setOnMenuItemClickListener { item ->
-                itemId = item.itemId
-                event.metaData.recurrence = buildRecurrence(recurrenceType = item.itemId)
+                recurrenceMenuId = item.itemId
                 recurrence_type_button?.text = popup.menu.findItem(item.itemId).title
-                recurrence_week_picker?.visibility = if (event.metaData.recurrence is EventRecurrence.Weekly) View.VISIBLE else View.GONE
+                recurrence_week_picker?.visibility = if (item.itemId == R.id.weeks) View.VISIBLE else View.GONE
                 true
             }
             popup.show()
@@ -169,7 +168,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         weekday_button_group.addOnButtonCheckedListener { group, checkedId, isChecked ->
             clearFocus(recurrence_frequency)
             clearFocus(event_description)
-            event.metaData.recurrence = buildRecurrence(selectedWeekDays = getSelectedWeekdays())
         }
     }
 
@@ -183,8 +181,8 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
     private fun setRecurrence(frequency: Int,
                               recurrenceType: Int,
-                              selectedWeekDays: List<Int>) {
-        event.metaData.recurrence = when (recurrenceType) {
+                              selectedWeekDays: List<Int>): EventRecurrence {
+        return when (recurrenceType) {
             R.id.days -> EventRecurrence.Daily(frequency)
             R.id.weeks -> EventRecurrence.Weekly(frequency, selectedWeekDays)
             R.id.months -> EventRecurrence.Monthly(frequency)
@@ -215,6 +213,11 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 true
             }
             R.id.action_edit_done -> {
+                event.metaData.recurrence = setRecurrence(
+                        recurrence_frequency.text.toIntOrOne(),
+                        recurrenceMenuId,
+                        getSelectedWeekdays()
+                )
                 event.user = spinner_users.selectedItem as User
                 presenter.editEventDone(event)
                 true
@@ -230,6 +233,11 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                     val btn = weekday_button_group.findViewById<MaterialButton>(buttonId)
                     weekday_button_group.indexOfChild(btn)
                 } // map checked buttons to weekday index 0..6 (mo - su)
+    }
+
+    private fun checkWeekdayToday() {
+        val weekDay = ZonedDateTime.now().get(ChronoField.DAY_OF_WEEK) - 1
+        weekday_button_group?.check(weekday_button_group[weekDay].id)
     }
 
     override fun onBackPressed() {
