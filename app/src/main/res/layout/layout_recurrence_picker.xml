@@ -35,16 +35,13 @@
             android:text="@string/default_custom_recurrence" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/recurrence_type_button"
+    <Spinner
+        android:id="@+id/spinner_recurrence"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:drawableEnd="@drawable/ic_arrow_drop_down"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
         android:text="@string/day"
-        app:iconPadding="0dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintBottom_toBottomOf="@+id/recurrence_frequency_hint"
         app:layout_constraintStart_toEndOf="@+id/recurrence_frequency_hint"
         app:layout_constraintTop_toTopOf="@+id/recurrence_frequency_hint" />
@@ -58,7 +55,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recurrence_type_button"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_recurrence"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -56,13 +56,13 @@ class EventEditPresenter @Inject constructor(
         view.finishActivity()
     }
 
-    fun checkForPluralRecurrenceType(numberInput: String) {
-        when {
-            numberInput.toIntOrNull()?.equals(1) == true || numberInput.isBlank() ->
-                view.inflatePopUpMenu(R.menu.recurrence_popup_menu)
-            else -> view.inflatePopUpMenu(R.menu.recurrence_popup_menu_plural)
-        }
-    }
+//    fun checkForPluralRecurrencePopUp(numberInput: String) {
+//        when {
+//            numberInput.toIntOrNull()?.equals(1) == true || numberInput.isBlank() ->
+//                view.inflatePopUpMenu(R.menu.recurrence_popup_menu)
+//            else -> view.inflatePopUpMenu(R.menu.recurrence_popup_menu_plural)
+//        }
+//    }
 
     fun disableInputZero(editable: Editable?) {
         editable?.let {
