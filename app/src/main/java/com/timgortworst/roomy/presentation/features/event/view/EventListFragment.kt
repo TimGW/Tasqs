@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
@@ -16,6 +15,7 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventMetaData
@@ -138,12 +138,16 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
         actionMode?.title = size.toString()
     }
 
-    override fun onActionItemDelete(selectedEvents: List<Event>) {
-        askForDeleteDialog(selectedEvents).show()
+    override fun onActionItemDelete(selectedEvents: List<Event>, mode: ActionMode) {
+        askForDeleteDialog(selectedEvents, mode).show()
     }
 
     override fun onActionItemEdit(selectedEvents: List<Event>) {
         openEventEditActivity(selectedEvents.first())
+    }
+
+    override fun onActionItemInfo(selectedEvents: List<Event>) {
+//        Toast.
     }
 
     override fun onActionItemDone(selectedEvents: List<Event>) {
@@ -201,14 +205,15 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
         notificationWorkerBuilder.removePendingNotificationReminder(eventId)
     }
 
-    private fun askForDeleteDialog(events: List<Event>) = AlertDialog.Builder(activityContext)
+    private fun askForDeleteDialog(events: List<Event>, mode: ActionMode) = MaterialAlertDialogBuilder(activityContext)
             .setTitle(R.string.delete)
             .setMessage(getString(R.string.delete_dialog_text, events.size))
             .setIcon(R.drawable.ic_delete)
-            .setPositiveButton(R.string.delete) { dialog, whichButton ->
+            .setPositiveButton(R.string.delete) { dialog, _ ->
                 presenter.deleteEvents(events)
+                mode.finish()
                 dialog.dismiss()
             }
-            .setNegativeButton(android.R.string.cancel) { dialog, which -> dialog.dismiss() }
+            .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .create()
 }

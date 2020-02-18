@@ -18,6 +18,7 @@ class ActionModeCallback(private var actionItemListener: ActionItemListener?,
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         val selectedEvents = tracker.selection.map { it }.toList()
         menu.findItem(R.id.edit).isVisible = selectedEvents.size == 1
+        menu.findItem(R.id.info).isVisible = selectedEvents.size == 1
         return true
     }
 
@@ -26,12 +27,16 @@ class ActionModeCallback(private var actionItemListener: ActionItemListener?,
 
         return when (item.itemId) {
             R.id.delete -> {
-                actionItemListener?.onActionItemDelete(selectedEvents)
-                mode.finish()
+                actionItemListener?.onActionItemDelete(selectedEvents, mode)
                 true
             }
             R.id.edit -> {
                 actionItemListener?.onActionItemEdit(selectedEvents)
+                mode.finish()
+                true
+            }
+            R.id.info -> {
+                actionItemListener?.onActionItemInfo(selectedEvents)
                 mode.finish()
                 true
             }
@@ -50,8 +55,9 @@ class ActionModeCallback(private var actionItemListener: ActionItemListener?,
     }
 
     interface ActionItemListener {
-        fun onActionItemDelete(selectedEvents: List<Event>)
+        fun onActionItemDelete(selectedEvents: List<Event>, mode: ActionMode)
         fun onActionItemEdit(selectedEvents: List<Event>)
+        fun onActionItemInfo(selectedEvents: List<Event>)
         fun onActionItemDone(selectedEvents: List<Event>)
     }
 }

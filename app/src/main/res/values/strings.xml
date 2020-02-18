@@ -60,6 +60,7 @@
     <string name="easter_egg_enabled">Ads are now disabled!</string>
     <string name="easter_egg_message">Click %1$d more time(s) to remove ads</string>
     <string name="edit">Edit</string>
+    <string name="info">Info</string>
     <string name="delete">Delete</string>
 
     <string-array name="night_mode_items">
