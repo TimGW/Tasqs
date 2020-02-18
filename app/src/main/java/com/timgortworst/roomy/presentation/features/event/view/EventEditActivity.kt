@@ -93,7 +93,9 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
         val isRepeating = event.metaData.recurrence !is EventRecurrence.SingleEvent
         event_repeat_checkbox.isChecked = isRepeating
-        spinner_recurrence.setSelection(recurrences.indexOf(event.metaData.recurrence.javaClass.newInstance()), false)
+
+        val index = recurrences.indexOfFirst { it.name == event.metaData.recurrence.name }
+        spinner_recurrence.setSelection(index)
         event_repeat_view.visibility = if (isRepeating) View.VISIBLE else View.GONE
         recurrence_frequency.setText(frequencyFromRecurrence(event.metaData.recurrence).toString())
         weekday_button_group.visibility = if (event.metaData.recurrence is EventRecurrence.Weekly) View.VISIBLE else View.GONE
