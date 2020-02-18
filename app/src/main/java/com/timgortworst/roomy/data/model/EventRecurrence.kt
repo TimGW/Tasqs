@@ -14,19 +14,19 @@ sealed class EventRecurrence : Parcelable {
             is Annually -> R.string.years
         }
 
-    @Parcelize
-    object SingleEvent : EventRecurrence()
+    var frequency: Int = 1
+//        get() = when (this) {
+//            SingleEvent -> R.string.days
+//            is Daily -> R.string.days
+//            is Weekly -> R.string.weeks
+//            is Monthly -> R.string.months
+//            is Annually -> R.string.years
+//        }
 
-    @Parcelize
-    data class Daily(val everyXDays: Int? = null) : EventRecurrence()
-
-    @Parcelize
-    data class Weekly(val everyXWeeks: Int? = null, val onDaysOfWeek: List<Int>? = null) : EventRecurrence()
-
-    @Parcelize
-    data class Monthly(val everyXMonths: Int? = null) : EventRecurrence()
-
-    @Parcelize
-    data class Annually(val everyXYears: Int? = null) : EventRecurrence()
+    @Parcelize object SingleEvent : EventRecurrence()
+    @Parcelize object Daily : EventRecurrence()
+    @Parcelize data class Weekly(val onDaysOfWeek: List<Int>? = null) : EventRecurrence()
+    @Parcelize object Monthly : EventRecurrence()
+    @Parcelize object Annually : EventRecurrence()
 }
 
