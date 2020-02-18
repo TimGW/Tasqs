@@ -142,12 +142,11 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
         recurrence_frequency.doAfterTextChanged {
             presenter.disableInputZero(it)
-//            presenter.checkForPluralRecurrencePopUp(recurrence_frequency.text.toString())
-//            spinner_recurrence?.te xt = popup.menu.findItem(currentPopUpMenuId).title
+            presenter.checkForPluralRecurrenceSpinner(recurrence_frequency.text.toString())
         }
 
         spinner_recurrence.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 clearFocus(recurrence_frequency)
                 clearFocus(event_description)
                 recurrence_week_picker?.visibility = if (recurrenceFromSelection() is EventRecurrence.Weekly) View.VISIBLE else View.GONE
@@ -167,27 +166,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         recurrence_frequency.setText("1")
         spinner_recurrence?.setSelection(recurrences.indexOf(EventRecurrence.Daily))
         recurrence_week_picker?.visibility = View.GONE
-    }
-
-    private fun setupUserSpinner() {
-        userAdapter = SpinnerUserAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                mutableListOf()
-        )
-        spinner_users.adapter = userAdapter
-        presenter.getUsers()
-    }
-
-    private fun setupRecurrenceSpinner() {
-        recurrenceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, recurrences.map { getString(it.name) })
-        recurrenceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner_recurrence.adapter = recurrenceAdapter
-
-        if (isInEditMode()) {
-            val userPos = userAdapter.getPosition(event.user)
-            spinner_users.setSelection(userPos)
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -243,6 +221,22 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         overridePendingTransition(R.anim.stay, R.anim.slide_down)
     }
 
+    private fun setupUserSpinner() {
+        userAdapter = SpinnerUserAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                mutableListOf()
+        )
+        spinner_users.adapter = userAdapter
+        presenter.getUsers()
+    }
+
+    private fun setupRecurrenceSpinner() {
+        recurrenceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, recurrences.map { getString(it.name) })
+        recurrenceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner_recurrence.adapter = recurrenceAdapter
+    }
+
     override fun presentUserList(users: MutableList<User>) {
         userAdapter.addAll(users)
         userAdapter.notifyDataSetChanged()
@@ -251,6 +245,18 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             val userPos = userAdapter.getPosition(event.user)
             spinner_users.setSelection(userPos)
         }
+    }
+
+    override fun setPluralSpinner() {
+        recurrenceAdapter.clear()
+        recurrenceAdapter.addAll(recurrences.map { getString(it.pluralName) })
+        recurrenceAdapter.notifyDataSetChanged()
+    }
+
+    override fun setSingularSpinner() {
+        recurrenceAdapter.clear()
+        recurrenceAdapter.addAll(recurrences.map { getString(it.name) })
+        recurrenceAdapter.notifyDataSetChanged()
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {

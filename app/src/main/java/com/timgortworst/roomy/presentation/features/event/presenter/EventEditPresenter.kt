@@ -6,14 +6,11 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.textfield.TextInputEditText
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventRecurrence
-import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventEditView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.*
@@ -45,7 +42,7 @@ class EventEditPresenter @Inject constructor(
         view.presentFormattedDate(formattedDayOfMonth, formattedMonth, formattedYear)
     }
 
-    fun editEventDone(event: Event)= scope.launch {
+    fun editEventDone(event: Event) = scope.launch {
         if (event.description.isEmpty()) {
             view.presentEmptyDescriptionError(R.string.event_edit_error_empty_description)
             return@launch
@@ -56,13 +53,13 @@ class EventEditPresenter @Inject constructor(
         view.finishActivity()
     }
 
-//    fun checkForPluralRecurrencePopUp(numberInput: String) {
-//        when {
-//            numberInput.toIntOrNull()?.equals(1) == true || numberInput.isBlank() ->
-//                view.inflatePopUpMenu(R.menu.recurrence_popup_menu)
-//            else -> view.inflatePopUpMenu(R.menu.recurrence_popup_menu_plural)
-//        }
-//    }
+    fun checkForPluralRecurrenceSpinner(numberInput: String) {
+        when {
+            numberInput.toIntOrNull()?.equals(1) == true || numberInput.isBlank() ->
+                view.setSingularSpinner()
+            else -> view.setPluralSpinner()
+        }
+    }
 
     fun disableInputZero(editable: Editable?) {
         editable?.let {

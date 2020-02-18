@@ -8,4 +8,6 @@ interface EventEditView {
     fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String)
     fun presentEmptyDescriptionError(@StringRes errorMessage: Int)
     fun finishActivity()
+    fun setPluralSpinner()
+    fun setSingularSpinner()
 }

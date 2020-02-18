@@ -33,12 +33,12 @@ object CustomMapper {
     }
 
     private fun EventRecurrenceJson.toEventInterval(): EventRecurrence {
-        return when {
+        return when { // todo
             singleEvent == true -> EventRecurrence.SingleEvent
-            everyXDays != null -> EventRecurrence.Daily(everyXDays)
-            everyXWeeks != null && onDaysOfWeek != null -> EventRecurrence.Weekly(everyXWeeks, onDaysOfWeek)
-            everyXMonths != null -> EventRecurrence.Monthly(everyXMonths)
-            everyXYears != null -> EventRecurrence.Annually(everyXYears)
+            everyXDays != null -> EventRecurrence.Daily
+            everyXWeeks != null && onDaysOfWeek != null -> EventRecurrence.Weekly(onDaysOfWeek)
+            everyXMonths != null -> EventRecurrence.Monthly
+            everyXYears != null -> EventRecurrence.Annually
             else -> EventRecurrence.SingleEvent
         }
     }
@@ -66,13 +66,13 @@ object CustomMapper {
         result[EventRecurrenceJson.EVENT_INTERVAL_NONE] = false
         when (this) {
             is EventRecurrence.SingleEvent -> result[EventRecurrenceJson.EVENT_INTERVAL_NONE] = true
-            is EventRecurrence.Daily -> result[EventRecurrenceJson.EVENT_INTERVAL_DAYS] = everyXDays!!
+            is EventRecurrence.Daily -> result[EventRecurrenceJson.EVENT_INTERVAL_DAYS] = frequency
             is EventRecurrence.Weekly -> {
-                result[EventRecurrenceJson.EVENT_INTERVAL_WEEKS] = everyXWeeks!!
+                result[EventRecurrenceJson.EVENT_INTERVAL_WEEKS] = frequency
                 result[EventRecurrenceJson.EVENT_INTERVAL_WEEKDAYS] = onDaysOfWeek!!
             }
-            is EventRecurrence.Monthly -> result[EventRecurrenceJson.EVENT_INTERVAL_MONTHS] = everyXMonths!!
-            is EventRecurrence.Annually -> result[EventRecurrenceJson.EVENT_INTERVAL_YEARS] = everyXYears!!
+            is EventRecurrence.Monthly -> result[EventRecurrenceJson.EVENT_INTERVAL_MONTHS] = frequency
+            is EventRecurrence.Annually -> result[EventRecurrenceJson.EVENT_INTERVAL_YEARS] = frequency
         }
         return result
     }
