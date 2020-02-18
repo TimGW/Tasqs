@@ -1,9 +1,12 @@
 package com.timgortworst.roomy.data.repository
 
 import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventRecurrence
 import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.data.model.firestore.EventRecurrenceJson
+import com.timgortworst.roomy.data.model.EventRecurrence
+import com.timgortworst.roomy.data.model.EventRecurrence.Companion.ANNUAL_EVENT
+import com.timgortworst.roomy.data.model.EventRecurrence.Companion.DAILY_EVENT
+import com.timgortworst.roomy.data.model.EventRecurrence.Companion.MONTHLY_EVENT
+import com.timgortworst.roomy.data.model.EventRecurrence.Companion.WEEKLY_EVENT
 import com.timgortworst.roomy.data.model.firestore.EventJson
 import com.timgortworst.roomy.data.model.firestore.EventMetaDataJson
 import org.threeten.bp.Instant
@@ -29,17 +32,18 @@ object CustomMapper {
                 Instant
                         .ofEpochMilli(startDateTime!!)
                         .atZone(ZoneId.of(timeZone!!)),
-                recurrence!!.toEventInterval())
+                buildRecurrence(recurrenceType, frequency, onDaysOfWeek))
     }
 
-    private fun EventRecurrenceJson.toEventInterval(): EventRecurrence {
-        return when { // todo
-            singleEvent == true -> EventRecurrence.SingleEvent
-            everyXDays != null -> EventRecurrence.Daily
-            everyXWeeks != null && onDaysOfWeek != null -> EventRecurrence.Weekly(onDaysOfWeek)
-            everyXMonths != null -> EventRecurrence.Monthly
-            everyXYears != null -> EventRecurrence.Annually
+    private fun buildRecurrence(recurrenceType: String?, frequency: Int?, onDaysOfWeek: List<Int>?): EventRecurrence {
+        return when (recurrenceType) {
+            DAILY_EVENT -> EventRecurrence.Daily
+            WEEKLY_EVENT -> EventRecurrence.Weekly(onDaysOfWeek)
+            MONTHLY_EVENT -> EventRecurrence.Monthly
+            ANNUAL_EVENT -> EventRecurrence.Annually
             else -> EventRecurrence.SingleEvent
+        }.apply {
+            this.frequency = frequency ?: 1
         }
     }
 
@@ -54,26 +58,12 @@ object CustomMapper {
     }
 
     private fun EventMetaData.toMap(): Map<String, Any?> {
-        val result = mutableMapOf<String, Any>()
+        val result = mutableMapOf<String, Any?>()
         result[EventMetaDataJson.EVENT_DATE_TIME_REF] = startDateTime.toInstant().toEpochMilli()
         result[EventMetaDataJson.EVENT_TIME_ZONE_REF] = startDateTime.zone.id
-        result[EventMetaDataJson.EVENT_INTERVAL_REF] = recurrence.toMap()
-        return result
-    }
-
-    private fun EventRecurrence.toMap(): Map<String, Any?> {
-        val result = mutableMapOf<String, Any>()
-        result[EventRecurrenceJson.EVENT_INTERVAL_NONE] = false
-        when (this) {
-            is EventRecurrence.SingleEvent -> result[EventRecurrenceJson.EVENT_INTERVAL_NONE] = true
-            is EventRecurrence.Daily -> result[EventRecurrenceJson.EVENT_INTERVAL_DAYS] = frequency
-            is EventRecurrence.Weekly -> {
-                result[EventRecurrenceJson.EVENT_INTERVAL_WEEKS] = frequency
-                result[EventRecurrenceJson.EVENT_INTERVAL_WEEKDAYS] = onDaysOfWeek!!
-            }
-            is EventRecurrence.Monthly -> result[EventRecurrenceJson.EVENT_INTERVAL_MONTHS] = frequency
-            is EventRecurrence.Annually -> result[EventRecurrenceJson.EVENT_INTERVAL_YEARS] = frequency
-        }
+        if (recurrence !is EventRecurrence.SingleEvent) result[EventMetaDataJson.EVENT_FREQUENCY] = recurrence.frequency
+        result[EventMetaDataJson.EVENT_RECURRENCE] = recurrence.id
+        (recurrence as? EventRecurrence.Weekly)?.let { result[EventMetaDataJson.EVENT_ON_DAYS] = it.onDaysOfWeek }
         return result
     }
 }
