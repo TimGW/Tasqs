@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
@@ -138,7 +139,7 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     }
 
     override fun onActionItemDelete(selectedEvents: List<Event>) {
-        presenter.deleteEvents(selectedEvents)
+        askForDeleteDialog(selectedEvents).show()
     }
 
     override fun onActionItemEdit(selectedEvents: List<Event>) {
@@ -199,4 +200,15 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     override fun removePendingNotificationReminder(eventId: String) {
         notificationWorkerBuilder.removePendingNotificationReminder(eventId)
     }
+
+    private fun askForDeleteDialog(events: List<Event>) = AlertDialog.Builder(activityContext)
+            .setTitle(R.string.delete)
+            .setMessage(getString(R.string.delete_dialog_text, events.size))
+            .setIcon(R.drawable.ic_delete)
+            .setPositiveButton(R.string.delete) { dialog, whichButton ->
+                presenter.deleteEvents(events)
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel) { dialog, which -> dialog.dismiss() }
+            .create()
 }
