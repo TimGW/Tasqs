@@ -1,13 +1,9 @@
 package com.timgortworst.roomy.data.model
 
-import android.annotation.SuppressLint
 import android.os.Parcelable
-import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.firestore.PropertyName
 import kotlinx.android.parcel.Parcelize
 
-@IgnoreExtraProperties
-@SuppressLint("ParcelCreator")
 @Parcelize
 data class User(
         @JvmField @PropertyName(USER_ID_REF) var userId: String = "",

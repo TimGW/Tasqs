@@ -85,7 +85,7 @@ class EventListPresenter @Inject constructor(
         view.setMsgView(hasError, R.string.error_list_state_title, R.string.error_list_state_text)
     }
 
-    fun onSelectionChanged(tracker: SelectionTracker<Event>, actionMode: ActionMode?) {
+    fun onSelectionChanged(tracker: SelectionTracker<String>, actionMode: ActionMode?) {
         if (tracker.hasSelection() && actionMode == null) {
             view.startActionMode(tracker)
             view.setActionModeTitle(tracker.selection.size())

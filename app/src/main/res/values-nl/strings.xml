@@ -82,6 +82,13 @@
     <string name="repeat_weekday_fr">V</string>
     <string name="repeat_weekday_sa">Z</string>
     <string name="repeat_weekday_su">Z</string>
+    <string name="repeat_mo">ma</string>
+    <string name="repeat_tu">di</string>
+    <string name="repeat_we">wo</string>
+    <string name="repeat_th">do</string>
+    <string name="repeat_fr">vr</string>
+    <string name="repeat_sa">za</string>
+    <string name="repeat_su">zo</string>
     <string name="is_repeated_for_every">Wordt herhaald voor elke</string>
     <string name="is_repeated_on">Wordt herhaald op</string>
     <string name="default_custom_recurrence">1</string>
@@ -94,5 +101,8 @@
     <string name="year">jaar</string>
     <string name="years">jaren</string>
     <string name="delete_dialog_text">Weet je zeker dat je %1$d items wilt verwijderen?"</string>
+    <string name="is_not_repeated">Wordt niet herhaald</string>
+    <string name="on">op:</string>
+    <string name="is_repeated">wordt herhaald elke</string>
 
 </resources>

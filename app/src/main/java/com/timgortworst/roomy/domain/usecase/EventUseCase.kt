@@ -41,13 +41,13 @@ constructor(private val eventRepository: EventRepository,
 
     suspend fun eventsCompleted(events: List<Event>) {
         events.filter {
-            it.metaData.recurrence == EventRecurrence.SingleEvent
+            it.metaData.recurrence is EventRecurrence.SingleEvent
         }.run {
             deleteEvents(this)
         }
 
         events.filterNot {
-            it.metaData.recurrence == EventRecurrence.SingleEvent
+            it.metaData.recurrence is EventRecurrence.SingleEvent
         }.run {
             updateNextEventDate(this)
         }

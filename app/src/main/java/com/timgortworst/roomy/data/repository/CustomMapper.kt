@@ -32,18 +32,16 @@ object CustomMapper {
                 Instant
                         .ofEpochMilli(startDateTime!!)
                         .atZone(ZoneId.of(timeZone!!)),
-                buildRecurrence(recurrenceType, frequency, onDaysOfWeek))
+                buildRecurrence(recurrenceType, frequency ?: 1, onDaysOfWeek))
     }
 
-    private fun buildRecurrence(recurrenceType: String?, frequency: Int?, onDaysOfWeek: List<Int>?): EventRecurrence {
+    private fun buildRecurrence(recurrenceType: String?, frequency: Int, onDaysOfWeek: List<Int>?): EventRecurrence {
         return when (recurrenceType) {
-            DAILY_EVENT -> EventRecurrence.Daily
-            WEEKLY_EVENT -> EventRecurrence.Weekly(onDaysOfWeek)
-            MONTHLY_EVENT -> EventRecurrence.Monthly
-            ANNUAL_EVENT -> EventRecurrence.Annually
-            else -> EventRecurrence.SingleEvent
-        }.apply {
-            this.frequency = frequency ?: 1
+            DAILY_EVENT -> EventRecurrence.Daily(frequency)
+            WEEKLY_EVENT -> EventRecurrence.Weekly(frequency, onDaysOfWeek)
+            MONTHLY_EVENT -> EventRecurrence.Monthly(frequency)
+            ANNUAL_EVENT -> EventRecurrence.Annually(frequency)
+            else -> EventRecurrence.SingleEvent(frequency)
         }
     }
 

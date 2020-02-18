@@ -8,7 +8,8 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 
 class ActionModeCallback(private var actionItemListener: ActionItemListener?,
-                         private val tracker: SelectionTracker<Event>) : ActionMode.Callback {
+                         private val tracker: SelectionTracker<String>,
+                         private val eventList: List<Event>) : ActionMode.Callback {
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.action_mode_menu, menu)
@@ -23,7 +24,8 @@ class ActionModeCallback(private var actionItemListener: ActionItemListener?,
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-        val selectedEvents = tracker.selection.map { it }.toList()
+        val selectedEventIds = tracker.selection.map { it }.toList()
+        val selectedEvents = eventList.filter { m -> selectedEventIds.any { it == m.eventId } }
 
         return when (item.itemId) {
             R.id.delete -> {
@@ -31,12 +33,12 @@ class ActionModeCallback(private var actionItemListener: ActionItemListener?,
                 true
             }
             R.id.edit -> {
-                actionItemListener?.onActionItemEdit(selectedEvents)
+                actionItemListener?.onActionItemEdit(selectedEvents.first())
                 mode.finish()
                 true
             }
             R.id.info -> {
-                actionItemListener?.onActionItemInfo(selectedEvents)
+                actionItemListener?.onActionItemInfo(selectedEvents.first())
                 mode.finish()
                 true
             }
@@ -55,9 +57,9 @@ class ActionModeCallback(private var actionItemListener: ActionItemListener?,
     }
 
     interface ActionItemListener {
-        fun onActionItemDelete(selectedEvents: List<Event>, mode: ActionMode)
-        fun onActionItemEdit(selectedEvents: List<Event>)
-        fun onActionItemInfo(selectedEvents: List<Event>)
         fun onActionItemDone(selectedEvents: List<Event>)
+        fun onActionItemDelete(selectedEvents: List<Event>, mode: ActionMode)
+        fun onActionItemEdit(selectedEvent: Event)
+        fun onActionItemInfo(selectedEvent: Event)
     }
 }

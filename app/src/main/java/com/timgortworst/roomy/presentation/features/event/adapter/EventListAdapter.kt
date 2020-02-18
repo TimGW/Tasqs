@@ -29,7 +29,7 @@ class EventListAdapter(
 ) : RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
 
     private var eventList: MutableList<Event> = mutableListOf()
-    var tracker: SelectionTracker<Event>? = null
+    var tracker: SelectionTracker<String>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater
@@ -42,7 +42,7 @@ class EventListAdapter(
         val event = eventList[position]
 
         tracker?.let {
-            viewHolder.bind(event, it.isSelected(event))
+            viewHolder.bind(event, it.isSelected(event.eventId))
         }
     }
 
@@ -54,7 +54,9 @@ class EventListAdapter(
 
     fun getEvent(position: Int) = eventList[position]
 
-    fun getPosition(event: Event) = eventList.indexOf(event)
+    fun getEvent(id: String) = eventList.find { it.eventId == id }
+
+    fun getPosition(eventId: String) = eventList.indexOfFirst { it.eventId == eventId }
 
     fun addEvent(event: Event) {
         val newAddIndex = eventList.indexOfLast {
@@ -87,6 +89,8 @@ class EventListAdapter(
 
     override fun getItemCount() = eventList.size
 
+    fun getEvents(): List<Event> = eventList
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val user: TextView = view.findViewById(R.id.event_user)
         private val dateTime: TextView = view.findViewById(R.id.event_date_time)
@@ -110,7 +114,7 @@ class EventListAdapter(
             description.text = event.description
 
             repeatIcon.setRepeatLabelText(event.metaData.recurrence)
-            if (event.metaData.recurrence != EventRecurrence.SingleEvent) {
+            if (event.metaData.recurrence !is EventRecurrence.SingleEvent) {
                 repeatIcon.visibility = View.VISIBLE
             } else {
                 repeatIcon.visibility = View.GONE
@@ -125,10 +129,10 @@ class EventListAdapter(
                         .withLocale(Locale.getDefault())
         )
 
-        fun getItemDetails(): ItemDetailsLookup.ItemDetails<Event> =
-                object : ItemDetailsLookup.ItemDetails<Event>() {
+        fun getItemDetails(): ItemDetailsLookup.ItemDetails<String> =
+                object : ItemDetailsLookup.ItemDetails<String>() {
                     override fun getPosition(): Int = adapterPosition
-                    override fun getSelectionKey(): Event? = eventList[adapterPosition]
+                    override fun getSelectionKey(): String? = eventList[adapterPosition].eventId
                 }
     }
 

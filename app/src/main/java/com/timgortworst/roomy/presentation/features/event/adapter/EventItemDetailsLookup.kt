@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.data.model.Event
 
 class EventItemDetailsLookup(private val recyclerView: RecyclerView) :
-        ItemDetailsLookup<Event>() {
+        ItemDetailsLookup<String>() {
 
-    override fun getItemDetails(motionEvent: MotionEvent): ItemDetails<Event>? =
+    override fun getItemDetails(motionEvent: MotionEvent): ItemDetails<String>? =
         recyclerView.findChildViewUnder(motionEvent.x, motionEvent.y)?.let {
             return (recyclerView.getChildViewHolder(it) as? EventListAdapter.ViewHolder)?.getItemDetails()
         }

@@ -87,6 +87,14 @@
     <string name="repeat_weekday_fr">F</string>
     <string name="repeat_weekday_sa">S</string>
     <string name="repeat_weekday_su">S</string>
+
+    <string name="repeat_mo">mo</string>
+    <string name="repeat_tu">tu</string>
+    <string name="repeat_we">we</string>
+    <string name="repeat_th">th</string>
+    <string name="repeat_fr">fr</string>
+    <string name="repeat_sa">sa</string>
+    <string name="repeat_su">su</string>
     <string name="is_repeated_for_every">Is repeated for every</string>
     <string name="is_repeated_on">Is repeated on</string>
     <string name="default_custom_recurrence">1</string>
@@ -99,5 +107,9 @@
     <string name="year">year</string>
     <string name="years">years</string>
     <string name="delete_dialog_text">Are you sure you want to delete %1$d events?"</string>
+    <string name="is_not_repeated">Is not repeated</string>
+    <string name="on">on:</string>
+    <string name="is_repeated">is repeated every</string>
+    <string name="repeat"/>
 
 </resources>

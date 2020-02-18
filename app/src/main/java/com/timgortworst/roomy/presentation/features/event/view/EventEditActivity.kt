@@ -46,10 +46,10 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     companion object {
         const val INTENT_EXTRA_EDIT_EVENT = "INTENT_EXTRA_EDIT_EVENT"
         private val recurrences = listOf(
-                EventRecurrence.Daily,
+                EventRecurrence.Daily(),
                 EventRecurrence.Weekly(),
-                EventRecurrence.Monthly,
-                EventRecurrence.Annually)
+                EventRecurrence.Monthly(),
+                EventRecurrence.Annually())
 
         fun start(context: AppCompatActivity, event: Event? = null) {
             val intent = Intent(context, EventEditActivity::class.java)
@@ -93,7 +93,8 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         val index = recurrences.indexOfFirst { it.name == event.metaData.recurrence.name }
         spinner_recurrence.setSelection(index)
         event_repeat_view.visibility = if (isRepeating) View.VISIBLE else View.GONE
-        recurrence_frequency.setText(event.metaData.recurrence.frequency.toString())
+        val freq = event.metaData.recurrence.frequency.toString()
+        recurrence_frequency.setText(freq)
         (event.metaData.recurrence as? EventRecurrence.Weekly)?.let { weekly ->
             weekly.onDaysOfWeek?.forEach { index ->
                 weekday_button_group.check(weekday_button_group[index].id)
@@ -164,7 +165,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     private fun clearRecurrence() {
         weekday_button_group.clearChecked()
         recurrence_frequency.setText("1")
-        spinner_recurrence?.setSelection(recurrences.indexOf(EventRecurrence.Daily))
+//        spinner_recurrence?.setSelection(recurrences.indexOf(EventRecurrence.Daily()))
         recurrence_week_picker?.visibility = View.GONE
     }
 
@@ -190,20 +191,21 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     }
 
     private fun recurrenceFromSelection(): EventRecurrence {
-        if (!event_repeat_checkbox.isChecked) return EventRecurrence.SingleEvent
+        if (!event_repeat_checkbox.isChecked) return EventRecurrence.SingleEvent()
+        val freq = recurrence_frequency.text.toIntOrOne()
 
         return when (recurrences[spinner_recurrence.selectedItemPosition]) {
-            is EventRecurrence.Daily -> EventRecurrence.Daily
+            is EventRecurrence.Daily -> EventRecurrence.Daily(freq)
             is EventRecurrence.Weekly -> {
                 val weekdays = getSelectedWeekdays().ifEmpty {
                     listOf(ZonedDateTime.now().get(ChronoField.DAY_OF_WEEK) - 1)
                 }
-                EventRecurrence.Weekly(weekdays)
+                EventRecurrence.Weekly(freq, weekdays)
             }
-            is EventRecurrence.Monthly -> EventRecurrence.Monthly
-            is EventRecurrence.Annually -> EventRecurrence.Annually
-            is EventRecurrence.SingleEvent -> EventRecurrence.SingleEvent
-        }.apply { frequency = recurrence_frequency.text.toIntOrOne() }
+            is EventRecurrence.Monthly -> EventRecurrence.Monthly(freq)
+            is EventRecurrence.Annually -> EventRecurrence.Annually(freq)
+            is EventRecurrence.SingleEvent -> EventRecurrence.SingleEvent(freq)
+        }
     }
 
     private fun getSelectedWeekdays(): List<Int> {
