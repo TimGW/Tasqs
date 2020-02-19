@@ -139,7 +139,11 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     }
 
     override fun setActionModeTitle(size: Int) {
-        actionMode?.title = size.toString()
+        actionMode?.apply {
+            menu?.findItem(R.id.edit)?.isVisible = size == 1
+            menu?.findItem(R.id.info)?.isVisible = size == 1
+            title = size.toString()
+        }
     }
 
     override fun onActionItemDelete(selectedEvents: List<Event>, mode: ActionMode) {

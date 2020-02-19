@@ -17,10 +17,7 @@ class ActionModeCallback(private var actionItemListener: ActionItemListener?,
     }
 
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-        val selectedEvents = tracker.selection.map { it }.toList()
-        menu.findItem(R.id.edit).isVisible = selectedEvents.size == 1
-        menu.findItem(R.id.info).isVisible = selectedEvents.size == 1
-        return true
+        return false
     }
 
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
