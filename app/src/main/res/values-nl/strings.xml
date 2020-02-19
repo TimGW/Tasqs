@@ -55,6 +55,7 @@
     <string name="title_activity_settings">Instellingen</string>
     <string name="toolbar_title_edit_event">%1$s aanpassen</string>
     <string name="toolbar_title_new_event">Nieuw evenement</string>
+    <string name="toolbar_title_info_event">Evenement info</string>
     <string name="toolbar_title_schema">Evenementen</string>
     <string name="toolbar_title_users">Gebruikers</string>
     <string name="easter_egg_enabled">Advertenties zijn nu uitgeschakeld!</string>

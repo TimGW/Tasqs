@@ -53,6 +53,9 @@
             android:name=".presentation.features.event.view.EventEditActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
+            android:name=".presentation.features.event.view.EventInfoActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
             android:name=".presentation.features.setup.view.SetupActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity

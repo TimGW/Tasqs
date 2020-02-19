@@ -2,6 +2,7 @@ package com.timgortworst.roomy.data.di
 
 
 import com.timgortworst.roomy.presentation.base.di.EventEditModule
+import com.timgortworst.roomy.presentation.base.di.EventInfoModule
 import com.timgortworst.roomy.presentation.features.event.view.EventEditActivity
 import com.timgortworst.roomy.presentation.base.di.GoogleSignInModule
 import com.timgortworst.roomy.presentation.features.googlesignin.view.GoogleSignInActivity
@@ -12,6 +13,7 @@ import com.timgortworst.roomy.presentation.features.settings.view.SettingsActivi
 import com.timgortworst.roomy.presentation.base.di.SetupModule
 import com.timgortworst.roomy.presentation.features.setup.view.SetupActivity
 import com.timgortworst.roomy.presentation.base.di.SplashModule
+import com.timgortworst.roomy.presentation.features.event.view.EventInfoActivity
 import com.timgortworst.roomy.presentation.features.splash.view.SplashActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -26,7 +28,10 @@ abstract class ActivityBuilder {
     internal abstract fun bindMainActivity(): MainActivity
 
     @ContributesAndroidInjector(modules = [EventEditModule::class])
-    internal abstract fun bindEditAgendaEventActivity(): EventEditActivity
+    internal abstract fun bindEditEventActivity(): EventEditActivity
+
+    @ContributesAndroidInjector(modules = [EventInfoModule::class])
+    internal abstract fun bindInfoEventActivity(): EventInfoActivity
 
     @ContributesAndroidInjector(modules = [GoogleSignInModule::class])
     internal abstract fun bindSignInActivity(): GoogleSignInActivity

@@ -13,7 +13,6 @@ interface EventListView : PageStateView {
     fun removePendingNotificationReminder(eventId: String)
     fun enqueueNotification(eventId: String, eventMetaData: EventMetaData, eventName: String, userName: String)
     fun showToast(@StringRes stringRes: Int)
-    fun showToast(msg: String)
     fun setActionModeTitle(size: Int)
     fun startActionMode(tracker: SelectionTracker<String>)
     fun stopActionMode()

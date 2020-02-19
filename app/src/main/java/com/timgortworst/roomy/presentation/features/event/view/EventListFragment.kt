@@ -151,7 +151,7 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     }
 
     override fun onActionItemInfo(selectedEvent: Event) {
-//        showInfoToast(selectedEvent) todo info page
+        EventInfoActivity.start(activityContext, selectedEvent)
     }
 
     override fun onActionItemDone(selectedEvents: List<Event>) {
@@ -186,10 +186,6 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
         Toast.makeText(activityContext, getString(stringRes), Toast.LENGTH_LONG).show()
     }
 
-    override fun showToast(msg: String) {
-        Toast.makeText(activityContext, msg, Toast.LENGTH_LONG).show()
-    }
-
     override fun onEventDoneClicked(position: Int) {
         presenter.eventsCompleted(listOf(eventListAdapter.getEvent(position)))
     }
@@ -220,37 +216,4 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
             }
             .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .create()
-
-//
-//    private fun showInfoToast(event: Event): String {
-//        with(event.metaData.recurrence) {
-//            return if (this is EventRecurrence.SingleEvent) {
-//                getString(R.string.is_not_repeated)
-//            } else {
-//                val weeklyAddon = if (this is EventRecurrence.Weekly) " ${activityContext.getString(R.string.on)} ${formatWeekdays(onDaysOfWeek, activityContext)}" else ""
-//                val isRepeatedOn = activityContext.getString(R.string.is_repeated)
-//                val msg = if (frequency > 1) {
-//                    "$isRepeatedOn $frequency ${activityContext.getString(pluralName)}"
-//                } else {
-//                    "$isRepeatedOn ${activityContext.getString(name)}"
-//                }.plus(weeklyAddon)
-//                msg
-//            }
-//        }
-//    }
-//
-//    private fun formatWeekdays(daysOfWeek: List<Int>?, activityContext: AppCompatActivity): String {
-//        return daysOfWeek?.joinToString {
-//            when (it) {
-//                0 -> activityContext.getString(R.string.repeat_mo)
-//                1 -> activityContext.getString(R.string.repeat_tu)
-//                2 -> activityContext.getString(R.string.repeat_we)
-//                3 -> activityContext.getString(R.string.repeat_th)
-//                4 -> activityContext.getString(R.string.repeat_fr)
-//                5 -> activityContext.getString(R.string.repeat_sa)
-//                6 -> activityContext.getString(R.string.repeat_su)
-//                else -> ""
-//            }
-//        }.orEmpty()
-//    }
 }

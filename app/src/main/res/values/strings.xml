@@ -54,6 +54,7 @@
     <string name="repeat_label_interval_text_year">Y</string>
     <string name="title_activity_settings">Settings</string>
     <string name="toolbar_title_edit_event">Edit %1$s</string>
+    <string name="toolbar_title_info_event">Event info</string>
     <string name="toolbar_title_new_event">New event</string>
     <string name="toolbar_title_schema">Events</string>
     <string name="toolbar_title_users">Users</string>
