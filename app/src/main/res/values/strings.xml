@@ -112,5 +112,6 @@
     <string name="on">on:</string>
     <string name="is_repeated">is repeated every</string>
     <string name="repeat"/>
+    <string name="user_picker_error">Pick a user</string>
 
 </resources>

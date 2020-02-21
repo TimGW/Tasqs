@@ -2,6 +2,7 @@ package com.timgortworst.roomy.presentation.features.event.view
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -34,6 +35,8 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
 import javax.inject.Inject
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 
 
 class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
@@ -41,7 +44,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     lateinit var presenter: EventEditPresenter
 
     private var event: Event = Event()
-    private lateinit var userAdapter: SpinnerUserAdapter
+    private lateinit var userAdapter: ArrayAdapter<String>
     private lateinit var recurrenceAdapter: ArrayAdapter<String>
 
     companion object {
@@ -76,8 +79,13 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     private fun setupUI() {
         setupToolbar()
         setupListeners()
-        setupUserSpinner()
-        setupRecurrenceSpinner()
+
+        userAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, mutableListOf(""))
+        spinner_users.adapter = userAdapter
+        presenter.getUsers()
+
+        recurrenceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, recurrences.map { getString(it.name) })
+        spinner_recurrence.adapter = recurrenceAdapter
 
         presenter.formatDate(event.metaData.startDateTime)
     }
@@ -174,7 +182,12 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 true
             }
             R.id.action_edit_done -> {
-                event.user = spinner_users.selectedItem as User
+                event.user = (spinner_users.selectedItem as? User?) ?: run {
+                    val errorText = spinner_users.selectedView as TextView
+                    errorText.setTextColor(ContextCompat.getColor(this, R.color.color_error))
+                    errorText.text = getString(R.string.user_picker_error)
+                    return false
+                }
                 event.metaData.recurrence = recurrenceFromSelection()
                 presenter.editEventDone(event)
                 true
@@ -210,29 +223,14 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 } // map checked buttons to weekday index 0..6 (mo - su)
     }
 
-    private fun setupUserSpinner() {
-        userAdapter = SpinnerUserAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                mutableListOf()
-        )
-        spinner_users.adapter = userAdapter
-        presenter.getUsers()
-    }
-
-    private fun setupRecurrenceSpinner() {
-        recurrenceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, recurrences.map { getString(it.name) })
-        recurrenceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner_recurrence.adapter = recurrenceAdapter
-    }
-
     override fun presentUserList(users: MutableList<User>) {
-        userAdapter.addAll(users)
+        userAdapter.clear()
+        userAdapter.addAll(users.map { it.name })
         userAdapter.notifyDataSetChanged()
 
         if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT)) {
-            val userPos = userAdapter.getPosition(event.user)
-            spinner_users.setSelection(userPos)
+            val index = users.indexOfFirst { it.userId == event.metaData.recurrence.id }
+            spinner_users.setSelection(index)
         }
     }
 

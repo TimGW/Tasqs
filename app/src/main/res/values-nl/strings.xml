@@ -105,5 +105,6 @@
     <string name="is_not_repeated">Wordt niet herhaald</string>
     <string name="on">op:</string>
     <string name="is_repeated">wordt herhaald elke</string>
+    <string name="user_picker_error">Kies een persoon</string>
 
 </resources>
