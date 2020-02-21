@@ -2,6 +2,7 @@ package com.timgortworst.roomy.presentation.features.event.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
@@ -9,6 +10,7 @@ import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventRecurrence
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.event.presenter.EventInfoPresenter
+import com.timgortworst.roomy.presentation.features.main.view.MainActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_info_event.*
 import javax.inject.Inject
@@ -47,24 +49,33 @@ class EventInfoActivity : BaseActivity(), EventInfoView {
             setDisplayShowHomeEnabled(true)
         }
 
-        info_description.setText(event.description)
-        info_user.setText(event.user.name)
-        info_repeated.setText(buildRepeatText(event))
+        info_description.text = event.description
+        info_user.text = event.user.name
+        info_repeated.text = buildRepeatText(event)
         presenter.formatDate(event.metaData.startDateTime)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                navigateUpTo(Intent(this, MainActivity::class.java))
+                true
+            }
+            R.id.action_go_to_edit -> {
+                EventEditActivity.start(this, event)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.info_menu, menu)
+        return true
+    }
+
     override fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String) {
-        info_date.setText("$formattedDayOfMonth $formattedMonth $formattedYear")
+        info_date.text = "$formattedDayOfMonth $formattedMonth $formattedYear"
     }
 
     private fun buildRepeatText(event: Event): String {

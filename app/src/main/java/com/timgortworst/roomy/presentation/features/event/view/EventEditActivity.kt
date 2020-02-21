@@ -22,6 +22,7 @@ import com.timgortworst.roomy.domain.utils.toIntOrOne
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.event.adapter.SpinnerUserAdapter
 import com.timgortworst.roomy.presentation.features.event.presenter.EventEditPresenter
+import com.timgortworst.roomy.presentation.features.main.view.MainActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_event.*
 import kotlinx.android.synthetic.main.layout_recurrence_picker.*
@@ -55,7 +56,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             val intent = Intent(context, EventEditActivity::class.java)
             event?.let { intent.putExtra(INTENT_EXTRA_EDIT_EVENT, it) }
             context.startActivity(intent)
-            context.overridePendingTransition(R.anim.slide_up, R.anim.stay)
         }
     }
 
@@ -162,13 +162,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         }
     }
 
-    private fun clearRecurrence() {
-        weekday_button_group.clearChecked()
-        recurrence_frequency.setText("1")
-//        spinner_recurrence?.setSelection(recurrences.indexOf(EventRecurrence.Daily()))
-        recurrence_week_picker?.visibility = View.GONE
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.edit_menu, menu)
         return true
@@ -177,7 +170,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                navigateUpTo(Intent(this, MainActivity::class.java))
                 true
             }
             R.id.action_edit_done -> {
@@ -215,12 +208,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                     val btn = weekday_button_group.findViewById<MaterialButton>(buttonId)
                     weekday_button_group.indexOfChild(btn)
                 } // map checked buttons to weekday index 0..6 (mo - su)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-
-        overridePendingTransition(R.anim.stay, R.anim.slide_down)
     }
 
     private fun setupUserSpinner() {
