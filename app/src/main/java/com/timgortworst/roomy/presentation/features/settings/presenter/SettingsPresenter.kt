@@ -4,12 +4,12 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.domain.utils.betweenUntil
 import com.timgortworst.roomy.presentation.features.settings.view.SettingsView
-import javax.inject.Inject
+import org.koin.core.KoinComponent
 
-class SettingsPresenter @Inject constructor(
+class SettingsPresenter (
         private val view: SettingsView,
         private val sharedPrefs: SharedPrefs
-) {
+) : KoinComponent {
 
     fun onAppVersionClick(counter: Int) {
         if (sharedPrefs.isAdsEnabled()) {

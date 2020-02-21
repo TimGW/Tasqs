@@ -9,17 +9,15 @@ import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.utils.isDateInPast
 import com.timgortworst.roomy.domain.utils.plusInterval
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
+import org.koin.core.KoinComponent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
-import javax.inject.Inject
 
-class EventUseCase
-@Inject
-constructor(private val eventRepository: EventRepository,
-            private val userRepository: UserRepository) {
+class EventUseCase(private val eventRepository: EventRepository,
+                   private val userRepository: UserRepository) : KoinComponent {
 
     suspend fun listenToEvents(eventListPresenter: EventListPresenter) {
         eventRepository.listenToEventsForHousehold(

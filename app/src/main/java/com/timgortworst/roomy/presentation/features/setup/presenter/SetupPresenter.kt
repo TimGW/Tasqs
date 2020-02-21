@@ -9,13 +9,12 @@ import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.setup.view.SetupView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.core.KoinComponent
 
-
-class SetupPresenter @Inject constructor(
+class SetupPresenter(
         private val view: SetupView,
         private val setupUseCase: SetupUseCase
-) : DefaultLifecycleObserver {
+) : DefaultLifecycleObserver, KoinComponent {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 

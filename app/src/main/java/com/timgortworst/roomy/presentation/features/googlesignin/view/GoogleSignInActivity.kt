@@ -13,19 +13,18 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.googlesignin.presenter.GoogleSignInPresenter
-import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_login.*
-import javax.inject.Inject
-
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class GoogleSignInActivity : BaseActivity(), GoogleSignInView {
-    @Inject
-    lateinit var presenter: GoogleSignInPresenter
+    private val presenter: GoogleSignInPresenter by inject {
+        parametersOf(this)
+    }
 
     lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 

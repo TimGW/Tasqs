@@ -18,20 +18,17 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.presentation.features.settings.presenter.SettingsPresenter
-import dagger.android.support.AndroidSupportInjection
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
-    @Inject lateinit var sharedPref: SharedPrefs
-    @Inject lateinit var presenter: SettingsPresenter
+    private val sharedPref: SharedPrefs by inject()
+    private val presenter: SettingsPresenter by inject {
+        parametersOf(this)
+    }
     private var toast: Toast? = null
     private var remainingTimeCounter: CountDownTimer? = null
     private var counter: Int = 0
-
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)

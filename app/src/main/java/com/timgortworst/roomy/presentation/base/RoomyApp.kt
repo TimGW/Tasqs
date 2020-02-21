@@ -1,8 +1,6 @@
 package com.timgortworst.roomy.presentation.base
 
-import android.app.Activity
 import android.app.Application
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.work.Configuration
 import com.google.android.gms.ads.MobileAds
@@ -11,34 +9,35 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
-import com.timgortworst.roomy.data.di.DaggerAppComponent
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import javax.inject.Inject
-
+import com.timgortworst.roomy.data.di.presenterModule
+import com.timgortworst.roomy.data.di.repositoryModule
+import com.timgortworst.roomy.data.di.useCaseModule
+import com.timgortworst.roomy.data.prefModule
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import org.koin.core.module.Module
 
 /**
  * Created by tim.gortworst on 17/02/2018.
  */
-class RoomyApp : Application(), HasActivityInjector, Configuration.Provider {
-    @Inject
-    internal lateinit var activityInjector: DispatchingAndroidInjector<Activity>
-
-    @Inject
-    lateinit var sharedPref: SharedPrefs
-
-    init {
-        instance = this
-    }
+class RoomyApp : Application(), Configuration.Provider {
+    private val sharedPref: SharedPrefs by inject()
+    private val appComponent: List<Module> = listOf(
+            prefModule,
+            repositoryModule,
+            useCaseModule,
+            presenterModule)
 
     override fun onCreate() {
         super.onCreate()
 
-        DaggerAppComponent.builder()
-            .context(this)
-            .build()
-            .inject(this)
+        startKoin{
+            androidLogger()
+            androidContext(this@RoomyApp)
+            modules(appComponent)
+        }
 
         AndroidThreeTen.init(this)
 
@@ -65,17 +64,5 @@ class RoomyApp : Application(), HasActivityInjector, Configuration.Provider {
              builder.setMinimumLoggingLevel(android.util.Log.INFO)
         }
         return builder.build()
-    }
-
-    override fun activityInjector(): AndroidInjector<Activity>? {
-        return activityInjector
-    }
-
-    companion object {
-        private lateinit var instance: RoomyApp
-
-        fun applicationContext(): Context {
-            return instance.applicationContext
-        }
     }
 }

@@ -1,20 +1,15 @@
 package com.timgortworst.roomy.data
 
+import android.content.Context
 import androidx.preference.PreferenceManager
-import com.timgortworst.roomy.data.utils.Constants.SHARED_PREF_ADS
-import com.timgortworst.roomy.data.utils.Constants.SHARED_PREF_DARK_MODE
-import com.timgortworst.roomy.data.utils.Constants.SHARED_PREF_FIRST_LAUNCH
-import com.timgortworst.roomy.presentation.base.RoomyApp
-import javax.inject.Inject
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
 
-/**
- * Created by tim.gortworst on 07/03/2018.
- */
-@Singleton
-class SharedPrefs
-@Inject constructor() {
-    private val sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(RoomyApp.applicationContext())
+val prefModule = module {
+    single { SharedPrefs(androidContext()) }
+}
+class SharedPrefs(context: Context) {
+    private val sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(context)
 
     fun isFirstLaunch(): Boolean {
         return getBoolValue(SHARED_PREF_FIRST_LAUNCH, true)
@@ -57,5 +52,11 @@ class SharedPrefs
             .edit()
             .putBoolean(key, value)
             .apply()
+    }
+
+    companion object {
+        const val SHARED_PREF_FIRST_LAUNCH = "SHARED_PREF_FIRST_LAUNCH"
+        const val SHARED_PREF_ADS = "SHARED_PREF_ADS"
+        const val SHARED_PREF_DARK_MODE = "SHARED_PREF_DARK_THEME"
     }
 }

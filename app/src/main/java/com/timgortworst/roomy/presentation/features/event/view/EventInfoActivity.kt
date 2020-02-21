@@ -11,15 +11,14 @@ import com.timgortworst.roomy.data.model.EventRecurrence
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.event.presenter.EventInfoPresenter
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
-import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_info_event.*
-import javax.inject.Inject
-
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class EventInfoActivity : BaseActivity(), EventInfoView {
-    @Inject
-    lateinit var presenter: EventInfoPresenter
-
+    private val presenter: EventInfoPresenter by inject {
+        parametersOf(this)
+    }
     private lateinit var event: Event
 
     companion object {
@@ -33,7 +32,6 @@ class EventInfoActivity : BaseActivity(), EventInfoView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info_event)
 

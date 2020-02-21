@@ -13,13 +13,12 @@ import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventListView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.core.KoinComponent
 
-
-class EventListPresenter @Inject constructor(
+class EventListPresenter(
         private val view: EventListView,
         private val eventUseCase: EventUseCase
-) : UIState<Event>, DefaultLifecycleObserver {
+) : UIState<Event>, DefaultLifecycleObserver, KoinComponent {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -33,11 +32,6 @@ class EventListPresenter @Inject constructor(
     }
 
     fun listenToEvents() = scope.launch {
-        //        view.setMsgView(true,
-//                R.string.empty_list_state_title_events,
-//                R.string.empty_list_state_text_events
-//        )
-
         eventUseCase.listenToEvents(this@EventListPresenter)
     }
 

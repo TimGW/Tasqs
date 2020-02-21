@@ -11,14 +11,13 @@ import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.main.view.MainView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.core.KoinComponent
 
-class MainPresenter
-@Inject constructor(
+class MainPresenter (
         private val view: MainView,
         private val mainUseCase: MainUseCase,
         private val sharedPrefs: SharedPrefs
-) : DefaultLifecycleObserver, HouseholdRepository.HouseholdListener {
+) : DefaultLifecycleObserver, HouseholdRepository.HouseholdListener, KoinComponent {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {

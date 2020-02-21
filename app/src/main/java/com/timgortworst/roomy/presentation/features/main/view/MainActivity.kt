@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
@@ -20,22 +21,14 @@ import com.timgortworst.roomy.presentation.features.main.presenter.MainPresenter
 import com.timgortworst.roomy.presentation.features.settings.view.SettingsActivity
 import com.timgortworst.roomy.presentation.features.splash.view.SplashActivity
 import com.timgortworst.roomy.presentation.features.user.view.UserListFragment
-import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.timgortworst.roomy.data.model.Event
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
-
-class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-
-    @Inject
-    lateinit var presenter: MainPresenter
+class MainActivity : BaseActivity(), MainView {
+    private val presenter: MainPresenter by inject {
+        parametersOf(this)
+    }
 
     private var adRequest: AdRequest? = null
     private val eventListFragment: Fragment by lazy { EventListFragment.newInstance() }
@@ -61,7 +54,6 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -233,9 +225,5 @@ class MainActivity : BaseActivity(), HasSupportFragmentInjector, MainView {
 
     override fun openEventEditActivity() {
         EventEditActivity.start(this)
-    }
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return dispatchingAndroidInjector
     }
 }

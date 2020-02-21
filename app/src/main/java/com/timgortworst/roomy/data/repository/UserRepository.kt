@@ -16,17 +16,12 @@ import com.timgortworst.roomy.data.model.User.Companion.USER_EMAIL_REF
 import com.timgortworst.roomy.data.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.data.model.User.Companion.USER_NAME_REF
 import com.timgortworst.roomy.data.model.User.Companion.USER_ROLE_REF
-import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
 import com.timgortworst.roomy.domain.Response
 import com.timgortworst.roomy.domain.UIState
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class UserRepository @Inject constructor() {
+class UserRepository {
     private val userCollectionRef = FirebaseFirestore.getInstance().collection(USER_COLLECTION_REF)
-
     private var registration: ListenerRegistration? = null
 
     fun getCurrentUserId() = FirebaseAuth.getInstance().currentUser?.uid
@@ -74,7 +69,7 @@ class UserRepository @Inject constructor() {
 
         val handler = Handler()
         val runnable = Runnable { apiStatus.setState(Response.Loading) }
-        handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
+        handler.postDelayed(runnable, android.R.integer.config_shortAnimTime.toLong())
 
         registration = userCollectionRef
                 .whereEqualTo(USER_HOUSEHOLD_ID_REF, householdId)

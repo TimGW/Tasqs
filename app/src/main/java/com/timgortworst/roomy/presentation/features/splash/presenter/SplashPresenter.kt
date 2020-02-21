@@ -8,13 +8,12 @@ import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.splash.view.SplashView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.core.KoinComponent
 
-class SplashPresenter @Inject constructor(
+class SplashPresenter(
         private val view: SplashView,
         private val setupUseCase: SetupUseCase
-) : DefaultLifecycleObserver {
-
+) : DefaultLifecycleObserver, KoinComponent {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {

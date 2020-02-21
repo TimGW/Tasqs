@@ -9,13 +9,13 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.utils.showToast
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
 import com.timgortworst.roomy.presentation.features.setup.presenter.SetupPresenter
-import dagger.android.AndroidInjection
-import javax.inject.Inject
-
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class SetupActivity : AppCompatActivity(), SetupView {
-    @Inject
-    lateinit var presenter: SetupPresenter
+    private val presenter: SetupPresenter by inject {
+        parametersOf(this)
+    }
 
     private lateinit var referredHouseholdId: String
 
@@ -30,7 +30,6 @@ class SetupActivity : AppCompatActivity(), SetupView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
         referredHouseholdId = intent.getStringExtra(referredHouseholdIdKey) ?: ""
@@ -48,15 +47,15 @@ class SetupActivity : AppCompatActivity(), SetupView {
 
     override fun presentHouseholdOverwriteDialog() {
         AlertDialog.Builder(this)
-            .setTitle(getString(R.string.dialog_household_overwrite_title))
-            .setMessage(getString(R.string.dialog_household_overwrite_text))
-            .setPositiveButton(android.R.string.yes) { _, _ ->
-                presenter.changeCurrentUserHousehold(referredHouseholdId)
-            }
-            .setNegativeButton(android.R.string.no) { _, _ ->
-                goToMainActivity()
-            }
-            .show()
+                .setTitle(getString(R.string.dialog_household_overwrite_title))
+                .setMessage(getString(R.string.dialog_household_overwrite_text))
+                .setPositiveButton(android.R.string.yes) { _, _ ->
+                    presenter.changeCurrentUserHousehold(referredHouseholdId)
+                }
+                .setNegativeButton(android.R.string.no) { _, _ ->
+                    goToMainActivity()
+                }
+                .show()
     }
 
     override fun presentAlreadyInHouseholdDialog() {
@@ -81,6 +80,7 @@ class SetupActivity : AppCompatActivity(), SetupView {
                 }
                 .show()
     }
+
     override fun presentHouseholdFullDialog() {
         AlertDialog.Builder(this)
                 .setTitle(getString(R.string.dialog_household_full_title))

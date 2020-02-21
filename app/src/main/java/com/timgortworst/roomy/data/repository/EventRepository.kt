@@ -2,6 +2,7 @@ package com.timgortworst.roomy.data.repository
 
 import android.os.Handler
 import android.util.Log
+import android.view.animation.Animation
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,15 +14,11 @@ import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.firestore.EventJson
 import com.timgortworst.roomy.data.model.firestore.EventJson.Companion.EVENT_COLLECTION_REF
 import com.timgortworst.roomy.data.model.firestore.EventJson.Companion.EVENT_HOUSEHOLD_ID_REF
-import com.timgortworst.roomy.data.utils.Constants.LOADING_SPINNER_DELAY
 import com.timgortworst.roomy.domain.Response
 import com.timgortworst.roomy.domain.UIState
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class EventRepository @Inject constructor() {
+class EventRepository {
     private val eventCollectionRef = FirebaseFirestore.getInstance().collection(EVENT_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 
@@ -65,7 +62,7 @@ class EventRepository @Inject constructor() {
     fun listenToEventsForHousehold(householdId: String, remoteApi: UIState<Event>) {
         val handler = Handler()
         val runnable = Runnable { remoteApi.setState(Response.Loading) }
-        handler.postDelayed(runnable, LOADING_SPINNER_DELAY)
+        handler.postDelayed(runnable, android.R.integer.config_shortAnimTime.toLong())
 
         registration = eventCollectionRef
                 .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)

@@ -5,13 +5,11 @@ import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import javax.inject.Inject
+import org.koin.core.KoinComponent
 
-class SetupUseCase
-@Inject
-constructor(private val householdRepository: HouseholdRepository,
-            private val userRepository: UserRepository,
-            private val eventRepository: EventRepository) {
+class SetupUseCase(private val householdRepository: HouseholdRepository,
+                   private val userRepository: UserRepository,
+                   private val eventRepository: EventRepository) : KoinComponent {
 
     suspend fun initializeHousehold(): String? {
         return householdRepository.createHousehold()
@@ -44,7 +42,8 @@ constructor(private val householdRepository: HouseholdRepository,
 
     suspend fun userBlackListedForHousehold(householdId: String): Boolean {
         val household = householdRepository.getHousehold(householdId)
-        return household?.userIdBlackList?.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty()) ?: false
+        return household?.userIdBlackList?.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
+                ?: false
     }
 
     suspend fun isHouseholdFull(referredHouseholdId: String): Boolean {

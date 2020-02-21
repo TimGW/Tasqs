@@ -26,11 +26,11 @@ import com.timgortworst.roomy.presentation.features.event.adapter.EventItemKeyPr
 import com.timgortworst.roomy.presentation.features.event.adapter.EventListAdapter
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
-import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
 import kotlinx.android.synthetic.main.layout_list_state.view.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionItemListener, EventListAdapter.EventDoneClickListener {
     private lateinit var activityContext: AppCompatActivity
@@ -38,9 +38,9 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
     private lateinit var tracker: SelectionTracker<String>
     private var actionMode: ActionMode? = null
-
-    @Inject
-    lateinit var presenter: EventListPresenter
+    private val presenter: EventListPresenter by inject {
+        parametersOf(this)
+    }
 
     companion object {
         const val EVENT_SELECTION_ID = "Event-selection"
@@ -66,7 +66,6 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     }
 
     override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         activityContext = (activity as? MainActivity) ?: return
     }

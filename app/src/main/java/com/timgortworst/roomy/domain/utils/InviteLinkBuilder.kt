@@ -3,7 +3,6 @@ package com.timgortworst.roomy.domain.utils
 import android.net.Uri
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import com.timgortworst.roomy.data.utils.Constants
 
 class InviteLinkBuilder private constructor(val householdId: String) {
 
@@ -21,7 +20,7 @@ class InviteLinkBuilder private constructor(val householdId: String) {
             val builder = Uri.Builder()
             builder.scheme("https")
                     .authority("roomyinvite.page.link")
-                    .appendQueryParameter(Constants.QUERY_PARAM_HOUSEHOLD, householdId)
+                    .appendQueryParameter(QUERY_PARAM_HOUSEHOLD, householdId)
             return builder.build()
         }
 
@@ -36,5 +35,9 @@ class InviteLinkBuilder private constructor(val householdId: String) {
                     .buildDynamicLink()
             return dynamicLink.uri
         }
+    }
+
+    companion object {
+        const val QUERY_PARAM_HOUSEHOLD = "QUERY_PARAM_HOUSEHOLD"
     }
 }

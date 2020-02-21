@@ -5,13 +5,11 @@ import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.presentation.features.user.presenter.UserListPresenter
-import javax.inject.Inject
+import org.koin.core.KoinComponent
 
-class UserUseCase
-@Inject
-constructor(private val householdRepository: HouseholdRepository,
-            private val userRepository: UserRepository,
-            private val eventRepository: EventRepository) {
+class UserUseCase(private val householdRepository: HouseholdRepository,
+                  private val userRepository: UserRepository,
+                  private val eventRepository: EventRepository) : KoinComponent {
 
     suspend fun getCurrentUser() = userRepository.getUser()
 

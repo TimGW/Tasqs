@@ -8,19 +8,19 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.utils.Constants
+import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.domain.utils.showToast
 import com.timgortworst.roomy.presentation.features.googlesignin.view.GoogleSignInActivity
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
 import com.timgortworst.roomy.presentation.features.setup.view.SetupActivity
 import com.timgortworst.roomy.presentation.features.splash.presenter.SplashPresenter
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class SplashActivity : AppCompatActivity(), SplashView {
-
-    @Inject
-    lateinit var presenter: SplashPresenter
+    private val presenter: SplashPresenter by inject {
+        parametersOf(this)
+    }
 
     companion object {
         private const val TAG = "SplashActivity"
@@ -33,12 +33,11 @@ class SplashActivity : AppCompatActivity(), SplashView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         setTheme(R.style.MyTheme_Launcher)
         super.onCreate(savedInstanceState)
 
         FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnCompleteListener {
-            val referredHouseholdId = it.result?.link?.getQueryParameter(Constants.QUERY_PARAM_HOUSEHOLD).orEmpty()
+            val referredHouseholdId = it.result?.link?.getQueryParameter(QUERY_PARAM_HOUSEHOLD).orEmpty()
             presenter.initializeUser(referredHouseholdId)
         }.addOnFailureListener {
             Log.e(TAG, it.localizedMessage.orEmpty())

@@ -4,12 +4,10 @@ import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
 import com.timgortworst.roomy.presentation.features.main.presenter.MainPresenter
-import javax.inject.Inject
+import org.koin.core.KoinComponent
 
-class MainUseCase
-@Inject
-constructor(private val householdRepository: HouseholdRepository,
-            private val userRepository: UserRepository) {
+class MainUseCase(private val householdRepository: HouseholdRepository,
+                  private val userRepository: UserRepository) : KoinComponent {
     suspend fun listenToHousehold(mainPresenter: MainPresenter) {
         householdRepository.listenToHousehold(
                 userRepository.getHouseholdIdForUser(),

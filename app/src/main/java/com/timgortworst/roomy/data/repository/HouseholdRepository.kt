@@ -12,13 +12,9 @@ import com.timgortworst.roomy.data.model.Household
 import com.timgortworst.roomy.data.model.Household.Companion.HOUSEHOLD_BLACKLIST_REF
 import com.timgortworst.roomy.data.model.Household.Companion.HOUSEHOLD_COLLECTION_REF
 import com.timgortworst.roomy.data.model.User.Companion.USER_HOUSEHOLD_ID_REF
-import com.timgortworst.roomy.data.utils.Constants
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class HouseholdRepository @Inject constructor() {
+class HouseholdRepository {
     private val householdsCollectionRef = FirebaseFirestore.getInstance().collection(HOUSEHOLD_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 

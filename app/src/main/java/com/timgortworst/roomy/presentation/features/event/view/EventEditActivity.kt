@@ -2,15 +2,17 @@ package com.timgortworst.roomy.presentation.features.event.view
 
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.AdapterView.INVALID_POSITION
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
@@ -21,28 +23,25 @@ import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.domain.utils.toIntOrOne
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
-import com.timgortworst.roomy.presentation.features.event.adapter.SpinnerUserAdapter
 import com.timgortworst.roomy.presentation.features.event.presenter.EventEditPresenter
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
-import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_edit_event.*
 import kotlinx.android.synthetic.main.layout_recurrence_picker.*
 import kotlinx.android.synthetic.main.layout_week_picker.*
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
-import javax.inject.Inject
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-
 
 class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
-    @Inject
-    lateinit var presenter: EventEditPresenter
-
+    private var userList: MutableList<User> = mutableListOf()
+    private val presenter: EventEditPresenter by inject {
+        parametersOf(this)
+    }
     private var event: Event = Event()
     private lateinit var userAdapter: ArrayAdapter<String>
     private lateinit var recurrenceAdapter: ArrayAdapter<String>
@@ -63,7 +62,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_event)
 
@@ -182,7 +180,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 true
             }
             R.id.action_edit_done -> {
-                event.user = (spinner_users.selectedItem as? User?) ?: run {
+                event.user = userFromSelection() ?: run {
                     val errorText = spinner_users.selectedView as TextView
                     errorText.setTextColor(ContextCompat.getColor(this, R.color.color_error))
                     errorText.text = getString(R.string.user_picker_error)
@@ -193,6 +191,14 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun userFromSelection(): User? {
+        return if ((spinner_users.selectedItem as? String).isNullOrEmpty()) {
+            null
+        } else {
+            userList[spinner_users.selectedItemPosition]
         }
     }
 
@@ -224,12 +230,13 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     }
 
     override fun presentUserList(users: MutableList<User>) {
+        this.userList = users
         userAdapter.clear()
-        userAdapter.addAll(users.map { it.name })
+        userAdapter.addAll(userList.map { it.name })
         userAdapter.notifyDataSetChanged()
 
         if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT)) {
-            val index = users.indexOfFirst { it.userId == event.metaData.recurrence.id }
+            val index = userList.indexOfFirst { it.name == event.user.name }
             spinner_users.setSelection(index)
         }
     }

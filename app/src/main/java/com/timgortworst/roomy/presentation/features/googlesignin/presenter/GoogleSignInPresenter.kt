@@ -9,9 +9,11 @@ import com.timgortworst.roomy.presentation.features.googlesignin.view.GoogleSign
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
+import org.koin.core.KoinComponent
 
-class GoogleSignInPresenter @Inject constructor(private val view: GoogleSignInView) : DefaultLifecycleObserver {
+class GoogleSignInPresenter (
+        private val view: GoogleSignInView
+) : DefaultLifecycleObserver, KoinComponent {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
