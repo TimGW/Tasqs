@@ -15,7 +15,7 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.EventRecurrence.Companion.SINGLE_EVENT
+import com.timgortworst.roomy.domain.model.EventRecurrence.Companion.SINGLE_EVENT
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_ID_KEY
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_MSG_KEY
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_TITLE_KEY

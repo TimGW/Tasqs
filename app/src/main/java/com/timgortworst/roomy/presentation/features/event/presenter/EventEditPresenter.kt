@@ -5,7 +5,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.textfield.TextInputEditText
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.Event
+import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventEditView

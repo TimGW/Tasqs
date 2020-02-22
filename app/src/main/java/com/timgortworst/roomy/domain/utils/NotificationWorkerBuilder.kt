@@ -6,8 +6,8 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.data.model.EventRecurrence
+import com.timgortworst.roomy.domain.model.EventMetaData
+import com.timgortworst.roomy.domain.model.EventRecurrence
 import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
 import java.util.concurrent.TimeUnit

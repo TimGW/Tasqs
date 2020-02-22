@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.BottomMenuItem
+import com.timgortworst.roomy.domain.model.BottomMenuItem
 import kotlinx.android.synthetic.main.bottom_sheet_menu_row.view.*
 
 class BottomSheetMenuAdapter(private val items: List<BottomMenuItem>) :

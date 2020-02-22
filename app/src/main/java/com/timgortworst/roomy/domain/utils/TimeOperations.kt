@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.domain.utils
 
-import com.timgortworst.roomy.data.model.EventRecurrence
+import com.timgortworst.roomy.domain.model.EventRecurrence
 import org.koin.dsl.module
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField

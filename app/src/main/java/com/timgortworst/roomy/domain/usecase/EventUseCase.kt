@@ -1,9 +1,9 @@
 package com.timgortworst.roomy.domain.usecase
 
-import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.data.model.EventRecurrence
-import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.domain.model.Event
+import com.timgortworst.roomy.domain.model.EventMetaData
+import com.timgortworst.roomy.domain.model.EventRecurrence
+import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.utils.TimeOperations

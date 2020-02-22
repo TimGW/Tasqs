@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.selection.SelectionTracker
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.Event
+import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.UIState
 import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope

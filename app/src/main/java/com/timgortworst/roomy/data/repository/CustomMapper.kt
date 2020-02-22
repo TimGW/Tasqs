@@ -1,14 +1,14 @@
 package com.timgortworst.roomy.data.repository
 
-import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.data.model.EventRecurrence
-import com.timgortworst.roomy.data.model.EventRecurrence.Companion.ANNUAL_EVENT
-import com.timgortworst.roomy.data.model.EventRecurrence.Companion.DAILY_EVENT
-import com.timgortworst.roomy.data.model.EventRecurrence.Companion.MONTHLY_EVENT
-import com.timgortworst.roomy.data.model.EventRecurrence.Companion.WEEKLY_EVENT
-import com.timgortworst.roomy.data.model.firestore.EventJson
-import com.timgortworst.roomy.data.model.firestore.EventMetaDataJson
+import com.timgortworst.roomy.domain.model.Event
+import com.timgortworst.roomy.domain.model.EventMetaData
+import com.timgortworst.roomy.domain.model.EventRecurrence
+import com.timgortworst.roomy.domain.model.EventRecurrence.Companion.ANNUAL_EVENT
+import com.timgortworst.roomy.domain.model.EventRecurrence.Companion.DAILY_EVENT
+import com.timgortworst.roomy.domain.model.EventRecurrence.Companion.MONTHLY_EVENT
+import com.timgortworst.roomy.domain.model.EventRecurrence.Companion.WEEKLY_EVENT
+import com.timgortworst.roomy.domain.model.firestore.EventJson
+import com.timgortworst.roomy.domain.model.firestore.EventMetaDataJson
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 

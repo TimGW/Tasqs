@@ -4,7 +4,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
-import com.timgortworst.roomy.data.model.Household
+import com.timgortworst.roomy.domain.model.Household
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.domain.usecase.MainUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope

@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.EventRecurrence
+import com.timgortworst.roomy.domain.model.EventRecurrence
 import kotlinx.android.synthetic.main.custom_repeat_icon.view.*
 
 class RepeatIcon

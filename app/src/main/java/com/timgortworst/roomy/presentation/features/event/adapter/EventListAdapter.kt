@@ -10,8 +10,8 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventRecurrence
+import com.timgortworst.roomy.domain.model.Event
+import com.timgortworst.roomy.domain.model.EventRecurrence
 import com.timgortworst.roomy.presentation.base.customview.RepeatIcon
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter

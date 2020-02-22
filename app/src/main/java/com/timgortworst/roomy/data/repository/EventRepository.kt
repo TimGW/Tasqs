@@ -10,10 +10,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
-import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.firestore.EventJson
-import com.timgortworst.roomy.data.model.firestore.EventJson.Companion.EVENT_COLLECTION_REF
-import com.timgortworst.roomy.data.model.firestore.EventJson.Companion.EVENT_HOUSEHOLD_ID_REF
+import com.timgortworst.roomy.domain.model.Event
+import com.timgortworst.roomy.domain.model.firestore.EventJson
+import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_COLLECTION_REF
+import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.Response
 import com.timgortworst.roomy.domain.UIState
 import kotlinx.coroutines.tasks.await

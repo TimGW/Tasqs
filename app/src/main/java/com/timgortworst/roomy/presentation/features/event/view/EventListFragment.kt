@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventMetaData
+import com.timgortworst.roomy.domain.model.Event
+import com.timgortworst.roomy.domain.model.EventMetaData
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
 import com.timgortworst.roomy.presentation.features.event.adapter.ActionModeCallback
 import com.timgortworst.roomy.presentation.features.event.adapter.EventItemDetailsLookup

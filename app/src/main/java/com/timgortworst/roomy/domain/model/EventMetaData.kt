@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.data.model
+package com.timgortworst.roomy.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

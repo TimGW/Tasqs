@@ -8,10 +8,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
-import com.timgortworst.roomy.data.model.Household
-import com.timgortworst.roomy.data.model.Household.Companion.HOUSEHOLD_BLACKLIST_REF
-import com.timgortworst.roomy.data.model.Household.Companion.HOUSEHOLD_COLLECTION_REF
-import com.timgortworst.roomy.data.model.User.Companion.USER_HOUSEHOLD_ID_REF
+import com.timgortworst.roomy.domain.model.Household
+import com.timgortworst.roomy.domain.model.Household.Companion.HOUSEHOLD_BLACKLIST_REF
+import com.timgortworst.roomy.domain.model.Household.Companion.HOUSEHOLD_COLLECTION_REF
+import com.timgortworst.roomy.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import kotlinx.coroutines.tasks.await
 
 class HouseholdRepository {

@@ -16,9 +16,9 @@ import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventRecurrence
-import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.domain.model.Event
+import com.timgortworst.roomy.domain.model.EventRecurrence
+import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.domain.utils.toIntOrOne
 import com.timgortworst.roomy.presentation.base.view.BaseActivity

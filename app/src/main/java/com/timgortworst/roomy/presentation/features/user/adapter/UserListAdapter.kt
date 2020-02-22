@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.Role
-import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.domain.model.Role
+import com.timgortworst.roomy.domain.model.User
 
 /**
  * Recyclerview adapter for handling the list items in the task overview

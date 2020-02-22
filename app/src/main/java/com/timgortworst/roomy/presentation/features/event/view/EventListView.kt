@@ -2,8 +2,8 @@ package com.timgortworst.roomy.presentation.features.event.view
 
 import androidx.annotation.StringRes
 import androidx.recyclerview.selection.SelectionTracker
-import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventMetaData
+import com.timgortworst.roomy.domain.model.Event
+import com.timgortworst.roomy.domain.model.EventMetaData
 import com.timgortworst.roomy.presentation.base.view.PageStateView
 
 interface EventListView : PageStateView {

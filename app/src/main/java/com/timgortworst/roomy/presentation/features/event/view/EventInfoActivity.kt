@@ -6,8 +6,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventRecurrence
+import com.timgortworst.roomy.domain.model.Event
+import com.timgortworst.roomy.domain.model.EventRecurrence
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.event.presenter.EventInfoPresenter
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
@@ -96,14 +96,14 @@ class EventInfoActivity : BaseActivity(), EventInfoView {
     private fun formatWeekdays(daysOfWeek: List<Int>?): String {
         return daysOfWeek?.joinToString {
             when (it) {
-                0 -> getString(R.string.repeat_mo)
-                1 -> getString(R.string.repeat_tu)
-                2 -> getString(R.string.repeat_we)
-                3 -> getString(R.string.repeat_th)
-                4 -> getString(R.string.repeat_fr)
-                5 -> getString(R.string.repeat_sa)
-                6 -> getString(R.string.repeat_su)
-                else -> ""
+                1 -> getString(R.string.repeat_mo)
+                2 -> getString(R.string.repeat_tu)
+                3 -> getString(R.string.repeat_we)
+                4 -> getString(R.string.repeat_th)
+                5 -> getString(R.string.repeat_fr)
+                6 -> getString(R.string.repeat_sa)
+                7 -> getString(R.string.repeat_su)
+                else -> "?"
             }
         }.orEmpty()
     }

@@ -3,7 +3,7 @@ package com.timgortworst.roomy.presentation.features.setup.presenter
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.Role
+import com.timgortworst.roomy.domain.model.Role
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.setup.view.SetupView

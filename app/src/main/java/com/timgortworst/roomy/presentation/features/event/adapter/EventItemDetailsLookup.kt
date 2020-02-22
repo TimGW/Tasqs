@@ -3,7 +3,7 @@ package com.timgortworst.roomy.presentation.features.event.adapter
 import android.view.MotionEvent
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
-import com.timgortworst.roomy.data.model.Event
+import com.timgortworst.roomy.domain.model.Event
 
 class EventItemDetailsLookup(private val recyclerView: RecyclerView) :
         ItemDetailsLookup<String>() {

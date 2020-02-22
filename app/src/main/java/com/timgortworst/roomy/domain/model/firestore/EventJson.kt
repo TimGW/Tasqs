@@ -1,9 +1,9 @@
-package com.timgortworst.roomy.data.model.firestore
+package com.timgortworst.roomy.domain.model.firestore
 
 import com.google.firebase.firestore.PropertyName
-import com.timgortworst.roomy.data.model.Event
-import com.timgortworst.roomy.data.model.EventMetaData
-import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.domain.model.Event
+import com.timgortworst.roomy.domain.model.EventMetaData
+import com.timgortworst.roomy.domain.model.User
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 

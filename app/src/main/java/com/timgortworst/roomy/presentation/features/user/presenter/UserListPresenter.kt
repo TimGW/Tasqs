@@ -4,8 +4,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.model.Role
-import com.timgortworst.roomy.data.model.User
+import com.timgortworst.roomy.domain.model.Role
+import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.UIState
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
