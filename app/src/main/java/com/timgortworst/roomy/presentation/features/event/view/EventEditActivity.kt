@@ -3,7 +3,6 @@ package com.timgortworst.roomy.presentation.features.event.view
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -21,7 +20,6 @@ import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventRecurrence
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.utils.clearFocus
-import com.timgortworst.roomy.domain.utils.toIntOrOne
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.event.presenter.EventEditPresenter
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
