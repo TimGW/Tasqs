@@ -1,6 +1,7 @@
 package com.timgortworst.roomy.domain.utils
 
 import android.content.Context
+import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
@@ -23,10 +24,15 @@ class NotificationWorkerBuilder(private val context: Context) {
 
         val delay = max(0L, Duration.between(ZonedDateTime.now(), eventMetaData.startDateTime).toMillis())
         val inputData = buildInputData(eventId, userName, categoryName, eventMetaData.recurrence)
+        val constraints = Constraints.Builder()
+                .setRequiresBatteryNotLow(true)
+                .build()
+
         val workRequest = OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
                 .setInitialDelay(delay, TimeUnit.MILLISECONDS)
                 .addTag(eventId)
                 .setInputData(inputData)
+                .setConstraints(constraints)
                 .build()
 
         workManager.enqueue(workRequest)

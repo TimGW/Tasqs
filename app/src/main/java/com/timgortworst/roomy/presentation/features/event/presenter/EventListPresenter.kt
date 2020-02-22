@@ -59,6 +59,7 @@ class EventListPresenter(
                     view.presentAddedEvent(it.first)
                 }
                 DocumentChange.Type.MODIFIED -> {
+                    view.removePendingNotificationReminder(it.first.eventId)
                     setNotificationReminder(it.first, hasPendingWrites)
                     view.presentEditedEvent(it.first)
                 }

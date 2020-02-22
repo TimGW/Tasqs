@@ -8,6 +8,8 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.work.Constraints
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.Worker
@@ -54,9 +56,14 @@ class ReminderNotificationWorker(
             val nextEventDateTime = timeOperations.nextEvent(nowNoon, recurrence, freq, onDaysOfWeek?.toList().orEmpty())
             val initialDelay = Duration.between(nowNoon, nextEventDateTime).toMillis()
 
+            val constraints = Constraints.Builder()
+                    .setRequiresBatteryNotLow(true)
+                    .build()
+
             workManager.enqueue(OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
                     .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                     .addTag(id)
+                    .setConstraints(constraints)
                     .setInputData(inputData)
                     .build())
         }
