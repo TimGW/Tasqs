@@ -1,11 +1,11 @@
-package com.timgortworst.roomy.presentation.features.googlesignin.presenter
+package com.timgortworst.roomy.presentation.features.authentication.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
-import com.timgortworst.roomy.presentation.features.googlesignin.view.GoogleSignInView
+import com.timgortworst.roomy.presentation.features.authentication.view.GoogleSignInView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await

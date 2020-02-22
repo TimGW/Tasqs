@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.features.googlesignin.view
+package com.timgortworst.roomy.presentation.features.authentication.view
 
 interface GoogleSignInView {
     fun loginSuccessful()

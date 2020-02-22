@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.features.googlesignin.view
+package com.timgortworst.roomy.presentation.features.authentication.view
 
 import android.app.Activity
 import android.content.Intent
@@ -12,7 +12,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
-import com.timgortworst.roomy.presentation.features.googlesignin.presenter.GoogleSignInPresenter
+import com.timgortworst.roomy.presentation.features.authentication.presenter.GoogleSignInPresenter
 import kotlinx.android.synthetic.main.activity_login.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf

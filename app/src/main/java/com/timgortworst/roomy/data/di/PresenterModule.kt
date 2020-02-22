@@ -7,8 +7,8 @@ import com.timgortworst.roomy.presentation.features.event.presenter.EventListPre
 import com.timgortworst.roomy.presentation.features.event.view.EventEditView
 import com.timgortworst.roomy.presentation.features.event.view.EventInfoView
 import com.timgortworst.roomy.presentation.features.event.view.EventListView
-import com.timgortworst.roomy.presentation.features.googlesignin.presenter.GoogleSignInPresenter
-import com.timgortworst.roomy.presentation.features.googlesignin.view.GoogleSignInView
+import com.timgortworst.roomy.presentation.features.authentication.presenter.GoogleSignInPresenter
+import com.timgortworst.roomy.presentation.features.authentication.view.GoogleSignInView
 import com.timgortworst.roomy.presentation.features.main.presenter.MainPresenter
 import com.timgortworst.roomy.presentation.features.main.view.MainView
 import com.timgortworst.roomy.presentation.features.settings.presenter.SettingsPresenter

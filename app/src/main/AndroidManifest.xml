@@ -47,7 +47,7 @@
             android:launchMode="singleTop" />
         <activity android:name=".presentation.base.view.BaseActivity" />
         <activity
-            android:name=".presentation.features.googlesignin.view.GoogleSignInActivity"
+            android:name=".presentation.features.authentication.view.GoogleSignInActivity"
             android:theme="@style/Theme.MaterialComponents.NoActionBar" />
         <activity
             android:name=".presentation.features.event.view.EventEditActivity"

@@ -10,7 +10,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.domain.utils.showToast
-import com.timgortworst.roomy.presentation.features.googlesignin.view.GoogleSignInActivity
+import com.timgortworst.roomy.presentation.features.authentication.view.GoogleSignInActivity
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
 import com.timgortworst.roomy.presentation.features.setup.view.SetupActivity
 import com.timgortworst.roomy.presentation.features.splash.presenter.SplashPresenter
