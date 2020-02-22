@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.base
+package com.timgortworst.roomy.presentation
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate

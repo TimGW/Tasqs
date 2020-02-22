@@ -14,7 +14,7 @@ class SettingsPresenter (
     fun onAppVersionClick(counter: Int) {
         if (sharedPrefs.isAdsEnabled()) {
             when {
-                counter.betweenUntil(CLICKS_FOR_MESSAGE, CLICKS_FOR_EASTER_EGG) -> {
+                betweenUntil(counter, CLICKS_FOR_MESSAGE, CLICKS_FOR_EASTER_EGG) -> {
                     view.toasti(R.string.easter_egg_message, CLICKS_FOR_EASTER_EGG - counter)
                 }
                 counter == CLICKS_FOR_EASTER_EGG -> {
@@ -25,6 +25,8 @@ class SettingsPresenter (
             }
         }
     }
+
+    fun betweenUntil(comparable:Int, x: Int, y: Int): Boolean = (comparable in x until y)
 
     companion object {
         private const val CLICKS_FOR_EASTER_EGG: Int = 10

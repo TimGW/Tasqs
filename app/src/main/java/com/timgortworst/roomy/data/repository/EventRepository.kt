@@ -2,7 +2,6 @@ package com.timgortworst.roomy.data.repository
 
 import android.os.Handler
 import android.util.Log
-import android.view.animation.Animation
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
@@ -14,8 +13,8 @@ import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.firestore.EventJson
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_HOUSEHOLD_ID_REF
-import com.timgortworst.roomy.domain.Response
-import com.timgortworst.roomy.domain.UIState
+import com.timgortworst.roomy.domain.model.NetworkResponse
+import com.timgortworst.roomy.domain.model.UIState
 import kotlinx.coroutines.tasks.await
 
 class EventRepository {
@@ -61,7 +60,7 @@ class EventRepository {
 
     fun listenToEventsForHousehold(householdId: String, remoteApi: UIState<Event>) {
         val handler = Handler()
-        val runnable = Runnable { remoteApi.setState(Response.Loading) }
+        val runnable = Runnable { remoteApi.setState(NetworkResponse.Loading) }
         handler.postDelayed(runnable, android.R.integer.config_shortAnimTime.toLong())
 
         registration = eventCollectionRef
@@ -72,7 +71,7 @@ class EventRepository {
                     val result = when {
                         e != null && snapshots == null -> {
                             Log.e(TAG, "listen:error", e)
-                            Response.Error
+                            NetworkResponse.Error
                         }
                         else -> {
                             val changeList = snapshots?.documentChanges ?: return@EventListener
@@ -81,7 +80,7 @@ class EventRepository {
                                 result.add(Pair(CustomMapper.toEvent(it.document.toObject(EventJson::class.java))!!, it.type))
                             }
 
-                            Response.HasData(result, snapshots.documents.size, snapshots.metadata.hasPendingWrites())
+                            NetworkResponse.HasData(result, snapshots.documents.size, snapshots.metadata.hasPendingWrites())
                         }
                     }
                     remoteApi.setState(result)

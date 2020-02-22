@@ -3,6 +3,7 @@ package com.timgortworst.roomy.presentation.features.event.view
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -203,7 +204,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
     private fun recurrenceFromSelection(): EventRecurrence {
         if (!event_repeat_checkbox.isChecked) return EventRecurrence.SingleEvent()
-        val freq = recurrence_frequency.text.toIntOrOne()
+        val freq = recurrence_frequency.text.toString().toIntOrNull() ?: 1
 
         return when (recurrences[spinner_recurrence.selectedItemPosition]) {
             is EventRecurrence.Daily -> EventRecurrence.Daily(freq)

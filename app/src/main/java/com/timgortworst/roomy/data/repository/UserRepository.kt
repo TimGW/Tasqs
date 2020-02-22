@@ -16,8 +16,8 @@ import com.timgortworst.roomy.domain.model.User.Companion.USER_EMAIL_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_NAME_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_ROLE_REF
-import com.timgortworst.roomy.domain.Response
-import com.timgortworst.roomy.domain.UIState
+import com.timgortworst.roomy.domain.model.NetworkResponse
+import com.timgortworst.roomy.domain.model.UIState
 import kotlinx.coroutines.tasks.await
 
 class UserRepository {
@@ -68,7 +68,7 @@ class UserRepository {
         if (householdId.isNullOrEmpty()) return
 
         val handler = Handler()
-        val runnable = Runnable { apiStatus.setState(Response.Loading) }
+        val runnable = Runnable { apiStatus.setState(NetworkResponse.Loading) }
         handler.postDelayed(runnable, android.R.integer.config_shortAnimTime.toLong())
 
         registration = userCollectionRef
@@ -79,7 +79,7 @@ class UserRepository {
                     val result = when {
                         e != null && snapshots == null -> {
                             Log.e(TAG, "listen:error", e)
-                            Response.Error
+                            NetworkResponse.Error
                         }
                         else -> {
                             val documentChanges = snapshots?.documentChanges ?: return@EventListener
@@ -88,7 +88,7 @@ class UserRepository {
                             documentChanges.forEach {
                                 result.add(Pair(it.document.toObject(User::class.java), it.type))
                             }
-                            Response.HasData(result, totalDataSetSize, snapshots.metadata.hasPendingWrites())
+                            NetworkResponse.HasData(result, totalDataSetSize, snapshots.metadata.hasPendingWrites())
                         }
                     }
                     apiStatus.setState(result)
