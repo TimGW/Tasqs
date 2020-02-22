@@ -47,9 +47,6 @@ class EventListPresenter(
 
     fun deleteEvents(events: List<Event>) = scope.launch {
         eventUseCase.deleteEvents(events)
-        events.forEach {
-            view.removePendingNotificationReminder(it.eventId)
-        }
     }
 
     override fun renderSuccessfulState(changeSet: List<Pair<Event, DocumentChange.Type>>, totalDataSetSize: Int, hasPendingWrites: Boolean) {
@@ -65,7 +62,10 @@ class EventListPresenter(
                     setNotificationReminder(it.first, hasPendingWrites)
                     view.presentEditedEvent(it.first)
                 }
-                DocumentChange.Type.REMOVED -> view.presentDeletedEvent(it.first)
+                DocumentChange.Type.REMOVED -> {
+                    view.removePendingNotificationReminder(it.first.eventId)
+                    view.presentDeletedEvent(it.first)
+                }
             }
         }
     }

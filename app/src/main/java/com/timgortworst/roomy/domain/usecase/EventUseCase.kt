@@ -6,18 +6,15 @@ import com.timgortworst.roomy.data.model.EventRecurrence
 import com.timgortworst.roomy.data.model.User
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.utils.isDateInPast
-import com.timgortworst.roomy.domain.utils.plusInterval
+import com.timgortworst.roomy.domain.utils.TimeOperations
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
 import org.koin.core.KoinComponent
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
-import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 
 class EventUseCase(private val eventRepository: EventRepository,
-                   private val userRepository: UserRepository) : KoinComponent {
+                   private val userRepository: UserRepository,
+                   private val timeOperations: TimeOperations) : KoinComponent {
 
     suspend fun listenToEvents(eventListPresenter: EventListPresenter) {
         eventRepository.listenToEventsForHousehold(
@@ -67,10 +64,11 @@ class EventUseCase(private val eventRepository: EventRepository,
     }
 
     private fun calcNextEventDate(eventMetaData: EventMetaData): ZonedDateTime {
-        return if (eventMetaData.startDateTime.isDateInPast()) {
-            LocalDate.now().toZonedNoonDateTime().plusInterval(eventMetaData.recurrence)
+        return if (eventMetaData.startDateTime.isBefore(ZonedDateTime.now())) {
+            val noon = ZonedDateTime.now().with(LocalTime.NOON)
+            timeOperations.nextEvent(noon, eventMetaData.recurrence)
         } else {
-            eventMetaData.startDateTime.plusInterval(eventMetaData.recurrence)
+            timeOperations.nextEvent(eventMetaData.startDateTime, eventMetaData.recurrence)
         }
     }
 
@@ -81,6 +79,4 @@ class EventUseCase(private val eventRepository: EventRepository,
             eventRepository.createEvent(event.apply { householdId = getHouseholdIdForUser() })
         }
     }
-
-    private fun LocalDate.toZonedNoonDateTime() = LocalDateTime.of(this, LocalTime.NOON).atZone(ZoneId.systemDefault())
 }

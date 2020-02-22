@@ -8,20 +8,58 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.data.model.EventRecurrence.Companion.SINGLE_EVENT
+import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_ID_KEY
+import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_MSG_KEY
+import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_TITLE_KEY
+import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.WM_FREQ_KEY
+import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.WM_RECURRENCE_KEY
+import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.WM_WEEKDAYS_KEY
 import com.timgortworst.roomy.presentation.features.main.view.MainActivity
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.threeten.bp.Duration
+import org.threeten.bp.LocalTime
+import org.threeten.bp.ZonedDateTime
+import java.util.concurrent.TimeUnit
 
-
-class ReminderNotificationWorker(val context: Context, params: WorkerParameters) : Worker(context, params) {
+class ReminderNotificationWorker(
+        val context: Context,
+        params: WorkerParameters
+) : Worker(context, params), KoinComponent {
+    private val timeOperations: TimeOperations by inject()
+    private val workManager = WorkManager.getInstance(context)
 
     override fun doWork() = try {
-        val title = inputData.getString(NOTIFICATION_TITLE_KEY) ?: context.getString(R.string.app_name)
-        val text = inputData.getString(NOTIFICATION_MSG_KEY) ?: context.getString(R.string.notification_default_msg)
-        val id = inputData.getInt(NOTIFICATION_ID_KEY, title.plus(text).hashCode())
+        val title = inputData.getString(NOTIFICATION_TITLE_KEY)
+                ?: context.getString(R.string.app_name)
+        val text = inputData.getString(NOTIFICATION_MSG_KEY)
+                ?: context.getString(R.string.notification_default_msg)
+        val id = inputData.getString(NOTIFICATION_ID_KEY) ?: title.plus(text)
 
-        triggerNotification(id, title, text)
+        val recurrence = inputData.getString(WM_RECURRENCE_KEY) ?: SINGLE_EVENT
+        val freq = inputData.getLong(WM_FREQ_KEY, NO_REPEATING_TASK)
+        val onDaysOfWeek = inputData.getIntArray(WM_WEEKDAYS_KEY)
+
+        triggerNotification(id.hashCode(), title, text)
+
+        // set new workmanager task for repeating event
+        if (recurrence != SINGLE_EVENT) {
+            val nowNoon = ZonedDateTime.now().with(LocalTime.NOON)
+            val nextEventDateTime = timeOperations.nextEvent(nowNoon, recurrence, freq, onDaysOfWeek?.toList().orEmpty())
+            val initialDelay = Duration.between(nowNoon, nextEventDateTime).toMillis()
+
+            workManager.enqueue(OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
+                    .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+                    .addTag(id)
+                    .setInputData(inputData)
+                    .build())
+        }
 
         Result.success()
     } catch (e: Exception) {
@@ -81,12 +119,10 @@ class ReminderNotificationWorker(val context: Context, params: WorkerParameters)
     }
 
     companion object {
-        const val NOTIFICATION_ID_KEY = "NOTIFICATION_ID_KEY"
-        const val NOTIFICATION_TITLE_KEY = "NOTIFICATION_TITLE_KEY"
-        const val NOTIFICATION_MSG_KEY = "NOTIFICATION_MSG_KEY"
         const val CHANNEL_ID = "channel_01"
         const val CHANNEL_DESC = "channel for notifications to remind users to perform their tasks"
         const val NOTIFICATION_GROUP_KEY = "GROUP_1"
         const val NOTIFICATION_GROUP_ID = 1
+        const val NO_REPEATING_TASK = -1L
     }
 }

@@ -8,7 +8,7 @@ import com.timgortworst.roomy.domain.usecase.UserUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
-    factory { EventUseCase(get(), get()) }
+    factory { EventUseCase(get(), get(), get()) }
     factory { MainUseCase(get(), get()) }
     factory { SetupUseCase(get(), get(), get()) }
     factory { UserUseCase(get(), get(), get()) }

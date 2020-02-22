@@ -45,7 +45,7 @@ sealed class EventRecurrence : Parcelable {
     class Daily(override var frequency: Int = 1) : EventRecurrence()
 
     @Parcelize
-    class Weekly(override var frequency: Int = 1, val onDaysOfWeek: List<Int>? = null) : EventRecurrence()
+    class Weekly(override var frequency: Int = 1, val onDaysOfWeek: List<Int> = emptyList()) : EventRecurrence()
 
     @Parcelize
     class Monthly(override var frequency: Int = 1) : EventRecurrence()

@@ -13,6 +13,7 @@ import com.timgortworst.roomy.data.di.presenterModule
 import com.timgortworst.roomy.data.di.repositoryModule
 import com.timgortworst.roomy.data.di.useCaseModule
 import com.timgortworst.roomy.data.prefModule
+import com.timgortworst.roomy.domain.utils.timeCalcModule
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -28,7 +29,8 @@ class RoomyApp : Application(), Configuration.Provider {
             prefModule,
             repositoryModule,
             useCaseModule,
-            presenterModule)
+            presenterModule,
+            timeCalcModule)
 
     override fun onCreate() {
         super.onCreate()

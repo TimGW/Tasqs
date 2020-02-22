@@ -12,7 +12,6 @@ import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.Event
 import com.timgortworst.roomy.data.model.EventRecurrence
-import com.timgortworst.roomy.domain.utils.isDateInPast
 import com.timgortworst.roomy.presentation.base.customview.RepeatIcon
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -53,8 +52,6 @@ class EventListAdapter(
     }
 
     fun getEvent(position: Int) = eventList[position]
-
-    fun getEvent(id: String) = eventList.find { it.eventId == id }
 
     fun getPosition(eventId: String) = eventList.indexOfFirst { it.eventId == eventId }
 
@@ -102,7 +99,7 @@ class EventListAdapter(
             val dateTimeEvent = event.metaData.startDateTime
             eventDone.setOnClickListener { eventDoneClickListener.onEventDoneClicked(adapterPosition) }
 
-            dateTime.text = if (dateTimeEvent.isDateInPast()) {
+            dateTime.text = if (dateTimeEvent.isBefore(ZonedDateTime.now())) {
                 dateTime.setTextColor(ContextCompat.getColor(itemView.context, R.color.color_error))
                 dateTime.context.getString(R.string.event_overdue, formatDate(dateTimeEvent))
             } else {

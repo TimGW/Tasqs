@@ -2,15 +2,15 @@ package com.timgortworst.roomy.domain.utils
 
 import android.content.Context
 import androidx.work.Data
-import androidx.work.PeriodicWorkRequest
+import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.model.EventMetaData
+import com.timgortworst.roomy.data.model.EventRecurrence
 import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
-
 
 class NotificationWorkerBuilder(private val context: Context) {
     private val workManager = WorkManager.getInstance(context)
@@ -21,33 +21,48 @@ class NotificationWorkerBuilder(private val context: Context) {
                             categoryName: String) {
         removePendingNotificationReminder(eventId)
 
-        val upcomingEvent = eventMetaData.startDateTime
-        val futureEvent = upcomingEvent.plusInterval(eventMetaData.recurrence)
-
-        val repeatInterval = Duration.between(upcomingEvent, futureEvent).toMillis()
-        val initialDelay = max(0L, Duration.between(ZonedDateTime.now(), upcomingEvent).toMillis())
-
-        workManager.enqueue(PeriodicWorkRequest.Builder(
-                    ReminderNotificationWorker::class.java,
-                    repeatInterval,
-                    TimeUnit.MILLISECONDS)
-                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+        val delay = max(0L, Duration.between(ZonedDateTime.now(), eventMetaData.startDateTime).toMillis())
+        val inputData = buildInputData(eventId, userName, categoryName, eventMetaData.recurrence)
+        val workRequest = OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
+                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
                 .addTag(eventId)
-                .setInputData(buildInputData(eventId, userName, categoryName))
-                .build())
+                .setInputData(inputData)
+                .build()
+
+        workManager.enqueue(workRequest)
     }
 
-    private fun buildInputData(eventId: String, userName: String, categoryName: String): Data {
+    private fun buildInputData(eventId: String,
+                               userName: String,
+                               categoryName: String,
+                               eventRecurrence: EventRecurrence): Data {
+
         val title = context.getString(R.string.notification_title, userName)
         val msg = context.getString(R.string.notification_message, categoryName)
-        return Data.Builder()
-                .putInt(ReminderNotificationWorker.NOTIFICATION_ID_KEY, eventId.hashCode())
-                .putString(ReminderNotificationWorker.NOTIFICATION_TITLE_KEY, title)
-                .putString(ReminderNotificationWorker.NOTIFICATION_MSG_KEY, msg)
-                .build()
+        val dataBuilder = Data.Builder()
+                .putString(NOTIFICATION_ID_KEY, eventId)
+                .putString(NOTIFICATION_TITLE_KEY, title)
+                .putString(NOTIFICATION_MSG_KEY, msg)
+                .putLong(WM_FREQ_KEY, eventRecurrence.frequency.toLong())
+                .putString(WM_RECURRENCE_KEY, eventRecurrence.id)
+
+        (eventRecurrence as? EventRecurrence.Weekly)?.onDaysOfWeek?.let {
+            dataBuilder.putIntArray(WM_WEEKDAYS_KEY, it.toIntArray())
+        }
+
+        return dataBuilder.build()
     }
 
     fun removePendingNotificationReminder(eventId: String) {
         workManager.cancelAllWorkByTag(eventId)
+    }
+
+    companion object {
+        const val NOTIFICATION_ID_KEY = "NOTIFICATION_ID_KEY"
+        const val NOTIFICATION_TITLE_KEY = "NOTIFICATION_TITLE_KEY"
+        const val NOTIFICATION_MSG_KEY = "NOTIFICATION_MSG_KEY"
+        const val WM_FREQ_KEY = "WM_FREQ_KEY"
+        const val WM_RECURRENCE_KEY = "WM_RECURRENCE_KEY"
+        const val WM_WEEKDAYS_KEY = "WM_WEEKDAYS_KEY"
     }
 }

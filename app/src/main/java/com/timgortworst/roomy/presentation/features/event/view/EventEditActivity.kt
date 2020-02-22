@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.AdapterView.INVALID_POSITION
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.TextView
@@ -209,8 +208,9 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         return when (recurrences[spinner_recurrence.selectedItemPosition]) {
             is EventRecurrence.Daily -> EventRecurrence.Daily(freq)
             is EventRecurrence.Weekly -> {
+                val currentWeekday = ZonedDateTime.now().get(ChronoField.DAY_OF_WEEK)
                 val weekdays = getSelectedWeekdays().ifEmpty {
-                    listOf(ZonedDateTime.now().get(ChronoField.DAY_OF_WEEK) - 1)
+                    listOf(currentWeekday)
                 }
                 EventRecurrence.Weekly(freq, weekdays)
             }
@@ -225,7 +225,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 .checkedButtonIds
                 .map { buttonId ->
                     val btn = weekday_button_group.findViewById<MaterialButton>(buttonId)
-                    weekday_button_group.indexOfChild(btn)
+                    weekday_button_group.indexOfChild(btn) + 1
                 } // map checked buttons to weekday index 0..6 (mo - su)
     }
 
