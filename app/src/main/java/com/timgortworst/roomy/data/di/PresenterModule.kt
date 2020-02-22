@@ -7,10 +7,10 @@ import com.timgortworst.roomy.presentation.features.event.presenter.EventListPre
 import com.timgortworst.roomy.presentation.features.event.view.EventEditView
 import com.timgortworst.roomy.presentation.features.event.view.EventInfoView
 import com.timgortworst.roomy.presentation.features.event.view.EventListView
-import com.timgortworst.roomy.presentation.features.authentication.presenter.GoogleSignInPresenter
-import com.timgortworst.roomy.presentation.features.authentication.view.GoogleSignInView
+import com.timgortworst.roomy.presentation.features.onboarding.view.AuthCallback
 import com.timgortworst.roomy.presentation.features.main.presenter.MainPresenter
 import com.timgortworst.roomy.presentation.features.main.view.MainView
+import com.timgortworst.roomy.presentation.features.onboarding.presenter.AuthenticationPresenter
 import com.timgortworst.roomy.presentation.features.settings.presenter.SettingsPresenter
 import com.timgortworst.roomy.presentation.features.settings.view.SettingsView
 import com.timgortworst.roomy.presentation.features.setup.presenter.SetupPresenter
@@ -23,7 +23,7 @@ import org.koin.dsl.module
 
 val presenterModule = module(override = true) {
     factory { (view: SplashView) -> SplashPresenter(view, get()) }
-    factory { (view: GoogleSignInView) -> GoogleSignInPresenter(view) }
+    factory { (view: AuthCallback) -> AuthenticationPresenter(view) }
     factory { (view: SetupView) -> SetupPresenter(view, get()) }
     factory { (view: MainView) -> MainPresenter(view, get(), get()) }
     factory { (view: EventListView) -> EventListPresenter(view, get()) }

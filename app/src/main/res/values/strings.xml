@@ -23,6 +23,7 @@
     <string name="error_list_state_text">Something went wrong, try again later</string>
     <string name="error_list_state_title">Whoops!</string>
     <string name="event_next">Next: %1$s</string>
+    <string name="next">next</string>
     <string name="event_overdue">OVERDUE: %1$s</string>
     <string name="generate_categories_button_text">Generate</string>
     <string name="invite_title">Share invite link</string>
@@ -113,5 +114,12 @@
     <string name="is_repeated">is repeated every</string>
     <string name="repeat"/>
     <string name="user_picker_error">Pick a user</string>
+    <string name="skip">skip</string>
+    <string name="onboarding_title_agenda">Create your own events</string>
+    <string name="onboarding_title_connect">Invite your friends</string>
+    <string name="onboarding_title_login">Connect to begin</string>
+    <string name="onboarding_subtitle_agenda">Set reminders for recurring tasks</string>
+    <string name="onboarding_subtitle_connect">Invite friends or family to share and update your tasks</string>
+    <string name="onboarding_subtitle_login">Login now to instantly share your tasks. Je can always choose to login later</string>
 
 </resources>

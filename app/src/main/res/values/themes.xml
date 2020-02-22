@@ -17,12 +17,13 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="MyTheme.Launcher" parent="MyTheme.DayNight">
+    <style name="MyTheme.NoActionBar.Launcher">
         <item name="android:windowBackground">@drawable/launcher_background</item>
+    </style>
+
+    <style name="MyTheme.NoActionBar" parent="MyTheme.DayNight">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <!--Top level DayNight theme to be used in AndroidManifest.xml-->

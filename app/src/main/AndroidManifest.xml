@@ -24,12 +24,8 @@
         <activity
             android:name=".presentation.features.splash.view.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.MaterialComponents.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:theme="@style/MyTheme.NoActionBar.Launcher">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -47,8 +43,14 @@
             android:launchMode="singleTop" />
         <activity android:name=".presentation.base.view.BaseActivity" />
         <activity
-            android:name=".presentation.features.authentication.view.GoogleSignInActivity"
-            android:theme="@style/Theme.MaterialComponents.NoActionBar" />
+            android:name=".presentation.features.onboarding.view.OnboardingActivity"
+            android:theme="@style/MyTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".presentation.features.event.view.EventEditActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />

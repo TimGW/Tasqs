@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.features.authentication.presenter
+package com.timgortworst.roomy.presentation.features.onboarding.presenter
 
 import org.junit.Before
 import org.junit.Test
