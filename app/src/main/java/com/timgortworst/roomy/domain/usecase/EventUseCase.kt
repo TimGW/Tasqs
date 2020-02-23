@@ -1,20 +1,19 @@
 package com.timgortworst.roomy.domain.usecase
 
+import com.timgortworst.roomy.data.repository.EventRepository
+import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventMetaData
 import com.timgortworst.roomy.domain.model.EventRecurrence
 import com.timgortworst.roomy.domain.model.User
-import com.timgortworst.roomy.data.repository.EventRepository
-import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.utils.TimeOperations
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
-import org.koin.core.KoinComponent
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 
 class EventUseCase(private val eventRepository: EventRepository,
                    private val userRepository: UserRepository,
-                   private val timeOperations: TimeOperations) : KoinComponent {
+                   private val timeOperations: TimeOperations) {
 
     suspend fun listenToEvents(eventListPresenter: EventListPresenter) {
         eventRepository.listenToEventsForHousehold(

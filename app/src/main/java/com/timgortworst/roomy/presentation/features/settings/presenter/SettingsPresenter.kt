@@ -3,12 +3,11 @@ package com.timgortworst.roomy.presentation.features.settings.presenter
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.presentation.features.settings.view.SettingsView
-import org.koin.core.KoinComponent
 
-class SettingsPresenter (
+class SettingsPresenter(
         private val view: SettingsView,
         private val sharedPrefs: SharedPrefs
-) : KoinComponent {
+) {
 
     fun onAppVersionClick(counter: Int) {
         if (sharedPrefs.isAdsEnabled()) {
@@ -20,12 +19,13 @@ class SettingsPresenter (
                     sharedPrefs.setAdsEnabled(false)
                     view.toasti(R.string.easter_egg_enabled)
                 }
-                else -> { /* do nothing */ }
+                else -> { /* do nothing */
+                }
             }
         }
     }
 
-    fun betweenUntil(comparable:Int, x: Int, y: Int): Boolean = (comparable in x until y)
+    private fun betweenUntil(comparable: Int, x: Int, y: Int): Boolean = (comparable in x until y)
 
     companion object {
         private const val CLICKS_FOR_EASTER_EGG: Int = 10

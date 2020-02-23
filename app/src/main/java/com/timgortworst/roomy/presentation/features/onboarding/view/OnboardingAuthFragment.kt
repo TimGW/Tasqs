@@ -1,6 +1,7 @@
 package com.timgortworst.roomy.presentation.features.onboarding.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,15 +10,19 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.FirebaseUser
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.presentation.features.onboarding.presenter.AuthenticationPresenter
-import kotlinx.android.synthetic.main.fragment_onboarding.view.*
+import com.timgortworst.roomy.domain.utils.showToast
+import com.timgortworst.roomy.presentation.features.onboarding.presenter.OnboardingPresenter
+import kotlinx.android.synthetic.main.fragment_onboarding.view.onboarding_headline
+import kotlinx.android.synthetic.main.fragment_onboarding.view.onboarding_subtitle
+import kotlinx.android.synthetic.main.fragment_onboarding_auth.view.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class OnboardingAuthFragment : Fragment(), AuthCallback {
-    private val presenter: AuthenticationPresenter by inject { parametersOf(this) }
+    private val presenter: OnboardingPresenter by inject { parametersOf(this) }
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var parentActivity: OnboardingActivity
 
@@ -27,9 +32,7 @@ class OnboardingAuthFragment : Fragment(), AuthCallback {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_onboarding, container, false)
-        view.goolge_sign_in.visibility = View.VISIBLE
-        view.onboarding_image.setImageResource(R.drawable.onboarding_connect)
+        val view = inflater.inflate(R.layout.fragment_onboarding_auth, container, false)
         view.onboarding_headline.setText(R.string.onboarding_title_login)
         view.onboarding_subtitle.setText(R.string.onboarding_subtitle_login)
 
@@ -47,33 +50,29 @@ class OnboardingAuthFragment : Fragment(), AuthCallback {
         return view
     }
 
-    fun signInAnonymously() { presenter.signInAnonymously() }
-
-//    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        if (requestCode == RC_SIGN_IN) {
-//            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-//            try {
-//                showProgressDialog()
-//                val account = task.getResult(ApiException::class.java) as GoogleSignInAccount
-//                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-//                presenter.signInWithCredential(credential)
-//            } catch (e: ApiException) {
-//                setResult(Activity.RESULT_CANCELED, Intent())
-//                finish()
-//            }
-//        }
-//    }
-
-    override fun loginSuccessful(user: FirebaseUser) {
-//        setResult(Activity.RESULT_OK, Intent())
-//        finish()
+    fun signInAnonymously() {
+        presenter.signInAnonymously()
     }
 
-    override fun loginFailed() {
-//        setResult(Activity.RESULT_CANCELED, Intent())
-//        finish()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            val account = task.getResult(ApiException::class.java)
+            val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+
+            presenter.signInWithCredential(credential)
+        }
+    }
+
+    override fun setupSuccessful() {
+        parentActivity.goToMain()
+    }
+
+    override fun setupFailed() {
+        parentActivity.showToast(R.string.error_generic)
+        parentActivity.finish()
     }
 
     companion object {

@@ -1,15 +1,14 @@
 package com.timgortworst.roomy.domain.usecase
 
-import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.presentation.features.user.presenter.UserListPresenter
-import org.koin.core.KoinComponent
 
 class UserUseCase(private val householdRepository: HouseholdRepository,
                   private val userRepository: UserRepository,
-                  private val eventRepository: EventRepository) : KoinComponent {
+                  private val eventRepository: EventRepository) {
 
     suspend fun getCurrentUser() = userRepository.getUser()
 

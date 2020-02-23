@@ -5,14 +5,13 @@ import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventInfoView
 import kotlinx.coroutines.Dispatchers
-import org.koin.core.KoinComponent
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.*
 
-class EventInfoPresenter (
+class EventInfoPresenter(
         private val view: EventInfoView
-) : DefaultLifecycleObserver, KoinComponent {
+) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 

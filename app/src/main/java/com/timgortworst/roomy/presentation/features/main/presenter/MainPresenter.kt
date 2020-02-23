@@ -4,20 +4,19 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
-import com.timgortworst.roomy.domain.model.Household
 import com.timgortworst.roomy.data.repository.HouseholdRepository
+import com.timgortworst.roomy.domain.model.Household
 import com.timgortworst.roomy.domain.usecase.MainUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.main.view.MainView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
 
-class MainPresenter (
+class MainPresenter(
         private val view: MainView,
         private val mainUseCase: MainUseCase,
         private val sharedPrefs: SharedPrefs
-) : DefaultLifecycleObserver, HouseholdRepository.HouseholdListener, KoinComponent {
+) : DefaultLifecycleObserver, HouseholdRepository.HouseholdListener {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -57,5 +56,5 @@ class MainPresenter (
         }
     }
 
-    fun showOrHideAd()= if (sharedPrefs.isAdsEnabled()) view.showAd() else view.hideAd()
+    fun showOrHideAd() = if (sharedPrefs.isAdsEnabled()) view.showAd() else view.hideAd()
 }

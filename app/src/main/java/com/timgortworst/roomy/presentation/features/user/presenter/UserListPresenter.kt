@@ -5,19 +5,18 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Role
-import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.UIState
+import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.user.view.UserListView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
 
 class UserListPresenter(
         private val view: UserListView,
         private val userUseCase: UserUseCase
-) : UIState<User>, DefaultLifecycleObserver, KoinComponent {
+) : UIState<User>, DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {

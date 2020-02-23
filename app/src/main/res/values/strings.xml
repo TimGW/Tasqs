@@ -114,7 +114,7 @@
     <string name="is_repeated">is repeated every</string>
     <string name="repeat"/>
     <string name="user_picker_error">Pick a user</string>
-    <string name="skip">skip</string>
+    <string name="skip">not now</string>
     <string name="onboarding_title_agenda">Create your own events</string>
     <string name="onboarding_title_connect">Invite your friends</string>
     <string name="onboarding_title_login">Connect to begin</string>

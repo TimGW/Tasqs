@@ -4,10 +4,9 @@ import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
 import com.timgortworst.roomy.presentation.features.main.presenter.MainPresenter
-import org.koin.core.KoinComponent
 
 class MainUseCase(private val householdRepository: HouseholdRepository,
-                  private val userRepository: UserRepository) : KoinComponent {
+                  private val userRepository: UserRepository) {
     suspend fun listenToHousehold(mainPresenter: MainPresenter) {
         householdRepository.listenToHousehold(
                 userRepository.getHouseholdIdForUser(),

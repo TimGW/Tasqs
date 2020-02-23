@@ -3,6 +3,7 @@ package com.timgortworst.roomy.data.repository
 import android.os.Handler
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
@@ -10,52 +11,45 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
+import com.timgortworst.roomy.domain.model.NetworkResponse
+import com.timgortworst.roomy.domain.model.Role
+import com.timgortworst.roomy.domain.model.UIState
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.User.Companion.USER_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_EMAIL_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_NAME_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_ROLE_REF
-import com.timgortworst.roomy.domain.model.NetworkResponse
-import com.timgortworst.roomy.domain.model.UIState
 import kotlinx.coroutines.tasks.await
 
 class UserRepository {
-    private val userCollectionRef = FirebaseFirestore.getInstance().collection(USER_COLLECTION_REF)
+    private val db = FirebaseFirestore.getInstance()
+    private val userCollection = db.collection(USER_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 
     fun getCurrentUserId() = FirebaseAuth.getInstance().currentUser?.uid
 
-    suspend fun createUser() {
-        val currentUserID = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        val currentUserDocRef = userCollectionRef.document(currentUserID)
-
-        val userDoc = try {
-            currentUserDocRef.get().await()
-        } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage.orEmpty())
-            null
-        }
-
-        if (userDoc?.exists() == false) {
+    suspend fun createUser(householdId: String, fireBaseUser: FirebaseUser) {
+        db.runTransaction { transition ->
+            val currentUserDocRef = userCollection.document(fireBaseUser.uid)
+            val userDoc = transition.get(currentUserDocRef)
             val newUser = User(
-                    FirebaseAuth.getInstance().currentUser?.uid ?: "",
-                    FirebaseAuth.getInstance().currentUser?.displayName ?: "",
-                    FirebaseAuth.getInstance().currentUser?.email ?: ""
-            )
+                    fireBaseUser.uid,
+                    fireBaseUser.displayName ?: "",
+                    fireBaseUser.email ?: "",
+                    Role.ADMIN.name,
+                    householdId)
 
-            try {
-                currentUserDocRef.set(newUser).await()
-            } catch (e: FirebaseFirestoreException) {
-                Log.e(TAG, e.localizedMessage.orEmpty())
+            if (!userDoc.exists()) {
+                transition.set(currentUserDocRef, newUser)
             }
-        }
+        }.await()
     }
 
     suspend fun getUser(userId: String? = getCurrentUserId()): User? {
         if (userId.isNullOrEmpty()) return null
 
-        val currentUserDocRef = userCollectionRef.document(userId)
+        val currentUserDocRef = userCollection.document(userId)
         return try {
             currentUserDocRef.get().await().toObject(User::class.java)
         } catch (e: FirebaseFirestoreException) {
@@ -71,7 +65,7 @@ class UserRepository {
         val runnable = Runnable { apiStatus.setState(NetworkResponse.Loading) }
         handler.postDelayed(runnable, android.R.integer.config_shortAnimTime.toLong())
 
-        registration = userCollectionRef
+        registration = userCollection
                 .whereEqualTo(USER_HOUSEHOLD_ID_REF, householdId)
                 .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
                     handler.removeCallbacks(runnable)
@@ -99,7 +93,7 @@ class UserRepository {
         if (householdId.isNullOrEmpty()) return null
 
         return try {
-            userCollectionRef
+            userCollection
                     .whereEqualTo(USER_HOUSEHOLD_ID_REF, householdId)
                     .get()
                     .await()
@@ -113,7 +107,7 @@ class UserRepository {
     suspend fun getHouseholdIdForUser(userId: String? = getCurrentUserId()): String {
         if (userId.isNullOrEmpty()) return ""
 
-        val userDocRef = userCollectionRef.document(userId)
+        val userDocRef = userCollection.document(userId)
         val user = try {
             userDocRef.get().await().toObject(User::class.java)
         } catch (e: FirebaseFirestoreException) {
@@ -132,7 +126,7 @@ class UserRepository {
             role: String? = null
     ) {
         userId ?: return
-        val userDocRef = userCollectionRef.document(userId)
+        val userDocRef = userCollection.document(userId)
 
         val userFieldMap = mutableMapOf<String, Any>()
         name?.let { userFieldMap[USER_NAME_REF] = it }

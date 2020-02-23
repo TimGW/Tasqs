@@ -11,7 +11,6 @@ import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventEditView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.*
@@ -19,7 +18,7 @@ import java.util.*
 class EventEditPresenter(
         private val view: EventEditView,
         private val eventUseCase: EventUseCase
-) : DefaultLifecycleObserver, KoinComponent {
+) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 

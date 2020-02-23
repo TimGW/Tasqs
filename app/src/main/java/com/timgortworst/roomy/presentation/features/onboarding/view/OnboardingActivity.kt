@@ -5,17 +5,27 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
+import com.timgortworst.roomy.presentation.features.main.view.MainActivity
 import com.timgortworst.roomy.presentation.features.onboarding.adapter.OnboardingAdapter
 import kotlinx.android.synthetic.main.activity_onboarding.*
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class OnboardingActivity : BaseActivity() {
+    private val sharedPrefs: SharedPrefs by inject { parametersOf(this) }
+
+    private val onboardingFragments = listOf(
+            OnboardingFragment.newInstance(0),
+            OnboardingFragment.newInstance(1),
+            OnboardingAuthFragment.newInstance())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
 
-        val adapter = OnboardingAdapter(supportFragmentManager, lifecycle)
+        val adapter = OnboardingAdapter(this, onboardingFragments)
         view_pager.adapter = adapter
         indicator.setViewPager(view_pager)
 
@@ -23,12 +33,11 @@ class OnboardingActivity : BaseActivity() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
+                // todo migrate to presenter
                 if (position == adapter.itemCount - 1) {
                     next_button.setText(R.string.skip)
                     next_button.setOnClickListener {
-                        (supportFragmentManager.findFragmentById(
-                                adapter.getItemId(position).toInt()
-                        ) as OnboardingAuthFragment).signInAnonymously()
+                        (onboardingFragments[position] as? OnboardingAuthFragment)?.signInAnonymously()
                     }
                 } else {
                     next_button.setText(R.string.next)
@@ -48,10 +57,19 @@ class OnboardingActivity : BaseActivity() {
         }
     }
 
+    fun goToMain() {
+        sharedPrefs.setFirstLaunch(false)
+        MainActivity.start(this)
+        finish()
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data) // delegate to fragment
+    }
+
     companion object {
-        fun startForResult(originActivity: Activity, resultCode: Int) {
-            val intent = Intent(originActivity, OnboardingActivity::class.java)
-            originActivity.startActivityForResult(intent, resultCode)
+        fun start(originActivity: Activity) {
+            originActivity.startActivity(Intent(originActivity, OnboardingActivity::class.java))
         }
     }
 }

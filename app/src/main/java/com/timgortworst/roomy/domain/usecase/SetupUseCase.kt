@@ -1,22 +1,20 @@
 package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
-import com.timgortworst.roomy.domain.model.User
+import com.google.firebase.auth.FirebaseUser
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import org.koin.core.KoinComponent
+import com.timgortworst.roomy.domain.model.User
 
 class SetupUseCase(private val householdRepository: HouseholdRepository,
                    private val userRepository: UserRepository,
-                   private val eventRepository: EventRepository) : KoinComponent {
+                   private val eventRepository: EventRepository) {
 
-    suspend fun initializeHousehold(): String? {
-        return householdRepository.createHousehold()
-    }
-
-    suspend fun createUser() {
-        userRepository.createUser()
+    suspend fun initializeHousehold(fireBaseUser: FirebaseUser): String? {
+        val householdId = householdRepository.createHousehold() ?: return null
+        userRepository.createUser(householdId, fireBaseUser)
+        return householdId
     }
 
     suspend fun switchHousehold(householdId: String, role: String) {

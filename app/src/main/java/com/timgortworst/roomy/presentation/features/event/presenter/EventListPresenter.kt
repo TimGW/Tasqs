@@ -13,12 +13,11 @@ import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventListView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
 
 class EventListPresenter(
         private val view: EventListView,
         private val eventUseCase: EventUseCase
-) : UIState<Event>, DefaultLifecycleObserver, KoinComponent {
+) : UIState<Event>, DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {

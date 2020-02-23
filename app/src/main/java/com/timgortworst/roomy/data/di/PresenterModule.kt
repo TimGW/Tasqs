@@ -10,11 +10,9 @@ import com.timgortworst.roomy.presentation.features.event.view.EventListView
 import com.timgortworst.roomy.presentation.features.onboarding.view.AuthCallback
 import com.timgortworst.roomy.presentation.features.main.presenter.MainPresenter
 import com.timgortworst.roomy.presentation.features.main.view.MainView
-import com.timgortworst.roomy.presentation.features.onboarding.presenter.AuthenticationPresenter
+import com.timgortworst.roomy.presentation.features.onboarding.presenter.OnboardingPresenter
 import com.timgortworst.roomy.presentation.features.settings.presenter.SettingsPresenter
 import com.timgortworst.roomy.presentation.features.settings.view.SettingsView
-import com.timgortworst.roomy.presentation.features.setup.presenter.SetupPresenter
-import com.timgortworst.roomy.presentation.features.setup.view.SetupView
 import com.timgortworst.roomy.presentation.features.splash.presenter.SplashPresenter
 import com.timgortworst.roomy.presentation.features.splash.view.SplashView
 import com.timgortworst.roomy.presentation.features.user.presenter.UserListPresenter
@@ -22,9 +20,8 @@ import com.timgortworst.roomy.presentation.features.user.view.UserListView
 import org.koin.dsl.module
 
 val presenterModule = module(override = true) {
-    factory { (view: SplashView) -> SplashPresenter(view, get()) }
-    factory { (view: AuthCallback) -> AuthenticationPresenter(view) }
-    factory { (view: SetupView) -> SetupPresenter(view, get()) }
+    factory { (view: SplashView) -> SplashPresenter(view, get(), get()) }
+    factory { (view: AuthCallback) -> OnboardingPresenter(view, get()) }
     factory { (view: MainView) -> MainPresenter(view, get(), get()) }
     factory { (view: EventListView) -> EventListPresenter(view, get()) }
     factory { (view: EventInfoView) -> EventInfoPresenter(view) }
