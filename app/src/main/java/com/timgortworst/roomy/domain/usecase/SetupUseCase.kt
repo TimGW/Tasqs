@@ -28,7 +28,7 @@ class SetupUseCase(private val householdRepository: HouseholdRepository,
         }
     }
 
-    suspend fun getHouseholdIdForUser() = userRepository.getHouseholdIdForUser()
+    suspend fun getHouseholdIdForUser() = userRepository.getHouseholdIdForUser(userRepository.getCurrentUserId())
 
     suspend fun getUserListForHousehold(householdId: String): List<User>? {
         return userRepository.getUserListForHousehold(householdId)

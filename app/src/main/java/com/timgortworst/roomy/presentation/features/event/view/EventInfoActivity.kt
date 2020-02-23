@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Event
@@ -48,8 +49,11 @@ class EventInfoActivity : BaseActivity(), EventInfoView {
         }
 
         info_description.text = event.description
-        info_user.text = event.user.name
         info_repeated.text = buildRepeatText(event)
+        if (event.user.name.isNotBlank()) {
+            user_group.visibility = View.VISIBLE
+            info_user.text = event.user.name
+        }
         presenter.formatDate(event.metaData.startDateTime)
     }
 

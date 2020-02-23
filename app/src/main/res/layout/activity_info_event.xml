@@ -10,35 +10,15 @@
         android:padding="@dimen/keyline_4">
 
         <TextView
-            android:id="@+id/info_user_caption"
-            style="@style/TextAppearance.MyTheme.Caption"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Toegewezen aan:"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/info_user"
-            style="@style/TextAppearance.MyTheme.Body1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Tim Gortworst"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/info_user_caption" />
-
-        <TextView
             android:id="@+id/info_date_caption"
             style="@style/TextAppearance.MyTheme.Caption"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:text="volgende event:"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/info_user" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/info_date"
@@ -91,5 +71,33 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/info_description_caption" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/user_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="info_user_caption,info_user"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/info_user_caption"
+            style="@style/TextAppearance.MyTheme.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Toegewezen aan:"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/info_description" />
+
+        <TextView
+            android:id="@+id/info_user"
+            style="@style/TextAppearance.MyTheme.Body1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Tim Gortworst"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/info_user_caption" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

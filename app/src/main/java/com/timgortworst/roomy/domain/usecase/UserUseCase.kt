@@ -10,7 +10,7 @@ class UserUseCase(private val householdRepository: HouseholdRepository,
                   private val userRepository: UserRepository,
                   private val eventRepository: EventRepository) {
 
-    suspend fun getCurrentUser() = userRepository.getUser()
+    suspend fun getCurrentUser() = userRepository.getUser(userRepository.getCurrentUserId())
 
     suspend fun deleteAndBanUser(user: User) {
         removeEventsAssignedToUser(user.userId)
@@ -38,6 +38,6 @@ class UserUseCase(private val householdRepository: HouseholdRepository,
     }
 
     suspend fun listenToUsers(userListPresenter: UserListPresenter) {
-        userRepository.listenToUsersForHousehold(userRepository.getHouseholdIdForUser(), userListPresenter)
+        userRepository.listenToUsersForHousehold(userRepository.getHouseholdIdForUser(userRepository.getCurrentUserId()), userListPresenter)
     }
 }

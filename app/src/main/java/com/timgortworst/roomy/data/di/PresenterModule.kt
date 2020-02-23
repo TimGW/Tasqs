@@ -25,7 +25,7 @@ val presenterModule = module(override = true) {
     factory { (view: MainView) -> MainPresenter(view, get(), get()) }
     factory { (view: EventListView) -> EventListPresenter(view, get()) }
     factory { (view: EventInfoView) -> EventInfoPresenter(view) }
-    factory { (view: EventEditView) -> EventEditPresenter(view, get()) }
+    factory { (view: EventEditView) -> EventEditPresenter(view, get(), get()) }
     factory { (view: UserListView) -> UserListPresenter(view, get()) }
     factory { (view: SettingsView) -> SettingsPresenter(view, get()) }
 }

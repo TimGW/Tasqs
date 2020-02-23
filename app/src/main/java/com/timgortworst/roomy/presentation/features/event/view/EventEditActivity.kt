@@ -36,7 +36,7 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
 
 class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
-    private var userList: MutableList<User> = mutableListOf()
+    private var userList: List<User> = listOf()
     private val presenter: EventEditPresenter by inject {
         parametersOf(this)
     }
@@ -76,9 +76,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         setupToolbar()
         setupListeners()
 
-        userAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, mutableListOf(""))
-        spinner_users.adapter = userAdapter
-        presenter.getUsers()
+        presenter.setupEvent()
 
         recurrenceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, recurrences.map { getString(it.name) })
         spinner_recurrence.adapter = recurrenceAdapter
@@ -100,7 +98,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         val freq = event.metaData.recurrence.frequency.toString()
         recurrence_frequency.setText(freq)
         (event.metaData.recurrence as? EventRecurrence.Weekly)?.let { weekly ->
-            weekly.onDaysOfWeek?.forEach { index ->
+            weekly.onDaysOfWeek.forEach { index ->
                 weekday_button_group.check(weekday_button_group[index].id)
             }
         }
@@ -194,7 +192,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
     private fun userFromSelection(): User? {
         return if ((spinner_users.selectedItem as? String).isNullOrEmpty()) {
-            null
+            event.user
         } else {
             userList[spinner_users.selectedItemPosition]
         }
@@ -228,16 +226,21 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 } // map checked buttons to weekday index 0..6 (mo - su)
     }
 
-    override fun presentUserList(users: MutableList<User>) {
+    override fun presentUserList(users: List<User>) {
         this.userList = users
-        userAdapter.clear()
-        userAdapter.addAll(userList.map { it.name })
-        userAdapter.notifyDataSetChanged()
+
+        user_group.visibility = View.VISIBLE
+        val userAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, users.map { it.name })
+        spinner_users.adapter = userAdapter
 
         if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT)) {
-            val index = userList.indexOfFirst { it.name == event.user.name }
+            val index = users.indexOfFirst { it.name == event.user.name }
             spinner_users.setSelection(index)
         }
+    }
+
+    override fun setEventUser(user: User) {
+        event.user = user
     }
 
     override fun setPluralSpinner() {

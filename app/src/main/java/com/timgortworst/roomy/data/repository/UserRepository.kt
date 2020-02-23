@@ -46,7 +46,7 @@ class UserRepository {
         }.await()
     }
 
-    suspend fun getUser(userId: String? = getCurrentUserId()): User? {
+    suspend fun getUser(userId: String?): User? {
         if (userId.isNullOrEmpty()) return null
 
         val currentUserDocRef = userCollection.document(userId)
@@ -104,7 +104,7 @@ class UserRepository {
         }
     }
 
-    suspend fun getHouseholdIdForUser(userId: String? = getCurrentUserId()): String {
+    suspend fun getHouseholdIdForUser(userId: String?): String {
         if (userId.isNullOrEmpty()) return ""
 
         val userDocRef = userCollection.document(userId)

@@ -9,7 +9,7 @@ class MainUseCase(private val householdRepository: HouseholdRepository,
                   private val userRepository: UserRepository) {
     suspend fun listenToHousehold(mainPresenter: MainPresenter) {
         householdRepository.listenToHousehold(
-                userRepository.getHouseholdIdForUser(),
+                userRepository.getHouseholdIdForUser(userRepository.getCurrentUserId()),
                 mainPresenter
         )
     }
@@ -20,7 +20,7 @@ class MainUseCase(private val householdRepository: HouseholdRepository,
 
     fun getCurrentUserId() = userRepository.getCurrentUserId()
 
-    suspend fun getHouseholdIdForUser() = userRepository.getHouseholdIdForUser()
+    suspend fun getHouseholdIdForUser() = userRepository.getHouseholdIdForUser(userRepository.getCurrentUserId())
 
     fun buildInviteLink(householdId: String) = InviteLinkBuilder.Builder().householdId(householdId).build()
 }

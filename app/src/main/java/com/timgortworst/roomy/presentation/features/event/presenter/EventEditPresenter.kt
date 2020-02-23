@@ -7,6 +7,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.usecase.EventUseCase
+import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.event.view.EventEditView
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,8 @@ import java.util.*
 
 class EventEditPresenter(
         private val view: EventEditView,
-        private val eventUseCase: EventUseCase
+        private val eventUseCase: EventUseCase,
+        private val userUseCase: UserUseCase
 ) : DefaultLifecycleObserver {
 
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -28,9 +30,13 @@ class EventEditPresenter(
         }
     }
 
-    fun getUsers() = scope.launch {
-        val userList = eventUseCase.getUserListForCurrentHousehold()
-        view.presentUserList(userList?.toMutableList() ?: mutableListOf())
+    fun setupEvent() = scope.launch {
+        val user = userUseCase.getCurrentUser()
+        user?.let { view.setEventUser(it) }
+
+        eventUseCase.getUserListForCurrentHousehold()?.let {
+            view.presentUserList(it)
+        }
     }
 
     fun formatDate(zonedDateTime: ZonedDateTime) {

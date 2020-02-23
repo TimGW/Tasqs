@@ -97,17 +97,6 @@ class EventListAdapter(
 
         fun bind(event: Event, isActivated: Boolean) {
             val dateTimeEvent = event.metaData.startDateTime
-            eventDone.setOnClickListener { eventDoneClickListener.onEventDoneClicked(adapterPosition) }
-
-            dateTime.text = if (dateTimeEvent.isBefore(ZonedDateTime.now())) {
-                dateTime.setTextColor(ContextCompat.getColor(itemView.context, R.color.color_error))
-                dateTime.context.getString(R.string.event_overdue, formatDate(dateTimeEvent))
-            } else {
-                dateTime.setTextColor(description.currentTextColor)
-                dateTime.context.getString(R.string.event_next, formatDate(dateTimeEvent))
-            }
-
-            user.text = event.user.name.capitalize()
             description.text = event.description
 
             repeatIcon.setRepeatLabelText(event.metaData.recurrence)
@@ -116,6 +105,23 @@ class EventListAdapter(
             } else {
                 repeatIcon.visibility = View.GONE
             }
+
+            dateTime.text = formatDate(dateTimeEvent)
+            if (dateTimeEvent.isBefore(ZonedDateTime.now())) {
+                dateTime.setTextColor(ContextCompat.getColor(itemView.context, R.color.color_error))
+            } else {
+                dateTime.setTextColor(description.currentTextColor)
+            }
+
+            user.visibility = if (event.user.name.isNotBlank()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+
+            user.text = event.user.name.capitalize()
+
+            eventDone.setOnClickListener { eventDoneClickListener.onEventDoneClicked(adapterPosition) }
 
             itemView.isActivated = isActivated
         }

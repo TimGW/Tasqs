@@ -25,12 +25,19 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/event_description"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:maxLength="500"
                 android:maxLines="5"
                 android:scrollbars="vertical" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/user_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="event_users_spinner_hint,spinner_users"/>
 
         <TextView
             android:id="@+id/event_users_spinner_hint"

@@ -17,7 +17,7 @@ class EventUseCase(private val eventRepository: EventRepository,
 
     suspend fun listenToEvents(eventListPresenter: EventListPresenter) {
         eventRepository.listenToEventsForHousehold(
-                userRepository.getHouseholdIdForUser(),
+                userRepository.getHouseholdIdForUser(userRepository.getCurrentUserId()),
                 eventListPresenter)
     }
 
@@ -55,11 +55,13 @@ class EventUseCase(private val eventRepository: EventRepository,
     }
 
     suspend fun getHouseholdIdForUser(): String {
-        return userRepository.getHouseholdIdForUser()
+        return userRepository.getHouseholdIdForUser(getCurrentUserId())
     }
 
     suspend fun getUserListForCurrentHousehold(): List<User>? {
-        return userRepository.getUserListForHousehold(userRepository.getHouseholdIdForUser())
+        val houdholdId = userRepository.getHouseholdIdForUser(userRepository.getCurrentUserId())
+        val list = userRepository.getUserListForHousehold(houdholdId) ?: return null
+        return if (list.size > 1) list else null
     }
 
     private fun calcNextEventDate(eventMetaData: EventMetaData): ZonedDateTime {
