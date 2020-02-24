@@ -29,27 +29,27 @@ class SetupUseCase(private val householdRepository: HouseholdRepository,
         }
     }
 
-    suspend fun getHouseholdIdForUser() = userRepository.getHouseholdIdForUser(uId)
+    suspend fun currentHouseholdIdForCurrentUser() = userRepository.getHouseholdIdForUser(uId)
 
-    suspend fun getUserListForHousehold(householdId: String): List<User>? {
-        return userRepository.getUserListForHousehold(householdId)
+    suspend fun userListForCurrentHousehold(): List<User>? {
+        return userRepository.getUserListForHousehold(userRepository.getHouseholdIdForUser(uId))
     }
 
     suspend fun deleteHousehold(householdId: String) {
         householdRepository.deleteHousehold(householdId)
     }
 
-    suspend fun userBlackListedForHousehold(householdId: String): Boolean {
-        val household = householdRepository.getHousehold(householdId)
-        return household?.userIdBlackList?.contains(uId.orEmpty()) ?: false
-    }
+//    suspend fun userBlackListedForHousehold(householdId: String): Boolean {
+//        val household = householdRepository.getHousehold(householdId)
+//        return household?.userIdBlackList?.contains(uId.orEmpty()) ?: false
+//    }
 
-    suspend fun isHouseholdFull(referredHouseholdId: String): Boolean {
-        val userList = userRepository.getUserListForHousehold(referredHouseholdId) ?: return true
-        return userList.size >= 10
-    }
+//    suspend fun isHouseholdFull(referredHouseholdId: String): Boolean {
+//        val userList = userRepository.getUserListForHousehold(referredHouseholdId) ?: return true
+//        return userList.size >= 10
+//    }
 
     suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
-        return referredHouseholdId == getHouseholdIdForUser()
+        return referredHouseholdId == userRepository.getHouseholdIdForUser(uId)
     }
 }

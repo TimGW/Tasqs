@@ -11,7 +11,7 @@ import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventRecurrence
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.event.presenter.EventInfoPresenter
-import com.timgortworst.roomy.presentation.features.main.view.MainActivity
+import com.timgortworst.roomy.presentation.features.main.MainActivity
 import kotlinx.android.synthetic.main.activity_info_event.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf

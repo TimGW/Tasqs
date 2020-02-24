@@ -27,7 +27,7 @@
 //    @Test
 //    fun listenToCategoriesForHousehold() = testCoroutineRule.runBlockingTest {
 //        val categoryListPresenter = mock(CategoryListPresenter::class.java)
-//        val householdId = userRepository.getHouseholdIdForUser()
+//        val householdId = userRepository.currentHouseholdIdForCurrentUser()
 //
 //        useCase.listenToCategoriesForHousehold(categoryListPresenter)
 //
@@ -76,7 +76,7 @@
 //        val description = "desc"
 //        val householdId = "123456"
 //
-//        `when`(userRepository.getHouseholdIdForUser()).thenReturn(householdId)
+//        `when`(userRepository.currentHouseholdIdForCurrentUser()).thenReturn(householdId)
 //
 //        useCase.createCategory(name, description)
 //

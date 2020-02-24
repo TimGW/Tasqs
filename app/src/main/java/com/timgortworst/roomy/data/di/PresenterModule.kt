@@ -7,16 +7,16 @@ import com.timgortworst.roomy.presentation.features.event.presenter.EventListPre
 import com.timgortworst.roomy.presentation.features.event.view.EventEditView
 import com.timgortworst.roomy.presentation.features.event.view.EventInfoView
 import com.timgortworst.roomy.presentation.features.event.view.EventListView
-import com.timgortworst.roomy.presentation.features.onboarding.view.AuthCallback
-import com.timgortworst.roomy.presentation.features.main.presenter.MainPresenter
-import com.timgortworst.roomy.presentation.features.main.view.MainView
-import com.timgortworst.roomy.presentation.features.onboarding.presenter.OnboardingPresenter
-import com.timgortworst.roomy.presentation.features.settings.presenter.SettingsPresenter
-import com.timgortworst.roomy.presentation.features.settings.view.SettingsView
-import com.timgortworst.roomy.presentation.features.splash.presenter.SplashPresenter
-import com.timgortworst.roomy.presentation.features.splash.view.SplashView
-import com.timgortworst.roomy.presentation.features.user.presenter.UserListPresenter
-import com.timgortworst.roomy.presentation.features.user.view.UserListView
+import com.timgortworst.roomy.presentation.features.auth.AuthCallback
+import com.timgortworst.roomy.presentation.features.main.MainPresenter
+import com.timgortworst.roomy.presentation.features.main.MainView
+import com.timgortworst.roomy.presentation.features.onboarding.OnboardingPresenter
+import com.timgortworst.roomy.presentation.features.settings.SettingsPresenter
+import com.timgortworst.roomy.presentation.features.settings.SettingsView
+import com.timgortworst.roomy.presentation.features.splash.SplashPresenter
+import com.timgortworst.roomy.presentation.features.splash.SplashView
+import com.timgortworst.roomy.presentation.features.user.UserListPresenter
+import com.timgortworst.roomy.presentation.features.user.UserListView
 import org.koin.dsl.module
 
 val presenterModule = module(override = true) {

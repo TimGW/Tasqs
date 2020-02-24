@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
-import com.timgortworst.roomy.presentation.features.main.presenter.MainPresenter
+import com.timgortworst.roomy.presentation.features.main.MainPresenter
 
 class MainUseCase(private val householdRepository: HouseholdRepository,
                   private val userRepository: UserRepository) {

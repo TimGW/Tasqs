@@ -20,12 +20,12 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventMetaData
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
-import com.timgortworst.roomy.presentation.features.event.adapter.ActionModeCallback
-import com.timgortworst.roomy.presentation.features.event.adapter.EventItemDetailsLookup
-import com.timgortworst.roomy.presentation.features.event.adapter.EventItemKeyProvider
-import com.timgortworst.roomy.presentation.features.event.adapter.EventListAdapter
+import com.timgortworst.roomy.presentation.features.event.recyclerview.ActionModeCallback
+import com.timgortworst.roomy.presentation.features.event.recyclerview.EventItemDetailsLookup
+import com.timgortworst.roomy.presentation.features.event.recyclerview.EventItemKeyProvider
+import com.timgortworst.roomy.presentation.features.event.recyclerview.EventListAdapter
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
-import com.timgortworst.roomy.presentation.features.main.view.MainActivity
+import com.timgortworst.roomy.presentation.features.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
 import kotlinx.android.synthetic.main.layout_list_state.view.*

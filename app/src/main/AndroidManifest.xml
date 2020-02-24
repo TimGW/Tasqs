@@ -13,16 +13,16 @@
         android:theme="@style/MyTheme.DayNight"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".presentation.features.settings.view.SettingsActivity"
+            android:name=".presentation.features.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".presentation.features.main.view.MainActivity">
+            android:parentActivityName=".presentation.features.main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".presentation.features.main.view.MainActivity" />
+                android:value=".presentation.features.main.MainActivity" />
         </activity>
         <!-- Main activities -->
         <activity
-            android:name=".presentation.features.splash.view.SplashActivity"
+            android:name=".presentation.features.splash.SplashActivity"
             android:screenOrientation="portrait">
 
             <intent-filter>
@@ -40,11 +40,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.features.main.view.MainActivity"
+            android:name=".presentation.features.main.MainActivity"
             android:launchMode="singleTop" />
         <activity android:name=".presentation.base.view.BaseActivity" />
         <activity
-            android:name=".presentation.features.onboarding.view.OnboardingActivity"
+            android:name=".presentation.features.onboarding.OnboardingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyTheme.NoActionBar" />
         <activity
@@ -54,9 +54,9 @@
             android:name=".presentation.features.event.view.EventInfoActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".presentation.features.settings.view.HtmlTextActivity"
+            android:name=".presentation.features.settings.HtmlTextActivity"
             android:label=""
-            android:parentActivityName=".presentation.features.settings.view.SettingsActivity" />
+            android:parentActivityName=".presentation.features.settings.SettingsActivity" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

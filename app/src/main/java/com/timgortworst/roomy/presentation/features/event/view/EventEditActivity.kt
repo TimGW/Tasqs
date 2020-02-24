@@ -9,9 +9,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
@@ -22,7 +20,7 @@ import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.event.presenter.EventEditPresenter
-import com.timgortworst.roomy.presentation.features.main.view.MainActivity
+import com.timgortworst.roomy.presentation.features.main.MainActivity
 import kotlinx.android.synthetic.main.activity_edit_event.*
 import kotlinx.android.synthetic.main.layout_recurrence_picker.*
 import kotlinx.android.synthetic.main.layout_week_picker.*

@@ -2,7 +2,8 @@ package com.timgortworst.roomy.presentation.features.settings.presenter
 
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
-import com.timgortworst.roomy.presentation.features.settings.view.SettingsView
+import com.timgortworst.roomy.presentation.features.settings.SettingsPresenter
+import com.timgortworst.roomy.presentation.features.settings.SettingsView
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

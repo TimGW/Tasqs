@@ -21,7 +21,7 @@ import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.N
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.WM_FREQ_KEY
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.WM_RECURRENCE_KEY
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.WM_WEEKDAYS_KEY
-import com.timgortworst.roomy.presentation.features.main.view.MainActivity
+import com.timgortworst.roomy.presentation.features.main.MainActivity
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.threeten.bp.Duration
