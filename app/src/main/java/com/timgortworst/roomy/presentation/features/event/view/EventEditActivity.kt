@@ -36,18 +36,18 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
 
 class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
-    private var userList: List<User> = listOf()
     private val presenter: EventEditPresenter by inject { parametersOf(this) }
+    private var userList: List<User> = listOf()
     private lateinit var event: Event
     private lateinit var recurrenceAdapter: ArrayAdapter<String>
+    private val recurrences = listOf(
+            EventRecurrence.Daily(),
+            EventRecurrence.Weekly(),
+            EventRecurrence.Monthly(),
+            EventRecurrence.Annually())
 
     companion object {
         const val INTENT_EXTRA_EDIT_EVENT = "INTENT_EXTRA_EDIT_EVENT"
-        private val recurrences = listOf(
-                EventRecurrence.Daily(),
-                EventRecurrence.Weekly(),
-                EventRecurrence.Monthly(),
-                EventRecurrence.Annually())
 
         fun start(context: AppCompatActivity, event: Event? = null) {
             val intent = Intent(context, EventEditActivity::class.java)
