@@ -37,11 +37,8 @@ import org.threeten.bp.temporal.ChronoField
 
 class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDateSetListener {
     private var userList: List<User> = listOf()
-    private val presenter: EventEditPresenter by inject {
-        parametersOf(this)
-    }
-    private var event: Event = Event()
-    private lateinit var userAdapter: ArrayAdapter<String>
+    private val presenter: EventEditPresenter by inject { parametersOf(this) }
+    private lateinit var event: Event
     private lateinit var recurrenceAdapter: ArrayAdapter<String>
 
     companion object {
@@ -63,25 +60,30 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_event)
 
-        if (isInEditMode()) event = intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) as Event
+        event = intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) as? Event ?: Event()
 
         setupUI()
-        if (isInEditMode()) setupEditUI()
     }
-
-    private fun isInEditMode() = intent.hasExtra(INTENT_EXTRA_EDIT_EVENT) &&
-            intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) as? Event != null
 
     private fun setupUI() {
         setupToolbar()
         setupListeners()
 
-        presenter.setupEvent()
+        presenter.getUsers()
 
-        recurrenceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, recurrences.map { getString(it.name) })
+        recurrenceAdapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                recurrences.map { getString(it.name) }
+        )
         spinner_recurrence.adapter = recurrenceAdapter
 
         presenter.formatDate(event.metaData.startDateTime)
+
+        if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT) &&
+                intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) as? Event != null) {
+            setupEditUI()
+        }
     }
 
     private fun setupEditUI() {
@@ -176,25 +178,12 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 true
             }
             R.id.action_edit_done -> {
-                event.user = userFromSelection() ?: run {
-                    val errorText = spinner_users.selectedView as TextView
-                    errorText.setTextColor(ContextCompat.getColor(this, R.color.color_error))
-                    errorText.text = getString(R.string.user_picker_error)
-                    return false
-                }
+                event.user = userList[spinner_users.selectedItemPosition]
                 event.metaData.recurrence = recurrenceFromSelection()
                 presenter.editEventDone(event)
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun userFromSelection(): User? {
-        return if ((spinner_users.selectedItem as? String).isNullOrEmpty()) {
-            event.user
-        } else {
-            userList[spinner_users.selectedItemPosition]
         }
     }
 
@@ -226,21 +215,26 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 } // map checked buttons to weekday index 0..6 (mo - su)
     }
 
-    override fun presentUserList(users: List<User>) {
-        this.userList = users
+    override fun presentUserList(filteredUserList: List<User>) {
+        this.userList = filteredUserList
 
         user_group.visibility = View.VISIBLE
-        val userAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, users.map { it.name })
+
+        val userAdapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                filteredUserList.map { it.name }
+        )
         spinner_users.adapter = userAdapter
 
         if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT)) {
-            val index = users.indexOfFirst { it.name == event.user.name }
+            val index = filteredUserList.indexOf(event.user)
             spinner_users.setSelection(index)
         }
     }
 
-    override fun setEventUser(user: User) {
-        event.user = user
+    override fun presentCurrentUser(currentUser: User?) {
+        currentUser?.let { event.user = it }
     }
 
     override fun setPluralSpinner() {
@@ -272,6 +266,6 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     }
 
     override fun finishActivity() {
-        finish()
+        navigateUpTo(Intent(this, MainActivity::class.java))
     }
 }

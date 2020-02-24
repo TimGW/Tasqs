@@ -2,11 +2,13 @@ package com.timgortworst.roomy.presentation.features.main.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.domain.model.Household
 import com.timgortworst.roomy.domain.usecase.MainUseCase
+import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.main.view.MainView
 import kotlinx.coroutines.Dispatchers
@@ -15,9 +17,11 @@ import kotlinx.coroutines.launch
 class MainPresenter(
         private val view: MainView,
         private val mainUseCase: MainUseCase,
+        private val userUseCase: UserUseCase,
         private val sharedPrefs: SharedPrefs
 ) : DefaultLifecycleObserver, HouseholdRepository.HouseholdListener {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
+    private val uId = FirebaseAuth.getInstance().currentUser?.uid
 
     init {
         if (view is LifecycleOwner) {
@@ -34,7 +38,7 @@ class MainPresenter(
     }
 
     override fun householdModified(household: Household) {
-        if (household.userIdBlackList.contains(mainUseCase.getCurrentUserId())) {
+        if (household.userIdBlackList.contains(uId)) {
             view.logout()
         }
     }
@@ -57,4 +61,12 @@ class MainPresenter(
     }
 
     fun showOrHideAd() = if (sharedPrefs.isAdsEnabled()) view.showAd() else view.hideAd()
+
+    fun selectFragment() = scope.launch {
+        if (userUseCase.getCurrentUser()?.email.isNullOrBlank()) {
+            view.presentGoogleAuthFragment()
+        } else {
+            view.presentUsersFragment()
+        }
+    }
 }

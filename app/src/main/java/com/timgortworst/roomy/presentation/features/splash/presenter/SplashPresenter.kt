@@ -2,9 +2,11 @@ package com.timgortworst.roomy.presentation.features.splash.presenter
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.domain.model.Role
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
+import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.splash.view.SplashView
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +18,7 @@ class SplashPresenter(
         private val sharedPrefs: SharedPrefs
 ) : DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
+    private val uId = FirebaseAuth.getInstance().currentUser?.uid
 
     init {
         if (view is LifecycleOwner) {
@@ -25,7 +28,7 @@ class SplashPresenter(
 
     fun initializeUser(referredHouseholdId: String) = scope.launch {
         when {
-            sharedPrefs.isFirstLaunch() -> view.goToOnboardingActivity()
+            sharedPrefs.isFirstLaunch() || uId.isNullOrEmpty() -> view.goToOnboardingActivity()
             referredHouseholdId.isNotBlank() -> referredSetup(referredHouseholdId)
             else -> view.goToMainActivity()
         }

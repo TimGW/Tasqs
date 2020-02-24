@@ -52,9 +52,11 @@ class UserListPresenter(
                                        totalDataSetSize: Int,
                                        hasPendingWrites: Boolean) {
         scope.launch {
-            view.setMsgView(totalDataSetSize == 0)
-
-            changeSet.forEach {
+            changeSet.filterNot {
+                it.first.userId == userUseCase.getCurrentUser()?.userId
+            }.also {
+                view.setMsgView(it.isEmpty(), R.string.empty_list_state_title_users, R.string.empty_list_state_text_users)
+            }.forEach {
                 when (it.second) {
                     DocumentChange.Type.ADDED -> view.presentAddedUser(it.first)
                     DocumentChange.Type.MODIFIED -> view.presentEditedUser(it.first)

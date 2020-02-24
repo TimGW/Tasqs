@@ -21,7 +21,6 @@ class EventEditPresenter(
         private val eventUseCase: EventUseCase,
         private val userUseCase: UserUseCase
 ) : DefaultLifecycleObserver {
-
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -30,12 +29,15 @@ class EventEditPresenter(
         }
     }
 
-    fun setupEvent() = scope.launch {
-        val user = userUseCase.getCurrentUser()
-        user?.let { view.setEventUser(it) }
+    fun getUsers() = scope.launch {
+        eventUseCase.householdUsers()?.let { userList ->
+            val currentUser = userUseCase.getCurrentUser()
 
-        eventUseCase.getUserListForCurrentHousehold()?.let {
-            view.presentUserList(it)
+            if (userList.filterNot { it.userId == currentUser?.userId }.isEmpty()) {
+                view.presentCurrentUser(currentUser)
+            } else {
+                view.presentUserList(userList)
+            }
         }
     }
 

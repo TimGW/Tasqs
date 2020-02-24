@@ -4,6 +4,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.selection.SelectionTracker
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Event
@@ -19,6 +20,7 @@ class EventListPresenter(
         private val eventUseCase: EventUseCase
 ) : UIState<Event>, DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
+    private val uId = FirebaseAuth.getInstance().currentUser?.uid
 
     init {
         if (view is LifecycleOwner) {
@@ -39,7 +41,7 @@ class EventListPresenter(
     }
 
     private fun setNotificationReminder(event: Event, hasPendingWrites: Boolean) {
-        if (hasPendingWrites && event.user.userId == eventUseCase.getCurrentUserId()) {
+        if (hasPendingWrites && event.user.userId == uId) {
             view.enqueueNotification(event.eventId, event.metaData, event.description, event.user.name)
         }
     }

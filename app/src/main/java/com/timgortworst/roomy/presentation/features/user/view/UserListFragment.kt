@@ -25,7 +25,6 @@ import org.koin.core.parameter.parametersOf
 class UserListFragment : Fragment(), UserListView {
     private lateinit var userListAdapter: UserListAdapter
     private lateinit var activityContext: MainActivity
-    private var recyclerView: RecyclerView? = null
     private val presenter: UserListPresenter by inject {
         parametersOf(this)
     }
@@ -48,7 +47,6 @@ class UserListFragment : Fragment(), UserListView {
                 presenter.showContextMenuIfUserHasPermission(user)
             }
         })
-        recyclerView = view.recycler_view
         return view
     }
 
@@ -59,7 +57,7 @@ class UserListFragment : Fragment(), UserListView {
 
         presenter.listenToUsers()
 
-        recyclerView?.apply {
+        recycler_view?.apply {
             val linearLayoutManager = LinearLayoutManager(activityContext)
             val dividerItemDecoration = DividerItemDecoration(activityContext, linearLayoutManager.orientation)
             layoutManager = linearLayoutManager

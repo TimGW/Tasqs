@@ -27,8 +27,6 @@ class UserRepository {
     private val userCollection = db.collection(USER_COLLECTION_REF)
     private var registration: ListenerRegistration? = null
 
-    fun getCurrentUserId() = FirebaseAuth.getInstance().currentUser?.uid
-
     suspend fun createUser(householdId: String, fireBaseUser: FirebaseUser) {
         db.runTransaction { transition ->
             val currentUserDocRef = userCollection.document(fireBaseUser.uid)
@@ -119,7 +117,7 @@ class UserRepository {
     }
 
     suspend fun updateUser(
-            userId: String? = getCurrentUserId(),
+            userId: String? = FirebaseAuth.getInstance().currentUser?.uid,
             name: String? = null,
             email: String? = null,
             householdId: String? = null,

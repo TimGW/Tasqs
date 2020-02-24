@@ -7,7 +7,9 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.timgortworst.roomy.domain.usecase.EventUseCase
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
+import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.onboarding.view.AuthCallback
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +18,9 @@ import kotlinx.coroutines.tasks.await
 
 class OnboardingPresenter(
         private val view: AuthCallback,
-        private val setupUseCase: SetupUseCase
+        private val setupUseCase: SetupUseCase,
+        private val userUseCase: UserUseCase,
+        private val eventUseCase: EventUseCase
 ) : DefaultLifecycleObserver {
     private val auth = FirebaseAuth.getInstance()
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -31,8 +35,16 @@ class OnboardingPresenter(
         trySignIn { auth.signInAnonymously() }
     }
 
-    fun signInWithCredential(credential: AuthCredential) = scope.launch {
-        trySignIn { auth.signInWithCredential(credential) }
+    fun signInOrLinkCredential(credential: AuthCredential, displayName: String?) = scope.launch {
+        val prevUser = auth.currentUser
+        if (prevUser?.isAnonymous == true) {
+            val newUser = prevUser.linkWithCredential(credential).await()?.user
+            userUseCase.updateUser(displayName.orEmpty(), newUser?.email.orEmpty())
+            eventUseCase.updateEventsForUser(newUser?.uid, displayName.orEmpty(), newUser?.email.orEmpty())
+            view.setupSuccessful()
+        } else {
+            trySignIn { auth.signInWithCredential(credential) }
+        }
     }
 
     private suspend fun trySignIn(action: () -> Task<AuthResult>) {

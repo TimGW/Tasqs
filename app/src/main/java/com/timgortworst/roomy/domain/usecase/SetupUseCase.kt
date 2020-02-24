@@ -10,6 +10,7 @@ import com.timgortworst.roomy.domain.model.User
 class SetupUseCase(private val householdRepository: HouseholdRepository,
                    private val userRepository: UserRepository,
                    private val eventRepository: EventRepository) {
+    private val uId = FirebaseAuth.getInstance().currentUser?.uid
 
     suspend fun initializeHousehold(fireBaseUser: FirebaseUser): String? {
         val householdId = householdRepository.createHousehold() ?: return null
@@ -18,7 +19,7 @@ class SetupUseCase(private val householdRepository: HouseholdRepository,
     }
 
     suspend fun switchHousehold(householdId: String, role: String) {
-        val currentUserId = userRepository.getCurrentUserId() ?: return
+        val currentUserId = uId ?: return
 
         userRepository.updateUser(householdId = householdId, role = role)
 
@@ -28,7 +29,7 @@ class SetupUseCase(private val householdRepository: HouseholdRepository,
         }
     }
 
-    suspend fun getHouseholdIdForUser() = userRepository.getHouseholdIdForUser(userRepository.getCurrentUserId())
+    suspend fun getHouseholdIdForUser() = userRepository.getHouseholdIdForUser(uId)
 
     suspend fun getUserListForHousehold(householdId: String): List<User>? {
         return userRepository.getUserListForHousehold(householdId)
@@ -40,8 +41,7 @@ class SetupUseCase(private val householdRepository: HouseholdRepository,
 
     suspend fun userBlackListedForHousehold(householdId: String): Boolean {
         val household = householdRepository.getHousehold(householdId)
-        return household?.userIdBlackList?.contains(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
-                ?: false
+        return household?.userIdBlackList?.contains(uId.orEmpty()) ?: false
     }
 
     suspend fun isHouseholdFull(referredHouseholdId: String): Boolean {

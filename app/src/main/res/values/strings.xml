@@ -18,6 +18,8 @@
     <string name="edit_event_user_hint">Persoon</string>
     <string name="empty_list_state_text_events">Add your first event by clicking the + button</string>
     <string name="empty_list_state_title_events">No events</string>
+    <string name="empty_list_state_title_users">No users</string>
+    <string name="empty_list_state_text_users">Add your first friend by clicking the + button</string>
     <string name="error_connection">Please check your internet connection</string>
     <string name="error_generic">Something went wrong</string>
     <string name="error_list_state_text">Something went wrong, try again later</string>

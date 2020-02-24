@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.domain.usecase
 
+import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
@@ -9,8 +10,9 @@ import com.timgortworst.roomy.presentation.features.user.presenter.UserListPrese
 class UserUseCase(private val householdRepository: HouseholdRepository,
                   private val userRepository: UserRepository,
                   private val eventRepository: EventRepository) {
+    private val uId = FirebaseAuth.getInstance().currentUser?.uid
 
-    suspend fun getCurrentUser() = userRepository.getUser(userRepository.getCurrentUserId())
+    suspend fun getCurrentUser() = userRepository.getUser(uId)
 
     suspend fun deleteAndBanUser(user: User) {
         removeEventsAssignedToUser(user.userId)
@@ -19,6 +21,10 @@ class UserUseCase(private val householdRepository: HouseholdRepository,
 
         // clear household id from user document
         userRepository.updateUser(userId = user.userId, householdId = "")
+    }
+
+    suspend fun updateUser(name: String, email: String) {
+        userRepository.updateUser(name = name, email = email)
     }
 
     private suspend fun addUserToBlackList(userId: String) {
@@ -38,6 +44,7 @@ class UserUseCase(private val householdRepository: HouseholdRepository,
     }
 
     suspend fun listenToUsers(userListPresenter: UserListPresenter) {
-        userRepository.listenToUsersForHousehold(userRepository.getHouseholdIdForUser(userRepository.getCurrentUserId()), userListPresenter)
+        val householdId = userRepository.getHouseholdIdForUser(uId)
+        userRepository.listenToUsersForHousehold(householdId, userListPresenter)
     }
 }

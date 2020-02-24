@@ -4,11 +4,11 @@ import androidx.annotation.StringRes
 import com.timgortworst.roomy.domain.model.User
 
 interface EventEditView {
-    fun presentUserList(users: List<User>)
+    fun presentUserList(filteredUserList: List<User>)
     fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String)
     fun presentEmptyDescriptionError(@StringRes errorMessage: Int)
     fun finishActivity()
     fun setPluralSpinner()
     fun setSingularSpinner()
-    fun setEventUser(user: User)
+    fun presentCurrentUser(currentUser: User?)
 }
