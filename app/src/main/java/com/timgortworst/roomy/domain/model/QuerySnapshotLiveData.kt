@@ -23,7 +23,7 @@ class QuerySnapshotLiveData(
 
     override fun onEvent(snapshot: QuerySnapshot?, e: FirebaseFirestoreException?) {
         value = if (e != null && snapshot == null) {
-            NetworkResponse.Error(e.localizedMessage!!)
+            NetworkResponse.Error(e)
         } else {
             NetworkResponse.Success(snapshot)
         }
@@ -46,6 +46,6 @@ class QuerySnapshotLiveData(
         super.onInactive()
         handler.postDelayed(removeListener, 2000)
         listenerRemovePending = true
-        Log.i(TAG, "onInactive")
+        Log.i(TAG, "removedSnapShotListener")
     }
 }

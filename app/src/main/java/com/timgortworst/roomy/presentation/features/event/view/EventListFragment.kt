@@ -111,9 +111,10 @@ class EventListFragment : Fragment(),
     }
 
     private fun observeEvents() = eventViewModel.viewModelScope.launch {
-        eventViewModel.fetchEvents().observe(viewLifecycleOwner, Observer {
-            it?.let { presenter.handleResponse(it) }
-        })
+        eventViewModel.eventListener().observe(viewLifecycleOwner,
+            Observer { networkResponse ->
+                networkResponse?.let { presenter.handleResponse(it) }
+            })
     }
 
     private fun setupSelectionTracker(recyclerView: RecyclerView) {

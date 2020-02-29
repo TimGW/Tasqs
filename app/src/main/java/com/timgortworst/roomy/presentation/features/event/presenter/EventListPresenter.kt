@@ -31,7 +31,7 @@ class EventListPresenter(
         }
     }
 
-    fun handleResponse(networkResponse: NetworkResponse?) {
+    fun handleResponse(networkResponse: NetworkResponse) {
         when (networkResponse) {
             NetworkResponse.Loading -> {
                 view.setMsgView(View.GONE)
@@ -50,6 +50,7 @@ class EventListPresenter(
     }
 
     private fun renderSuccessfulState(snapshot: QuerySnapshot) {
+        Log.i(RoomyApp.TAG, "---------------------------------------------------------------")
         Log.i(RoomyApp.TAG, "isFromCache: ${snapshot.metadata.isFromCache}")
         Log.i(RoomyApp.TAG, "hasPendingWrites: ${snapshot.metadata.hasPendingWrites()}")
         Log.i(RoomyApp.TAG, "documentsSize: ${snapshot.documents.size}")

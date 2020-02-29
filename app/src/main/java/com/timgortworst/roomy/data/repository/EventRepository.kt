@@ -1,17 +1,15 @@
 package com.timgortworst.roomy.data.repository
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.ListenerRegistration
-import com.timgortworst.roomy.domain.model.QuerySnapshotLiveData
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.firestore.EventJson
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_HOUSEHOLD_ID_REF
-import com.timgortworst.roomy.domain.model.NetworkResponse
-import com.timgortworst.roomy.domain.utils.asSnapshotLiveData
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
@@ -55,11 +53,28 @@ class EventRepository {
         }
     }
 
-    fun getLiveEventData(householdId: String): QuerySnapshotLiveData {
+    fun getEventsForHousehold(householdId: String): Query {
         return eventCollectionRef
             .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)
-            .asSnapshotLiveData() // todo check if listener is also crap when creating in viewmodel
+//            .asSnapshotLiveData() // todo check if listener is also crap when creating in viewmodel
     }
+
+
+//    fun getEventsForHousehold(householdId: String): Task<QuerySnapshot>? {
+//        if (householdId.isBlank()) return null
+//
+//        return try {
+//            eventCollectionRef
+//                .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)
+//                .get()
+////                .await()
+////                .toObjects(EventJson::class.java)
+////                .mapNotNull { CustomMapper.toEvent(it) }
+//        } catch (e: FirebaseFirestoreException) {
+//            Log.e(TAG, e.localizedMessage.orEmpty())
+//            null
+//        }
+//    }
 
     suspend fun updateEvents(events: List<Event>) {
         try {

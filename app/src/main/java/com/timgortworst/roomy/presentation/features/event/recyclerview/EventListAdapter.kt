@@ -55,8 +55,6 @@ class EventListAdapter(
     fun getPosition(eventId: String) = eventList.indexOfFirst { it.eventId == eventId }
 
     fun addEvent(event: Event) {
-//        if (eventList.any { it.eventId == event.eventId }) return
-
         val newAddIndex = eventList.indexOfLast {
             it.metaData.startDateTime <= event.metaData.startDateTime
         } + 1
