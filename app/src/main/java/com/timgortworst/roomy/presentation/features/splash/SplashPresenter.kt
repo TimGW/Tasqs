@@ -52,12 +52,12 @@ class SplashPresenter(
 
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
         val oldHouseholdId = setupUseCase.currentHouseholdIdForCurrentUser()
-
         setupUseCase.switchHousehold(
                 householdId = newHouseholdId,
                 role = Role.NORMAL.name
         )
         setupUseCase.userListForCurrentHousehold()?.let {
+            // todo clear old events?
             if (it.isEmpty()) setupUseCase.deleteHousehold(oldHouseholdId)
         }
 

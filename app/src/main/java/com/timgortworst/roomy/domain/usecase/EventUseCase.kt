@@ -6,25 +6,20 @@ import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventMetaData
 import com.timgortworst.roomy.domain.model.EventRecurrence
-import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.QuerySnapshotLiveData
 import com.timgortworst.roomy.domain.utils.TimeOperations
-import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 
-class EventUseCase(private val eventRepository: EventRepository,
-                   private val userRepository: UserRepository,
-                   private val timeOperations: TimeOperations) {
+class EventUseCase(
+    private val eventRepository: EventRepository,
+    private val userRepository: UserRepository,
+    private val timeOperations: TimeOperations
+) {
     private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
 
-    suspend fun listenToEvents(eventListPresenter: EventListPresenter) {
-        eventRepository.listenToEventsForHousehold(
-                userRepository.getHouseholdIdForUser(currentUserId),
-                eventListPresenter)
-    }
-
-    fun detachEventListener() {
-        eventRepository.detachEventListener()
+    suspend fun getLiveEventData(): QuerySnapshotLiveData {
+        return eventRepository.getLiveEventData(userRepository.getHouseholdIdForUser(currentUserId))
     }
 
     suspend fun deleteEvents(events: List<Event>) {
@@ -52,9 +47,9 @@ class EventUseCase(private val eventRepository: EventRepository,
         eventRepository.updateEvents(events)
     }
 
-    suspend fun householdUsers()=
-            userRepository
-                .getUserListForHousehold(userRepository.getHouseholdIdForUser(currentUserId))
+    suspend fun householdUsers() =
+        userRepository
+            .getUserListForHousehold(userRepository.getHouseholdIdForUser(currentUserId))
 
     private fun calcNextEventDate(eventMetaData: EventMetaData): ZonedDateTime {
         return if (eventMetaData.startDateTime.isBefore(ZonedDateTime.now())) {
@@ -67,9 +62,13 @@ class EventUseCase(private val eventRepository: EventRepository,
 
     suspend fun createOrUpdateEvent(event: Event) {
         if (event.eventId.isNotEmpty()) {
-            eventRepository.updateEvent(event.apply { householdId = userRepository.getHouseholdIdForUser(currentUserId) })
+            eventRepository.updateEvent(event.apply {
+                householdId = userRepository.getHouseholdIdForUser(currentUserId)
+            })
         } else {
-            eventRepository.createEvent(event.apply { householdId = userRepository.getHouseholdIdForUser(currentUserId) })
+            eventRepository.createEvent(event.apply {
+                householdId = userRepository.getHouseholdIdForUser(currentUserId)
+            })
         }
     }
 

@@ -9,6 +9,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlin.coroutines.CoroutineContext
 
+@Deprecated("use viewmodelscope")
 class CoroutineLifecycleScope(private val dispatcher: CoroutineDispatcher) : CoroutineScope, LifecycleObserver {
     private val job = SupervisorJob()
 

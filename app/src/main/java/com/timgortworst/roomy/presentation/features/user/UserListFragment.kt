@@ -49,7 +49,7 @@ class UserListFragment : Fragment(), UserListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        swipe_container?.isEnabled = false
+//        swipe_container?.isEnabled = false
 
         presenter.listenToUsers()
 
@@ -93,7 +93,7 @@ class UserListFragment : Fragment(), UserListView {
     }
 
     override fun setLoadingView(isLoading: Boolean) {
-        swipe_container?.isRefreshing = isLoading
+//        swipe_container?.isRefreshing = isLoading
     }
 
     override fun setMsgView(isVisible: Boolean, title: Int?, text: Int?) {

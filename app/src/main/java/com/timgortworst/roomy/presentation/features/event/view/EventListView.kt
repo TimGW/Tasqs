@@ -4,9 +4,8 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.selection.SelectionTracker
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventMetaData
-import com.timgortworst.roomy.presentation.base.view.PageStateView
 
-interface EventListView : PageStateView {
+interface EventListView {
     fun presentAddedEvent(event: Event)
     fun presentEditedEvent(event: Event)
     fun presentDeletedEvent(event: Event)
@@ -17,4 +16,6 @@ interface EventListView : PageStateView {
     fun startActionMode(tracker: SelectionTracker<String>)
     fun stopActionMode()
     fun invalidateActionMode()
+    fun setMsgView(isVisible: Int, title: Int? = null, text: Int? = null)
+    fun presentLoadingState(isVisible: Int)
 }

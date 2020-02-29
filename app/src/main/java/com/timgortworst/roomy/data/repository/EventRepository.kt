@@ -1,25 +1,22 @@
 package com.timgortworst.roomy.data.repository
 
-import android.os.Handler
 import android.util.Log
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.EventListener
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.MetadataChanges
-import com.google.firebase.firestore.QuerySnapshot
+import com.timgortworst.roomy.domain.model.QuerySnapshotLiveData
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.firestore.EventJson
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.model.NetworkResponse
-import com.timgortworst.roomy.domain.model.UIState
+import com.timgortworst.roomy.domain.utils.asSnapshotLiveData
+import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
 class EventRepository {
     private val eventCollectionRef = FirebaseFirestore.getInstance().collection(EVENT_COLLECTION_REF)
-    private var registration: ListenerRegistration? = null
 
     suspend fun createEvent(event: Event): String? {
         val document = eventCollectionRef.document()
@@ -58,33 +55,10 @@ class EventRepository {
         }
     }
 
-    fun listenToEventsForHousehold(householdId: String, remoteApi: UIState<Event>) {
-        val handler = Handler()
-        val runnable = Runnable { remoteApi.setState(NetworkResponse.Loading) }
-        handler.postDelayed(runnable, android.R.integer.config_shortAnimTime.toLong())
-
-        registration = eventCollectionRef
-                .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)
-                .addSnapshotListener(MetadataChanges.INCLUDE, EventListener<QuerySnapshot> { snapshots, e ->
-                    handler.removeCallbacks(runnable)
-                    Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-                    val result = when {
-                        e != null && snapshots == null -> {
-                            Log.e(TAG, "listen:error", e)
-                            NetworkResponse.Error
-                        }
-                        else -> {
-                            val changeList = snapshots?.documentChanges ?: return@EventListener
-                            val result = mutableListOf<Pair<Event, DocumentChange.Type>>()
-                            changeList.forEach {
-                                result.add(Pair(CustomMapper.toEvent(it.document.toObject(EventJson::class.java))!!, it.type))
-                            }
-
-                            NetworkResponse.HasData(result, snapshots.documents.size, snapshots.metadata.hasPendingWrites())
-                        }
-                    }
-                    remoteApi.setState(result)
-                })
+    fun getLiveEventData(householdId: String): QuerySnapshotLiveData {
+        return eventCollectionRef
+            .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)
+            .asSnapshotLiveData() // todo check if listener is also crap when creating in viewmodel
     }
 
     suspend fun updateEvents(events: List<Event>) {
@@ -119,13 +93,5 @@ class EventRepository {
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
         }
-    }
-
-    fun detachEventListener() {
-        registration?.remove()
-    }
-
-    companion object {
-        private const val TAG = "EventRepository"
     }
 }

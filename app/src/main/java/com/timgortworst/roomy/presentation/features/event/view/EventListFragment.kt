@@ -9,6 +9,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -17,30 +19,36 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.databinding.FragmentRecyclerViewBinding
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventMetaData
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
+import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
 import com.timgortworst.roomy.presentation.features.event.recyclerview.ActionModeCallback
 import com.timgortworst.roomy.presentation.features.event.recyclerview.EventItemDetailsLookup
 import com.timgortworst.roomy.presentation.features.event.recyclerview.EventItemKeyProvider
 import com.timgortworst.roomy.presentation.features.event.recyclerview.EventListAdapter
-import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
+import com.timgortworst.roomy.presentation.features.event.viewmodel.EventViewModel
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import kotlinx.android.synthetic.main.fragment_recycler_view.*
-import kotlinx.android.synthetic.main.fragment_recycler_view.view.*
-import kotlinx.android.synthetic.main.layout_list_state.view.*
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionItemListener, EventListAdapter.EventDoneClickListener {
-    private lateinit var activityContext: AppCompatActivity
+class EventListFragment : Fragment(),
+    ActionModeCallback.ActionItemListener,
+    EventListAdapter.EventDoneClickListener,
+    EventListView {
+
+    private lateinit var parentActivity: AppCompatActivity
+    private var _binding: FragmentRecyclerViewBinding? = null
+    private val binding get() = _binding!!
     private lateinit var eventListAdapter: EventListAdapter
     private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
     private lateinit var tracker: SelectionTracker<String>
     private var actionMode: ActionMode? = null
-    private val presenter: EventListPresenter by inject {
-        parametersOf(this)
-    }
+    private val eventViewModel by viewModel<EventViewModel>()
+    private val presenter: EventListPresenter by inject { parametersOf(this) }
 
     companion object {
         const val EVENT_SELECTION_ID = "Event-selection"
@@ -67,45 +75,56 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        activityContext = (activity as? MainActivity) ?: return
+        parentActivity = (activity as? MainActivity) ?: return
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_recycler_view, container, false)
-        notificationWorkerBuilder = NotificationWorkerBuilder(activityContext)
-        eventListAdapter = EventListAdapter(this)
-        view.swipe_container?.isEnabled = false
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentRecyclerViewBinding.inflate(inflater, container, false)
 
-        view.recycler_view.apply {
-            val linearLayoutManager = LinearLayoutManager(activityContext)
+        notificationWorkerBuilder = NotificationWorkerBuilder(parentActivity)
+        eventListAdapter = EventListAdapter(this)
+
+        binding.recyclerView.apply {
+            val linearLayoutManager = LinearLayoutManager(parentActivity)
             layoutManager = linearLayoutManager
             adapter = eventListAdapter
             addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
             setupSelectionTracker(this)
         }
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.listenToEvents()
+
+        observeEvents()
     }
 
-    override fun onDestroy() {
-        presenter.detachEventListener()
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun observeEvents() = eventViewModel.viewModelScope.launch {
+        eventViewModel.fetchEvents().observe(viewLifecycleOwner, Observer {
+            it?.let { presenter.handleResponse(it) }
+        })
     }
 
     private fun setupSelectionTracker(recyclerView: RecyclerView) {
         tracker = SelectionTracker.Builder<String>(
-                EVENT_SELECTION_ID,
-                recyclerView,
-                EventItemKeyProvider(recyclerView.adapter),
-                EventItemDetailsLookup(recyclerView),
-                StorageStrategy.createStringStorage()
+            EVENT_SELECTION_ID,
+            recyclerView,
+            EventItemKeyProvider(recyclerView.adapter),
+            EventItemDetailsLookup(recyclerView),
+            StorageStrategy.createStringStorage()
         ).withSelectionPredicate(
-                SelectionPredicates.createSelectAnything()
+            SelectionPredicates.createSelectAnything()
         ).withOnDragInitiatedListener {
             true
         }.build()
@@ -121,11 +140,13 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     }
 
     override fun startActionMode(tracker: SelectionTracker<String>) {
-        actionMode = activityContext.startSupportActionMode(
-                ActionModeCallback(
-                        this@EventListFragment,
-                        tracker,
-                        eventListAdapter.getEvents()))
+        actionMode = parentActivity.startSupportActionMode(
+            ActionModeCallback(
+                this@EventListFragment,
+                tracker,
+                eventListAdapter.getEvents()
+            )
+        )
     }
 
     override fun stopActionMode() {
@@ -150,19 +171,21 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
     }
 
     override fun onActionItemEdit(selectedEvent: Event) {
-        EventEditActivity.start(activityContext, selectedEvent)
+        EventEditActivity.start(parentActivity, selectedEvent)
     }
 
     override fun onActionItemInfo(selectedEvent: Event) {
-        EventInfoActivity.start(activityContext, selectedEvent)
+        EventInfoActivity.start(parentActivity, selectedEvent)
     }
 
     override fun onActionItemDone(selectedEvents: List<Event>) {
-        presenter.eventsCompleted(selectedEvents)
+        eventViewModel.viewModelScope.launch {
+            eventViewModel.eventsCompleted(selectedEvents)
+        }
     }
 
     override fun presentAddedEvent(event: Event) {
-        eventListAdapter.addEvent(event) //.apply { description = showInfoToast(event) })
+        eventListAdapter.addEvent(event)
     }
 
     override fun presentEditedEvent(event: Event) {
@@ -173,47 +196,55 @@ class EventListFragment : Fragment(), EventListView, ActionModeCallback.ActionIt
         eventListAdapter.removeEvent(event)
     }
 
-    override fun setLoadingView(isLoading: Boolean) {
-        swipe_container?.isRefreshing = isLoading
+    override fun presentLoadingState(isVisible: Int) {
+        binding.progress.visibility = isVisible
     }
 
-    override fun setMsgView(isVisible: Boolean, title: Int?, text: Int?) {
-        layout_list_state?.apply {
-            title?.let { this.state_title.text = activityContext.getString(it) }
-            text?.let { this.state_message.text = activityContext.getString(it) }
-            visibility = if (isVisible) View.VISIBLE else View.GONE
+    override fun setMsgView(isVisible: Int, title: Int?, text: Int?) {
+        binding.layoutListState.apply {
+            title?.let { this.stateTitle.text = parentActivity.getString(it) }
+            text?.let { this.stateMessage.text = parentActivity.getString(it) }
+            root.visibility = isVisible
         }
     }
 
     override fun showToast(stringRes: Int) {
-        Toast.makeText(activityContext, getString(stringRes), Toast.LENGTH_LONG).show()
+        Toast.makeText(parentActivity, getString(stringRes), Toast.LENGTH_LONG).show()
     }
 
     override fun onEventDoneClicked(position: Int) {
-        presenter.eventsCompleted(listOf(eventListAdapter.getEvent(position)))
+        eventViewModel.viewModelScope.launch {
+            eventViewModel.eventsCompleted(listOf(eventListAdapter.getEvent(position)))
+        }
     }
 
-    override fun enqueueNotification(eventId: String,
-                                     eventMetaData: EventMetaData,
-                                     eventName: String,
-                                     userName: String) {
+    override fun enqueueNotification(
+        eventId: String,
+        eventMetaData: EventMetaData,
+        eventName: String,
+        userName: String
+    ) {
         notificationWorkerBuilder.enqueueNotification(
-                eventId,
-                eventMetaData,
-                userName,
-                eventName)
+            eventId,
+            eventMetaData,
+            userName,
+            eventName
+        )
     }
 
     override fun removePendingNotificationReminder(eventId: String) {
         notificationWorkerBuilder.removePendingNotificationReminder(eventId)
     }
 
-    private fun askForDeleteDialog(events: List<Event>, mode: ActionMode) = MaterialAlertDialogBuilder(activityContext)
+    private fun askForDeleteDialog(events: List<Event>, mode: ActionMode) =
+        MaterialAlertDialogBuilder(parentActivity)
             .setTitle(R.string.delete)
             .setMessage(getString(R.string.delete_dialog_text, events.size))
             .setIcon(R.drawable.ic_delete)
             .setPositiveButton(R.string.delete) { dialog, _ ->
-                presenter.deleteEvents(events)
+                eventViewModel.viewModelScope.launch {
+                    eventViewModel.deleteEvents(events)
+                }
                 mode.finish()
                 dialog.dismiss()
             }

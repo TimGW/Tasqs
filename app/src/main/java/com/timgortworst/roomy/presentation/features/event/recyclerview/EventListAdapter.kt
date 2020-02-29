@@ -24,10 +24,9 @@ import java.util.*
  * Handles clicks by expanding items to show a more detailed description of the category
  */
 class EventListAdapter(
-        private val eventDoneClickListener: EventDoneClickListener
+        private val eventDoneClickListener: EventDoneClickListener,
+        private val eventList: MutableList<Event> = mutableListOf()
 ) : RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
-
-    private var eventList: MutableList<Event> = mutableListOf()
     var tracker: SelectionTracker<String>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -56,6 +55,8 @@ class EventListAdapter(
     fun getPosition(eventId: String) = eventList.indexOfFirst { it.eventId == eventId }
 
     fun addEvent(event: Event) {
+//        if (eventList.any { it.eventId == event.eventId }) return
+
         val newAddIndex = eventList.indexOfLast {
             it.metaData.startDateTime <= event.metaData.startDateTime
         } + 1

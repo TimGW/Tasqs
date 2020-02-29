@@ -45,6 +45,6 @@ class UserUseCase(private val householdRepository: HouseholdRepository,
 
     suspend fun listenToUsers(userListPresenter: UserListPresenter) {
         val householdId = userRepository.getHouseholdIdForUser(uId)
-        userRepository.listenToUsersForHousehold(householdId, userListPresenter)
+        userRepository.listenToUsersForHousehold(householdId, null)
     }
 }

@@ -13,7 +13,6 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.domain.model.NetworkResponse
 import com.timgortworst.roomy.domain.model.Role
-import com.timgortworst.roomy.domain.model.UIState
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.User.Companion.USER_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_EMAIL_REF
@@ -56,35 +55,35 @@ class UserRepository {
         }
     }
 
-    fun listenToUsersForHousehold(householdId: String?, apiStatus: UIState<User>) {
-        if (householdId.isNullOrEmpty()) return
-
-        val handler = Handler()
-        val runnable = Runnable { apiStatus.setState(NetworkResponse.Loading) }
-        handler.postDelayed(runnable, android.R.integer.config_shortAnimTime.toLong())
-
-        registration = userCollection
-                .whereEqualTo(USER_HOUSEHOLD_ID_REF, householdId)
-                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
-                    handler.removeCallbacks(runnable)
-                    Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
-                    val result = when {
-                        e != null && snapshots == null -> {
-                            Log.e(TAG, "listen:error", e)
-                            NetworkResponse.Error
-                        }
-                        else -> {
-                            val documentChanges = snapshots?.documentChanges ?: return@EventListener
-                            val totalDataSetSize = snapshots.documents.size
-                            val result = mutableListOf<Pair<User, DocumentChange.Type>>()
-                            documentChanges.forEach {
-                                result.add(Pair(it.document.toObject(User::class.java), it.type))
-                            }
-                            NetworkResponse.HasData(result, totalDataSetSize, snapshots.metadata.hasPendingWrites())
-                        }
-                    }
-                    apiStatus.setState(result)
-                })
+    fun listenToUsersForHousehold(householdId: String?, apiStatus: NetworkResponse?) {
+//        if (householdId.isNullOrEmpty()) return
+//
+//        val handler = Handler()
+//        val runnable = Runnable { apiStatus.setState(NetworkResponse.Loading) }
+//        handler.postDelayed(runnable, android.R.integer.config_shortAnimTime.toLong())
+//
+//        registration = userCollection
+//                .whereEqualTo(USER_HOUSEHOLD_ID_REF, householdId)
+//                .addSnapshotListener(EventListener<QuerySnapshot> { snapshots, e ->
+//                    handler.removeCallbacks(runnable)
+//                    Log.d(TAG, "isFromCache: ${snapshots?.metadata?.isFromCache}")
+//                    val result = when {
+//                        e != null && snapshots == null -> {
+//                            Log.e(TAG, "listen:error", e)
+//                            NetworkResponse.Error
+//                        }
+//                        else -> {
+//                            val documentChanges = snapshots?.documentChanges ?: return@EventListener
+//                            val totalDataSetSize = snapshots.documents.size
+//                            val result = mutableListOf<Pair<User, DocumentChange.Type>>()
+//                            documentChanges.forEach {
+//                                result.add(Pair(it.document.toObject(User::class.java), it.type))
+//                            }
+//                            NetworkResponse.HasData(result, totalDataSetSize, snapshots.metadata.hasPendingWrites())
+//                        }
+//                    }
+//                    apiStatus.setState(result)
+//                })
     }
 
     suspend fun getUserListForHousehold(householdId: String?): List<User>? {

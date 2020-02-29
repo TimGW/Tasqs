@@ -5,7 +5,6 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.firestore.DocumentChange
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Role
-import com.timgortworst.roomy.domain.model.UIState
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
@@ -15,7 +14,7 @@ import kotlinx.coroutines.launch
 class UserListPresenter(
         private val view: UserListView,
         private val userUseCase: UserUseCase
-) : UIState<User>, DefaultLifecycleObserver {
+) : DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
 
     init {
@@ -47,7 +46,7 @@ class UserListPresenter(
         }
     }
 
-    override fun renderSuccessfulState(changeSet: List<Pair<User, DocumentChange.Type>>,
+    fun renderSuccessfulState(changeSet: List<Pair<User, DocumentChange.Type>>,
                                        totalDataSetSize: Int,
                                        hasPendingWrites: Boolean) {
         scope.launch {
@@ -65,11 +64,11 @@ class UserListPresenter(
         }
     }
 
-    override fun renderLoadingState(isLoading: Boolean) {
+    fun renderLoadingState(isLoading: Boolean) {
         view.setLoadingView(isLoading)
     }
 
-    override fun renderErrorState(hasError: Boolean) {
+    fun renderErrorState(hasError: Boolean) {
         view.setMsgView(hasError, R.string.error_list_state_title, R.string.error_list_state_text)
     }
 }

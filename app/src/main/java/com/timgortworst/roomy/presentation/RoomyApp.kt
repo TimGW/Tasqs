@@ -12,6 +12,7 @@ import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.data.di.presenterModule
 import com.timgortworst.roomy.data.di.repositoryModule
 import com.timgortworst.roomy.data.di.useCaseModule
+import com.timgortworst.roomy.data.di.viewModelModule
 import com.timgortworst.roomy.data.prefModule
 import com.timgortworst.roomy.domain.utils.timeCalcModule
 import org.koin.android.ext.android.inject
@@ -30,7 +31,8 @@ class RoomyApp : Application(), Configuration.Provider {
             repositoryModule,
             useCaseModule,
             presenterModule,
-            timeCalcModule)
+            timeCalcModule,
+            viewModelModule)
 
     override fun onCreate() {
         super.onCreate()
@@ -66,5 +68,9 @@ class RoomyApp : Application(), Configuration.Provider {
              builder.setMinimumLoggingLevel(android.util.Log.INFO)
         }
         return builder.build()
+    }
+
+    companion object {
+        const val TAG = "RoomyApp"
     }
 }
