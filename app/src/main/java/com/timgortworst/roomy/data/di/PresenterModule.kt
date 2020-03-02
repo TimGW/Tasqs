@@ -15,8 +15,6 @@ import com.timgortworst.roomy.presentation.features.settings.SettingsPresenter
 import com.timgortworst.roomy.presentation.features.settings.SettingsView
 import com.timgortworst.roomy.presentation.features.splash.SplashPresenter
 import com.timgortworst.roomy.presentation.features.splash.SplashView
-import com.timgortworst.roomy.presentation.features.user.UserListPresenter
-import com.timgortworst.roomy.presentation.features.user.UserListView
 import org.koin.dsl.module
 
 val presenterModule = module(override = true) {
@@ -26,6 +24,5 @@ val presenterModule = module(override = true) {
     factory { (view: EventListView) -> EventListPresenter(view) }
     factory { (view: EventInfoView) -> EventInfoPresenter(view) }
     factory { (view: EventEditView) -> EventEditPresenter(view, get(),get()) }
-    factory { (view: UserListView) -> UserListPresenter(view, get()) }
     factory { (view: SettingsView) -> SettingsPresenter(view, get()) }
 }

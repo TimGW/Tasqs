@@ -15,7 +15,6 @@ import kotlinx.coroutines.tasks.await
 
 class EventRepository {
     private val eventCollectionRef = FirebaseFirestore.getInstance().collection(EVENT_COLLECTION_REF)
-//    val chatMessagesLiveData = MutableLiveData<NetworkResponse>()
 
     suspend fun createEvent(event: Event): String? {
         val document = eventCollectionRef.document()
@@ -57,7 +56,7 @@ class EventRepository {
     fun getEventsForHousehold(householdId: String): Query {
         return eventCollectionRef
             .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)
-//            .orderBy(EVENT_DATE_TIME_REF, Query.Direction.ASCENDING)
+//            .orderBy(EVENT_DATE_TIME_REF, Query.Direction.ASCENDING) todo sort by date
     }
 
     suspend fun updateEvents(events: List<Event>) {

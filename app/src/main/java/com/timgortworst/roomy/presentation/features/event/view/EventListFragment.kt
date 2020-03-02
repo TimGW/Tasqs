@@ -21,7 +21,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentRecyclerViewBinding
 import com.timgortworst.roomy.domain.model.Event
@@ -46,7 +45,7 @@ class EventListFragment : Fragment(),
     private lateinit var parentActivity: AppCompatActivity
     private var _binding: FragmentRecyclerViewBinding? = null
     private val binding get() = _binding!!
-    private lateinit var eventListAdapter: FirestoreAdapter
+    private lateinit var eventListEventAdapter: FirestoreEventAdapter
     private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
     private var tracker: SelectionTracker<String>? = null
     private var actionMode: ActionMode? = null
@@ -90,7 +89,7 @@ class EventListFragment : Fragment(),
     ): View? {
         _binding = FragmentRecyclerViewBinding.inflate(inflater, container, false)
 
-        bindRecyclerview()
+        setupRecyclerView()
         createFireStoreRvAdapter()
 
         notificationWorkerBuilder = NotificationWorkerBuilder(parentActivity)
@@ -107,11 +106,11 @@ class EventListFragment : Fragment(),
         .observe(viewLifecycleOwner, Observer { networkResponse ->
             networkResponse?.let {
                 val options = it.setLifecycleOwner(this).build()
-                eventListAdapter.updateOptions(options)
+                eventListEventAdapter.updateOptions(options)
             }
         })
 
-    private fun bindRecyclerview() {
+    private fun setupRecyclerView() {
         // todo remove this placeholder options
         val query = FirebaseFirestore.getInstance().collection(EventJson.EVENT_COLLECTION_REF).whereEqualTo(
             EventJson.EVENT_HOUSEHOLD_ID_REF, "")
@@ -120,11 +119,11 @@ class EventListFragment : Fragment(),
             .setQuery(query, Event::class.java)
             .build()
 
-        eventListAdapter = FirestoreAdapter(this, this, defaultOptions)
+        eventListEventAdapter = FirestoreEventAdapter(this, this, defaultOptions)
         binding.recyclerView.apply {
             val linearLayoutManager = LinearLayoutManager(parentActivity)
             layoutManager = linearLayoutManager
-            adapter = eventListAdapter
+            adapter = eventListEventAdapter
             addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
             setupSelectionTracker(this)
         }
@@ -143,7 +142,7 @@ class EventListFragment : Fragment(),
             true
         }.build()
 
-        eventListAdapter.tracker = tracker
+        eventListEventAdapter.tracker = tracker
 
         tracker?.addObserver(object : SelectionTracker.SelectionObserver<String>() {
             override fun onSelectionChanged() {
@@ -158,7 +157,7 @@ class EventListFragment : Fragment(),
             ActionModeCallback(
                 this@EventListFragment,
                 tracker,
-                eventListAdapter.snapshots
+                eventListEventAdapter.snapshots
             )
         )
     }

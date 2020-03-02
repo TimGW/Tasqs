@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class EventItemKeyProvider(private val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>?) : ItemKeyProvider<String>(SCOPE_MAPPED) {
 
-    override fun getKey(position: Int) = (adapter as FirestoreAdapter).getItem(position).eventId
+    override fun getKey(position: Int) = (adapter as FirestoreEventAdapter).getItem(position).eventId
 
-    override fun getPosition(eventId: String) = (adapter as FirestoreAdapter).getPosition(eventId)
+    override fun getPosition(eventId: String) = (adapter as FirestoreEventAdapter).getPosition(eventId)
 }

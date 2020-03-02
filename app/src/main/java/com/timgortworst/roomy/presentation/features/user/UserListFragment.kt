@@ -6,24 +6,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.databinding.FragmentRecyclerViewBinding
 import com.timgortworst.roomy.domain.model.BottomMenuItem
 import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.firestore.EventJson
 import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
+import com.timgortworst.roomy.presentation.features.event.recyclerview.AdapterStateListener
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_recycler_view.*
 import kotlinx.android.synthetic.main.layout_list_state.view.*
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
+import kotlinx.coroutines.launch
+import org.koin.android.viewmodel.ext.android.viewModel
 
-class UserListFragment : Fragment(), UserListView {
-    private lateinit var userListAdapter: UserListAdapter
-    private lateinit var activityContext: MainActivity
-    private val presenter: UserListPresenter by inject {
-        parametersOf(this)
-    }
+class UserListFragment : Fragment(), AdapterStateListener,
+    FirestoreUserAdapter.OnUserLongClickListener {
+    private lateinit var userListAdapter: FirestoreUserAdapter
+    private lateinit var parentActivity: MainActivity
+    private var _binding: FragmentRecyclerViewBinding? = null
+    private val binding get() = _binding!!
+    private val userViewModel by viewModel<UserViewModel>()
 
     companion object {
         fun newInstance(): UserListFragment {
@@ -33,74 +42,95 @@ class UserListFragment : Fragment(), UserListView {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        activityContext = (activity as? MainActivity) ?: return
+        parentActivity = (activity as? MainActivity) ?: return
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_recycler_view, container, false)
-        userListAdapter = UserListAdapter(object : UserListAdapter.OnUserLongClickListener {
-            override fun onUserClick(user: User) {
-                presenter.showContextMenuIfUserHasPermission(user)
-            }
-        })
-        return view
+        _binding = FragmentRecyclerViewBinding.inflate(inflater, container, false)
+
+        setupRecyclerView()
+        createFireStoreRvAdapter()
+
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    fun setupRecyclerView() {
+        // todo remove this placeholder options
+        val query = FirebaseFirestore.getInstance().collection(EventJson.EVENT_COLLECTION_REF).whereEqualTo(
+            EventJson.EVENT_HOUSEHOLD_ID_REF, "")
+        val defaultOptions = FirestoreRecyclerOptions
+            .Builder<User>()
+            .setQuery(query, User::class.java)
+            .build()
 
-//        swipe_container?.isEnabled = false
+        userListAdapter = FirestoreUserAdapter(this, this, defaultOptions)
 
-        presenter.listenToUsers()
-
-        recycler_view?.apply {
-            val linearLayoutManager = LinearLayoutManager(activityContext)
-            val dividerItemDecoration = DividerItemDecoration(activityContext, linearLayoutManager.orientation)
+        binding.recyclerView.apply {
+            val linearLayoutManager = LinearLayoutManager(parentActivity)
+            val dividerItemDecoration = DividerItemDecoration(parentActivity, linearLayoutManager.orientation)
             layoutManager = linearLayoutManager
             adapter = userListAdapter
             addItemDecoration(dividerItemDecoration)
         }
+
+    }
+    private fun createFireStoreRvAdapter() = userViewModel.fetchFireStoreRecyclerOptionsBuilder()
+        .observe(viewLifecycleOwner, Observer { networkResponse ->
+            networkResponse?.let {
+                val options = it.setLifecycleOwner(this).build()
+                userListAdapter.updateOptions(options)
+            }
+        })
+
+    override fun onEmptyState(isVisible: Int) {
+        setMsgView(
+            isVisible,
+            R.string.empty_list_state_title_users,
+            R.string.empty_list_state_text_users
+        )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.detachUserListener()
+    override fun onLoadingState(isVisible: Int) {
+        binding.progress.visibility = isVisible
     }
 
-    override fun showContextMenuFor(user: User) {
+    override fun onErrorState(isVisible: Int, e: FirebaseFirestoreException?) {
+        // todo handle specific errors
+        setMsgView(
+            isVisible,
+            R.string.error_list_state_title,
+            R.string.error_list_state_text
+        )
+    }
+
+    private fun setMsgView(isVisible: Int, title: Int?, text: Int?) {
+        layout_list_state?.apply {
+            title?.let { this.state_title.text = parentActivity.getString(it) }
+            text?.let { this.state_message.text = parentActivity.getString(it) }
+            visibility = isVisible
+        }
+    }
+
+    override fun onUserClick(user: User) {
+       userViewModel.userAdminObservable(user).observe(viewLifecycleOwner, Observer {
+           it?.let {
+               showContextMenuFor(user)
+           }
+       })
+    }
+
+    private fun showContextMenuFor(user: User) {
         var bottomSheetMenu: BottomSheetMenu? = null
 
         val items = arrayListOf(
-                BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                    presenter.deleteUser(user)
-                    bottomSheetMenu?.dismiss()
+            BottomMenuItem(R.drawable.ic_delete, "Delete") {
+                userViewModel.viewModelScope.launch {
+                    userViewModel.deleteUser(user)
                 }
+                bottomSheetMenu?.dismiss()
+            }
         )
-        bottomSheetMenu = BottomSheetMenu(activityContext, user.name, items)
+        bottomSheetMenu = BottomSheetMenu(parentActivity, user.name, items)
         bottomSheetMenu.show()
-    }
-
-    override fun presentEditedUser(user: User) {
-        userListAdapter.updateUser(user)
-    }
-
-    override fun presentDeletedUser(user: User) {
-        userListAdapter.removeUser(user)
-    }
-
-    override fun presentAddedUser(user: User) {
-        userListAdapter.addUser(user)
-    }
-
-    override fun setLoadingView(isLoading: Boolean) {
-//        swipe_container?.isRefreshing = isLoading
-    }
-
-    override fun setMsgView(isVisible: Boolean, title: Int?, text: Int?) {
-        layout_list_state?.apply {
-            title?.let { this.state_title.text = activityContext.getString(it) }
-            text?.let { this.state_message.text = activityContext.getString(it) }
-            visibility = if (isVisible) View.VISIBLE else View.GONE
-        }
     }
 }

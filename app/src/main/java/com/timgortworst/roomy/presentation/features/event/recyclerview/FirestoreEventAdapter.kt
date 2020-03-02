@@ -12,7 +12,6 @@ import com.firebase.ui.common.ChangeEventType
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.button.MaterialButton
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
@@ -30,11 +29,11 @@ import java.util.*
  *
  * Handles clicks by expanding items to show a more detailed description of the category
  */
-class FirestoreAdapter(
+class FirestoreEventAdapter(
         private val eventDoneClickListener: EventDoneClickListener,
         private val adapterStateListener: AdapterStateListener,
         options: FirestoreRecyclerOptions<Event>
-) : FirestoreRecyclerAdapter<Event, FirestoreAdapter.ViewHolder>(options) {
+) : FirestoreRecyclerAdapter<Event, FirestoreEventAdapter.ViewHolder>(options) {
     var tracker: SelectionTracker<String>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

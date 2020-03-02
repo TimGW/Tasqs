@@ -1,11 +1,11 @@
 package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.Query
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.User
-import com.timgortworst.roomy.presentation.features.user.UserListPresenter
 
 class UserUseCase(private val householdRepository: HouseholdRepository,
                   private val userRepository: UserRepository,
@@ -39,12 +39,7 @@ class UserUseCase(private val householdRepository: HouseholdRepository,
         }
     }
 
-    fun detachUserListener() {
-        userRepository.detachUserListener()
-    }
-
-    suspend fun listenToUsers(userListPresenter: UserListPresenter) {
-        val householdId = userRepository.getHouseholdIdForUser(uId)
-        userRepository.listenToUsersForHousehold(householdId, null)
+    suspend fun getUsersForHousehold(): Query {
+        return userRepository.getUsersForHousehold(userRepository.getHouseholdIdForUser(uId))
     }
 }
