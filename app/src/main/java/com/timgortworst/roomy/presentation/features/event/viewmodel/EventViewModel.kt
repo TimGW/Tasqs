@@ -11,23 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class EventViewModel(private val eventUseCase: EventUseCase) : ViewModel() {
-//    val mediatorLiveData = MediatorLiveData<NetworkResponse>()
-//    private var networkResponse : LiveData<NetworkResponse> = fetchEvents()
-//
-//    init {
-//        mediatorLiveData.addSource(networkResponse) { mediatorLiveData.value = it }
-//    }
-//
-//    private fun fetchEvents() = liveData {
-//        emit(NetworkResponse.Loading)
-//        emitSource(eventUseCase.eventsForHouseholdQuery().asSnapshotLiveData())
-//    }
-//
-//    fun refresh() {
-//        mediatorLiveData.removeSource(networkResponse)
-//        networkResponse = fetchEvents()
-//        mediatorLiveData.addSource(networkResponse) { mediatorLiveData.value = it }
-//    }
 
     suspend fun eventsCompleted(events: List<Event>) = withContext(Dispatchers.IO) {
         eventUseCase.eventsCompleted(events)

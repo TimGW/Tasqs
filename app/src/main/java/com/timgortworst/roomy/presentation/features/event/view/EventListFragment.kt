@@ -17,12 +17,16 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentRecyclerViewBinding
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventMetaData
+import com.timgortworst.roomy.domain.model.firestore.EventJson
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
 import com.timgortworst.roomy.presentation.features.event.recyclerview.*
@@ -44,7 +48,7 @@ class EventListFragment : Fragment(),
     private val binding get() = _binding!!
     private lateinit var eventListAdapter: FirestoreAdapter
     private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
-    private lateinit var tracker: SelectionTracker<String>
+    private var tracker: SelectionTracker<String>? = null
     private var actionMode: ActionMode? = null
     private val eventViewModel by viewModel<EventViewModel>()
     private val presenter: EventListPresenter by inject { parametersOf(this) }
@@ -60,15 +64,17 @@ class EventListFragment : Fragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        savedInstanceState?.let {
-            tracker.onRestoreInstanceState(it)
-            if (it.getBoolean(IS_IN_ACTION_MODE_KEY, false)) startActionMode(tracker)
+        savedInstanceState?.let { bundle ->
+            tracker?.let {
+                it.onRestoreInstanceState(bundle)
+                if (bundle.getBoolean(IS_IN_ACTION_MODE_KEY, false)) startActionMode(it)
+            }
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        tracker.onSaveInstanceState(outState)
+        tracker?.onSaveInstanceState(outState)
         outState.putBoolean(IS_IN_ACTION_MODE_KEY, actionMode != null)
     }
 
@@ -84,6 +90,7 @@ class EventListFragment : Fragment(),
     ): View? {
         _binding = FragmentRecyclerViewBinding.inflate(inflater, container, false)
 
+        bindRecyclerview()
         createFireStoreRvAdapter()
 
         notificationWorkerBuilder = NotificationWorkerBuilder(parentActivity)
@@ -98,14 +105,22 @@ class EventListFragment : Fragment(),
 
     private fun createFireStoreRvAdapter() = eventViewModel.fetchFireStoreRecyclerOptionsBuilder()
         .observe(viewLifecycleOwner, Observer { networkResponse ->
-        networkResponse?.let {
-            val options = it.setLifecycleOwner(this).build()
-            eventListAdapter = FirestoreAdapter(this,this, options)
-            bindRecyclerview()
-        }
-    })
+            networkResponse?.let {
+                val options = it.setLifecycleOwner(this).build()
+                eventListAdapter.updateOptions(options)
+            }
+        })
 
     private fun bindRecyclerview() {
+        // todo remove this placeholder options
+        val query = FirebaseFirestore.getInstance().collection(EventJson.EVENT_COLLECTION_REF).whereEqualTo(
+            EventJson.EVENT_HOUSEHOLD_ID_REF, "")
+        val defaultOptions = FirestoreRecyclerOptions
+            .Builder<Event>()
+            .setQuery(query, Event::class.java)
+            .build()
+
+        eventListAdapter = FirestoreAdapter(this, this, defaultOptions)
         binding.recyclerView.apply {
             val linearLayoutManager = LinearLayoutManager(parentActivity)
             layoutManager = linearLayoutManager
@@ -130,10 +145,10 @@ class EventListFragment : Fragment(),
 
         eventListAdapter.tracker = tracker
 
-        tracker.addObserver(object : SelectionTracker.SelectionObserver<String>() {
+        tracker?.addObserver(object : SelectionTracker.SelectionObserver<String>() {
             override fun onSelectionChanged() {
                 super.onSelectionChanged()
-                presenter.onSelectionChanged(tracker, actionMode)
+                tracker?.let { presenter.onSelectionChanged(it, actionMode) }
             }
         })
     }

@@ -8,9 +8,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.common.ChangeEventType
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Event
@@ -49,6 +52,27 @@ class FirestoreAdapter(
 
     override fun getItemCount(): Int  = snapshots.size
 
+    override fun onChildChanged(
+        type: ChangeEventType,
+        snapshot: DocumentSnapshot,
+        newIndex: Int,
+        oldIndex: Int
+    ) {
+        super.onChildChanged(type, snapshot, newIndex, oldIndex)
+        when (type) { //todo set notifications
+            ChangeEventType.ADDED -> {
+//                setNotificationReminder(event, snapshot.metadata.hasPendingWrites())
+            }
+            ChangeEventType.CHANGED -> {
+//                view.removePendingNotificationReminder(event.eventId)
+//                setNotificationReminder(event, snapshot.metadata.hasPendingWrites())
+            }
+            ChangeEventType.REMOVED -> {
+//                view.removePendingNotificationReminder(event.eventId)
+            }
+            ChangeEventType.MOVED -> { }
+        }
+    }
     override fun onDataChanged() {
         adapterStateListener.onLoadingState(View.GONE)
         adapterStateListener.onErrorState(View.GONE)
@@ -63,6 +87,17 @@ class FirestoreAdapter(
     fun getPosition(eventId: String): Int {
         return snapshots.indexOfFirst { it.eventId == eventId }
     }
+
+//    private fun setNotificationReminder(event: Event, hasPendingWrites: Boolean) {
+//        if (hasPendingWrites && event.user.userId == uId) {
+//            callback.enqueueNotification(
+//                event.eventId,
+//                event.metaData,
+//                event.description,
+//                event.user.name
+//            )
+//        }
+//    }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val user: TextView = view.findViewById(R.id.event_user)

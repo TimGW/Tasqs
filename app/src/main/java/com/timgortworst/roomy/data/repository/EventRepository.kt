@@ -1,12 +1,10 @@
 package com.timgortworst.roomy.data.repository
 
 import android.util.Log
-import androidx.lifecycle.liveData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.timgortworst.roomy.domain.model.Event
-import com.timgortworst.roomy.domain.model.NetworkResponse
 import com.timgortworst.roomy.domain.model.firestore.EventJson
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_HOUSEHOLD_ID_REF
