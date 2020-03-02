@@ -1,10 +1,12 @@
 package com.timgortworst.roomy.domain.model
 
 import android.os.Parcelable
+import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.firestore.PropertyName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
+@IgnoreExtraProperties
 data class Household(
         @JvmField @PropertyName(HOUSEHOLD_ID_REF) var householdId: String = "",
         @JvmField @PropertyName(HOUSEHOLD_BLACKLIST_REF) var userIdBlackList: MutableList<String> = mutableListOf()

@@ -2,16 +2,11 @@ package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
-import com.timgortworst.roomy.data.repository.CustomMapper
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.model.Event
-import com.timgortworst.roomy.domain.model.EventMetaData
-import com.timgortworst.roomy.domain.model.EventRecurrence
-import com.timgortworst.roomy.domain.model.NetworkResponse
-import com.timgortworst.roomy.domain.model.firestore.EventJson
+import com.timgortworst.roomy.domain.model.*
 import com.timgortworst.roomy.domain.utils.TimeOperations
-import kotlinx.coroutines.tasks.await
+import com.timgortworst.roomy.domain.utils.asSnapshotLiveData
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 
@@ -25,23 +20,6 @@ class EventUseCase(
     suspend fun eventsForHouseholdQuery(): Query {
         return eventRepository.getEventsForHousehold(userRepository.getHouseholdIdForUser(currentUserId))
     }
-//    suspend fun eventsForHouseholdQuery(): NetworkResponse {
-//        val task = eventRepository.getEventsForHousehold(
-//            userRepository.getHouseholdIdForUser(currentUserId)
-//        )
-//        return try {
-//            NetworkResponse.Success(
-//                task
-//                    ?.await()
-//                    ?.toObjects(EventJson::class.java)
-//                    ?.mapNotNull {
-//                        CustomMapper.toEvent(it)
-//                    }
-//            )
-//        } catch (ex: Exception) {
-//            NetworkResponse.Error(ex)
-//        }
-//    }
 
     suspend fun deleteEvents(events: List<Event>) {
         eventRepository.deleteEvents(events)

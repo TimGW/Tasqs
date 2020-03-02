@@ -9,6 +9,6 @@ class EventItemDetailsLookup(private val recyclerView: RecyclerView) :
 
     override fun getItemDetails(motionEvent: MotionEvent): ItemDetails<String>? =
         recyclerView.findChildViewUnder(motionEvent.x, motionEvent.y)?.let {
-            return (recyclerView.getChildViewHolder(it) as? EventListAdapter.ViewHolder)?.getItemDetails()
+            return (recyclerView.getChildViewHolder(it) as? FirestoreAdapter.ViewHolder)?.getItemDetails()
         }
 }

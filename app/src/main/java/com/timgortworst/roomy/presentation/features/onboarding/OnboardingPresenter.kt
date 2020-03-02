@@ -51,7 +51,7 @@ class OnboardingPresenter(
         try {
             val fireBaseUser = action.invoke().await().user
             if (fireBaseUser != null) {
-                setupHousehold(fireBaseUser)
+                setupHousehold(fireBaseUser) // todo skip when cache is cleared and user logs in again
             } else {
                 view.setupFailed()
             }

@@ -18,16 +18,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentRecyclerViewBinding
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventMetaData
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
 import com.timgortworst.roomy.presentation.features.event.presenter.EventListPresenter
-import com.timgortworst.roomy.presentation.features.event.recyclerview.ActionModeCallback
-import com.timgortworst.roomy.presentation.features.event.recyclerview.EventItemDetailsLookup
-import com.timgortworst.roomy.presentation.features.event.recyclerview.EventItemKeyProvider
-import com.timgortworst.roomy.presentation.features.event.recyclerview.EventListAdapter
+import com.timgortworst.roomy.presentation.features.event.recyclerview.*
 import com.timgortworst.roomy.presentation.features.event.viewmodel.EventViewModel
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import kotlinx.coroutines.launch
@@ -37,13 +35,14 @@ import org.koin.core.parameter.parametersOf
 
 class EventListFragment : Fragment(),
     ActionModeCallback.ActionItemListener,
-    EventListAdapter.EventDoneClickListener,
-    EventListView {
+    EventDoneClickListener,
+    EventListView,
+    AdapterStateListener {
 
     private lateinit var parentActivity: AppCompatActivity
     private var _binding: FragmentRecyclerViewBinding? = null
     private val binding get() = _binding!!
-    private lateinit var eventListAdapter: EventListAdapter
+    private lateinit var eventListAdapter: FirestoreAdapter
     private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
     private lateinit var tracker: SelectionTracker<String>
     private var actionMode: ActionMode? = null
@@ -85,24 +84,11 @@ class EventListFragment : Fragment(),
     ): View? {
         _binding = FragmentRecyclerViewBinding.inflate(inflater, container, false)
 
-        notificationWorkerBuilder = NotificationWorkerBuilder(parentActivity)
-        eventListAdapter = EventListAdapter(this)
+        createFireStoreRvAdapter()
 
-        binding.recyclerView.apply {
-            val linearLayoutManager = LinearLayoutManager(parentActivity)
-            layoutManager = linearLayoutManager
-            adapter = eventListAdapter
-            addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
-            setupSelectionTracker(this)
-        }
+        notificationWorkerBuilder = NotificationWorkerBuilder(parentActivity)
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        observeEvents()
     }
 
     override fun onDestroyView() {
@@ -110,11 +96,23 @@ class EventListFragment : Fragment(),
         _binding = null
     }
 
-    private fun observeEvents() = eventViewModel.viewModelScope.launch {
-        eventViewModel.eventListener().observe(viewLifecycleOwner,
-            Observer { networkResponse ->
-                networkResponse?.let { presenter.handleResponse(it) }
-            })
+    private fun createFireStoreRvAdapter() = eventViewModel.fetchFireStoreRecyclerOptionsBuilder()
+        .observe(viewLifecycleOwner, Observer { networkResponse ->
+        networkResponse?.let {
+            val options = it.setLifecycleOwner(this).build()
+            eventListAdapter = FirestoreAdapter(this,this, options)
+            bindRecyclerview()
+        }
+    })
+
+    private fun bindRecyclerview() {
+        binding.recyclerView.apply {
+            val linearLayoutManager = LinearLayoutManager(parentActivity)
+            layoutManager = linearLayoutManager
+            adapter = eventListAdapter
+            addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
+            setupSelectionTracker(this)
+        }
     }
 
     private fun setupSelectionTracker(recyclerView: RecyclerView) {
@@ -145,7 +143,7 @@ class EventListFragment : Fragment(),
             ActionModeCallback(
                 this@EventListFragment,
                 tracker,
-                eventListAdapter.getEvents()
+                eventListAdapter.snapshots
             )
         )
     }
@@ -185,37 +183,16 @@ class EventListFragment : Fragment(),
         }
     }
 
-    override fun presentAddedEvent(event: Event) {
-        eventListAdapter.addEvent(event)
-    }
-
-    override fun presentEditedEvent(event: Event) {
-        eventListAdapter.updateEvent(event)
-    }
-
-    override fun presentDeletedEvent(event: Event) {
-        eventListAdapter.removeEvent(event)
-    }
-
-    override fun presentLoadingState(isVisible: Int) {
-        binding.progress.visibility = isVisible
-    }
-
-    override fun setMsgView(isVisible: Int, title: Int?, text: Int?) {
-        binding.layoutListState.apply {
-            title?.let { this.stateTitle.text = parentActivity.getString(it) }
-            text?.let { this.stateMessage.text = parentActivity.getString(it) }
-            root.visibility = isVisible
-        }
-    }
-
     override fun showToast(stringRes: Int) {
         Toast.makeText(parentActivity, getString(stringRes), Toast.LENGTH_LONG).show()
     }
 
-    override fun onEventDoneClicked(position: Int) {
+    override fun onEventDoneClicked(
+        event: Event,
+        position: Int
+    ) {
         eventViewModel.viewModelScope.launch {
-            eventViewModel.eventsCompleted(listOf(eventListAdapter.getEvent(position)))
+            eventViewModel.eventsCompleted(listOf(event))
         }
     }
 
@@ -251,4 +228,34 @@ class EventListFragment : Fragment(),
             }
             .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .create()
+
+
+    private fun setMsgView(isVisible: Int, title: Int?, text: Int?) {
+        binding.layoutListState.apply {
+            title?.let { this.stateTitle.text = parentActivity.getString(it) }
+            text?.let { this.stateMessage.text = parentActivity.getString(it) }
+            root.visibility = isVisible
+        }
+    }
+
+    override fun onEmptyState(isVisible: Int) {
+        setMsgView(
+            isVisible,
+            R.string.empty_list_state_title_events,
+            R.string.empty_list_state_text_events
+        )
+    }
+
+    override fun onLoadingState(isVisible: Int) {
+        binding.progress.visibility = isVisible
+    }
+
+    override fun onErrorState(isVisible: Int, e: FirebaseFirestoreException?) {
+        // todo handle specific errors
+        setMsgView(
+            isVisible,
+            R.string.error_list_state_title,
+            R.string.error_list_state_text
+        )
+    }
 }

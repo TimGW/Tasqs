@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.presentation.features.event.presenter
 
-import android.util.Log
 import android.view.View
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.selection.SelectionTracker
@@ -12,7 +11,6 @@ import com.timgortworst.roomy.data.repository.CustomMapper
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.NetworkResponse
 import com.timgortworst.roomy.domain.model.firestore.EventJson
-import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.features.event.view.EventListView
 
 class EventListPresenter(
@@ -34,27 +32,22 @@ class EventListPresenter(
     fun handleResponse(networkResponse: NetworkResponse) {
         when (networkResponse) {
             NetworkResponse.Loading -> {
-                view.setMsgView(View.GONE)
-                view.presentLoadingState(View.VISIBLE)
+//                view.setMsgView(View.GONE)
+//                view.presentLoadingState(View.VISIBLE)
             }
             is NetworkResponse.Error -> {
-                view.presentLoadingState(View.GONE)
-                view.setMsgView(View.VISIBLE, R.string.error_list_state_title, R.string.error_list_state_text)
+//                view.presentLoadingState(View.GONE)
+//                view.setMsgView(View.VISIBLE, R.string.error_list_state_title, R.string.error_list_state_text)
             }
             is NetworkResponse.Success -> {
-                view.presentLoadingState(View.GONE)
-                view.setMsgView(View.GONE)
+//                view.presentLoadingState(View.GONE)
+//                view.setMsgView(View.GONE)
                 networkResponse.data?.let { renderSuccessfulState(it) }
             }
         }
     }
 
     private fun renderSuccessfulState(snapshot: QuerySnapshot) {
-        Log.i(RoomyApp.TAG, "---------------------------------------------------------------")
-        Log.i(RoomyApp.TAG, "isFromCache: ${snapshot.metadata.isFromCache}")
-        Log.i(RoomyApp.TAG, "hasPendingWrites: ${snapshot.metadata.hasPendingWrites()}")
-        Log.i(RoomyApp.TAG, "documentsSize: ${snapshot.documents.size}")
-        Log.i(RoomyApp.TAG, "documentChangesSize: ${snapshot.documentChanges.size}")
         if (snapshot.isEmpty) {
             renderEmptyState()
         } else {
@@ -63,11 +56,11 @@ class EventListPresenter(
     }
 
     private fun renderEmptyState() {
-        view.setMsgView(
-            View.VISIBLE,
-            R.string.empty_list_state_title_events,
-            R.string.empty_list_state_text_events
-        )
+//        view.setMsgView(
+//            View.VISIBLE,
+//            R.string.empty_list_state_title_events,
+//            R.string.empty_list_state_text_events
+//        )
     }
 
     private fun renderDataState(snapshot: QuerySnapshot) {
@@ -77,16 +70,16 @@ class EventListPresenter(
             when (it.type) {
                 DocumentChange.Type.ADDED -> {
                     setNotificationReminder(event, snapshot.metadata.hasPendingWrites())
-                    view.presentAddedEvent(event)
+//                    view.presentAddedEvent(event)
                 }
                 DocumentChange.Type.MODIFIED -> {
                     view.removePendingNotificationReminder(event.eventId)
                     setNotificationReminder(event, snapshot.metadata.hasPendingWrites())
-                    view.presentEditedEvent(event)
+//                    view.presentEditedEvent(event)
                 }
                 DocumentChange.Type.REMOVED -> {
                     view.removePendingNotificationReminder(event.eventId)
-                    view.presentDeletedEvent(event)
+//                    view.presentDeletedEvent(event)
                 }
             }
         }

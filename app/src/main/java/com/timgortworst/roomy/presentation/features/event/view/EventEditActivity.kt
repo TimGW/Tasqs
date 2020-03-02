@@ -39,10 +39,11 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
     private lateinit var event: Event
     private lateinit var recurrenceAdapter: ArrayAdapter<String>
     private val recurrences = listOf(
-            EventRecurrence.Daily(),
-            EventRecurrence.Weekly(),
-            EventRecurrence.Monthly(),
-            EventRecurrence.Annually())
+        EventRecurrence.Daily(),
+        EventRecurrence.Weekly(),
+        EventRecurrence.Monthly(),
+        EventRecurrence.Annually()
+    )
 
     companion object {
         const val INTENT_EXTRA_EDIT_EVENT = "INTENT_EXTRA_EDIT_EVENT"
@@ -70,16 +71,17 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         presenter.getUsers()
 
         recurrenceAdapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                recurrences.map { getString(it.name) }
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            recurrences.map { getString(it.name) }
         )
         spinner_recurrence.adapter = recurrenceAdapter
 
         presenter.formatDate(event.metaData.startDateTime)
 
         if (intent.hasExtra(INTENT_EXTRA_EDIT_EVENT) &&
-                intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) as? Event != null) {
+            intent.getParcelableExtra(INTENT_EXTRA_EDIT_EVENT) as? Event != null
+        ) {
             setupEditUI()
         }
     }
@@ -121,10 +123,10 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         agenda_item_date_input.setOnClickListener {
             event.metaData.startDateTime.let {
                 DatePickerDialog(
-                        this, this,
-                        it.year,
-                        it.monthValue - 1,
-                        it.dayOfMonth
+                    this, this,
+                    it.year,
+                    it.monthValue - 1,
+                    it.dayOfMonth
                 ).apply {
                     datePicker.minDate = Instant.now().toEpochMilli()
                     show()
@@ -149,10 +151,16 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         }
 
         spinner_recurrence.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 clearFocus(recurrence_frequency)
                 clearFocus(event_description)
-                recurrence_week_picker?.visibility = if (recurrenceFromSelection() is EventRecurrence.Weekly) View.VISIBLE else View.GONE
+                recurrence_week_picker?.visibility =
+                    if (recurrenceFromSelection() is EventRecurrence.Weekly) View.VISIBLE else View.GONE
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -176,9 +184,10 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
                 true
             }
             R.id.action_edit_done -> {
-                event.user = userList[spinner_users.selectedItemPosition]
+                val result = spinner_users.selectedItemPosition
+                if (result != -1) event.user = userList[result]
                 event.metaData.recurrence = recurrenceFromSelection()
-                presenter.editEventDone(event)
+                presenter.editEventDone(event) //todo update eventlist
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -206,11 +215,11 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
     private fun getSelectedWeekdays(): List<Int> {
         return weekday_button_group
-                .checkedButtonIds
-                .map { buttonId ->
-                    val btn = weekday_button_group.findViewById<MaterialButton>(buttonId)
-                    weekday_button_group.indexOfChild(btn) + 1
-                } // map checked buttons to weekday index 0..6 (mo - su)
+            .checkedButtonIds
+            .map { buttonId ->
+                val btn = weekday_button_group.findViewById<MaterialButton>(buttonId)
+                weekday_button_group.indexOfChild(btn) + 1
+            } // map checked buttons to weekday index 0..6 (mo - su)
     }
 
     override fun presentUserList(filteredUserList: List<User>) {
@@ -219,9 +228,9 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
         user_group.visibility = View.VISIBLE
 
         val userAdapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                filteredUserList.map { it.name }
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            filteredUserList.map { it.name }
         )
         spinner_users.adapter = userAdapter
 
@@ -249,13 +258,18 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         event.metaData.startDateTime = ZonedDateTime.of(
-                LocalDate.of(year, month + 1, dayOfMonth),
-                LocalTime.NOON,
-                ZoneId.systemDefault())
+            LocalDate.of(year, month + 1, dayOfMonth),
+            LocalTime.NOON,
+            ZoneId.systemDefault()
+        )
         presenter.formatDate(event.metaData.startDateTime)
     }
 
-    override fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String) {
+    override fun presentFormattedDate(
+        formattedDayOfMonth: String,
+        formattedMonth: String?,
+        formattedYear: String
+    ) {
         agenda_item_date_input.setText("$formattedDayOfMonth $formattedMonth $formattedYear")
     }
 

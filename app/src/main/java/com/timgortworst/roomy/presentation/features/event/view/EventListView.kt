@@ -6,9 +6,6 @@ import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventMetaData
 
 interface EventListView {
-    fun presentAddedEvent(event: Event)
-    fun presentEditedEvent(event: Event)
-    fun presentDeletedEvent(event: Event)
     fun removePendingNotificationReminder(eventId: String)
     fun enqueueNotification(eventId: String, eventMetaData: EventMetaData, eventName: String, userName: String)
     fun showToast(@StringRes stringRes: Int)
@@ -16,6 +13,4 @@ interface EventListView {
     fun startActionMode(tracker: SelectionTracker<String>)
     fun stopActionMode()
     fun invalidateActionMode()
-    fun setMsgView(isVisible: Int, title: Int? = null, text: Int? = null)
-    fun presentLoadingState(isVisible: Int)
 }

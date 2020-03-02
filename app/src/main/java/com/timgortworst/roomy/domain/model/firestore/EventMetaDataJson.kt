@@ -1,7 +1,9 @@
 package com.timgortworst.roomy.domain.model.firestore
 
+import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.firestore.PropertyName
 
+@IgnoreExtraProperties
 data class EventMetaDataJson(
         @JvmField @PropertyName(EVENT_DATE_TIME_REF) var startDateTime: Long? = null,
         @JvmField @PropertyName(EVENT_TIME_ZONE_REF) var timeZone: String? = null,

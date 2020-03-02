@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.domain.model.firestore
 
+import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.firestore.PropertyName
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventMetaData
@@ -7,6 +8,7 @@ import com.timgortworst.roomy.domain.model.User
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 
+@IgnoreExtraProperties
 data class EventJson(
         @JvmField @PropertyName(EVENT_ID_REF) var eventId: String? = null,
         @JvmField @PropertyName(EVENT_DESCRIPTION_REF) var description: String? = null,
