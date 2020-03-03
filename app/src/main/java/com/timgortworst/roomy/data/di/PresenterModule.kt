@@ -17,7 +17,7 @@ import com.timgortworst.roomy.presentation.features.splash.SplashPresenter
 import com.timgortworst.roomy.presentation.features.splash.SplashView
 import org.koin.dsl.module
 
-val presenterModule = module(override = true) {
+val presenterModule = module {
     factory { (view: SplashView) -> SplashPresenter(view, get(), get()) }
     factory { (view: AuthCallback) -> OnboardingPresenter(view, get(), get(), get()) }
     factory { (view: MainView) -> MainPresenter(view, get(), get(), get()) }

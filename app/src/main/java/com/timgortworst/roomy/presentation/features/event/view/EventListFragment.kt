@@ -261,7 +261,7 @@ class EventListFragment : Fragment(),
     }
 
     override fun onLoadingState(isVisible: Int) {
-        binding.progress.visibility = isVisible
+        binding.progress.root.visibility = isVisible
     }
 
     override fun onErrorState(isVisible: Int, e: FirebaseFirestoreException?) {
