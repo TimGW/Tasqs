@@ -138,6 +138,7 @@ class EventEditActivity : BaseActivity(), EventEditView, DatePickerDialog.OnDate
             clearFocus(recurrence_frequency)
             clearFocus(event_description)
 
+            // todo animate down
             event_repeat_view.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 

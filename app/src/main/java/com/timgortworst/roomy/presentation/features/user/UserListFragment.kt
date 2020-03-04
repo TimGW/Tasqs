@@ -1,5 +1,7 @@
 package com.timgortworst.roomy.presentation.features.user
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,14 +16,14 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.databinding.FragmentRecyclerViewBinding
+import com.timgortworst.roomy.databinding.FragmentUserListBinding
 import com.timgortworst.roomy.domain.model.BottomMenuItem
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.firestore.EventJson
 import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
 import com.timgortworst.roomy.presentation.features.event.recyclerview.AdapterStateListener
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import kotlinx.android.synthetic.main.fragment_recycler_view.*
+import kotlinx.android.synthetic.main.fragment_event_list.*
 import kotlinx.android.synthetic.main.layout_list_state.view.*
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -30,7 +32,7 @@ class UserListFragment : Fragment(), AdapterStateListener,
     FirestoreUserAdapter.OnUserLongClickListener {
     private lateinit var userListAdapter: FirestoreUserAdapter
     private lateinit var parentActivity: MainActivity
-    private var _binding: FragmentRecyclerViewBinding? = null
+    private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
     private val userViewModel by viewModel<UserViewModel>()
 
@@ -46,7 +48,7 @@ class UserListFragment : Fragment(), AdapterStateListener,
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentRecyclerViewBinding.inflate(inflater, container, false)
+        _binding = FragmentUserListBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
         createFireStoreRvAdapter()
@@ -90,8 +92,27 @@ class UserListFragment : Fragment(), AdapterStateListener,
         )
     }
 
-    override fun onLoadingState(isVisible: Int) {
-        binding.progress.root.visibility = isVisible
+    override fun hideLoadingState() {
+        val animationDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
+
+        binding.recyclerView.apply {
+            alpha = 0f
+            visibility = View.VISIBLE
+
+            animate()
+                .alpha(1f)
+                .setDuration(animationDuration.toLong())
+                .setListener(null)
+        }
+
+        binding.progress.root.animate()
+            .alpha(0f)
+            .setDuration(animationDuration.toLong())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    binding.progress.root.visibility = View.GONE
+                }
+            })
     }
 
     override fun onErrorState(isVisible: Int, e: FirebaseFirestoreException?) {

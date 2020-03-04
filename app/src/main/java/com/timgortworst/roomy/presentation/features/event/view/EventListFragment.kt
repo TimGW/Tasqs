@@ -1,5 +1,7 @@
 package com.timgortworst.roomy.presentation.features.event.view
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,7 +24,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.databinding.FragmentRecyclerViewBinding
+import com.timgortworst.roomy.databinding.FragmentEventListBinding
 import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.EventMetaData
 import com.timgortworst.roomy.domain.model.firestore.EventJson
@@ -43,7 +45,7 @@ class EventListFragment : Fragment(),
     AdapterStateListener {
 
     private lateinit var parentActivity: AppCompatActivity
-    private var _binding: FragmentRecyclerViewBinding? = null
+    private var _binding: FragmentEventListBinding? = null
     private val binding get() = _binding!!
     private lateinit var eventListEventAdapter: FirestoreEventAdapter
     private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
@@ -87,7 +89,7 @@ class EventListFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentRecyclerViewBinding.inflate(inflater, container, false)
+        _binding = FragmentEventListBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
         createFireStoreRvAdapter()
@@ -105,6 +107,7 @@ class EventListFragment : Fragment(),
     private fun createFireStoreRvAdapter() = eventViewModel.fetchFireStoreRecyclerOptionsBuilder()
         .observe(viewLifecycleOwner, Observer { networkResponse ->
             networkResponse?.let {
+                hideLoadingState() // todo better place
                 val options = it.setLifecycleOwner(this).build()
                 eventListEventAdapter.updateOptions(options)
             }
@@ -260,11 +263,31 @@ class EventListFragment : Fragment(),
         )
     }
 
-    override fun onLoadingState(isVisible: Int) {
-        binding.progress.root.visibility = isVisible
+    override fun hideLoadingState() {
+        val animationDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
+
+        binding.recyclerView.apply {
+            alpha = 0f
+            visibility = View.VISIBLE
+
+            animate()
+                .alpha(1f)
+                .setDuration(animationDuration.toLong())
+                .setListener(null)
+        }
+
+        binding.progress.root.animate()
+            .alpha(0f)
+            .setDuration(animationDuration.toLong())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    binding.progress.root.visibility = View.GONE
+                }
+            })
     }
 
     override fun onErrorState(isVisible: Int, e: FirebaseFirestoreException?) {
+//        binding.recyclerView.visibility = View.GONE
         // todo handle specific errors
         setMsgView(
             isVisible,

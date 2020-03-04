@@ -8,6 +8,9 @@ import com.timgortworst.roomy.domain.model.Event
 import com.timgortworst.roomy.domain.model.firestore.EventJson
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_HOUSEHOLD_ID_REF
+import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_ID_REF
+import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_META_DATA_REF
+import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_USER_REF
 import com.timgortworst.roomy.domain.model.firestore.EventMetaDataJson.Companion.EVENT_DATE_TIME_REF
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
@@ -42,7 +45,7 @@ class EventRepository {
 
         return try {
             eventCollectionRef
-                    .whereEqualTo("user.id", userId)
+                    .whereEqualTo("$EVENT_USER_REF.$EVENT_ID_REF", userId)
                     .get()
                     .await()
                     .toObjects(EventJson::class.java)
@@ -56,7 +59,7 @@ class EventRepository {
     fun getEventsForHousehold(householdId: String): Query {
         return eventCollectionRef
             .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)
-//            .orderBy(EVENT_DATE_TIME_REF, Query.Direction.ASCENDING) todo sort by date
+            .orderBy("$EVENT_META_DATA_REF.$EVENT_DATE_TIME_REF", Query.Direction.ASCENDING) //todo sort by date
     }
 
     suspend fun updateEvents(events: List<Event>) {

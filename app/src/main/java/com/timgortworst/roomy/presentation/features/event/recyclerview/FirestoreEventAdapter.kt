@@ -36,6 +36,10 @@ class FirestoreEventAdapter(
 ) : FirestoreRecyclerAdapter<Event, FirestoreEventAdapter.ViewHolder>(options) {
     var tracker: SelectionTracker<String>? = null
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater
                 .from(parent.context)
@@ -49,6 +53,11 @@ class FirestoreEventAdapter(
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        val event: Event = snapshots[position]
+        return event.eventId.hashCode().toLong()
+    }
+
     override fun getItemCount(): Int  = snapshots.size
 
     override fun onChildChanged(
@@ -57,7 +66,6 @@ class FirestoreEventAdapter(
         newIndex: Int,
         oldIndex: Int
     ) {
-        super.onChildChanged(type, snapshot, newIndex, oldIndex)
         when (type) { //todo set notifications
             ChangeEventType.ADDED -> {
 //                setNotificationReminder(event, snapshot.metadata.hasPendingWrites())
@@ -71,9 +79,11 @@ class FirestoreEventAdapter(
             }
             ChangeEventType.MOVED -> { }
         }
+        super.onChildChanged(type, snapshot, newIndex, oldIndex)
     }
+
     override fun onDataChanged() {
-        adapterStateListener.onLoadingState(View.GONE)
+//        adapterStateListener.hideLoadingState()
         adapterStateListener.onErrorState(View.GONE)
         val visibility = if (itemCount == 0) View.VISIBLE else View.GONE
         adapterStateListener.onEmptyState(visibility)
