@@ -146,7 +146,7 @@ class UserListFragment : Fragment(), AdapterStateListener,
         val items = arrayListOf(
             BottomMenuItem(R.drawable.ic_delete, "Delete") {
                 userViewModel.viewModelScope.launch {
-                    userViewModel.deleteUser(user)
+//                    userViewModel.deleteUser(user) todo
                 }
                 bottomSheetMenu?.dismiss()
             }

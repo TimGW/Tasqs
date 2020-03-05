@@ -18,9 +18,9 @@ class MainPresenter(
         private val mainUseCase: MainUseCase,
         private val userUseCase: UserUseCase,
         private val sharedPrefs: SharedPrefs
-) : DefaultLifecycleObserver, HouseholdRepository.HouseholdListener {
+) : DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
-    private val uId = FirebaseAuth.getInstance().currentUser?.uid
+//    private val uId = FirebaseAuth.getInstance().currentUser?.uid
 
     init {
         if (view is LifecycleOwner) {
@@ -28,19 +28,19 @@ class MainPresenter(
         }
     }
 
-    fun listenToHousehold() = scope.launch {
-        mainUseCase.listenToHousehold(this@MainPresenter)
-    }
+//    fun listenToHousehold() = scope.launch {
+//        mainUseCase.listenToHousehold(this@MainPresenter)
+//    }
+//
+//    fun detachHouseholdListener() {
+//        mainUseCase.detachHouseholdListener()
+//    }
 
-    fun detachHouseholdListener() {
-        mainUseCase.detachHouseholdListener()
-    }
-
-    override fun householdModified(household: Household) {
-        if (household.userIdBlackList.contains(uId)) {
-            view.logout()
-        }
-    }
+//    override fun householdModified(household: Household) {
+//        if (household.userIdBlackList.contains(uId)) {
+//            view.logout()
+//        }
+//    }
 
     fun inviteUser() = scope.launch {
         view.share(mainUseCase.getHouseholdIdForUser())

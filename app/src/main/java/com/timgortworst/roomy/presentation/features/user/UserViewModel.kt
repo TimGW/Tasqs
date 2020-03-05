@@ -14,13 +14,13 @@ class UserViewModel(
     private val userUseCase: UserUseCase
 ) : ViewModel() {
 
-    suspend fun deleteUser(user: User) = withContext(Dispatchers.IO) {
-        userUseCase.deleteAndBanUser(user)
-    }
+//    suspend fun deleteUser(user: User) = withContext(Dispatchers.IO) {
+//        userUseCase.deleteAndBanUser(user)
+//    }
 
     fun fetchFireStoreRecyclerOptionsBuilder() = liveData {
         val options : FirestoreRecyclerOptions.Builder<User> = FirestoreRecyclerOptions.Builder<User>()
-            .setQuery(userUseCase.getUsersForHousehold(), User::class.java)
+            .setQuery(userUseCase.getAllUsersQuery(), User::class.java)
 
         emit(options)
     }

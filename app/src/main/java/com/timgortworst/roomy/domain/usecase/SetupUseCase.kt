@@ -4,13 +4,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.timgortworst.roomy.data.repository.EventRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
+import com.timgortworst.roomy.data.repository.IdProvider
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.User
 
 class SetupUseCase(private val householdRepository: HouseholdRepository,
                    private val userRepository: UserRepository,
-                   private val eventRepository: EventRepository) {
-    private val uId = FirebaseAuth.getInstance().currentUser?.uid
+                   private val eventRepository: EventRepository,
+                   private val idProvider: IdProvider) {
 
     suspend fun initializeHousehold(fireBaseUser: FirebaseUser): String? {
         val householdId = householdRepository.createHousehold() ?: return null
@@ -19,7 +20,7 @@ class SetupUseCase(private val householdRepository: HouseholdRepository,
     }
 
     suspend fun switchHousehold(householdId: String, role: String) {
-        val currentUserId = uId ?: return
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         userRepository.updateUser(householdId = householdId, role = role)
 
@@ -29,11 +30,9 @@ class SetupUseCase(private val householdRepository: HouseholdRepository,
         }
     }
 
-    suspend fun currentHouseholdIdForCurrentUser() = userRepository.getHouseholdIdForUser(uId)
+    suspend fun currentHouseholdIdForCurrentUser() = idProvider.getHouseholdId()
 
-    suspend fun userListForCurrentHousehold(): List<User>? {
-        return userRepository.getUserListForHousehold(userRepository.getHouseholdIdForUser(uId))
-    }
+    suspend fun userListForCurrentHousehold() = userRepository.getAllUsers()
 
     suspend fun deleteHousehold(householdId: String) {
         householdRepository.deleteHousehold(householdId)
@@ -50,6 +49,6 @@ class SetupUseCase(private val householdRepository: HouseholdRepository,
 //    }
 
     suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
-        return referredHouseholdId == userRepository.getHouseholdIdForUser(uId)
+        return referredHouseholdId == idProvider.getHouseholdId()
     }
 }

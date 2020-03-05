@@ -67,7 +67,7 @@ class MainActivity : BaseActivity(), MainView {
         setupBottomAppBar()
         updateFabAndTitle(activeFragment)
 
-        presenter.listenToHousehold()
+//        presenter.listenToHousehold()
 
         setupAds()
         setupBroadcastReceivers()
@@ -85,7 +85,7 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun onDestroy() {
-        presenter.detachHouseholdListener()
+//        presenter.detachHouseholdListener()
         adView?.removeAllViews()
         adView?.destroy()
         super.onDestroy()

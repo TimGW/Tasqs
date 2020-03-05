@@ -22,7 +22,7 @@ class EventViewModel(private val eventUseCase: EventUseCase) : ViewModel() {
 
     fun fetchFireStoreRecyclerOptionsBuilder() = liveData {
         val options = FirestoreRecyclerOptions.Builder<Event>()
-            .setQuery(eventUseCase.eventsForHouseholdQuery()) {
+            .setQuery(eventUseCase.getAllEventsQuery()) {
                 CustomMapper.toEvent(it.toObject(EventJson::class.java)!!)!!
             }
         emit(options)

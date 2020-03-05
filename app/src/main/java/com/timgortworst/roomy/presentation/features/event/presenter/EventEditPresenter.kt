@@ -30,7 +30,7 @@ class EventEditPresenter(
     }
 
     fun getUsers() = scope.launch {
-        eventUseCase.householdUsers()?.let { userList ->
+        eventUseCase.getAllUsers()?.let { userList ->
             val currentUser = userUseCase.getCurrentUser()
 
             if (userList.filterNot { it.userId == currentUser?.userId }.isEmpty()) {

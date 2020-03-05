@@ -287,7 +287,7 @@ class EventListFragment : Fragment(),
     }
 
     override fun onErrorState(isVisible: Int, e: FirebaseFirestoreException?) {
-//        binding.recyclerView.visibility = View.GONE
+        binding.recyclerView.visibility = View.GONE
         // todo handle specific errors
         setMsgView(
             isVisible,

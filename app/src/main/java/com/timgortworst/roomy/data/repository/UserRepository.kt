@@ -14,9 +14,10 @@ import com.timgortworst.roomy.domain.model.User.Companion.USER_EMAIL_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_NAME_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_ROLE_REF
+import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
-class UserRepository {
+class UserRepository(private val idProvider: IdProvider) {
     private val db = FirebaseFirestore.getInstance()
     private val userCollection = db.collection(USER_COLLECTION_REF)
 
@@ -50,17 +51,17 @@ class UserRepository {
         }
     }
 
-    fun getUsersForHousehold(householdId: String): Query {
+    suspend fun allUsersQuery(): Query {
         return userCollection
-            .whereEqualTo(USER_HOUSEHOLD_ID_REF, householdId)
+            .whereEqualTo(USER_HOUSEHOLD_ID_REF, idProvider.getHouseholdId())
     }
 
-    suspend fun getUserListForHousehold(householdId: String?): List<User>? {
-        if (householdId.isNullOrEmpty()) return null
+    suspend fun getAllUsers(): List<User>? {
+        if (idProvider.getHouseholdId().isEmpty()) return null
 
         return try {
             userCollection
-                .whereEqualTo(USER_HOUSEHOLD_ID_REF, householdId)
+                .whereEqualTo(USER_HOUSEHOLD_ID_REF, idProvider.getHouseholdId())
                 .get()
                 .await()
                 .toObjects(User::class.java)
@@ -68,20 +69,6 @@ class UserRepository {
             Log.e(TAG, e.localizedMessage.orEmpty())
             null
         }
-    }
-
-    suspend fun getHouseholdIdForUser(userId: String?): String {
-        if (userId.isNullOrEmpty()) return ""
-
-        val userDocRef = userCollection.document(userId)
-        val user = try {
-            userDocRef.get().await().toObject(User::class.java)
-        } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage.orEmpty())
-            null
-        }
-
-        return user?.householdId.orEmpty()
     }
 
     suspend fun updateUser(
@@ -105,9 +92,5 @@ class UserRepository {
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
         }
-    }
-
-    companion object {
-        private const val TAG = "UserRepository"
     }
 }

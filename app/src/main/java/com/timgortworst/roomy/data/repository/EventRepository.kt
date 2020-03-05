@@ -1,26 +1,34 @@
 package com.timgortworst.roomy.data.repository
 
 import android.util.Log
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.timgortworst.roomy.domain.model.Event
+import com.timgortworst.roomy.domain.model.Household
+import com.timgortworst.roomy.domain.model.User.Companion.USER_ID_REF
 import com.timgortworst.roomy.domain.model.firestore.EventJson
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_HOUSEHOLD_ID_REF
-import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_ID_REF
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_META_DATA_REF
 import com.timgortworst.roomy.domain.model.firestore.EventJson.Companion.EVENT_USER_REF
 import com.timgortworst.roomy.domain.model.firestore.EventMetaDataJson.Companion.EVENT_DATE_TIME_REF
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
+class EventRepository(private val idProvider: IdProvider) {
 
-class EventRepository {
-    private val eventCollectionRef = FirebaseFirestore.getInstance().collection(EVENT_COLLECTION_REF)
+    private suspend fun collectionRef(): CollectionReference {
+        return FirebaseFirestore
+        .getInstance()
+        .collection(Household.HOUSEHOLD_COLLECTION_REF)
+        .document(idProvider.getHouseholdId())
+        .collection(EVENT_COLLECTION_REF)
+    }
 
     suspend fun createEvent(event: Event): String? {
-        val document = eventCollectionRef.document()
+        val document = collectionRef().document()
 
         return try {
             document.set(CustomMapper.convertToMap(event.apply { eventId = document.id })).await()
@@ -32,7 +40,7 @@ class EventRepository {
     }
 
     suspend fun updateEvent(event: Event) {
-        val document = eventCollectionRef.document(event.eventId)
+        val document = collectionRef().document(event.eventId)
         try {
             document.update(CustomMapper.convertToMap(event)).await()
         } catch (e: FirebaseFirestoreException) {
@@ -44,29 +52,29 @@ class EventRepository {
         if (userId.isBlank()) return emptyList()
 
         return try {
-            eventCollectionRef
-                    .whereEqualTo("$EVENT_USER_REF.$EVENT_ID_REF", userId)
-                    .get()
-                    .await()
-                    .toObjects(EventJson::class.java)
-                    .mapNotNull { CustomMapper.toEvent(it) }
+            collectionRef()
+                .whereEqualTo("$EVENT_USER_REF.$USER_ID_REF", userId)
+                .get()
+                .await()
+                .toObjects(EventJson::class.java)
+                .mapNotNull { CustomMapper.toEvent(it) }
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
             emptyList()
         }
     }
 
-    fun getEventsForHousehold(householdId: String): Query {
-        return eventCollectionRef
-            .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, householdId)
-            .orderBy("$EVENT_META_DATA_REF.$EVENT_DATE_TIME_REF", Query.Direction.ASCENDING) //todo sort by date
+    suspend fun getAllEventsQuery(): Query {
+        return collectionRef()
+            .whereEqualTo(EVENT_HOUSEHOLD_ID_REF, idProvider.getHouseholdId())
+            .orderBy("$EVENT_META_DATA_REF.$EVENT_DATE_TIME_REF", Query.Direction.ASCENDING)
     }
 
     suspend fun updateEvents(events: List<Event>) {
         try {
             val batch = FirebaseFirestore.getInstance().batch()
             events.forEach {
-                batch.update(eventCollectionRef.document(it.eventId), CustomMapper.convertToMap(it))
+                batch.update(collectionRef().document(it.eventId), CustomMapper.convertToMap(it))
             }
             batch.commit().await()
         } catch (e: FirebaseFirestoreException) {
@@ -76,10 +84,10 @@ class EventRepository {
 
     suspend fun deleteEvent(eventId: String) {
         try {
-            eventCollectionRef
-                    .document(eventId)
-                    .delete()
-                    .await()
+            collectionRef()
+                .document(eventId)
+                .delete()
+                .await()
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
         }
@@ -87,9 +95,8 @@ class EventRepository {
 
     suspend fun deleteEvents(events: List<Event>) {
         try {
-            // Get a new write batch and commit all write operations
             val batch = FirebaseFirestore.getInstance().batch()
-            events.forEach { batch.delete(eventCollectionRef.document(it.eventId)) }
+            events.forEach { batch.delete(collectionRef().document(it.eventId)) }
             batch.commit().await()
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
