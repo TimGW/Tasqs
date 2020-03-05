@@ -66,6 +66,7 @@ class FirestoreEventAdapter(
         newIndex: Int,
         oldIndex: Int
     ) {
+        super.onChildChanged(type, snapshot, newIndex, oldIndex)
         when (type) { //todo set notifications
             ChangeEventType.ADDED -> {
 //                setNotificationReminder(event, snapshot.metadata.hasPendingWrites())
@@ -79,7 +80,6 @@ class FirestoreEventAdapter(
             }
             ChangeEventType.MOVED -> { }
         }
-        super.onChildChanged(type, snapshot, newIndex, oldIndex)
     }
 
     override fun onDataChanged() {

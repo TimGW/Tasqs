@@ -5,9 +5,6 @@ import androidx.preference.PreferenceManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val prefModule = module {
-    single { SharedPrefs(androidContext()) }
-}
 class SharedPrefs(context: Context) {
     private val sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(context)
 

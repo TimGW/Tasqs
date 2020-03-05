@@ -13,7 +13,6 @@ import com.timgortworst.roomy.data.di.presenterModule
 import com.timgortworst.roomy.data.di.repositoryModule
 import com.timgortworst.roomy.data.di.useCaseModule
 import com.timgortworst.roomy.data.di.viewModelModule
-import com.timgortworst.roomy.data.prefModule
 import com.timgortworst.roomy.domain.utils.timeCalcModule
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -27,7 +26,6 @@ import org.koin.core.module.Module
 class RoomyApp : Application(), Configuration.Provider {
     private val sharedPref: SharedPrefs by inject()
     private val appComponent: List<Module> = listOf(
-            prefModule,
             repositoryModule,
             useCaseModule,
             presenterModule,

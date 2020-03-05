@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.timgortworst.roomy.presentation.base.view.EmptyStateLoadingRow
+    <com.timgortworst.roomy.presentation.base.customview.LoadingShimmer
         android:id="@+id/event_name"
         android:layout_width="0dp"
         android:layout_height="@dimen/loading_line_height"
@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.timgortworst.roomy.presentation.base.view.EmptyStateLoadingRow
+    <com.timgortworst.roomy.presentation.base.customview.LoadingShimmer
         android:id="@+id/event_date_time"
         android:layout_width="0dp"
         android:layout_height="@dimen/loading_line_height"
@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.timgortworst.roomy.presentation.base.view.EmptyStateLoadingRow
+    <com.timgortworst.roomy.presentation.base.customview.LoadingShimmer
         android:id="@+id/event_user"
         android:layout_width="0dp"
         android:layout_height="@dimen/loading_line_height"

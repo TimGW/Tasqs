@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.base.view
+package com.timgortworst.roomy.presentation.base.customview
 
 import android.animation.ValueAnimator
 import android.content.Context
@@ -10,7 +10,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.timgortworst.roomy.R
 
-class EmptyStateLoadingRow(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
+class LoadingShimmer(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
     private val myPaint = Paint()
     private val rect = RectF()
     private val animator: ValueAnimator = ValueAnimator.ofFloat(1f, 0.6f)
