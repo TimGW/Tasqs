@@ -14,7 +14,7 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.EventRecurrence.Companion.SINGLE_EVENT
+import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.SINGLE_TASK
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_ID_KEY
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_MSG_KEY
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_TITLE_KEY
@@ -43,17 +43,17 @@ class ReminderNotificationWorker(
                 ?: context.getString(R.string.notification_default_msg)
         val id = inputData.getString(NOTIFICATION_ID_KEY) ?: title.plus(text)
 
-        val recurrence = inputData.getString(WM_RECURRENCE_KEY) ?: SINGLE_EVENT
+        val recurrence = inputData.getString(WM_RECURRENCE_KEY) ?: SINGLE_TASK
         val freq = inputData.getLong(WM_FREQ_KEY, NO_REPEATING_TASK)
         val onDaysOfWeek = inputData.getIntArray(WM_WEEKDAYS_KEY)
 
         triggerNotification(id.hashCode(), title, text)
 
         // set new workmanager task for repeating event
-        if (recurrence != SINGLE_EVENT) {
+        if (recurrence != SINGLE_TASK) {
             val nowNoon = ZonedDateTime.now().with(LocalTime.NOON)
-            val nextEventDateTime = timeOperations.nextEvent(nowNoon, recurrence, freq, onDaysOfWeek?.toList().orEmpty())
-            val initialDelay = Duration.between(nowNoon, nextEventDateTime).toMillis()
+            val nextTaskDateTime = timeOperations.nextTask(nowNoon, recurrence, freq, onDaysOfWeek?.toList().orEmpty())
+            val initialDelay = Duration.between(nowNoon, nextTaskDateTime).toMillis()
 
             val constraints = Constraints.Builder()
                     .setRequiresBatteryNotLow(true)

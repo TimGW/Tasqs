@@ -6,8 +6,8 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.EventMetaData
-import com.timgortworst.roomy.domain.model.EventRecurrence
+import com.timgortworst.roomy.domain.model.TaskMetaData
+import com.timgortworst.roomy.domain.model.TaskRecurrence
 import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
 import java.util.concurrent.TimeUnit
@@ -16,21 +16,21 @@ import kotlin.math.max
 class NotificationWorkerBuilder(private val context: Context) {
     private val workManager = WorkManager.getInstance(context)
 
-    fun enqueueNotification(eventId: String,
-                            eventMetaData: EventMetaData,
+    fun enqueueNotification(taskId: String,
+                            taskMetaData: TaskMetaData,
                             userName: String,
                             categoryName: String) {
-        removePendingNotificationReminder(eventId)
+        removePendingNotificationReminder(taskId)
 
-        val delay = max(0L, Duration.between(ZonedDateTime.now(), eventMetaData.startDateTime).toMillis())
-        val inputData = buildInputData(eventId, userName, categoryName, eventMetaData.recurrence)
+        val delay = max(0L, Duration.between(ZonedDateTime.now(), taskMetaData.startDateTime).toMillis())
+        val inputData = buildInputData(taskId, userName, categoryName, taskMetaData.recurrence)
         val constraints = Constraints.Builder()
                 .setRequiresBatteryNotLow(true)
                 .build()
 
         val workRequest = OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
                 .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-                .addTag(eventId)
+                .addTag(taskId)
                 .setInputData(inputData)
                 .setConstraints(constraints)
                 .build()
@@ -38,29 +38,29 @@ class NotificationWorkerBuilder(private val context: Context) {
         workManager.enqueue(workRequest)
     }
 
-    private fun buildInputData(eventId: String,
+    private fun buildInputData(taskId: String,
                                userName: String,
                                categoryName: String,
-                               eventRecurrence: EventRecurrence): Data {
+                               taskRecurrence: TaskRecurrence): Data {
 
         val title = context.getString(R.string.notification_title, userName)
         val msg = context.getString(R.string.notification_message, categoryName)
         val dataBuilder = Data.Builder()
-                .putString(NOTIFICATION_ID_KEY, eventId)
+                .putString(NOTIFICATION_ID_KEY, taskId)
                 .putString(NOTIFICATION_TITLE_KEY, title)
                 .putString(NOTIFICATION_MSG_KEY, msg)
-                .putLong(WM_FREQ_KEY, eventRecurrence.frequency.toLong())
-                .putString(WM_RECURRENCE_KEY, eventRecurrence.id)
+                .putLong(WM_FREQ_KEY, taskRecurrence.frequency.toLong())
+                .putString(WM_RECURRENCE_KEY, taskRecurrence.id)
 
-        (eventRecurrence as? EventRecurrence.Weekly)?.onDaysOfWeek?.let {
+        (taskRecurrence as? TaskRecurrence.Weekly)?.onDaysOfWeek?.let {
             dataBuilder.putIntArray(WM_WEEKDAYS_KEY, it.toIntArray())
         }
 
         return dataBuilder.build()
     }
 
-    fun removePendingNotificationReminder(eventId: String) {
-        workManager.cancelAllWorkByTag(eventId)
+    fun removePendingNotificationReminder(taskId: String) {
+        workManager.cancelAllWorkByTag(taskId)
     }
 
     companion object {

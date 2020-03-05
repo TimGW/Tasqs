@@ -1,67 +1,67 @@
 package com.timgortworst.roomy.data.repository
 
-import com.timgortworst.roomy.domain.model.Event
-import com.timgortworst.roomy.domain.model.EventMetaData
-import com.timgortworst.roomy.domain.model.EventRecurrence
-import com.timgortworst.roomy.domain.model.EventRecurrence.Companion.ANNUAL_EVENT
-import com.timgortworst.roomy.domain.model.EventRecurrence.Companion.DAILY_EVENT
-import com.timgortworst.roomy.domain.model.EventRecurrence.Companion.MONTHLY_EVENT
-import com.timgortworst.roomy.domain.model.EventRecurrence.Companion.WEEKLY_EVENT
-import com.timgortworst.roomy.domain.model.firestore.EventJson
-import com.timgortworst.roomy.domain.model.firestore.EventMetaDataJson
+import com.timgortworst.roomy.domain.model.Task
+import com.timgortworst.roomy.domain.model.TaskMetaData
+import com.timgortworst.roomy.domain.model.TaskRecurrence
+import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.ANNUAL_TASK
+import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.DAILY_TASK
+import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.MONTHLY_TASK
+import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.WEEKLY_TASK
+import com.timgortworst.roomy.domain.model.firestore.TaskJson
+import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 
 object CustomMapper {
-    fun toEvent(eventJson: EventJson): Event? {
-        if (eventJson.eventId == null || eventJson.description == null || eventJson.metaData == null ||
-                eventJson.user == null || eventJson.householdId == null) {
+    fun toTask(taskJson: TaskJson): Task? {
+        if (taskJson.id == null || taskJson.description == null || taskJson.metaData == null ||
+                taskJson.user == null || taskJson.householdId == null) {
             return null
         }
 
-        return Event(
-                eventJson.eventId!!,
-                eventJson.description!!,
-                eventJson.metaData!!.toEventMetaData(),
-                eventJson.user!!,
-                eventJson.householdId!!)
+        return Task(
+                taskJson.id!!,
+                taskJson.description!!,
+                taskJson.metaData!!.toTaskMetaData(),
+                taskJson.user!!,
+                taskJson.householdId!!)
     }
 
-    private fun EventMetaDataJson.toEventMetaData(): EventMetaData {
-        return EventMetaData(
+    private fun TaskMetaDataJson.toTaskMetaData(): TaskMetaData {
+        return TaskMetaData(
                 Instant
                         .ofEpochMilli(startDateTime!!)
                         .atZone(ZoneId.of(timeZone!!)),
                 buildRecurrence(recurrenceType, frequency ?: 1, onDaysOfWeek.orEmpty()))
     }
 
-    private fun buildRecurrence(recurrenceType: String?, frequency: Int, onDaysOfWeek: List<Int>): EventRecurrence {
+    private fun buildRecurrence(recurrenceType: String?, frequency: Int, onDaysOfWeek: List<Int>): TaskRecurrence {
         return when (recurrenceType) {
-            DAILY_EVENT -> EventRecurrence.Daily(frequency)
-            WEEKLY_EVENT -> EventRecurrence.Weekly(frequency, onDaysOfWeek)
-            MONTHLY_EVENT -> EventRecurrence.Monthly(frequency)
-            ANNUAL_EVENT -> EventRecurrence.Annually(frequency)
-            else -> EventRecurrence.SingleEvent(frequency)
+            DAILY_TASK -> TaskRecurrence.Daily(frequency)
+            WEEKLY_TASK -> TaskRecurrence.Weekly(frequency, onDaysOfWeek)
+            MONTHLY_TASK -> TaskRecurrence.Monthly(frequency)
+            ANNUAL_TASK -> TaskRecurrence.Annually(frequency)
+            else -> TaskRecurrence.SingleTask(frequency)
         }
     }
 
-    fun convertToMap(event: Event): Map<String, Any> {
+    fun convertToMap(task: Task): Map<String, Any> {
         val result = mutableMapOf<String, Any>()
-        result[EventJson.EVENT_ID_REF] = event.eventId
-        result[EventJson.EVENT_DESCRIPTION_REF] = event.description
-        result[EventJson.EVENT_META_DATA_REF] = event.metaData.toMap()
-        result[EventJson.EVENT_USER_REF] = event.user
-        result[EventJson.EVENT_HOUSEHOLD_ID_REF] = event.householdId
+        result[TaskJson.TASK_ID_REF] = task.id
+        result[TaskJson.TASK_DESCRIPTION_REF] = task.description
+        result[TaskJson.TASK_META_DATA_REF] = task.metaData.toMap()
+        result[TaskJson.TASK_USER_REF] = task.user
+        result[TaskJson.TASK_HOUSEHOLD_ID_REF] = task.householdId
         return result
     }
 
-    private fun EventMetaData.toMap(): Map<String, Any?> {
+    private fun TaskMetaData.toMap(): Map<String, Any?> {
         val result = mutableMapOf<String, Any?>()
-        result[EventMetaDataJson.EVENT_DATE_TIME_REF] = startDateTime.toInstant().toEpochMilli()
-        result[EventMetaDataJson.EVENT_TIME_ZONE_REF] = startDateTime.zone.id
-        if (recurrence !is EventRecurrence.SingleEvent) result[EventMetaDataJson.EVENT_FREQUENCY] = recurrence.frequency
-        result[EventMetaDataJson.EVENT_RECURRENCE] = recurrence.id
-        (recurrence as? EventRecurrence.Weekly)?.let { result[EventMetaDataJson.EVENT_ON_DAYS] = it.onDaysOfWeek }
+        result[TaskMetaDataJson.TASK_DATE_TIME_REF] = startDateTime.toInstant().toEpochMilli()
+        result[TaskMetaDataJson.TASK_TIME_ZONE_REF] = startDateTime.zone.id
+        if (recurrence !is TaskRecurrence.SingleTask) result[TaskMetaDataJson.TASK_FREQUENCY] = recurrence.frequency
+        result[TaskMetaDataJson.TASK_RECURRENCE] = recurrence.id
+        (recurrence as? TaskRecurrence.Weekly)?.let { result[TaskMetaDataJson.TASK_ON_DAYS] = it.onDaysOfWeek }
         return result
     }
 }

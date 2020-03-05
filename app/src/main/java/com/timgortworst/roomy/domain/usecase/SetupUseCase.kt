@@ -2,15 +2,14 @@ package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.timgortworst.roomy.data.repository.EventRepository
+import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.IdProvider
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.model.User
 
 class SetupUseCase(private val householdRepository: HouseholdRepository,
                    private val userRepository: UserRepository,
-                   private val eventRepository: EventRepository,
+                   private val taskRepository: TaskRepository,
                    private val idProvider: IdProvider) {
 
     suspend fun initializeHousehold(fireBaseUser: FirebaseUser): String? {
@@ -24,9 +23,9 @@ class SetupUseCase(private val householdRepository: HouseholdRepository,
 
         userRepository.updateUser(householdId = householdId, role = role)
 
-        // remove events assigned to user
-        eventRepository.getEventsForUser(currentUserId).forEach {
-            eventRepository.deleteEvent(it.eventId)
+        // remove tasks assigned to user
+        taskRepository.getTasksForUser(currentUserId).forEach {
+            taskRepository.deleteTask(it.id)
         }
     }
 

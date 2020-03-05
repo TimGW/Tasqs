@@ -11,7 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Role
 import com.timgortworst.roomy.domain.model.User
-import com.timgortworst.roomy.presentation.features.event.recyclerview.AdapterStateListener
+import com.timgortworst.roomy.presentation.features.task.recyclerview.AdapterStateListener
 
 
 /**

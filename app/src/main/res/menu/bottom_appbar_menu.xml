@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/appbar_events_id"
+        android:id="@+id/appbar_tasks_id"
         android:icon="@drawable/ic_calendar"
-        android:title="@string/toolbar_title_schema"
+        android:title="@string/toolbar_title_tasks"
         app:showAsAction="always" />
     <item
         android:id="@+id/appbar_users_id"

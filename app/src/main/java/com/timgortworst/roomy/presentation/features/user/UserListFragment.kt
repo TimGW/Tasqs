@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
@@ -17,15 +16,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentUserListBinding
-import com.timgortworst.roomy.domain.model.BottomMenuItem
 import com.timgortworst.roomy.domain.model.User
-import com.timgortworst.roomy.domain.model.firestore.EventJson
-import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
-import com.timgortworst.roomy.presentation.features.event.recyclerview.AdapterStateListener
+import com.timgortworst.roomy.domain.model.firestore.TaskJson
+import com.timgortworst.roomy.presentation.features.task.recyclerview.AdapterStateListener
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import kotlinx.android.synthetic.main.fragment_event_list.*
+import kotlinx.android.synthetic.main.fragment_task_list.*
 import kotlinx.android.synthetic.main.layout_list_state.view.*
-import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class UserListFragment : Fragment(), AdapterStateListener,
@@ -58,8 +54,8 @@ class UserListFragment : Fragment(), AdapterStateListener,
 
     fun setupRecyclerView() {
         // todo remove this placeholder options
-        val query = FirebaseFirestore.getInstance().collection(EventJson.EVENT_COLLECTION_REF).whereEqualTo(
-            EventJson.EVENT_HOUSEHOLD_ID_REF, "")
+        val query = FirebaseFirestore.getInstance().collection(TaskJson.TASK_COLLECTION_REF).whereEqualTo(
+            TaskJson.TASK_HOUSEHOLD_ID_REF, "")
         val defaultOptions = FirestoreRecyclerOptions
             .Builder<User>()
             .setQuery(query, User::class.java)
@@ -115,6 +111,10 @@ class UserListFragment : Fragment(), AdapterStateListener,
             })
     }
 
+    override fun onDataState(isVisible: Int) {
+//        isVisible todo
+    }
+
     override fun onErrorState(isVisible: Int, e: FirebaseFirestoreException?) {
         // todo handle specific errors
         setMsgView(
@@ -133,25 +133,25 @@ class UserListFragment : Fragment(), AdapterStateListener,
     }
 
     override fun onUserClick(user: User) {
-       userViewModel.userAdminObservable(user).observe(viewLifecycleOwner, Observer {
-           it?.let {
-               showContextMenuFor(user)
-           }
-       })
+//       userViewModel.userAdminObservable(user).observe(viewLifecycleOwner, Observer {
+//           it?.let {
+//               showContextMenuFor(user)
+//           }
+//       })
     }
-
-    private fun showContextMenuFor(user: User) {
-        var bottomSheetMenu: BottomSheetMenu? = null
-
-        val items = arrayListOf(
-            BottomMenuItem(R.drawable.ic_delete, "Delete") {
-                userViewModel.viewModelScope.launch {
-//                    userViewModel.deleteUser(user) todo
-                }
-                bottomSheetMenu?.dismiss()
-            }
-        )
-        bottomSheetMenu = BottomSheetMenu(parentActivity, user.name, items)
-        bottomSheetMenu.show()
-    }
+//
+//    private fun showContextMenuFor(user: User) {
+//        var bottomSheetMenu: BottomSheetMenu? = null
+//
+//        val items = arrayListOf(
+//            BottomMenuItem(R.drawable.ic_delete, "Delete") {
+//                userViewModel.viewModelScope.launch {
+////                    userViewModel.deleteUser(user) todo
+//                }
+//                bottomSheetMenu?.dismiss()
+//            }
+//        )
+//        bottomSheetMenu = BottomSheetMenu(parentActivity, user.name, items)
+//        bottomSheetMenu.show()
+//    }
 }

@@ -49,10 +49,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyTheme.NoActionBar" />
         <activity
-            android:name=".presentation.features.event.view.EventEditActivity"
+            android:name=".presentation.features.task.view.TaskEditActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name=".presentation.features.event.view.EventInfoActivity"
+            android:name=".presentation.features.task.view.TaskInfoActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".presentation.features.settings.HtmlTextActivity"

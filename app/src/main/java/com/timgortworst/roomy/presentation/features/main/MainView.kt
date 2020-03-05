@@ -8,7 +8,7 @@ interface MainView {
     fun share(householdId: String)
     fun presentShareLinkUri(linkUri: Uri)
     fun showToast(@StringRes stringRes: Int)
-    fun openEventEditActivity()
+    fun openTaskEditActivity()
     fun loadAd()
     fun hideAd()
     fun showAd()

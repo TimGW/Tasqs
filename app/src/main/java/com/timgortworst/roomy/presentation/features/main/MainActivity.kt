@@ -13,8 +13,8 @@ import com.google.android.gms.ads.AdRequest
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
-import com.timgortworst.roomy.presentation.features.event.view.EventEditActivity
-import com.timgortworst.roomy.presentation.features.event.view.EventListFragment
+import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
+import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
 import com.timgortworst.roomy.presentation.features.auth.AuthFragment
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
 import com.timgortworst.roomy.presentation.features.splash.SplashActivity
@@ -29,7 +29,7 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     private var adRequest: AdRequest? = null
-    private val eventListFragment: Fragment by lazy { EventListFragment.newInstance() }
+    private val taskListFragment: Fragment by lazy { TaskListFragment.newInstance() }
     private val userListFragment: Fragment by lazy { UserListFragment.newInstance() }
     private val googleAuthFragment: Fragment by lazy { AuthFragment.newInstance() }
 
@@ -58,7 +58,7 @@ class MainActivity : BaseActivity(), MainView {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            openFragment(eventListFragment, eventListFragment::class.java.toString())
+            openFragment(taskListFragment, taskListFragment::class.java.toString())
         } else {
             activeFragment = supportFragmentManager.getFragment(savedInstanceState, ACTIVE_FRAG_KEY)
             activeFragment?.let { openFragment(it, it::class.java.toString()) }
@@ -95,7 +95,7 @@ class MainActivity : BaseActivity(), MainView {
         bottom_appbar.replaceMenu(R.menu.bottom_appbar_menu)
         bottom_appbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.appbar_events_id -> openFragment(eventListFragment, eventListFragment::class.java.toString())
+                R.id.appbar_tasks_id -> openFragment(taskListFragment, taskListFragment::class.java.toString())
                 R.id.appbar_users_id -> presenter.selectFragment()
                 R.id.appbar_settings_id -> SettingsActivity.start(this)
             }
@@ -136,7 +136,7 @@ class MainActivity : BaseActivity(), MainView {
 
     private fun setToolbarTitleFor(tag: String) {
         supportActionBar?.title = when (tag) {
-            eventListFragment::class.java.toString() -> getString(R.string.toolbar_title_schema)
+            taskListFragment::class.java.toString() -> getString(R.string.toolbar_title_tasks)
             userListFragment::class.java.toString(),
             googleAuthFragment::class.java.toString() -> getString(R.string.toolbar_title_users)
             else -> getString(R.string.app_name)
@@ -144,9 +144,9 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     private fun setFabClickListenerFor(fragment: Fragment?) {
-        val clickEvent: (View) -> Unit = when (fragment?.tag) {
-            eventListFragment::class.java.toString() -> { _ ->
-                openEventEditActivity()
+        val clickTask: (View) -> Unit = when (fragment?.tag) {
+            taskListFragment::class.java.toString() -> { _ ->
+                openTaskEditActivity()
             }
             userListFragment::class.java.toString() -> { _ ->
                 showProgressDialog()
@@ -155,7 +155,7 @@ class MainActivity : BaseActivity(), MainView {
             else -> { _ -> }
         }
 
-        fab.setOnClickListener(clickEvent)
+        fab.setOnClickListener(clickTask)
     }
 
     override fun logout() {
@@ -220,8 +220,8 @@ class MainActivity : BaseActivity(), MainView {
         Toast.makeText(this@MainActivity, getString(stringRes), Toast.LENGTH_LONG).show()
     }
 
-    override fun openEventEditActivity() {
-        EventEditActivity.start(this)
+    override fun openTaskEditActivity() {
+        TaskEditActivity.start(this)
     }
 
     override fun presentGoogleAuthFragment() {

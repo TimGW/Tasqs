@@ -13,19 +13,19 @@
     <string name="dialog_household_overwrite_title">Huishouden overschrijven</string>
     <string name="dialog_household_similar_text">Je bent al in dit huishouden. Druk op \'OK\' om door te gaan</string>
     <string name="dialog_household_similar_title">Hetzelfde huishouden!</string>
-    <string name="edit_event_date_hint">Datum</string>
-    <string name="edit_event_description_hint">Omschrijving</string>
-    <string name="edit_event_user_hint">Persoon</string>
-    <string name="empty_list_state_text_events">Voeg je eerste evenement toe door op de knop + te klikken</string>
-    <string name="empty_list_state_title_events">Geen evenementen</string>
+    <string name="edit_task_date_hint">Datum</string>
+    <string name="edit_task_description_hint">Omschrijving</string>
+    <string name="edit_task_user_hint">Persoon</string>
+    <string name="empty_list_state_text_tasks">Voeg je eerste taak toe door op de knop + te klikken</string>
+    <string name="empty_list_state_title_tasks">Geen taken</string>
     <string name="empty_list_state_title_users">Geen gebruikers</string>
     <string name="empty_list_state_text_users">Voeg je eerste vriend toe door op de + knop te klikken</string>
     <string name="error_connection">Controleer je internetverbinding</string>
     <string name="error_generic">Er is iets fout gegaan</string>
     <string name="error_list_state_text">Er is iets misgegaan, probeer het later opnieuw</string>
     <string name="error_list_state_title">Oeps!</string>
-    <string name="event_next">Volgende: %1$s</string>
-    <string name="event_overdue">TE LAAT: %1$s</string>
+    <string name="task_next">Volgende: %1$s</string>
+    <string name="task_overdue">TE LAAT: %1$s</string>
     <string name="next">volgende</string>
     <string name="generate_categories_button_text">Genereren</string>
     <string name="invite_title">Deel uitnodigingslink</string>
@@ -56,10 +56,10 @@
     <string name="repeat_label_interval_text_week">W</string>
     <string name="repeat_label_interval_text_year">J</string>
     <string name="title_activity_settings">Instellingen</string>
-    <string name="toolbar_title_edit_event">%1$s aanpassen</string>
-    <string name="toolbar_title_new_event">Nieuw evenement</string>
-    <string name="toolbar_title_info_event">Evenement info</string>
-    <string name="toolbar_title_schema">Evenementen</string>
+    <string name="toolbar_title_edit_task">%1$s aanpassen</string>
+    <string name="toolbar_title_new_task">Nieuwe taak</string>
+    <string name="toolbar_title_info_task">Taak informatie</string>
+    <string name="toolbar_title_tasks">Taken</string>
     <string name="toolbar_title_users">Gebruikers</string>
     <string name="easter_egg_enabled">Advertenties zijn nu uitgeschakeld!</string>
     <string name="easter_egg_message">Klik nog %1$d keer om advertenties te verwijderen</string>
@@ -75,7 +75,7 @@
     <string name="night_mode_label_auto">Volg systeem</string>
     <string name="night_mode_label_off">Uit</string>
     <string name="night_mode_label_on">Aan</string>
-    <string name="event_edit_error_empty_description">Voer een beschrijving in</string>
+    <string name="task_edit_error_empty_description">Voer een beschrijving in</string>
     <string name="button_done_text">Klaar</string>
     <string name="empty_string" />
 
@@ -110,11 +110,15 @@
     <string name="is_repeated">wordt herhaald elke</string>
     <string name="user_picker_error">Kies een persoon</string>
     <string name="skip">later</string>
-    <string name="onboarding_title_agenda">Creeër je eigen events</string>
+    <string name="onboarding_title_agenda">Creeër je eigen taken</string>
     <string name="onboarding_title_connect">Nodig je vrienden uit</string>
     <string name="onboarding_title_login">Connect om te beginnen</string>
     <string name="onboarding_subtitle_agenda">Stel herinneringen in voor herhalende taken</string>
-    <string name="onboarding_subtitle_connect">Nodig vrienden en familie uit om je taken mee te delen. Nieuwe of bewerkte evenementen worden automatisch gesynchroniseerd en gepusht naar uw vrienden</string>
+    <string name="onboarding_subtitle_connect">Nodig vrienden en familie uit om je taken mee te delen. Nieuwe of bewerkte taken worden automatisch gesynchroniseerd en gepusht naar uw vrienden</string>
     <string name="onboarding_subtitle_login">Log nu in om meteen je taken te kunnen delen. Je kan ook altijd op een later moment inloggen</string>
+    <string name="info_task_next_date">Volgende taak op</string>
+    <string name="info_repeated_title">Herhaald elke</string>
+    <string name="info_task_description_title">Beschrijving</string>
+    <string name="info_task_assinged_title">Toegewezen aan</string>
 
 </resources>

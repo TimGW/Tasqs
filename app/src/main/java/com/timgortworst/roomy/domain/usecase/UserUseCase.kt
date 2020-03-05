@@ -1,14 +1,13 @@
 package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
-import com.timgortworst.roomy.data.repository.EventRepository
+import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.model.User
 
 class UserUseCase(private val householdRepository: HouseholdRepository,
                   private val userRepository: UserRepository,
-                  private val eventRepository: EventRepository) {
+                  private val taskRepository: TaskRepository) {
 
     suspend fun getCurrentUser() = userRepository.getUser(FirebaseAuth.getInstance().currentUser?.uid)
 

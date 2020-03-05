@@ -7,7 +7,7 @@
     android:layout_gravity="center">
 
     <ImageView
-        android:id="@+id/event_repeat_label"
+        android:id="@+id/task_repeat_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-        android:id="@+id/event_repeat_text"
+        android:id="@+id/task_repeat_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_8"

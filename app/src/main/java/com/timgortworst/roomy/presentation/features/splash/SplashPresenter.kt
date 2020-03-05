@@ -57,7 +57,7 @@ class SplashPresenter(
                 role = Role.NORMAL.name
         )
         setupUseCase.userListForCurrentHousehold()?.let {
-            // todo clear old events?
+            // todo clear old tasks?
             if (it.isEmpty()) setupUseCase.deleteHousehold(oldHouseholdId)
         }
 

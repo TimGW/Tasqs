@@ -7,7 +7,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.timgortworst.roomy.domain.usecase.EventUseCase
+import com.timgortworst.roomy.domain.usecase.TaskUseCase
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
@@ -20,7 +20,7 @@ class OnboardingPresenter(
         private val view: AuthCallback,
         private val setupUseCase: SetupUseCase,
         private val userUseCase: UserUseCase,
-        private val eventUseCase: EventUseCase
+        private val taskUseCase: TaskUseCase
 ) : DefaultLifecycleObserver {
     private val auth = FirebaseAuth.getInstance()
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
@@ -40,7 +40,7 @@ class OnboardingPresenter(
         if (prevUser?.isAnonymous == true) {
             val newUser = prevUser.linkWithCredential(credential).await()?.user
             userUseCase.updateUser(displayName.orEmpty(), newUser?.email.orEmpty())
-            eventUseCase.updateEventsForUser(newUser?.uid, displayName.orEmpty(), newUser?.email.orEmpty())
+            taskUseCase.updateTasksForUser(newUser?.uid, displayName.orEmpty(), newUser?.email.orEmpty())
             view.setupSuccessful()
         } else {
             trySignIn { auth.signInWithCredential(credential) }
