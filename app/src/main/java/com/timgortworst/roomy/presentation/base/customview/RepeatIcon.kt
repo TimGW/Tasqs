@@ -5,16 +5,20 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.databinding.CustomRepeatIconBinding
 import com.timgortworst.roomy.domain.model.TaskRecurrence
-import kotlinx.android.synthetic.main.custom_repeat_icon.view.*
 
 class RepeatIcon
 @JvmOverloads
 constructor(context: Context,
             attrs: AttributeSet? = null,
             defStyleAttr: Int = 0) : RelativeLayout(context, attrs, defStyleAttr) {
+
+    private var _binding: CustomRepeatIconBinding? = null
+    private val binding get() = _binding!!
+
     init {
-        LayoutInflater.from(context).inflate(R.layout.custom_repeat_icon, this, true)
+        _binding = CustomRepeatIconBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     fun setRepeatLabelText(interval: TaskRecurrence) {
@@ -25,7 +29,7 @@ constructor(context: Context,
             is TaskRecurrence.Monthly -> context.getString(R.string.repeat_label_interval_text_month)
             is TaskRecurrence.Annually -> context.getString(R.string.repeat_label_interval_text_year)
         }
-        task_repeat_text.text = label.toUpperCase()
+        binding.taskRepeatText.text = label.toUpperCase()
     }
 }
 

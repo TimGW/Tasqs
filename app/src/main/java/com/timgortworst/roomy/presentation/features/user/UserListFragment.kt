@@ -20,8 +20,6 @@ import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.presentation.features.task.recyclerview.AdapterStateListener
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import kotlinx.android.synthetic.main.fragment_task_list.*
-import kotlinx.android.synthetic.main.layout_list_state.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class UserListFragment : Fragment(), AdapterStateListener,
@@ -125,10 +123,10 @@ class UserListFragment : Fragment(), AdapterStateListener,
     }
 
     private fun setMsgView(isVisible: Int, title: Int?, text: Int?) {
-        layout_list_state?.apply {
-            title?.let { this.state_title.text = parentActivity.getString(it) }
-            text?.let { this.state_message.text = parentActivity.getString(it) }
-            visibility = isVisible
+        binding.layoutListState.apply {
+            title?.let { this.stateTitle.text = parentActivity.getString(it) }
+            text?.let { this.stateMessage.text = parentActivity.getString(it) }
+            root.visibility = isVisible
         }
     }
 

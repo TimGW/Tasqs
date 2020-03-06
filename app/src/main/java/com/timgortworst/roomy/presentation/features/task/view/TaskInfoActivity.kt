@@ -7,16 +7,17 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.databinding.ActivityInfoTaskBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.task.presenter.TaskInfoPresenter
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import kotlinx.android.synthetic.main.activity_info_task.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class TaskInfoActivity : BaseActivity(), TaskInfoView {
+    private lateinit var binding: ActivityInfoTaskBinding
     private val presenter: TaskInfoPresenter by inject {
         parametersOf(this)
     }
@@ -34,7 +35,7 @@ class TaskInfoActivity : BaseActivity(), TaskInfoView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_info_task)
+        binding = ActivityInfoTaskBinding.inflate(layoutInflater)
 
         if (intent.hasExtra(INTENT_EXTRA_INFO_TASK)) {
             task = intent.getParcelableExtra(INTENT_EXTRA_INFO_TASK) as Task
@@ -48,11 +49,11 @@ class TaskInfoActivity : BaseActivity(), TaskInfoView {
             setDisplayShowHomeEnabled(true)
         }
 
-        info_description.text = task.description
-        info_repeated.text = buildRepeatText(task)
+        binding.infoDescription.text = task.description
+        binding.infoRepeated.text = buildRepeatText(task)
         if (task.user.name.isNotBlank()) {
-            user_group.visibility = View.VISIBLE
-            info_user.text = task.user.name
+            binding.userGroup.visibility = View.VISIBLE
+            binding.infoUser.text = task.user.name
         }
         presenter.formatDate(task.metaData.startDateTime)
     }
@@ -77,7 +78,7 @@ class TaskInfoActivity : BaseActivity(), TaskInfoView {
     }
 
     override fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String) {
-        info_date.text = "$formattedDayOfMonth $formattedMonth $formattedYear"
+        binding.infoDate.text = "$formattedDayOfMonth $formattedMonth $formattedYear"
     }
 
     private fun buildRepeatText(task: Task): String {

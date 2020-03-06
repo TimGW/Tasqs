@@ -6,14 +6,15 @@ import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
+import com.timgortworst.roomy.databinding.ActivityOnboardingBinding
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.auth.AuthFragment
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import kotlinx.android.synthetic.main.activity_onboarding.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class OnboardingActivity : BaseActivity() {
+    private lateinit var binding: ActivityOnboardingBinding
     private val sharedPrefs: SharedPrefs by inject { parametersOf(this) }
 
     private val onboardingFragments = listOf(
@@ -23,26 +24,27 @@ class OnboardingActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_onboarding)
+        binding = ActivityOnboardingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val adapter = OnboardingAdapter(this, onboardingFragments)
-        view_pager.adapter = adapter
-        indicator.setViewPager(view_pager)
+        binding.viewPager.adapter = adapter
+        binding.indicator.setViewPager(binding.viewPager)
 
-        view_pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
                 // todo migrate to presenter
                 if (position == adapter.itemCount - 1) {
-                    next_button.setText(R.string.skip)
-                    next_button.setOnClickListener {
+                    binding.nextButton.setText(R.string.skip)
+                    binding.nextButton.setOnClickListener {
                         (onboardingFragments[position] as? AuthFragment)?.signInAnonymously()
                     }
                 } else {
-                    next_button.setText(R.string.next)
-                    next_button.setOnClickListener {
-                        view_pager.currentItem = view_pager.currentItem + 1
+                    binding.nextButton.setText(R.string.next)
+                    binding.nextButton.setOnClickListener {
+                        binding.viewPager.currentItem =  binding.viewPager.currentItem + 1
                     }
                 }
             }
@@ -50,10 +52,10 @@ class OnboardingActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (view_pager.currentItem == 0) {
+        if ( binding.viewPager.currentItem == 0) {
             super.onBackPressed()
         } else {
-            view_pager.currentItem = view_pager.currentItem - 1
+            binding.viewPager.currentItem =  binding.viewPager.currentItem - 1
         }
     }
 

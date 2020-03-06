@@ -5,16 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import androidx.appcompat.app.AppCompatActivity
-import com.timgortworst.roomy.R
+import com.timgortworst.roomy.databinding.ActivityHtmlTextBinding
 import com.timgortworst.roomy.domain.utils.fromHtml
-import kotlinx.android.synthetic.main.activity_html_text.*
 
 class HtmlTextActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityHtmlTextBinding
     private lateinit var htmlText: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_html_text)
+        binding = ActivityHtmlTextBinding.inflate(layoutInflater)
 
         title = intent.getStringExtra(INTENT_EXTRA_TITLE) ?: ""
         htmlText = intent.getStringExtra(INTENT_EXTRA_HTML_TEXT) ?: return
@@ -23,8 +23,8 @@ class HtmlTextActivity : AppCompatActivity() {
 
     private fun setDisclaimerText(htmlText: String) {
         val htmlString = htmlText.fromHtml()
-        html_text.movementMethod = LinkMovementMethod.getInstance()
-        html_text.text = htmlString
+        binding.htmlText.movementMethod = LinkMovementMethod.getInstance()
+        binding.htmlText.text = htmlString
     }
 
     companion object {
@@ -38,5 +38,4 @@ class HtmlTextActivity : AppCompatActivity() {
             context.startActivity(intent)
         }
     }
-
 }

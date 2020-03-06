@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.timgortworst.roomy.R
-import kotlinx.android.synthetic.main.fragment_onboarding.view.*
+import com.timgortworst.roomy.databinding.FragmentOnboardingBinding
 
 class OnboardingFragment : Fragment() {
     private var position: Int = INVALID_POSITION
@@ -14,15 +14,18 @@ class OnboardingFragment : Fragment() {
     private var titles = intArrayOf(R.string.onboarding_title_agenda, R.string.onboarding_title_connect)
     private var subtitles = intArrayOf(R.string.onboarding_subtitle_agenda, R.string.onboarding_subtitle_connect)
 
+    private var _binding: FragmentOnboardingBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_onboarding, container, false)
+        _binding = FragmentOnboardingBinding.inflate(inflater, container, false)
         position = arguments?.getInt(ARG_SECTION_NUMBER) ?: INVALID_POSITION
         if (position != INVALID_POSITION) {
-            view.onboarding_image.setImageResource(bgs[position])
-            view.onboarding_headline.setText(titles[position])
-            view.onboarding_subtitle.setText(subtitles[position])
+            binding.onboardingImage.setImageResource(bgs[position])
+            binding.onboardingHeadline.setText(titles[position])
+            binding.onboardingSubtitle.setText(subtitles[position])
         }
-        return view
+        return binding.root
     }
 
     companion object {

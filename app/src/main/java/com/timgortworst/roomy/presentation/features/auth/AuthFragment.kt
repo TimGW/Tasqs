@@ -14,14 +14,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.databinding.FragmentGoogleAuthBinding
 import com.timgortworst.roomy.domain.utils.showToast
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.onboarding.OnboardingPresenter
 import com.timgortworst.roomy.presentation.features.onboarding.OnboardingActivity
-import kotlinx.android.synthetic.main.fragment_google_auth.view.*
-import kotlinx.android.synthetic.main.fragment_onboarding.view.onboarding_headline
-import kotlinx.android.synthetic.main.fragment_onboarding.view.onboarding_subtitle
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -30,15 +28,19 @@ class AuthFragment : Fragment(), AuthCallback {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var parentActivity: Activity
 
+    private var _binding: FragmentGoogleAuthBinding? = null
+    private val binding get() = _binding!!
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         parentActivity = (activity as? Activity) ?: return
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_google_auth, container, false)
-        view.onboarding_headline.setText(R.string.onboarding_title_login)
-        view.onboarding_subtitle.setText(R.string.onboarding_subtitle_login)
+        _binding = FragmentGoogleAuthBinding.inflate(inflater, container, false)
+
+        binding.onboardingHeadline.setText(R.string.onboarding_title_login)
+        binding.onboardingSubtitle.setText(R.string.onboarding_subtitle_login)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -47,11 +49,11 @@ class AuthFragment : Fragment(), AuthCallback {
 
         googleSignInClient = GoogleSignIn.getClient(parentActivity, gso)
 
-        view.goolge_sign_in.setOnClickListener {
+        binding.goolgeSignIn.setOnClickListener {
             startActivityForResult(googleSignInClient.signInIntent, RC_SIGN_IN)
         }
 
-        return view
+        return binding.root
     }
 
     fun signInAnonymously() {
