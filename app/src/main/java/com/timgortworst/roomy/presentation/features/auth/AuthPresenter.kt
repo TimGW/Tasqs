@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.features.onboarding
+package com.timgortworst.roomy.presentation.features.auth
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -11,12 +11,11 @@ import com.timgortworst.roomy.domain.usecase.TaskUseCase
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
-import com.timgortworst.roomy.presentation.features.auth.AuthCallback
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class OnboardingPresenter(
+class AuthPresenter(
         private val view: AuthCallback,
         private val setupUseCase: SetupUseCase,
         private val userUseCase: UserUseCase,
@@ -41,7 +40,7 @@ class OnboardingPresenter(
             val newUser = prevUser.linkWithCredential(credential).await()?.user
             userUseCase.updateUser(displayName.orEmpty(), newUser?.email.orEmpty())
             taskUseCase.updateTasksForUser(newUser?.uid, displayName.orEmpty(), newUser?.email.orEmpty())
-            view.setupSuccessful()
+            view.loginSuccessful()
         } else {
             trySignIn { auth.signInWithCredential(credential) }
         }
@@ -51,20 +50,25 @@ class OnboardingPresenter(
         try {
             val fireBaseUser = action.invoke().await().user
             if (fireBaseUser != null) {
-                setupHousehold(fireBaseUser) // todo skip when cache is cleared and user logs in again
+                if (setupUseCase.currentHouseholdIdForCurrentUser().isBlank()) {
+                    setupHousehold(fireBaseUser)
+                } else {
+                    view.welcomeBack()
+                    view.loginSuccessful()
+                }
             } else {
-                view.setupFailed()
+                view.loginFailed()
             }
         } catch (e: Exception) {
-            view.setupFailed()
+            view.loginFailed()
         }
     }
 
     private fun setupHousehold(fireBaseUser: FirebaseUser) = scope.launch {
         setupUseCase.initializeHousehold(fireBaseUser)?.let {
-            view.setupSuccessful()
+            view.loginSuccessful()
             return@launch
         }
-        view.setupFailed()
+        view.loginFailed()
     }
 }

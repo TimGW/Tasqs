@@ -18,13 +18,12 @@ import com.timgortworst.roomy.databinding.FragmentGoogleAuthBinding
 import com.timgortworst.roomy.domain.utils.showToast
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import com.timgortworst.roomy.presentation.features.onboarding.OnboardingPresenter
 import com.timgortworst.roomy.presentation.features.onboarding.OnboardingActivity
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class AuthFragment : Fragment(), AuthCallback {
-    private val presenter: OnboardingPresenter by inject { parametersOf(this) }
+    private val presenter: AuthPresenter by inject { parametersOf(this) }
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var parentActivity: Activity
 
@@ -74,7 +73,7 @@ class AuthFragment : Fragment(), AuthCallback {
         }
     }
 
-    override fun setupSuccessful() {
+    override fun loginSuccessful() {
         (parentActivity as? BaseActivity)?.hideProgressDialog()
         when (parentActivity) {
             is OnboardingActivity -> (parentActivity as? OnboardingActivity)?.goToMain()
@@ -82,7 +81,11 @@ class AuthFragment : Fragment(), AuthCallback {
         }
     }
 
-    override fun setupFailed() {
+    override fun welcomeBack() {
+        parentActivity.showToast(R.string.app_name)
+    }
+
+    override fun loginFailed() {
         (parentActivity as? BaseActivity)?.hideProgressDialog()
         parentActivity.showToast(R.string.error_generic)
         parentActivity.finish()

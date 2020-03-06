@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.presentation.features.onboarding
 
-import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.viewpager2.widget.ViewPager2
@@ -35,7 +35,6 @@ class OnboardingActivity : BaseActivity() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
 
-                // todo migrate to presenter
                 if (position == adapter.itemCount - 1) {
                     binding.nextButton.setText(R.string.skip)
                     binding.nextButton.setOnClickListener {
@@ -70,8 +69,8 @@ class OnboardingActivity : BaseActivity() {
     }
 
     companion object {
-        fun start(originActivity: Activity) {
-            originActivity.startActivity(Intent(originActivity, OnboardingActivity::class.java))
+        fun start(context: Context) {
+            context.startActivity(Intent(context, OnboardingActivity::class.java))
         }
     }
 }
