@@ -3,8 +3,6 @@ package com.timgortworst.roomy.presentation.features.task.recyclerview
 import com.google.firebase.firestore.FirebaseFirestoreException
 
 interface AdapterStateListener {
-    fun onEmptyState(isVisible: Int)
-    fun onErrorState(isVisible: Int, e: FirebaseFirestoreException? = null)
-    fun onDataState(isVisible: Int)
-    fun hideLoadingState()
+    fun onDataChanged(itemCount: Int)
+    fun onError(e: FirebaseFirestoreException)
 }

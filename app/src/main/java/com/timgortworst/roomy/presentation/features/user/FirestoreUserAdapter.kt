@@ -50,15 +50,11 @@ class FirestoreUserAdapter(
     override fun getItemCount(): Int = snapshots.size
 
     override fun onDataChanged() {
-        adapterStateListener.hideLoadingState()
-        adapterStateListener.onErrorState(View.GONE)
-        val visibility = if (itemCount == 0) View.VISIBLE else View.GONE
-        adapterStateListener.onEmptyState(visibility)
+        adapterStateListener.onDataChanged(itemCount)
     }
 
     override fun onError(e: FirebaseFirestoreException) {
-        //todo hide list
-        adapterStateListener.onErrorState(View.VISIBLE, e)
+        adapterStateListener.onError(e)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

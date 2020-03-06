@@ -8,11 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.common.ChangeEventType
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.button.MaterialButton
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Task
@@ -61,23 +60,20 @@ class TaskFirestoreAdapter(
     override fun getItemCount(): Int  = snapshots.size
 
     override fun onDataChanged() {
-        adapterStateListener.onDataState(View.VISIBLE)
-        adapterStateListener.onErrorState(View.GONE)
-        val visibility = if (itemCount == 0) View.VISIBLE else View.GONE
-        adapterStateListener.onEmptyState(visibility)
+        adapterStateListener.onDataChanged(itemCount)
     }
 
     override fun onError(e: FirebaseFirestoreException) {
-        adapterStateListener.onDataState(View.GONE)
-        adapterStateListener.onErrorState(View.VISIBLE, e)
+        adapterStateListener.onError(e)
     }
 
     fun getPosition(id: String): Int {
         return snapshots.indexOfFirst { it.id == id }
     }
-
-//    private fun setNotificationReminder(event: Event, hasPendingWrites: Boolean) {
-//        if (hasPendingWrites && event.user.userId == uId) {
+//
+//    private fun setNotificationReminder(task: Task, hasPendingWrites: Boolean) {
+//        val uId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+//        if (hasPendingWrites && task.user.userId == uId) {
 //            callback.enqueueNotification(
 //                event.eventId,
 //                event.metaData,

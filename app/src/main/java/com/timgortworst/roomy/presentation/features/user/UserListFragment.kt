@@ -73,20 +73,33 @@ class UserListFragment : Fragment(), AdapterStateListener,
     private fun createFireStoreRvAdapter() = userViewModel.fetchFireStoreRecyclerOptionsBuilder()
         .observe(viewLifecycleOwner, Observer { networkResponse ->
             networkResponse?.let {
+                hideLoadingState()
                 val options = it.setLifecycleOwner(this).build()
                 userListAdapter.updateOptions(options)
             }
         })
 
-    override fun onEmptyState(isVisible: Int) {
+
+    override fun onDataChanged(itemCount: Int) {
+        binding.recyclerView.visibility = View.VISIBLE
+        val visibility = if (itemCount == 0) View.VISIBLE else View.GONE
         setMsgView(
-            isVisible,
+            visibility,
             R.string.empty_list_state_title_users,
             R.string.empty_list_state_text_users
         )
     }
 
-    override fun hideLoadingState() {
+    override fun onError(e: FirebaseFirestoreException) {
+        binding.recyclerView.visibility = View.GONE
+        setMsgView(
+            View.VISIBLE,
+            R.string.error_list_state_title,
+            R.string.error_list_state_text
+        )
+    }
+
+    private fun hideLoadingState() {
         val animationDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
 
         binding.recyclerView.apply {
@@ -107,19 +120,6 @@ class UserListFragment : Fragment(), AdapterStateListener,
                     binding.progress.root.visibility = View.GONE
                 }
             })
-    }
-
-    override fun onDataState(isVisible: Int) {
-//        isVisible todo
-    }
-
-    override fun onErrorState(isVisible: Int, e: FirebaseFirestoreException?) {
-        // todo handle specific errors
-        setMsgView(
-            isVisible,
-            R.string.error_list_state_title,
-            R.string.error_list_state_text
-        )
     }
 
     private fun setMsgView(isVisible: Int, title: Int?, text: Int?) {

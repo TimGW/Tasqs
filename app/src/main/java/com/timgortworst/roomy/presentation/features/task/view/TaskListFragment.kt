@@ -255,19 +255,26 @@ class TaskListFragment : Fragment(),
         }
     }
 
-    override fun onEmptyState(isVisible: Int) {
+    override fun onDataChanged(itemCount: Int) {
+        binding.recyclerView.visibility = View.VISIBLE
+        val visibility = if (itemCount == 0) View.VISIBLE else View.GONE
         setMsgView(
-            isVisible,
+            visibility,
             R.string.empty_list_state_title_tasks,
             R.string.empty_list_state_text_tasks
         )
     }
 
-    override fun onDataState(isVisible: Int) {
-        binding.recyclerView.visibility = isVisible
+    override fun onError(e: FirebaseFirestoreException) {
+        binding.recyclerView.visibility = View.GONE
+        setMsgView(
+            View.VISIBLE,
+            R.string.error_list_state_title,
+            R.string.error_list_state_text
+        )
     }
 
-    override fun hideLoadingState() {
+    private fun hideLoadingState() {
         val animationDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
 
         binding.recyclerView.apply {
@@ -288,14 +295,5 @@ class TaskListFragment : Fragment(),
                     binding.progress.root.visibility = View.GONE
                 }
             })
-    }
-
-    override fun onErrorState(isVisible: Int, e: FirebaseFirestoreException?) {
-        // todo handle specific errors
-        setMsgView(
-            isVisible,
-            R.string.error_list_state_title,
-            R.string.error_list_state_text
-        )
     }
 }
