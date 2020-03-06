@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
@@ -13,27 +14,28 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.transition.MaterialArcMotion
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialContainerTransformSharedElementCallback
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.databinding.ActivityEditTaskBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
-import com.timgortworst.roomy.presentation.features.task.presenter.TaskEditPresenter
 import com.timgortworst.roomy.presentation.features.main.MainActivity
+import com.timgortworst.roomy.presentation.features.task.presenter.TaskEditPresenter
 import kotlinx.android.synthetic.main.activity_edit_task.*
 import kotlinx.android.synthetic.main.layout_recurrence_picker.*
 import kotlinx.android.synthetic.main.layout_week_picker.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalTime
-import org.threeten.bp.ZoneId
-import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.*
 import org.threeten.bp.temporal.ChronoField
 
 class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSetListener {
+    private lateinit var binding: ActivityEditTaskBinding
     private val presenter: TaskEditPresenter by inject { parametersOf(this) }
     private var userList: List<User> = listOf()
     private lateinit var task: Task
@@ -56,12 +58,28 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        initAnimation()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_task)
+        binding = ActivityEditTaskBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         task = intent.getParcelableExtra(INTENT_EXTRA_EDIT_TASK) as? Task ?: Task()
 
         setupUI()
+    }
+
+    private fun initAnimation() {
+        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+        findViewById<View>(android.R.id.content).transitionName = "shared_element_container"
+        setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+
+        val transform = MaterialContainerTransform(this).apply {
+            addTarget(android.R.id.content)
+            duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
+        }
+
+        window.sharedElementEnterTransition = transform
+        window.sharedElementReturnTransition = transform
     }
 
     private fun setupUI() {

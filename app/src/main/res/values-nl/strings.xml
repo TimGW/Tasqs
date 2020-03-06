@@ -56,7 +56,7 @@
     <string name="repeat_label_interval_text_week">W</string>
     <string name="repeat_label_interval_text_year">J</string>
     <string name="title_activity_settings">Instellingen</string>
-    <string name="toolbar_title_edit_task">%1$s aanpassen</string>
+    <string name="toolbar_title_edit_task">\'%1$s\' aanpassen</string>
     <string name="toolbar_title_new_task">Nieuwe taak</string>
     <string name="toolbar_title_info_task">Taak informatie</string>
     <string name="toolbar_title_tasks">Taken</string>

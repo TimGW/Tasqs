@@ -1,17 +1,21 @@
 package com.timgortworst.roomy.presentation.features.main
 
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.Window
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.material.transition.MaterialContainerTransformSharedElementCallback
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.databinding.ActivityMainBinding
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
@@ -19,11 +23,11 @@ import com.timgortworst.roomy.presentation.features.auth.AuthFragment
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
 import com.timgortworst.roomy.presentation.features.splash.SplashActivity
 import com.timgortworst.roomy.presentation.features.user.UserListFragment
-import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class MainActivity : BaseActivity(), MainView {
+    private lateinit var binding: ActivityMainBinding
     private val presenter: MainPresenter by inject {
         parametersOf(this)
     }
@@ -54,8 +58,10 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        initAnimation()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (savedInstanceState == null) {
             openFragment(taskListFragment, taskListFragment::class.java.toString())
@@ -73,6 +79,12 @@ class MainActivity : BaseActivity(), MainView {
         setupBroadcastReceivers()
     }
 
+    private fun initAnimation() {
+        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+        setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
+        window.sharedElementsUseOverlay = false
+    }
+
     override fun onResume() {
         super.onResume()
         networkChangeReceiver.register()
@@ -86,14 +98,14 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun onDestroy() {
 //        presenter.detachHouseholdListener()
-        adView?.removeAllViews()
-        adView?.destroy()
+        binding.adView.removeAllViews()
+        binding.adView.destroy()
         super.onDestroy()
     }
 
     private fun setupBottomAppBar() {
-        bottom_appbar.replaceMenu(R.menu.bottom_appbar_menu)
-        bottom_appbar.setOnMenuItemClickListener { menuItem ->
+        binding.bottomAppbar.replaceMenu(R.menu.bottom_appbar_menu)
+        binding.bottomAppbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.appbar_tasks_id -> openFragment(taskListFragment, taskListFragment::class.java.toString())
                 R.id.appbar_users_id -> presenter.selectFragment()
@@ -109,9 +121,9 @@ class MainActivity : BaseActivity(), MainView {
             setToolbarTitleFor(it.tag.orEmpty())
 
             if (activeFragment.tag == googleAuthFragment::class.java.toString()) {
-                fab.hide()
+                binding.fab.hide()
             } else {
-                fab.show()
+                binding.fab.show()
             }
         }
     }
@@ -155,7 +167,7 @@ class MainActivity : BaseActivity(), MainView {
             else -> { _ -> }
         }
 
-        fab.setOnClickListener(clickTask)
+        binding.fab.setOnClickListener(clickTask)
     }
 
     override fun logout() {
@@ -178,7 +190,7 @@ class MainActivity : BaseActivity(), MainView {
     private fun setupAds() {
         val builder = AdRequest.Builder()
         adRequest = builder.build()
-        adView?.adListener = object : AdListener() {
+        binding.adView.adListener = object : AdListener() {
             override fun onAdLoaded() { presenter.showOrHideAd() }
 
             override fun onAdFailedToLoad(errorCode: Int) { hideAd() }
@@ -186,11 +198,11 @@ class MainActivity : BaseActivity(), MainView {
         loadAd()
     }
 
-    override fun loadAd() { adView?.loadAd(adRequest) }
+    override fun loadAd() { binding.adView.loadAd(adRequest) }
 
-    override fun showAd() { adView_container?.visibility = View.VISIBLE }
+    override fun showAd() { binding.adViewContainer.visibility = View.VISIBLE }
 
-    override fun hideAd() { adView_container?.visibility = View.GONE }
+    override fun hideAd() { binding.adViewContainer.visibility = View.GONE }
 
     override fun presentShareLinkUri(linkUri: Uri) {
         FirebaseDynamicLinks.getInstance().createDynamicLink()
@@ -221,7 +233,17 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun openTaskEditActivity() {
-        TaskEditActivity.start(this)
+//        TaskEditActivity.start(this)
+
+        val intent = Intent(this, TaskEditActivity::class.java)
+        val options =  ActivityOptions.makeSceneTransitionAnimation(
+            this,
+            binding.fab,
+            "shared_element_container"  // The transition name to be matched in Activity B.
+        )
+//        task?.let { intent.putExtra(TaskEditActivity.INTENT_EXTRA_EDIT_TASK, it) }
+        startActivity(intent, options.toBundle())
+
     }
 
     override fun presentGoogleAuthFragment() {
