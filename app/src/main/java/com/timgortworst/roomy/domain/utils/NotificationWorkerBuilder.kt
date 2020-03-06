@@ -49,12 +49,6 @@ class NotificationWorkerBuilder(private val context: Context) {
                 .putString(NOTIFICATION_ID_KEY, taskId)
                 .putString(NOTIFICATION_TITLE_KEY, title)
                 .putString(NOTIFICATION_MSG_KEY, msg)
-                .putLong(WM_FREQ_KEY, taskRecurrence.frequency.toLong())
-                .putString(WM_RECURRENCE_KEY, taskRecurrence.id)
-
-        (taskRecurrence as? TaskRecurrence.Weekly)?.onDaysOfWeek?.let {
-            dataBuilder.putIntArray(WM_WEEKDAYS_KEY, it.toIntArray())
-        }
 
         return dataBuilder.build()
     }
@@ -67,8 +61,5 @@ class NotificationWorkerBuilder(private val context: Context) {
         const val NOTIFICATION_ID_KEY = "NOTIFICATION_ID_KEY"
         const val NOTIFICATION_TITLE_KEY = "NOTIFICATION_TITLE_KEY"
         const val NOTIFICATION_MSG_KEY = "NOTIFICATION_MSG_KEY"
-        const val WM_FREQ_KEY = "WM_FREQ_KEY"
-        const val WM_RECURRENCE_KEY = "WM_RECURRENCE_KEY"
-        const val WM_WEEKDAYS_KEY = "WM_WEEKDAYS_KEY"
     }
 }

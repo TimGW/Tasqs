@@ -1,10 +1,7 @@
 package com.timgortworst.roomy.presentation
 
 import android.app.Application
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.work.Configuration
@@ -21,13 +18,12 @@ import com.timgortworst.roomy.data.di.repositoryModule
 import com.timgortworst.roomy.data.di.useCaseModule
 import com.timgortworst.roomy.data.di.viewModelModule
 import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
-import com.timgortworst.roomy.domain.utils.timeCalcModule
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
-import java.util.HashMap
+import java.util.*
 
 /**
  * Created by tim.gortworst on 17/02/2018.
@@ -38,7 +34,6 @@ class RoomyApp : Application(), Configuration.Provider {
         repositoryModule,
         useCaseModule,
         presenterModule,
-        timeCalcModule,
         viewModelModule
     )
 

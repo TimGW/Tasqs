@@ -11,7 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Role
 import com.timgortworst.roomy.domain.model.User
-import com.timgortworst.roomy.presentation.features.task.recyclerview.AdapterStateListener
+import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 
 
 /**
@@ -19,11 +19,11 @@ import com.timgortworst.roomy.presentation.features.task.recyclerview.AdapterSta
  *
  * Handles clicks by expanding items to show a more detailed description of the category
  */
-class FirestoreUserAdapter(
+class UserFirestoreAdapter(
     private val onUserLongClickListener: OnUserLongClickListener,
     private val adapterStateListener: AdapterStateListener,
     options: FirestoreRecyclerOptions<User>
-) : FirestoreRecyclerAdapter<User, FirestoreUserAdapter.ViewHolder>(options) {
+) : FirestoreRecyclerAdapter<User, UserFirestoreAdapter.ViewHolder>(options) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater

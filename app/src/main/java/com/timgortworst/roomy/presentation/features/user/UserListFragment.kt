@@ -18,13 +18,14 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentUserListBinding
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
-import com.timgortworst.roomy.presentation.features.task.recyclerview.AdapterStateListener
+import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class UserListFragment : Fragment(), AdapterStateListener,
-    FirestoreUserAdapter.OnUserLongClickListener {
-    private lateinit var userListAdapter: FirestoreUserAdapter
+class UserListFragment : Fragment(),
+    AdapterStateListener,
+    UserFirestoreAdapter.OnUserLongClickListener {
+    private lateinit var userListAdapter: UserFirestoreAdapter
     private lateinit var parentActivity: MainActivity
     private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
@@ -59,7 +60,7 @@ class UserListFragment : Fragment(), AdapterStateListener,
             .setQuery(query, User::class.java)
             .build()
 
-        userListAdapter = FirestoreUserAdapter(this, this, defaultOptions)
+        userListAdapter = UserFirestoreAdapter(this, this, defaultOptions)
 
         binding.recyclerView.apply {
             val linearLayoutManager = LinearLayoutManager(parentActivity)

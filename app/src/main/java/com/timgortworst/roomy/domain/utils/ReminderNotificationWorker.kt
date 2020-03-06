@@ -8,19 +8,11 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.work.Constraints
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.SINGLE_TASK
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_ID_KEY
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_MSG_KEY
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_TITLE_KEY
-import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.WM_FREQ_KEY
-import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.WM_RECURRENCE_KEY
-import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.WM_WEEKDAYS_KEY
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -32,8 +24,7 @@ import java.util.concurrent.TimeUnit
 class ReminderNotificationWorker(
         val context: Context,
         params: WorkerParameters
-) : Worker(context, params), KoinComponent {
-    private val timeOperations: TimeOperations by inject()
+) : Worker(context, params) {
     private val workManager = WorkManager.getInstance(context)
 
     override fun doWork() = try {
@@ -43,33 +34,32 @@ class ReminderNotificationWorker(
                 ?: context.getString(R.string.notification_default_msg)
         val id = inputData.getString(NOTIFICATION_ID_KEY) ?: title.plus(text)
 
-        val recurrence = inputData.getString(WM_RECURRENCE_KEY) ?: SINGLE_TASK
-        val freq = inputData.getLong(WM_FREQ_KEY, NO_REPEATING_TASK)
-        val onDaysOfWeek = inputData.getIntArray(WM_WEEKDAYS_KEY)
-
         triggerNotification(id.hashCode(), title, text)
 
-        // set new workmanager task for repeating event
-        if (recurrence != SINGLE_TASK) {
-            val nowNoon = ZonedDateTime.now().with(LocalTime.NOON)
-            val nextTaskDateTime = timeOperations.nextTask(nowNoon, recurrence, freq, onDaysOfWeek?.toList().orEmpty())
-            val initialDelay = Duration.between(nowNoon, nextTaskDateTime).toMillis()
-
-            val constraints = Constraints.Builder()
-                    .setRequiresBatteryNotLow(true)
-                    .build()
-
-            workManager.enqueue(OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
-                    .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                    .addTag(id)
-                    .setConstraints(constraints)
-                    .setInputData(inputData)
-                    .build())
-        }
+        setFutureReminder(id)
 
         Result.success()
     } catch (e: Exception) {
         Result.failure()
+    }
+
+    private fun setFutureReminder(
+        id: String
+    ) {
+        val now = ZonedDateTime.now()
+        val tomorrowNoon = now.plusDays(1).with(LocalTime.NOON)
+        val initialDelay = Duration.between(now, tomorrowNoon).toMillis()
+
+        val constraints = Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        workManager.enqueue(OneTimeWorkRequest.Builder(ReminderNotificationWorker::class.java)
+            .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+            .addTag(id)
+            .setConstraints(constraints)
+            .setInputData(inputData)
+            .build())
     }
 
     private fun triggerNotification(id: Int, title: String, text: String) {

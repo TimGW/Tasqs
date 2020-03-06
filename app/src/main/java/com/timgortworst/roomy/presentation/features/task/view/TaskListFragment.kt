@@ -19,16 +19,21 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.common.ChangeEventType
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.MetadataChanges
+import com.google.firebase.firestore.SnapshotMetadata
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentTaskListBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskMetaData
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
+import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
+import com.timgortworst.roomy.presentation.base.view.ChildChangedListener
 import com.timgortworst.roomy.presentation.features.task.presenter.TaskListPresenter
 import com.timgortworst.roomy.presentation.features.task.recyclerview.*
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskViewModel
@@ -42,7 +47,7 @@ class TaskListFragment : Fragment(),
     ActionModeCallback.ActionItemListener,
     TaskDoneClickListener,
     TaskListView,
-    AdapterStateListener {
+    AdapterStateListener, ChildChangedListener {
 
     private lateinit var parentActivity: AppCompatActivity
     private var _binding: FragmentTaskListBinding? = null
@@ -115,14 +120,22 @@ class TaskListFragment : Fragment(),
 
     private fun setupRecyclerView() {
         // todo remove this placeholder options
-        val query = FirebaseFirestore.getInstance().collection(TaskJson.TASK_COLLECTION_REF).whereEqualTo(
-            TaskJson.TASK_HOUSEHOLD_ID_REF, "")
+        val query =
+            FirebaseFirestore.getInstance().collection(TaskJson.TASK_COLLECTION_REF).whereEqualTo(
+                TaskJson.TASK_HOUSEHOLD_ID_REF, ""
+            )
         val defaultOptions = FirestoreRecyclerOptions
             .Builder<Task>()
             .setQuery(query, Task::class.java)
             .build()
 
-        taskListAdapter = TaskFirestoreAdapter(this, this, defaultOptions)
+        taskListAdapter = TaskFirestoreAdapter(
+            this,
+            this,
+            this,
+            defaultOptions
+        )
+
         binding.recyclerView.apply {
             val linearLayoutManager = LinearLayoutManager(parentActivity)
             layoutManager = linearLayoutManager
@@ -295,5 +308,12 @@ class TaskListFragment : Fragment(),
                     binding.progress.root.visibility = View.GONE
                 }
             })
+    }
+
+    override fun onChildChanged(
+        type: ChangeEventType,
+        task: Task?
+    ) {
+        presenter.renderDataState(type, task)
     }
 }

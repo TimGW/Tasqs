@@ -13,7 +13,6 @@ import org.threeten.bp.ZonedDateTime
 class TaskUseCase(
     private val taskRepository: TaskRepository,
     private val userRepository: UserRepository,
-    private val timeOperations: TimeOperations,
     private val idProvider: IdProvider
 ) {
     suspend fun getAllTasksQuery() = taskRepository.getAllTasksQuery()
@@ -46,6 +45,7 @@ class TaskUseCase(
     }
 
     private fun calcNextTaskDate(taskMetaData: TaskMetaData): ZonedDateTime {
+        val timeOperations = TimeOperations()
         return if (taskMetaData.startDateTime.isBefore(ZonedDateTime.now())) {
             val noon = ZonedDateTime.now().with(LocalTime.NOON)
             timeOperations.nextTask(noon, taskMetaData.recurrence)
@@ -55,14 +55,11 @@ class TaskUseCase(
     }
 
     suspend fun createOrUpdateTask(task: Task) {
-        if (task.id.isNotEmpty()) {
-            taskRepository.updateTask(task.apply {
-                this.householdId = idProvider.getHouseholdId()
-            })
+        if (task.id.isEmpty()) {
+            task.householdId = idProvider.getHouseholdId()
+            taskRepository.createTask(task)
         } else {
-            taskRepository.createTask(task.apply {
-                this.householdId = idProvider.getHouseholdId()
-            })
+            taskRepository.updateTask(task)
         }
     }
 

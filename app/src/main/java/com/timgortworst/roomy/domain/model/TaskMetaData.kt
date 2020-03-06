@@ -8,6 +8,6 @@ import org.threeten.bp.ZonedDateTime
 @Parcelize
 @IgnoreExtraProperties
 data class TaskMetaData(
-        var startDateTime: ZonedDateTime = ZonedDateTime.now(), // todo fetch right time
+        var startDateTime: ZonedDateTime = ZonedDateTime.now(),
         var recurrence: TaskRecurrence = TaskRecurrence.SingleTask(1)
 ) : Parcelable

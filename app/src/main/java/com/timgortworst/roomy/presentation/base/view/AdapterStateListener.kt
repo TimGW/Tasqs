@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.features.task.recyclerview
+package com.timgortworst.roomy.presentation.base.view
 
 import com.google.firebase.firestore.FirebaseFirestoreException
 

@@ -114,9 +114,11 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
         val freq = task.metaData.recurrence.frequency.toString()
         binding.taskRepeatView.recurrenceFrequency.setText(freq)
         (task.metaData.recurrence as? TaskRecurrence.Weekly)?.let { weekly ->
-            val weekdayButtonGroup = binding.taskRepeatView.recurrenceWeekPicker.weekdayButtonGroup
+            val recurrenceWeekPicker = binding.taskRepeatView.recurrenceWeekPicker
+            recurrenceWeekPicker.root.visibility = View.VISIBLE
+            val weekdayButtonGroup = recurrenceWeekPicker.weekdayButtonGroup
             weekly.onDaysOfWeek.forEach { index ->
-                weekdayButtonGroup.check(weekdayButtonGroup[index].id)
+                weekdayButtonGroup.check(weekdayButtonGroup[index - 1].id)
             }
         }
     }
@@ -152,7 +154,6 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
         binding.taskRepeatCheckbox.setOnCheckedChangeListener { _, isChecked ->
             clearAllFocus()
 
-            // todo animate down
             binding.taskRepeatView.root.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
@@ -183,7 +184,6 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
 
         binding.taskRepeatView.recurrenceWeekPicker.weekdayButtonGroup.addOnButtonCheckedListener {
                 group, checkedId, isChecked ->
-
             clearAllFocus()
         }
     }
@@ -208,7 +208,7 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
                 val result = binding.spinnerUsers.selectedItemPosition
                 if (result != -1) task.user = userList[result]
                 task.metaData.recurrence = recurrenceFromSelection()
-                presenter.editTaskDone(task) //todo update tasklist
+                presenter.editTaskDone(task)
                 true
             }
             else -> super.onOptionsItemSelected(item)
