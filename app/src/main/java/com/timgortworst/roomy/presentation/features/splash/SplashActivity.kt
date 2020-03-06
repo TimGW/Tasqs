@@ -2,20 +2,24 @@ package com.timgortworst.roomy.presentation.features.splash
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.domain.utils.showToast
+import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.onboarding.OnboardingActivity
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
-class SplashActivity : AppCompatActivity(), SplashView {
+class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpdateNeededListener {
     private val presenter: SplashPresenter by inject { parametersOf(this) }
     private lateinit var referredHouseholdId: String
 
@@ -32,14 +36,12 @@ class SplashActivity : AppCompatActivity(), SplashView {
         setTheme(R.style.MyTheme_NoActionBar_Launcher)
         super.onCreate(savedInstanceState)
 
-        FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnSuccessListener {
-            val referredHouseholdId = it?.link?.getQueryParameter(QUERY_PARAM_HOUSEHOLD).orEmpty()
-            presenter.initializeUser(referredHouseholdId)
-        }.addOnFailureListener {
-            Log.e(TAG, it.localizedMessage.orEmpty())
-            showToast(R.string.error_generic)
-            finish()
-        }
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+        val currentVersion = RoomyApp.getAppVersion()
+
+        ForceUpdateUseCase.with(remoteConfig)
+            .onUpdateNeeded(this)
+            .check(currentVersion)
     }
 
     override fun goToOnboardingActivity() {
@@ -54,47 +56,73 @@ class SplashActivity : AppCompatActivity(), SplashView {
 
     override fun presentHouseholdOverwriteDialog() {
         AlertDialog.Builder(this)
-                .setTitle(getString(R.string.dialog_household_overwrite_title))
-                .setMessage(getString(R.string.dialog_household_overwrite_text))
-                .setPositiveButton(android.R.string.yes) { _, _ ->
-                    presenter.changeCurrentUserHousehold(referredHouseholdId)
-                }
-                .setNegativeButton(android.R.string.no) { _, _ ->
-                    goToMainActivity()
-                }
-                .show()
+            .setTitle(getString(R.string.dialog_household_overwrite_title))
+            .setMessage(getString(R.string.dialog_household_overwrite_text))
+            .setPositiveButton(android.R.string.yes) { _, _ ->
+                presenter.changeCurrentUserHousehold(referredHouseholdId)
+            }
+            .setNegativeButton(android.R.string.no) { _, _ ->
+                goToMainActivity()
+            }
+            .show()
     }
 
     override fun presentAlreadyInHouseholdDialog() {
         AlertDialog.Builder(this)
-                .setTitle(getString(R.string.dialog_household_similar_title))
-                .setMessage(getString(R.string.dialog_household_similar_text))
-                .setNeutralButton(android.R.string.yes) { _, _ ->
-                    goToMainActivity()
-                }
-                .show()
+            .setTitle(getString(R.string.dialog_household_similar_title))
+            .setMessage(getString(R.string.dialog_household_similar_text))
+            .setNeutralButton(android.R.string.yes) { _, _ ->
+                goToMainActivity()
+            }
+            .show()
     }
 
-//    override fun presentUserIsBannedDialog() {
-//        AlertDialog.Builder(this)
-//                .setTitle(getString(R.string.dialog_household_banned_title))
-//                .setMessage(getString(R.string.dialog_household_banned_text))
-//                .setPositiveButton(android.R.string.yes) { _, _ ->
-//                    presenter.setupNewHousehold()
-//                }
-//                .setNegativeButton(android.R.string.no) { _, _ ->
-//                    finish()
-//                }
-//                .show()
-//    }
+    override fun onUpdateNeeded(updateUrl: String) {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.forced_update_dialog_title))
+            .setMessage(getString(R.string.forced_update_dialog_text))
+            .setPositiveButton(getString(R.string.forced_update_dialog_positive_button)) { _, _ ->
+                redirectStore(updateUrl)
+                finish()
+            }
+            .setNegativeButton(getString(R.string.forced_update_dialog_negative_button)) { _, _ ->
+                finish()
+            }
+            .setCancelable(false)
+            .create()
+            .show()
+    }
 
-//    override fun presentHouseholdFullDialog() {
-//        AlertDialog.Builder(this)
-//                .setTitle(getString(R.string.dialog_household_full_title))
-//                .setMessage(getString(R.string.dialog_household_full_text))
-//                .setNeutralButton(android.R.string.ok) { _, _ ->
-//                    finish()
-//                }
-//                .show()
-//    }
+    override fun onUpdateRecommended(updateUrl: String) {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.recommended_update_dialog_title))
+            .setMessage(getString(R.string.recommended_update_dialog_text))
+            .setPositiveButton(getString(R.string.recommended_update_dialog_positive_button)) { _, _ ->
+                redirectStore(updateUrl)
+                finish()
+            }
+            .setNegativeButton(getString(R.string.recommended_update_dialog_negative_button)) { _, _ ->
+                noUpdateNeeded()
+            }
+            .setCancelable(false)
+            .create()
+            .show()
+    }
+
+    override fun noUpdateNeeded() {
+        FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnSuccessListener {
+            val referredHouseholdId = it?.link?.getQueryParameter(QUERY_PARAM_HOUSEHOLD).orEmpty()
+            presenter.initializeUser(referredHouseholdId)
+        }.addOnFailureListener {
+            Log.e(TAG, it.localizedMessage.orEmpty())
+            showToast(R.string.error_generic)
+            finish()
+        }
+    }
+
+    private fun redirectStore(updateUrl: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
 }

@@ -60,30 +60,7 @@ class TaskFirestoreAdapter(
 
     override fun getItemCount(): Int  = snapshots.size
 
-//    override fun onChildChanged(
-//        type: ChangeEventType,
-//        snapshot: DocumentSnapshot,
-//        newIndex: Int,
-//        oldIndex: Int
-//    ) {
-//        super.onChildChanged(type, snapshot, newIndex, oldIndex)
-//        when (type) { //todo set notifications
-//            ChangeEventType.ADDED -> {
-////                setNotificationReminder(event, snapshot.metadata.hasPendingWrites())
-//            }
-//            ChangeEventType.CHANGED -> {
-////                view.removePendingNotificationReminder(event.eventId)
-////                setNotificationReminder(event, snapshot.metadata.hasPendingWrites())
-//            }
-//            ChangeEventType.REMOVED -> {
-////                view.removePendingNotificationReminder(event.eventId)
-//            }
-//            ChangeEventType.MOVED -> { }
-//        }
-//    }
-
     override fun onDataChanged() {
-//        adapterStateListener.hideLoadingState()
         adapterStateListener.onDataState(View.VISIBLE)
         adapterStateListener.onErrorState(View.GONE)
         val visibility = if (itemCount == 0) View.VISIBLE else View.GONE

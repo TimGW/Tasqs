@@ -120,5 +120,13 @@
     <string name="info_repeated_title">Herhaald elke</string>
     <string name="info_task_description_title">Beschrijving</string>
     <string name="info_task_assinged_title">Toegewezen aan</string>
-
+    <string name="forced_update_dialog_negative_button">Sluiten</string>
+    <string name="forced_update_dialog_positive_button">Update</string>
+    <string name="forced_update_dialog_text">Deze versie van Roomy is verouderd. Update naar de nieuwste verise om deze app te kunnen blijven gebruiken.</string>
+    <string name="forced_update_dialog_title">Update Roomy</string>
+    <string name="recommended_update_dialog_negative_button">Niet nu</string>
+    <string name="recommended_update_dialog_positive_button">Updaten</string>
+    <string name="recommended_update_dialog_text">Deze versie van Roomy is verouderd. Update om gebruik te maken van de nieuwe versie.</string>
+    <string name="recommended_update_dialog_title">Update Roomy</string>
+    <string name="welcome_back">Welkom terug!</string>
 </resources>

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -64,12 +65,16 @@ class AuthFragment : Fragment(), AuthCallback {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            val account = task.getResult(ApiException::class.java)
-            val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+            try {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                val account = task.getResult(ApiException::class.java)
+                val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
 
-            (parentActivity as? BaseActivity)?.showProgressDialog()
-            presenter.signInOrLinkCredential(credential, account?.displayName)
+                (parentActivity as? BaseActivity)?.showProgressDialog()
+                presenter.signInOrLinkCredential(credential, account?.displayName)
+            } catch (e: ApiException) {
+                loginFailed(R.string.error_connection)
+            }
         }
     }
 
@@ -82,12 +87,12 @@ class AuthFragment : Fragment(), AuthCallback {
     }
 
     override fun welcomeBack() {
-        parentActivity.showToast(R.string.app_name)
+        parentActivity.showToast(R.string.welcome_back)
     }
 
-    override fun loginFailed() {
+    override fun loginFailed(@StringRes errorMessage: Int) {
         (parentActivity as? BaseActivity)?.hideProgressDialog()
-        parentActivity.showToast(R.string.error_generic)
+        parentActivity.showToast(errorMessage)
         parentActivity.finish()
     }
 

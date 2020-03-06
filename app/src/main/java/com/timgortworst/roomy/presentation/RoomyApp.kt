@@ -1,10 +1,17 @@
 package com.timgortworst.roomy.presentation
 
 import android.app.Application
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.work.Configuration
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
@@ -13,12 +20,14 @@ import com.timgortworst.roomy.data.di.presenterModule
 import com.timgortworst.roomy.data.di.repositoryModule
 import com.timgortworst.roomy.data.di.useCaseModule
 import com.timgortworst.roomy.data.di.viewModelModule
+import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
 import com.timgortworst.roomy.domain.utils.timeCalcModule
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import java.util.HashMap
 
 /**
  * Created by tim.gortworst on 17/02/2018.
@@ -26,16 +35,21 @@ import org.koin.core.module.Module
 class RoomyApp : Application(), Configuration.Provider {
     private val sharedPref: SharedPrefs by inject()
     private val appComponent: List<Module> = listOf(
-            repositoryModule,
-            useCaseModule,
-            presenterModule,
-            timeCalcModule,
-            viewModelModule)
+        repositoryModule,
+        useCaseModule,
+        presenterModule,
+        timeCalcModule,
+        viewModelModule
+    )
+
+    init {
+        instance = this
+    }
 
     override fun onCreate() {
         super.onCreate()
 
-        startKoin{
+        startKoin {
             androidLogger()
             androidContext(this@RoomyApp)
             modules(appComponent)
@@ -47,7 +61,9 @@ class RoomyApp : Application(), Configuration.Provider {
             FirebaseFirestore.setLoggingEnabled(true)
         }
 
-        val nightMode = when(sharedPref.getDarkModeSetting()) {
+        setupFirebaseRemoteConfig()
+
+        val nightMode = when (sharedPref.getDarkModeSetting()) {
             0 -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             1 -> AppCompatDelegate.MODE_NIGHT_NO
             2 -> AppCompatDelegate.MODE_NIGHT_YES
@@ -58,17 +74,50 @@ class RoomyApp : Application(), Configuration.Provider {
         MobileAds.initialize(this, getString(R.string.ad_app_id))
     }
 
+    private fun setupFirebaseRemoteConfig() {
+        val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+
+        val defaults = HashMap<String, Any>()
+        defaults[ForceUpdateUseCase.KEY_CURRENT_REQUIRED_VERSION] = BuildConfig.VERSION_NAME
+        defaults[ForceUpdateUseCase.KEY_CURRENT_RECOMMENDED_VERSION] = BuildConfig.VERSION_NAME
+        defaults[ForceUpdateUseCase.KEY_UPDATE_URL] = "market://details?id=com.timgortworst.roomy"
+        firebaseRemoteConfig.setDefaultsAsync(defaults)
+
+        val configSettings = FirebaseRemoteConfigSettings.Builder()
+            .setFetchTimeoutInSeconds(5)
+            .build()
+
+        firebaseRemoteConfig.setConfigSettingsAsync(configSettings).addOnCompleteListener {
+            if (it.isSuccessful) {
+                firebaseRemoteConfig.fetchAndActivate()
+            }
+        }
+    }
+
     override fun getWorkManagerConfiguration(): Configuration {
         val builder = Configuration.Builder()
-         if (BuildConfig.DEBUG) {
-             builder.setMinimumLoggingLevel(android.util.Log.DEBUG)
-         } else {
-             builder.setMinimumLoggingLevel(android.util.Log.INFO)
+        if (BuildConfig.DEBUG) {
+            builder.setMinimumLoggingLevel(Log.DEBUG)
+        } else {
+            builder.setMinimumLoggingLevel(Log.INFO)
         }
         return builder.build()
     }
 
     companion object {
         const val TAG = "RoomyApp"
+        private lateinit var instance: RoomyApp
+
+        fun getAppVersion(): String {
+            var result = ""
+            try {
+                result = instance.packageManager
+                    .getPackageInfo(instance.packageName, 0)
+                    .versionName
+            } catch (e: PackageManager.NameNotFoundException) {
+                Log.e(TAG, e.message.toString())
+            }
+            return result
+        }
     }
 }

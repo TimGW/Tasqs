@@ -7,6 +7,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.usecase.TaskUseCase
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.domain.usecase.UserUseCase
@@ -57,10 +58,10 @@ class AuthPresenter(
                     view.loginSuccessful()
                 }
             } else {
-                view.loginFailed()
+                view.loginFailed(R.string.error_generic)
             }
         } catch (e: Exception) {
-            view.loginFailed()
+            view.loginFailed(R.string.error_generic)
         }
     }
 
@@ -69,6 +70,6 @@ class AuthPresenter(
             view.loginSuccessful()
             return@launch
         }
-        view.loginFailed()
+        view.loginFailed(R.string.error_generic)
     }
 }
