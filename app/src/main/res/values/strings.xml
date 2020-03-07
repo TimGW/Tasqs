@@ -148,4 +148,6 @@
     <string name="sign_in_cancelled">sign in cancelled</string>
     <string name="delete_account_fail_msg">Something went during with the removal of your account</string>
     <string name="retry">retry</string>
+    <string name="tasks_deleted">%1$d tasks deleted</string>
+    <string name="task_deleted">%1$s deleted</string>
 </resources>

@@ -113,7 +113,7 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
             presenter.handleAppStartup(referredHouseholdId)
         }.addOnFailureListener {
             val content = findViewById<View>(android.R.id.content)
-            content.snackbar(R.string.error_generic)
+            content.snackbar(getString(R.string.error_generic))
             finish()
         }
     }

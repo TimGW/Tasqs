@@ -30,18 +30,25 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentTaskListBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskMetaData
+import com.timgortworst.roomy.domain.model.TaskRecurrence
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
+import com.timgortworst.roomy.domain.utils.TimeOperations
+import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 import com.timgortworst.roomy.presentation.base.view.ChildChangedListener
 import com.timgortworst.roomy.presentation.features.task.presenter.TaskListPresenter
 import com.timgortworst.roomy.presentation.features.task.recyclerview.*
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskViewModel
 import com.timgortworst.roomy.presentation.features.main.MainActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.TextStyle
+import java.util.*
 
 class TaskListFragment : Fragment(),
     ActionModeCallback.ActionItemListener,
@@ -49,7 +56,7 @@ class TaskListFragment : Fragment(),
     TaskListView,
     AdapterStateListener, ChildChangedListener {
 
-    private lateinit var parentActivity: AppCompatActivity
+    private lateinit var parentActivity: MainActivity
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
     private lateinit var taskListAdapter: TaskFirestoreAdapter
@@ -223,7 +230,21 @@ class TaskListFragment : Fragment(),
     ) {
         taskViewModel.viewModelScope.launch {
             taskViewModel.tasksCompleted(listOf(task))
+
+            if (task.metaData.recurrence !is TaskRecurrence.SingleTask) {
+                parentActivity.binding.bottomNavigationContainer.snackbar(
+                    message = getString(R.string.task_next, formatDate(task.metaData.startDateTime)),
+                    anchorView = parentActivity.binding.fab
+                )
+            }
         }
+    }
+
+    private fun formatDate(zonedDateTime: ZonedDateTime): String {
+        val formattedDayOfMonth = zonedDateTime.dayOfMonth.toString()
+        val formattedMonth = zonedDateTime.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        val formattedYear = zonedDateTime.year.toString()
+        return "$formattedDayOfMonth $formattedMonth $formattedYear"
     }
 
     override fun enqueueNotification(
@@ -252,6 +273,18 @@ class TaskListFragment : Fragment(),
             .setPositiveButton(R.string.delete) { dialog, _ ->
                 taskViewModel.viewModelScope.launch {
                     taskViewModel.deleteTasks(tasks)
+
+                    if (tasks.size == 1) {
+                        parentActivity.binding.bottomNavigationContainer.snackbar(
+                            message = getString(R.string.task_deleted, tasks.first().description),
+                            anchorView = parentActivity.binding.fab
+                        )
+                    } else {
+                        parentActivity.binding.bottomNavigationContainer.snackbar(
+                            message = getString(R.string.tasks_deleted, tasks.size),
+                            anchorView = parentActivity.binding.fab
+                        )
+                    }
                 }
                 mode.finish()
                 dialog.dismiss()

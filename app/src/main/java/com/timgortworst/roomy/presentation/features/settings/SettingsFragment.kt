@@ -21,7 +21,6 @@ import androidx.preference.SwitchPreferenceCompat
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.auth.GoogleAuthProvider
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.domain.utils.snackbar

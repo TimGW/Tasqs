@@ -141,4 +141,6 @@
     <string name="sign_in_cancelled">inloggen is geanuleerd</string>
     <string name="delete_account_fail_msg">Er ging iets mis met het verwijderen.</string>
     <string name="retry">opnieuw</string>
+    <string name="tasks_deleted">%1$d taken verwijderd</string>
+    <string name="task_deleted">%1$s verwijderd</string>
 </resources>

@@ -44,16 +44,6 @@ fun String.fromHtml(): Spanned {
 }
 
 fun View.snackbar(
-    @StringRes message: Int = R.string.empty_string,
-    @StringRes actionMessage: Int = R.string.empty_string,
-    anchorView: View? = null,
-    length: Int = Snackbar.LENGTH_LONG,
-    action: (() -> Unit)? = null
-): Snackbar {
-    return snackbar(context.getString(message), context.getString(actionMessage), anchorView, length, action)
-}
-
-fun View.snackbar(
     message: String = "",
     actionMessage: String = "",
     anchorView: View? = null,

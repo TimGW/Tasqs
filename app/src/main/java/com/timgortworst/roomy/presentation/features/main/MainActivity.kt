@@ -28,7 +28,7 @@ import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class MainActivity : BaseActivity(), MainView {
-    private lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
 
     private val presenter: MainPresenter by inject { parametersOf(this) }

@@ -36,6 +36,7 @@ class TaskInfoActivity : BaseActivity(), TaskInfoView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInfoTaskBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (intent.hasExtra(INTENT_EXTRA_INFO_TASK)) {
             task = intent.getParcelableExtra(INTENT_EXTRA_INFO_TASK) as Task
