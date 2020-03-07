@@ -12,11 +12,11 @@ class SettingsPresenter(
         if (sharedPrefs.isAdsEnabled()) {
             when {
                 betweenUntil(counter, CLICKS_FOR_MESSAGE, CLICKS_FOR_EASTER_EGG) -> {
-                    view.toasti(R.string.easter_egg_message, CLICKS_FOR_EASTER_EGG - counter)
+                    view.easterEggMsg(R.string.easter_egg_message, CLICKS_FOR_EASTER_EGG - counter)
                 }
                 counter == CLICKS_FOR_EASTER_EGG -> {
                     sharedPrefs.setAdsEnabled(false)
-                    view.toasti(R.string.easter_egg_enabled)
+                    view.easterEggMsg(R.string.easter_egg_enabled)
                 }
                 else -> { /* do nothing */
                 }

@@ -49,19 +49,20 @@ fun View.snackbar(
     anchorView: View? = null,
     length: Int = Snackbar.LENGTH_LONG,
     action: (() -> Unit)? = null
-) {
-    snackbar(context.getString(message), actionMessage, anchorView, length, action)
+): Snackbar {
+    return snackbar(context.getString(message), context.getString(actionMessage), anchorView, length, action)
 }
 
 fun View.snackbar(
     message: String = "",
-    @StringRes actionMessage: Int = R.string.empty_string,
+    actionMessage: String = "",
     anchorView: View? = null,
     length: Int = Snackbar.LENGTH_LONG,
     action: (() -> Unit)? = null
-) {
+): Snackbar {
     val snackbar = Snackbar.make(this, message, length)
     if (action != null) snackbar.setAction(actionMessage) { action.invoke() }
     if (anchorView != null) snackbar.anchorView = anchorView
     snackbar.show()
+    return snackbar
 }

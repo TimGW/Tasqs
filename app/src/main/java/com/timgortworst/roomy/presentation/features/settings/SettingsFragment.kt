@@ -1,27 +1,32 @@
 package com.timgortworst.roomy.presentation.features.settings
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.firebase.ui.auth.AuthUI
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.GoogleAuthProvider
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
-import com.timgortworst.roomy.presentation.features.main.MainActivity
+import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.features.splash.SplashActivity
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -34,7 +39,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
     private val presenter: SettingsPresenter by inject { parametersOf(this) }
 
     private var counter: Int = 0
-    private var toast: Toast? = null
+    private var snackbar: Snackbar? = null
     private var remainingTimeCounter: CountDownTimer? = null
 
     override fun onAttach(context: Context) {
@@ -77,8 +82,23 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
 
                 true
             }
-    }
 
+        (findPreference("preferences_account_delete_key") as? Preference)
+            ?.setOnPreferenceClickListener {
+                AlertDialog.Builder(parentActivity)
+                    .setTitle(getString(R.string.delete))
+                    .setMessage(getString(R.string.delete_account_dialog_text))
+                    .setPositiveButton(android.R.string.yes) { _, _ ->
+                        deleteAccount()
+                    }
+                    .setNegativeButton(android.R.string.no) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+
+                true
+            }
+    }
 
     private fun displayPrefs() {
         val darkModePref = (findPreference("dark_mode_key") as? ListPreference)
@@ -116,7 +136,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
             HtmlTextActivity.start(
                 parentActivity,
                 getString(R.string.privacy_policy),
-                "Privacy policy"
+                getString(R.string.privacy_policy_title)
             )
             true
         }
@@ -160,18 +180,45 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
         AuthUI.getInstance()
             .signOut(parentActivity)
             .addOnCompleteListener {
+                context?.cacheDir?.deleteRecursively() // clear cache
+
                 SplashActivity.start(parentActivity)
             }
     }
 
-    @SuppressLint("ShowToast")
-    override fun toasti(stringRes: Int, argument: Int?) {
-        val string = getString(stringRes, argument)
+    private fun deleteAccount() { // todo re-authenticatie before removal
+        settingsViewModel.viewModelScope.launch {
+            settingsViewModel.deleteFirestoreData()
 
-        if (toast == null) {
-            toast = Toast.makeText(activity, string, Toast.LENGTH_LONG)
+            AuthUI.getInstance()
+                .delete(parentActivity)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        context?.cacheDir?.deleteRecursively() // clear cache
+                        (context?.getSystemService(ACTIVITY_SERVICE) as? ActivityManager)
+                            ?.clearApplicationUserData() // clear app data
+                    } else {
+                        val rootView = activity?.findViewById<View>(android.R.id.content)
+                            ?: return@addOnCompleteListener
+                        rootView.snackbar(
+                            message = getString(R.string.delete_account_fail_msg),
+                            actionMessage = getString(R.string.retry)
+                        ) {
+                            deleteAccount()
+                        }
+                    }
+                }
         }
-        toast?.setText(string)
-        toast?.show()
+    }
+
+    override fun easterEggMsg(stringRes: Int, argument: Int?) {
+        val rootView = activity?.findViewById<View>(android.R.id.content) ?: return
+        val snackText = getString(stringRes, argument)
+
+        if (snackbar == null) {
+            snackbar = Snackbar.make(rootView, snackText, Snackbar.LENGTH_LONG)
+        }
+        snackbar?.setText(snackText)
+        snackbar?.show()
     }
 }

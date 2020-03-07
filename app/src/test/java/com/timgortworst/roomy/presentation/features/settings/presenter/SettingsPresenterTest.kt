@@ -41,7 +41,7 @@ class SettingsPresenterTest {
         presenter.onAppVersionClick(counter)
 
         verifyZeroInteractions(sharedPrefs)
-        verify(view).toasti(R.string.easter_egg_message, 10 - counter)
+        verify(view).easterEggMsg(R.string.easter_egg_message, 10 - counter)
     }
 
     @Test
@@ -50,7 +50,7 @@ class SettingsPresenterTest {
         presenter.onAppVersionClick(counter)
 
         verifyZeroInteractions(sharedPrefs)
-        verify(view).toasti(R.string.easter_egg_message, 10 - counter)
+        verify(view).easterEggMsg(R.string.easter_egg_message, 10 - counter)
     }
 
     @Test
@@ -59,6 +59,6 @@ class SettingsPresenterTest {
         presenter.onAppVersionClick(counter)
 
         verify(sharedPrefs).setAdsEnabled(false)
-        verify(view).toasti(R.string.easter_egg_enabled)
+        verify(view).easterEggMsg(R.string.easter_egg_enabled)
     }
 }

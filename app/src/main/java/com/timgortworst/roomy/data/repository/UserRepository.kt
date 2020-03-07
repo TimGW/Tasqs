@@ -95,4 +95,17 @@ class UserRepository(
             Log.e(TAG, e.localizedMessage.orEmpty())
         }
     }
+
+    suspend fun deleteUser(
+        id: String
+    ) {
+        try {
+            userCollection
+                .document(id)
+                .delete()
+                .await()
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, e.localizedMessage.orEmpty())
+        }
+    }
 }

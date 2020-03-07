@@ -9,6 +9,7 @@ import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
 
 class UserUseCase(
     private val userRepository: UserRepository,
+    private val taskRepository: TaskRepository,
     private val idProvider: IdProvider
 ) {
 
@@ -19,29 +20,20 @@ class UserUseCase(
 
     suspend fun getHouseholdIdForUser() = idProvider.getHouseholdId()
 
-//    suspend fun deleteAndBanUser(user: User) {
-//        removeEventsAssignedToUser(user.userId)
-//
-//        addUserToBlackList(user.userId)
-//
-//        // clear household id from user document
-//        userRepository.updateUser(userId = user.userId, householdId = "")
-//    }
-
-    suspend fun updateUser(name: String, email: String) {
-        userRepository.updateUser(name = name, email = email)
+    suspend fun deleteFirestoreData() {
+        val id = getCurrentUser()?.userId ?: return
+        removeEventsAssignedToUser(id)
+        userRepository.deleteUser(id)
     }
 
-//    private suspend fun addUserToBlackList(userId: String) {
+    private suspend fun removeEventsAssignedToUser(userId: String) {
+        val tasks = taskRepository.getTasksForUser(userId)
+        taskRepository.deleteTasks(tasks)
+    }
+
+    //    private suspend fun addUserToBlackList(userId: String) {
 //        val household = householdRepository.getHousehold(userRepository.getHouseholdIdForUser(userId))
 //        household?.userIdBlackList?.add(userId)
 //        householdRepository.updateHousehold(household?.householdId, household?.userIdBlackList)
 //    }
-
-//    private suspend fun removeEventsAssignedToUser(userId: String) {
-//        eventRepository.getEventsForUser(userId).forEach {
-//            eventRepository.deleteEvent(it.eventId)
-//        }
-//    }
-
 }

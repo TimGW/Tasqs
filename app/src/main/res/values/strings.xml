@@ -39,6 +39,7 @@
     <string name="preferences_display_dark_mode">Dark mode</string>
     <string name="preferences_display_header">Display</string>
     <string name="preferences_about_header">About</string>
+    <string name="privacy_policy_title">Privacy policy</string>
     <string name="privacy_policy"><![CDATA[
     <p>I built Roomy app as an Ad Supported app. This SERVICE is provided by me at no cost and is intended for use as is.
   <br><br>This page is used to inform visitors regarding the policies with the collection, use, and disclosure of Personal Information if anyone decided to use this service.
@@ -112,6 +113,7 @@
     <string name="year">year</string>
     <string name="years">years</string>
     <string name="delete_dialog_text">Are you sure you want to delete %1$d tasks?"</string>
+    <string name="delete_account_dialog_text">Are you sure you want to delete your account, settings, reminders, tasks and remove yourself from this household?"</string>
     <string name="is_not_repeated">Is not repeated</string>
     <string name="on">on:</string>
     <string name="is_repeated">is repeated every</string>
@@ -141,6 +143,9 @@
     <string name="username">Username</string>
     <string name="logout">Logout</string>
     <string name="preferences_account_logout_summary">Erases all settings and reminders from this device</string>
+    <string name="preferences_account_delete_summary">Log out and delete your user account and all tasks from the server</string>
     <string name="confirm_logout_message">Are you sure you want to logout?</string>
     <string name="sign_in_cancelled">sign in cancelled</string>
+    <string name="delete_account_fail_msg">Something went during with the removal of your account</string>
+    <string name="retry">retry</string>
 </resources>

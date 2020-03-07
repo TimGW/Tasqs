@@ -39,6 +39,7 @@
     <string name="preferences_display_dark_mode">Donkere modus</string>
     <string name="preferences_display_header">Weergave</string>
     <string name="preferences_about_header">Over de app</string>
+    <string name="privacy_policy_title">Privacy policy</string>
     <string name="privacy_policy"><![CDATA[
     <p>I built Roomy app as an Ad Supported app. This SERVICE is provided by me at no cost and is intended for use as is.
   <br><br>This page is used to inform visitors regarding the policies with the collection, use, and disclosure of Personal Information if anyone decided to use this service.
@@ -106,6 +107,7 @@
     <string name="year">jaar</string>
     <string name="years">jaren</string>
     <string name="delete_dialog_text">Weet je zeker dat je %1$d items wilt verwijderen?"</string>
+    <string name="delete_account_dialog_text">Weet je zeker dat je dit account wilt verwijderen samen met alle, instellingen, reminders, taken and jezelf van dit huishouden?"</string>
     <string name="is_not_repeated">Wordt niet herhaald</string>
     <string name="on">op:</string>
     <string name="is_repeated">wordt herhaald elke</string>
@@ -134,6 +136,9 @@
     <string name="username">Gebruikersnaam</string>
     <string name="logout">Afmelden</string>
     <string name="preferences_account_logout_summary">Verwijdert alle instellingen en reminders van dit apparaat</string>
+    <string name="preferences_account_delete_summary">Log uit en verwijder je account en taken van de server</string>
     <string name="confirm_logout_message">Weet je zeker dat je wilt uitloggen?</string>
     <string name="sign_in_cancelled">inloggen is geanuleerd</string>
+    <string name="delete_account_fail_msg">Er ging iets mis met het verwijderen.</string>
+    <string name="retry">opnieuw</string>
 </resources>

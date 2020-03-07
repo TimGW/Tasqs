@@ -3,14 +3,13 @@
     android:id="@+id/scrollview_html_text"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    android:fadingEdgeLength="16dp"
     android:requiresFadingEdge="vertical">
 
     <TextView
         android:id="@+id/html_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:lineSpacingMultiplier="1.3" />
+        android:lineSpacingMultiplier="1.3"
+        android:layout_margin="@dimen/keyline_4"/>
 
 </ScrollView>

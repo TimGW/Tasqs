@@ -7,16 +7,23 @@
 
         <Preference
             android:key="preferences_account_name_key"
-            android:title="@string/username"
-            android:summary="-"
             android:selectable="false"
-            app:iconSpaceReserved="false"/>
+            android:summary="-"
+            android:title="@string/username"
+            app:iconSpaceReserved="false" />
 
         <Preference
             android:key="preferences_account_logout_key"
-            android:title="@string/logout"
             android:summary="@string/preferences_account_logout_summary"
+            android:title="@string/logout"
             app:iconSpaceReserved="false" />
+
+        <Preference
+            android:key="preferences_account_delete_key"
+            android:summary="@string/preferences_account_delete_summary"
+            android:title="@string/delete"
+            app:iconSpaceReserved="false"
+            app:isPreferenceVisible="false"/>
 
     </PreferenceCategory>
 
@@ -25,12 +32,12 @@
         app:title="@string/preferences_display_header">
 
         <ListPreference
-            app:iconSpaceReserved="false"
-            app:key="dark_mode_key"
-            app:title="@string/preferences_display_dark_mode"
             android:defaultValue="0"
             android:entries="@array/night_mode_items"
-            android:entryValues="@array/night_mode_values"/>
+            android:entryValues="@array/night_mode_values"
+            app:iconSpaceReserved="false"
+            app:key="dark_mode_key"
+            app:title="@string/preferences_display_dark_mode" />
 
     </PreferenceCategory>
 
