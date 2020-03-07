@@ -28,14 +28,14 @@ import org.koin.core.parameter.parametersOf
 
 class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
     private lateinit var parentActivity: SettingsActivity
+
     private val sharedPref: SharedPrefs by inject()
     private val settingsViewModel: SettingsViewModel by viewModel()
-    private val presenter: SettingsPresenter by inject {
-        parametersOf(this)
-    }
+    private val presenter: SettingsPresenter by inject { parametersOf(this) }
+
+    private var counter: Int = 0
     private var toast: Toast? = null
     private var remainingTimeCounter: CountDownTimer? = null
-    private var counter: Int = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -50,6 +50,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        accountPrefs()
+        displayPrefs()
+        privacyPrefs()
+        aboutPrefs()
+    }
+
+    private fun accountPrefs() {
         val userNamePref = (findPreference("preferences_account_name_key") as? Preference)
         settingsViewModel.fetchUser().observe(viewLifecycleOwner, Observer { user ->
             user?.name?.let { userNamePref?.summary = it }
@@ -70,7 +77,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
 
                 true
             }
+    }
 
+
+    private fun displayPrefs() {
         val darkModePref = (findPreference("dark_mode_key") as? ListPreference)
         darkModePref?.summary =
             resources.getStringArray(R.array.night_mode_items)[sharedPref.getDarkModeSetting()]
@@ -91,6 +101,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
                 true
             }
 
+    }
+
+    private fun privacyPrefs() {
         (findPreference("analytics_key") as? SwitchPreferenceCompat)?.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _, newValue ->
                 val isAnalyticsEnabled = newValue as Boolean
@@ -107,7 +120,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
             )
             true
         }
+    }
 
+    private fun aboutPrefs() {
         (findPreference("preferences_rate_app_key") as? Preference)?.setOnPreferenceClickListener {
             val intent = try {
                 Intent(
