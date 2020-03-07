@@ -6,6 +6,7 @@
 
     <include
         android:id="@+id/progress"
+        android:visibility="gone"
         layout="@layout/layout_empty_task_list" />
 
     <androidx.recyclerview.widget.RecyclerView

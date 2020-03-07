@@ -1,16 +1,12 @@
 package com.timgortworst.roomy.presentation.features.task.view
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.selection.SelectionPredicates
@@ -24,8 +20,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.MetadataChanges
-import com.google.firebase.firestore.SnapshotMetadata
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentTaskListBinding
 import com.timgortworst.roomy.domain.model.Task
@@ -33,15 +27,14 @@ import com.timgortworst.roomy.domain.model.TaskMetaData
 import com.timgortworst.roomy.domain.model.TaskRecurrence
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
-import com.timgortworst.roomy.domain.utils.TimeOperations
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
+import com.timgortworst.roomy.presentation.base.view.BaseFragment
 import com.timgortworst.roomy.presentation.base.view.ChildChangedListener
+import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.presenter.TaskListPresenter
 import com.timgortworst.roomy.presentation.features.task.recyclerview.*
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskViewModel
-import com.timgortworst.roomy.presentation.features.main.MainActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -50,7 +43,7 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.*
 
-class TaskListFragment : Fragment(),
+class TaskListFragment : BaseFragment(),
     ActionModeCallback.ActionItemListener,
     TaskDoneClickListener,
     TaskListView,
@@ -104,26 +97,37 @@ class TaskListFragment : Fragment(),
         _binding = FragmentTaskListBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
-        createFireStoreRvAdapter()
 
         notificationWorkerBuilder = NotificationWorkerBuilder(parentActivity)
 
         return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    private fun createFireStoreRvAdapter() = taskViewModel.fetchFireStoreRecyclerOptionsBuilder()
-        .observe(viewLifecycleOwner, Observer { networkResponse ->
+        taskViewModel.data.observe(viewLifecycleOwner, Observer { networkResponse ->
             networkResponse?.let {
-                hideLoadingState() // todo better place
                 val options = it.setLifecycleOwner(this).build()
                 taskListAdapter.updateOptions(options)
             }
         })
+
+        taskViewModel.showLoading.observe(viewLifecycleOwner, Observer { networkResponse ->
+            networkResponse?.let {
+                if (it) {
+                    toggleFadeViews(binding.recyclerView, binding.progress.root)
+                } else {
+                    toggleFadeViews(binding.progress.root, binding.recyclerView)
+                }
+            }
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     private fun setupRecyclerView() {
         // todo remove this placeholder options
@@ -318,29 +322,6 @@ class TaskListFragment : Fragment(),
             R.string.error_list_state_title,
             R.string.error_list_state_text
         )
-    }
-
-    private fun hideLoadingState() {
-        val animationDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
-
-        binding.recyclerView.apply {
-            alpha = 0f
-            visibility = View.VISIBLE
-
-            animate()
-                .alpha(1f)
-                .setDuration(animationDuration.toLong())
-                .setListener(null)
-        }
-
-        binding.progress.root.animate()
-            .alpha(0f)
-            .setDuration(animationDuration.toLong())
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    binding.progress.root.visibility = View.GONE
-                }
-            })
     }
 
     override fun onChildChanged(

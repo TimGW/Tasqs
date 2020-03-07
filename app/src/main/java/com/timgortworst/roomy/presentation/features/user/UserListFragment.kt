@@ -19,10 +19,11 @@ import com.timgortworst.roomy.databinding.FragmentUserListBinding
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
+import com.timgortworst.roomy.presentation.base.view.BaseFragment
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class UserListFragment : Fragment(),
+class UserListFragment : BaseFragment(),
     AdapterStateListener,
     UserFirestoreAdapter.OnUserLongClickListener {
     private lateinit var userListAdapter: UserFirestoreAdapter
@@ -46,12 +47,32 @@ class UserListFragment : Fragment(),
         _binding = FragmentUserListBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
-        createFireStoreRvAdapter()
 
         return binding.root
     }
 
-    fun setupRecyclerView() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        userViewModel.data.observe(viewLifecycleOwner, Observer { networkResponse ->
+            networkResponse?.let {
+                val options = it.setLifecycleOwner(this).build()
+                userListAdapter.updateOptions(options)
+            }
+        })
+
+        userViewModel.showLoading.observe(viewLifecycleOwner, Observer { networkResponse ->
+            networkResponse?.let {
+                if (it) {
+                    toggleFadeViews(binding.recyclerView, binding.progress.root)
+                } else {
+                    toggleFadeViews(binding.progress.root, binding.recyclerView)
+                }
+            }
+        })
+    }
+
+    private fun setupRecyclerView() {
         // todo remove this placeholder options
         val query = FirebaseFirestore.getInstance().collection(TaskJson.TASK_COLLECTION_REF).whereEqualTo(
             TaskJson.TASK_HOUSEHOLD_ID_REF, "")
@@ -71,15 +92,6 @@ class UserListFragment : Fragment(),
         }
 
     }
-    private fun createFireStoreRvAdapter() = userViewModel.fetchFireStoreRecyclerOptionsBuilder()
-        .observe(viewLifecycleOwner, Observer { networkResponse ->
-            networkResponse?.let {
-                hideLoadingState()
-                val options = it.setLifecycleOwner(this).build()
-                userListAdapter.updateOptions(options)
-            }
-        })
-
 
     override fun onDataChanged(itemCount: Int) {
         binding.recyclerView.visibility = View.VISIBLE
