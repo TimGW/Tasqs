@@ -9,6 +9,9 @@ import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.presentation.RoomyApp
 import kotlinx.coroutines.tasks.await
 
+/**
+ * Class to retrieve the household ID for the current signed in user.
+ */
 class IdProvider(
     private val sharedPrefs: SharedPrefs
 ) {
@@ -17,7 +20,9 @@ class IdProvider(
         .collection(User.USER_COLLECTION_REF)
 
     /**
-     * Perform a User 'GET' request
+     * retrieve the household ID for the current signed in user.
+     * May be fetched locally or remote
+     *
      * @return the users' household ID
      */
     suspend fun getHouseholdId(): String {
@@ -28,6 +33,10 @@ class IdProvider(
         }
     }
 
+    /**
+     * Perform a User 'GET' request
+     * @return the users' household ID
+     */
     private suspend fun getRemoteHouseholdId(): String {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return ""
         val userDocRef = userCollection.document(userId)
@@ -41,5 +50,9 @@ class IdProvider(
         return user?.householdId.orEmpty()
     }
 
+    /**
+     * Retrieve the household ID from the local cache
+     * @return the users' household ID
+     */
     private fun getLocalHouseholdId() = sharedPrefs.getHouseholdId()
 }

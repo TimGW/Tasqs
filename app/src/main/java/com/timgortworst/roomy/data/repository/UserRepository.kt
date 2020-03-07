@@ -17,7 +17,9 @@ import com.timgortworst.roomy.domain.model.User.Companion.USER_ROLE_REF
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
-class UserRepository(private val idProvider: IdProvider) {
+class UserRepository(
+    private val idProvider: IdProvider
+) {
     private val db = FirebaseFirestore.getInstance()
     private val userCollection = db.collection(USER_COLLECTION_REF)
 

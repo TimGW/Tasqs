@@ -29,7 +29,7 @@ class SignInPresenter(
                 if (response.isNewUser) {
                     view.loginSuccessful()
                 } else {
-                    view.welcomeBack()
+                    view.welcomeBack(auth.currentUser?.displayName)
                 }
             }
             is Response.Error -> view.loginFailed(result.message)

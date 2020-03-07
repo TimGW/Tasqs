@@ -136,7 +136,7 @@
     <string name="recommended_update_dialog_positive_button">Update</string>
     <string name="recommended_update_dialog_text">This verion of Roomy is deprecated. Please update to the newest version.</string>
     <string name="recommended_update_dialog_title">Update Roomy</string>
-    <string name="welcome_back">Welcome back!</string>
+    <string name="welcome_back">Welcome back %1$s</string>
     <string name="preferences_account_header">Account</string>
     <string name="username">Username</string>
     <string name="logout">Logout</string>

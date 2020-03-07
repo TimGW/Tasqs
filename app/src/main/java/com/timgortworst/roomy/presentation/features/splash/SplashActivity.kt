@@ -12,7 +12,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
-import com.timgortworst.roomy.domain.utils.showSnackbar
+import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.signin.SignInActivity
@@ -113,7 +113,7 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
             presenter.handleAppStartup(referredHouseholdId)
         }.addOnFailureListener {
             val content = findViewById<View>(android.R.id.content)
-            content.showSnackbar(R.string.error_generic)
+            content.snackbar(R.string.error_generic)
             finish()
         }
     }

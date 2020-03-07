@@ -11,10 +11,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.Query
 import com.timgortworst.roomy.R
 
-fun Context.showToast(stringResource: Int, length: Int = Toast.LENGTH_LONG) {
+fun Context.toast(stringResource: Int, length: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, getString(stringResource), length).show()
 }
 
@@ -44,17 +43,25 @@ fun String.fromHtml(): Spanned {
     }
 }
 
-//fun Query.asSnapshotLiveData(): QuerySnapshotLiveData {
-//    return QuerySnapshotLiveData(this)
-//}
-
-fun View.showSnackbar(
+fun View.snackbar(
     @StringRes message: Int = R.string.empty_string,
     @StringRes actionMessage: Int = R.string.empty_string,
+    anchorView: View? = null,
+    length: Int = Snackbar.LENGTH_LONG,
+    action: (() -> Unit)? = null
+) {
+    snackbar(context.getString(message), actionMessage, anchorView, length, action)
+}
+
+fun View.snackbar(
+    message: String = "",
+    @StringRes actionMessage: Int = R.string.empty_string,
+    anchorView: View? = null,
     length: Int = Snackbar.LENGTH_LONG,
     action: (() -> Unit)? = null
 ) {
     val snackbar = Snackbar.make(this, message, length)
-    if(action != null) snackbar.setAction(actionMessage) { action.invoke() }
+    if (action != null) snackbar.setAction(actionMessage) { action.invoke() }
+    if (anchorView != null) snackbar.anchorView = anchorView
     snackbar.show()
 }

@@ -4,13 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.utils.showSnackbar
+import com.timgortworst.roomy.domain.utils.toast
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import org.koin.android.ext.android.inject
@@ -81,16 +80,13 @@ class SignInActivity : BaseActivity(), SignInView {
         finish()
     }
 
-    override fun welcomeBack() {
-        val content = findViewById<View>(android.R.id.content)
-        content.showSnackbar(R.string.welcome_back)
-        MainActivity.start(this)
+    override fun welcomeBack(displayName: String?) {
+        MainActivity.start(this, displayName)
         finish()
     }
 
     override fun loginFailed(errorMessage: Int) {
-        val content = findViewById<View>(android.R.id.content)
-        content.showSnackbar(errorMessage)
+        toast(errorMessage)
         finishAffinity()
     }
 }

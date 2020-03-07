@@ -62,14 +62,4 @@ class TaskUseCase(
             taskRepository.updateTask(task)
         }
     }
-
-    suspend fun updateTasksForUser(userId: String?, name: String, email: String) {
-        userId?.let { id ->
-            taskRepository.getTasksForUser(id).forEach {
-                it.user.name = name
-                it.user.email = email
-                taskRepository.updateTask(it)
-            }
-        }
-    }
 }

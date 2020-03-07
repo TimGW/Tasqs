@@ -129,7 +129,7 @@
     <string name="recommended_update_dialog_positive_button">Updaten</string>
     <string name="recommended_update_dialog_text">Deze versie van Roomy is verouderd. Update om gebruik te maken van de nieuwe versie.</string>
     <string name="recommended_update_dialog_title">Update Roomy</string>
-    <string name="welcome_back">Welkom terug!</string>
+    <string name="welcome_back">Welkom terug %1$s</string>
     <string name="preferences_account_header">Account</string>
     <string name="username">Gebruikersnaam</string>
     <string name="logout">Afmelden</string>

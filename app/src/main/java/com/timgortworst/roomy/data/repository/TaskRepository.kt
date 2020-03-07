@@ -17,18 +17,20 @@ import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson.Companion.
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
-class TaskRepository(private val idProvider: IdProvider) {
+class TaskRepository(
+    private val idProvider: IdProvider
+) {
 
-    private suspend fun collectionRef(): CollectionReference {
+    private suspend fun taskCollection(): CollectionReference {
         return FirebaseFirestore
-        .getInstance()
-        .collection(Household.HOUSEHOLD_COLLECTION_REF)
-        .document(idProvider.getHouseholdId())
-        .collection(TASK_COLLECTION_REF)
+            .getInstance()
+            .collection(Household.HOUSEHOLD_COLLECTION_REF)
+            .document(idProvider.getHouseholdId())
+            .collection(TASK_COLLECTION_REF)
     }
 
     suspend fun createTask(task: Task): String? {
-        val document = collectionRef().document()
+        val document = taskCollection().document()
 
         return try {
             document.set(CustomMapper.convertToMap(task.apply { id = document.id })).await()
@@ -40,7 +42,7 @@ class TaskRepository(private val idProvider: IdProvider) {
     }
 
     suspend fun updateTask(task: Task) {
-        val document = collectionRef().document(task.id)
+        val document = taskCollection().document(task.id)
         try {
             document.update(CustomMapper.convertToMap(task)).await()
         } catch (e: FirebaseFirestoreException) {
@@ -52,7 +54,7 @@ class TaskRepository(private val idProvider: IdProvider) {
         if (userId.isBlank()) return emptyList()
 
         return try {
-            collectionRef()
+            taskCollection()
                 .whereEqualTo("$TASK_USER_REF.$USER_ID_REF", userId)
                 .get()
                 .await()
@@ -65,7 +67,7 @@ class TaskRepository(private val idProvider: IdProvider) {
     }
 
     suspend fun getAllTasksQuery(): Query {
-        return collectionRef()
+        return taskCollection()
             .whereEqualTo(TASK_HOUSEHOLD_ID_REF, idProvider.getHouseholdId())
             .orderBy("$TASK_META_DATA_REF.$TASK_DATE_TIME_REF", Query.Direction.ASCENDING)
     }
@@ -74,7 +76,7 @@ class TaskRepository(private val idProvider: IdProvider) {
         try {
             val batch = FirebaseFirestore.getInstance().batch()
             tasks.forEach {
-                batch.update(collectionRef().document(it.id), CustomMapper.convertToMap(it))
+                batch.update(taskCollection().document(it.id), CustomMapper.convertToMap(it))
             }
             batch.commit().await()
         } catch (e: FirebaseFirestoreException) {
@@ -84,7 +86,7 @@ class TaskRepository(private val idProvider: IdProvider) {
 
     suspend fun deleteTask(id: String) {
         try {
-            collectionRef()
+            taskCollection()
                 .document(id)
                 .delete()
                 .await()
@@ -96,7 +98,9 @@ class TaskRepository(private val idProvider: IdProvider) {
     suspend fun deleteTasks(tasks: List<Task>) {
         try {
             val batch = FirebaseFirestore.getInstance().batch()
-            tasks.forEach { batch.delete(collectionRef().document(it.id)) }
+            tasks.forEach {
+                batch.delete(taskCollection().document(it.id))
+            }
             batch.commit().await()
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())

@@ -15,14 +15,6 @@ class SetupUseCase(
     private val taskRepository: TaskRepository,
     private val idProvider: IdProvider
 ) {
-
-    suspend fun createNewHousehold() = householdRepository.createHousehold()
-
-    suspend fun createNewUser(
-        householdId: String,
-        fireBaseUser: FirebaseUser
-    ) = userRepository.createUser(householdId, fireBaseUser)
-
     suspend fun switchHousehold(householdId: String, role: String) {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -60,4 +52,11 @@ class SetupUseCase(
         }
         return Response.Success<Nothing>()
     }
+
+    private suspend fun createNewHousehold() = householdRepository.createHousehold()
+
+    private suspend fun createNewUser(
+        householdId: String,
+        fireBaseUser: FirebaseUser
+    ) = userRepository.createUser(householdId, fireBaseUser)
 }

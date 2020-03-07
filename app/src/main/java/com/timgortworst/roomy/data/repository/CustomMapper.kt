@@ -12,6 +12,9 @@ import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 
+/**
+ * Custom object mapper class to convert firestore data models to app models and vice-versa
+ */
 object CustomMapper {
     fun toTask(taskJson: TaskJson): Task? {
         if (taskJson.id == null || taskJson.description == null || taskJson.metaData == null ||

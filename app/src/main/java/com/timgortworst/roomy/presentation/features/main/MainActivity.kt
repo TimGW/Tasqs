@@ -16,35 +16,35 @@ import com.google.android.material.transition.MaterialContainerTransformSharedEl
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityMainBinding
+import com.timgortworst.roomy.domain.utils.snackbar
+import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
-import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
-import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
 import com.timgortworst.roomy.presentation.features.splash.SplashActivity
+import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
+import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
 import com.timgortworst.roomy.presentation.features.user.UserListFragment
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class MainActivity : BaseActivity(), MainView {
     private lateinit var binding: ActivityMainBinding
-    private val presenter: MainPresenter by inject {
-        parametersOf(this)
-    }
-
-    private var adRequest: AdRequest? = null
-    private val taskListFragment: Fragment by lazy { TaskListFragment.newInstance() }
-    private val userListFragment: Fragment by lazy { UserListFragment.newInstance() }
-//    private val googleAuthFragment: Fragment by lazy { AuthFragment.newInstance() }
-
-    private var activeFragment: Fragment? = null
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
 
-    companion object {
-        private const val TAG = "MainActivity"
-        private const val ACTIVE_FRAG_KEY = "activeFragment"
+    private val presenter: MainPresenter by inject { parametersOf(this) }
+    private val taskListFragment: Fragment by lazy { TaskListFragment.newInstance() }
+    private val userListFragment: Fragment by lazy { UserListFragment.newInstance() }
 
-        fun start(context: Context) {
+    private var adRequest: AdRequest? = null
+    private var activeFragment: Fragment? = null
+
+    companion object {
+        private const val ACTIVE_FRAG_KEY = "activeFragment"
+        private const val INTENT_EXTRA_WELCOME_MSG = "INTENT_EXTRA_WELCOME_MSG"
+
+        fun start(context: Context, welcomeUserBack: String? = null) {
             val intent = Intent(context, MainActivity::class.java)
+            welcomeUserBack?.let { intent.putExtra(INTENT_EXTRA_WELCOME_MSG, it) }
             context.startActivity(intent)
         }
     }
@@ -52,7 +52,13 @@ class MainActivity : BaseActivity(), MainView {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (activeFragment?.isAdded == true) {
-            activeFragment?.let { supportFragmentManager.putFragment(outState, ACTIVE_FRAG_KEY, it) }
+            activeFragment?.let {
+                supportFragmentManager.putFragment(
+                    outState,
+                    ACTIVE_FRAG_KEY,
+                    it
+                )
+            }
         }
     }
 
@@ -72,10 +78,15 @@ class MainActivity : BaseActivity(), MainView {
         setupBottomAppBar()
         updateFabAndTitle(activeFragment)
 
-//        presenter.listenToHousehold()
-
         setupAds()
         setupBroadcastReceivers()
+
+        intent.extras?.getString(INTENT_EXTRA_WELCOME_MSG)?.let {
+            binding.bottomNavigationContainer.snackbar(
+                message = getString(R.string.welcome_back, it),
+                anchorView = binding.fab
+            )
+        }
     }
 
     private fun initAnimation() {
@@ -96,7 +107,6 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun onDestroy() {
-//        presenter.detachHouseholdListener()
         binding.adView.removeAllViews()
         binding.adView.destroy()
         super.onDestroy()
@@ -106,8 +116,14 @@ class MainActivity : BaseActivity(), MainView {
         binding.bottomAppbar.replaceMenu(R.menu.bottom_appbar_menu)
         binding.bottomAppbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.appbar_tasks_id -> openFragment(taskListFragment, taskListFragment::class.java.toString())
-                R.id.appbar_users_id -> openFragment(userListFragment, userListFragment::class.java.toString())
+                R.id.appbar_tasks_id -> openFragment(
+                    taskListFragment,
+                    taskListFragment::class.java.toString()
+                )
+                R.id.appbar_users_id -> openFragment(
+                    userListFragment,
+                    userListFragment::class.java.toString()
+                )
                 R.id.appbar_settings_id -> SettingsActivity.start(this)
             }
             true
@@ -118,17 +134,11 @@ class MainActivity : BaseActivity(), MainView {
         activeFragment?.let {
             setFabClickListenerFor(it)
             setToolbarTitleFor(it.tag.orEmpty())
-
-//            if (activeFragment.tag == googleAuthFragment::class.java.toString()) {
-//                binding.fab.hide()
-//            } else {
-//                binding.fab.show()
-//            }
         }
     }
 
     private fun openFragment(fragment: Fragment, tag: String) {
-        if(tag == activeFragment?.tag) return
+        if (tag == activeFragment?.tag) return
         supportFragmentManager.beginTransaction().apply {
             setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             activeFragment?.let { hide(it) }
@@ -189,41 +199,56 @@ class MainActivity : BaseActivity(), MainView {
         val builder = AdRequest.Builder()
         adRequest = builder.build()
         binding.adView.adListener = object : AdListener() {
-            override fun onAdLoaded() { presenter.showOrHideAd() }
+            override fun onAdLoaded() {
+                presenter.showOrHideAd()
+            }
 
-            override fun onAdFailedToLoad(errorCode: Int) { hideAd() }
+            override fun onAdFailedToLoad(errorCode: Int) {
+                hideAd()
+            }
         }
         loadAd()
     }
 
-    override fun loadAd() { binding.adView.loadAd(adRequest) }
+    override fun loadAd() {
+        binding.adView.loadAd(adRequest)
+    }
 
-    override fun showAd() { binding.adViewContainer.visibility = View.VISIBLE }
+    override fun showAd() {
+        binding.adViewContainer.visibility = View.VISIBLE
+    }
 
-    override fun hideAd() { binding.adViewContainer.visibility = View.GONE }
+    override fun hideAd() {
+        binding.adViewContainer.visibility = View.GONE
+    }
 
     override fun presentShareLinkUri(linkUri: Uri) {
         FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLongLink(linkUri)
-                .buildShortDynamicLink()
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        val shortLink = task.result?.shortLink
-                        val msg = "$shortLink"
-                        val sendIntent = Intent()
-                        sendIntent.action = Intent.ACTION_SEND
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, msg)
-                        sendIntent.type = "text/plain"
+            .setLongLink(linkUri)
+            .buildShortDynamicLink()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val shortLink = task.result?.shortLink
+                    val msg = "$shortLink"
+                    val sendIntent = Intent()
+                    sendIntent.action = Intent.ACTION_SEND
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, msg)
+                    sendIntent.type = "text/plain"
 
-                        if (sendIntent.resolveActivity(packageManager) != null)
-                            startActivity(Intent.createChooser(sendIntent, getString(R.string.invite_title)))
-                        else
-                            startActivity(sendIntent)
-                    } else {
-                        Log.e(TAG, task.exception?.message!!)
-                    }
-                    hideProgressDialog()
+                    if (sendIntent.resolveActivity(packageManager) != null)
+                        startActivity(
+                            Intent.createChooser(
+                                sendIntent,
+                                getString(R.string.invite_title)
+                            )
+                        )
+                    else
+                        startActivity(sendIntent)
+                } else {
+                    Log.e(RoomyApp.TAG, task.exception?.message!!)
                 }
+                hideProgressDialog()
+            }
     }
 
     override fun showToast(stringRes: Int) {
@@ -231,26 +256,15 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun openTaskEditActivity() {
-//        TaskEditActivity.start(this)
-
         val intent = Intent(this, TaskEditActivity::class.java)
-        val options =  ActivityOptions.makeSceneTransitionAnimation(
+        val options = ActivityOptions.makeSceneTransitionAnimation(
             this,
             binding.fab,
-            "shared_element_container"  // The transition name to be matched in Activity B.
+            "shared_element_container"
         )
-//        task?.let { intent.putExtra(TaskEditActivity.INTENT_EXTRA_EDIT_TASK, it) }
+
         startActivity(intent, options.toBundle())
-
     }
-
-//    override fun presentGoogleAuthFragment() {
-////        openFragment(googleAuthFragment, googleAuthFragment::class.java.toString())
-//    }
-//
-//    override fun presentUsersFragment() {
-////        openFragment(userListFragment, userListFragment::class.java.toString())
-//    }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data) // delegate to fragment
