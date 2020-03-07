@@ -1,8 +1,8 @@
-package com.timgortworst.roomy.presentation.features.auth
+package com.timgortworst.roomy.presentation.features.signin
 
 import androidx.annotation.StringRes
 
-interface AuthCallback {
+interface SignInView {
     fun loginSuccessful()
     fun welcomeBack()
     fun loginFailed(@StringRes errorMessage: Int)

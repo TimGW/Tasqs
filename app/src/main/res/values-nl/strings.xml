@@ -38,6 +38,7 @@
     <string name="preferences_analytics_header">Privacy</string>
     <string name="preferences_display_dark_mode">Donkere modus</string>
     <string name="preferences_display_header">Weergave</string>
+    <string name="preferences_about_header">Over de app</string>
     <string name="privacy_policy"><![CDATA[
     <p>I built Roomy app as an Ad Supported app. This SERVICE is provided by me at no cost and is intended for use as is.
   <br><br>This page is used to inform visitors regarding the policies with the collection, use, and disclosure of Personal Information if anyone decided to use this service.
@@ -129,4 +130,10 @@
     <string name="recommended_update_dialog_text">Deze versie van Roomy is verouderd. Update om gebruik te maken van de nieuwe versie.</string>
     <string name="recommended_update_dialog_title">Update Roomy</string>
     <string name="welcome_back">Welkom terug!</string>
+    <string name="preferences_account_header">Account</string>
+    <string name="username">Gebruikersnaam</string>
+    <string name="logout">Afmelden</string>
+    <string name="preferences_account_logout_summary">Verwijdert alle instellingen en taken van dit apparaat</string>
+    <string name="confirm_logout_message">Weet je zeker dat je wilt uitloggen?</string>
+    <string name="sign_in_cancelled">inloggen is geanuleerd</string>
 </resources>

@@ -3,7 +3,7 @@ package com.timgortworst.roomy.presentation.features.splash
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.auth.FirebaseAuth
-import com.timgortworst.roomy.data.SharedPrefs
+import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.model.Role
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
@@ -11,12 +11,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SplashPresenter(
-        private val view: SplashView,
-        private val setupUseCase: SetupUseCase,
-        private val sharedPrefs: SharedPrefs
+    private val view: SplashView,
+    private val setupUseCase: SetupUseCase
 ) : DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
-    private val uId = FirebaseAuth.getInstance().currentUser?.uid
+    private val auth = FirebaseAuth.getInstance()
 
     init {
         if (view is LifecycleOwner) {
@@ -24,22 +23,22 @@ class SplashPresenter(
         }
     }
 
-    fun initializeUser(referredHouseholdId: String) = scope.launch {
+    fun handleAppStartup(referredHouseholdId: String) = scope.launch {
         when {
-            sharedPrefs.isFirstLaunch() || uId.isNullOrEmpty() -> view.goToOnboardingActivity()
+            // first check if user has valid authentication
+            auth.currentUser == null ||
+                    auth.currentUser?.uid?.isBlank() == true -> view.goToSignInActivity()
+
+            // then check if the user accepted an invite link
             referredHouseholdId.isNotBlank() -> referredSetup(referredHouseholdId)
+
+            // continue to the app
             else -> view.goToMainActivity()
         }
     }
 
     private fun referredSetup(referredHouseholdId: String) = scope.launch {
         when {
-//            setupUseCase.userBlackListedForHousehold(referredHouseholdId) -> {
-//                view.presentUserIsBannedDialog()
-//            }
-//            setupUseCase.isHouseholdFull(referredHouseholdId) -> {
-//                view.presentHouseholdFullDialog()
-//            }
             setupUseCase.isIdSimilarToActiveId(referredHouseholdId) -> {
                 view.presentAlreadyInHouseholdDialog()
             }
@@ -53,8 +52,8 @@ class SplashPresenter(
     fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
         val oldHouseholdId = setupUseCase.currentHouseholdIdForCurrentUser()
         setupUseCase.switchHousehold(
-                householdId = newHouseholdId,
-                role = Role.NORMAL.name
+            householdId = newHouseholdId,
+            role = Role.NORMAL.name
         )
         setupUseCase.userListForCurrentHousehold()?.let {
             // todo clear old tasks?

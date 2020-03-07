@@ -3,6 +3,25 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:title="@string/preferences_account_header">
+
+        <Preference
+            android:key="preferences_account_name_key"
+            android:title="@string/username"
+            android:summary="T"
+            android:selectable="false"
+            app:iconSpaceReserved="false"/>
+
+        <Preference
+            android:key="preferences_account_logout_key"
+            android:title="@string/logout"
+            android:summary="@string/preferences_account_logout_summary"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="@string/preferences_display_header">
 
         <ListPreference
@@ -35,7 +54,7 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:title="About">
+        app:title="@string/preferences_about_header">
 
         <Preference
             android:key="preferences_app_version_key"
@@ -51,6 +70,5 @@
             app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
-
 
 </androidx.preference.PreferenceScreen>

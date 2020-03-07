@@ -19,7 +19,6 @@ import com.timgortworst.roomy.databinding.ActivityMainBinding
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
-import com.timgortworst.roomy.presentation.features.auth.AuthFragment
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
 import com.timgortworst.roomy.presentation.features.splash.SplashActivity
 import com.timgortworst.roomy.presentation.features.user.UserListFragment
@@ -35,7 +34,7 @@ class MainActivity : BaseActivity(), MainView {
     private var adRequest: AdRequest? = null
     private val taskListFragment: Fragment by lazy { TaskListFragment.newInstance() }
     private val userListFragment: Fragment by lazy { UserListFragment.newInstance() }
-    private val googleAuthFragment: Fragment by lazy { AuthFragment.newInstance() }
+//    private val googleAuthFragment: Fragment by lazy { AuthFragment.newInstance() }
 
     private var activeFragment: Fragment? = null
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
@@ -108,7 +107,7 @@ class MainActivity : BaseActivity(), MainView {
         binding.bottomAppbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.appbar_tasks_id -> openFragment(taskListFragment, taskListFragment::class.java.toString())
-                R.id.appbar_users_id -> presenter.selectFragment()
+                R.id.appbar_users_id -> openFragment(userListFragment, userListFragment::class.java.toString())
                 R.id.appbar_settings_id -> SettingsActivity.start(this)
             }
             true
@@ -120,11 +119,11 @@ class MainActivity : BaseActivity(), MainView {
             setFabClickListenerFor(it)
             setToolbarTitleFor(it.tag.orEmpty())
 
-            if (activeFragment.tag == googleAuthFragment::class.java.toString()) {
-                binding.fab.hide()
-            } else {
-                binding.fab.show()
-            }
+//            if (activeFragment.tag == googleAuthFragment::class.java.toString()) {
+//                binding.fab.hide()
+//            } else {
+//                binding.fab.show()
+//            }
         }
     }
 
@@ -149,8 +148,7 @@ class MainActivity : BaseActivity(), MainView {
     private fun setToolbarTitleFor(tag: String) {
         supportActionBar?.title = when (tag) {
             taskListFragment::class.java.toString() -> getString(R.string.toolbar_title_tasks)
-            userListFragment::class.java.toString(),
-            googleAuthFragment::class.java.toString() -> getString(R.string.toolbar_title_users)
+            userListFragment::class.java.toString() -> getString(R.string.toolbar_title_users)
             else -> getString(R.string.app_name)
         }
     }
@@ -246,13 +244,13 @@ class MainActivity : BaseActivity(), MainView {
 
     }
 
-    override fun presentGoogleAuthFragment() {
-        openFragment(googleAuthFragment, googleAuthFragment::class.java.toString())
-    }
-
-    override fun presentUsersFragment() {
-        openFragment(userListFragment, userListFragment::class.java.toString())
-    }
+//    override fun presentGoogleAuthFragment() {
+////        openFragment(googleAuthFragment, googleAuthFragment::class.java.toString())
+//    }
+//
+//    override fun presentUsersFragment() {
+////        openFragment(userListFragment, userListFragment::class.java.toString())
+//    }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data) // delegate to fragment

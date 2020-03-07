@@ -21,8 +21,7 @@
                 android:value=".presentation.features.main.MainActivity" />
         </activity>
         <!-- Main activities -->
-        <activity android:name=".presentation.features.splash.SplashActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".presentation.features.splash.SplashActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,9 +43,12 @@
             android:name=".presentation.features.main.MainActivity"
             android:launchMode="singleTop" />
         <activity android:name=".presentation.base.view.BaseActivity" />
+<!--        <activity-->
+<!--            android:name=".presentation.features.onboarding.OnboardingActivity"-->
+<!--            android:theme="@style/MyTheme.NoActionBar" />-->
         <activity
-            android:name=".presentation.features.onboarding.OnboardingActivity"
-            android:screenOrientation="portrait"
+            android:name=".presentation.features.signin.SignInActivity"
+            android:screenOrientation="fullSensor"
             android:theme="@style/MyTheme.NoActionBar" />
         <activity
             android:name=".presentation.features.task.view.TaskEditActivity"

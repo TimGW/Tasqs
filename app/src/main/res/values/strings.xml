@@ -38,6 +38,7 @@
     <string name="preferences_analytics_header">Privacy</string>
     <string name="preferences_display_dark_mode">Dark mode</string>
     <string name="preferences_display_header">Display</string>
+    <string name="preferences_about_header">About</string>
     <string name="privacy_policy"><![CDATA[
     <p>I built Roomy app as an Ad Supported app. This SERVICE is provided by me at no cost and is intended for use as is.
   <br><br>This page is used to inform visitors regarding the policies with the collection, use, and disclosure of Personal Information if anyone decided to use this service.
@@ -136,4 +137,10 @@
     <string name="recommended_update_dialog_text">This verion of Roomy is deprecated. Please update to the newest version.</string>
     <string name="recommended_update_dialog_title">Update Roomy</string>
     <string name="welcome_back">Welcome back!</string>
+    <string name="preferences_account_header">Account</string>
+    <string name="username">Username</string>
+    <string name="logout">Logout</string>
+    <string name="preferences_account_logout_summary">Erases all settings and tasks from device</string>
+    <string name="confirm_logout_message">Are you sure you want to logout?</string>
+    <string name="sign_in_cancelled">sign in cancelled</string>
 </resources>

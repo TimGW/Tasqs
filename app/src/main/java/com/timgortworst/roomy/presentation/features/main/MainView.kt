@@ -12,6 +12,6 @@ interface MainView {
     fun loadAd()
     fun hideAd()
     fun showAd()
-    fun presentGoogleAuthFragment()
-    fun presentUsersFragment()
+//    fun presentGoogleAuthFragment()
+//    fun presentUsersFragment()
 }

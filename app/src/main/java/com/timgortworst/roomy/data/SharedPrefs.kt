@@ -8,14 +8,6 @@ import org.koin.dsl.module
 class SharedPrefs(context: Context) {
     private val sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(context)
 
-    fun isFirstLaunch(): Boolean {
-        return getBoolValue(SHARED_PREF_FIRST_LAUNCH, true)
-    }
-
-    fun setFirstLaunch(setFirstLaunch: Boolean) {
-        setBoolValue(SHARED_PREF_FIRST_LAUNCH, setFirstLaunch)
-    }
-
     fun isAdsEnabled(): Boolean {
         return getBoolValue(SHARED_PREF_ADS, true)
     }

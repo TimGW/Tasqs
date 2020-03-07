@@ -61,11 +61,11 @@ class MainPresenter(
 
     fun showOrHideAd() = if (sharedPrefs.isAdsEnabled()) view.showAd() else view.hideAd()
 
-    fun selectFragment() = scope.launch {
-        if (userUseCase.getCurrentUser()?.email.isNullOrBlank()) {
-            view.presentGoogleAuthFragment()
-        } else {
-            view.presentUsersFragment()
-        }
-    }
+//    fun selectFragment() = scope.launch {
+//        if (userUseCase.getCurrentUser()?.email.isNullOrBlank()) {
+//            view.presentGoogleAuthFragment()
+//        } else {
+//            view.presentUsersFragment()
+//        }
+//    }
 }

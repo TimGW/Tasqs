@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
@@ -12,10 +12,10 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
-import com.timgortworst.roomy.domain.utils.showToast
+import com.timgortworst.roomy.domain.utils.showSnackbar
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import com.timgortworst.roomy.presentation.features.onboarding.OnboardingActivity
+import com.timgortworst.roomy.presentation.features.signin.SignInActivity
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -24,8 +24,6 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
     private lateinit var referredHouseholdId: String
 
     companion object {
-        private const val TAG = "SplashActivity"
-
         fun start(context: Context) {
             val intent = Intent(context, SplashActivity::class.java)
             context.startActivity(intent)
@@ -44,8 +42,8 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
             .check(currentVersion)
     }
 
-    override fun goToOnboardingActivity() {
-        OnboardingActivity.start(this)
+    override fun goToSignInActivity() {
+        SignInActivity.start(this)
         finish()
     }
 
@@ -112,10 +110,10 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
     override fun noUpdateNeeded() {
         FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnSuccessListener {
             val referredHouseholdId = it?.link?.getQueryParameter(QUERY_PARAM_HOUSEHOLD).orEmpty()
-            presenter.initializeUser(referredHouseholdId)
+            presenter.handleAppStartup(referredHouseholdId)
         }.addOnFailureListener {
-            Log.e(TAG, it.localizedMessage.orEmpty())
-            showToast(R.string.error_generic)
+            val content = findViewById<View>(android.R.id.content)
+            content.showSnackbar(R.string.error_generic)
             finish()
         }
     }

@@ -16,6 +16,10 @@ class IdProvider(
         .getInstance()
         .collection(User.USER_COLLECTION_REF)
 
+    /**
+     * Perform a User 'GET' request
+     * @return the users' household ID
+     */
     suspend fun getHouseholdId(): String {
         return if (getLocalHouseholdId().isNotBlank()) {
             getLocalHouseholdId()

@@ -2,21 +2,26 @@ package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.IdProvider
 import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.model.Response
 
-class SetupUseCase(private val householdRepository: HouseholdRepository,
-                   private val userRepository: UserRepository,
-                   private val taskRepository: TaskRepository,
-                   private val idProvider: IdProvider) {
+class SetupUseCase(
+    private val householdRepository: HouseholdRepository,
+    private val userRepository: UserRepository,
+    private val taskRepository: TaskRepository,
+    private val idProvider: IdProvider
+) {
 
-    suspend fun initializeHousehold(fireBaseUser: FirebaseUser): String? {
-        val householdId = householdRepository.createHousehold() ?: return null
-        userRepository.createUser(householdId, fireBaseUser)
-        return householdId
-    }
+    suspend fun createNewHousehold() = householdRepository.createHousehold()
+
+    suspend fun createNewUser(
+        householdId: String,
+        fireBaseUser: FirebaseUser
+    ) = userRepository.createUser(householdId, fireBaseUser)
 
     suspend fun switchHousehold(householdId: String, role: String) {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -37,17 +42,22 @@ class SetupUseCase(private val householdRepository: HouseholdRepository,
         householdRepository.deleteHousehold(householdId)
     }
 
-//    suspend fun userBlackListedForHousehold(householdId: String): Boolean {
-//        val household = householdRepository.getHousehold(householdId)
-//        return household?.userIdBlackList?.contains(uId.orEmpty()) ?: false
-//    }
-
-//    suspend fun isHouseholdFull(referredHouseholdId: String): Boolean {
-//        val userList = userRepository.getUserListForHousehold(referredHouseholdId) ?: return true
-//        return userList.size >= 10
-//    }
-
     suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
         return referredHouseholdId == idProvider.getHouseholdId()
+    }
+
+    suspend fun handleLoginResult(
+        fbUser: FirebaseUser?,
+        newUser: Boolean
+    ): Response {
+        val user = fbUser ?: return Response.Error(R.string.error_generic)
+
+        if (newUser) {
+            val householdId = createNewHousehold() ?: run {
+                return Response.Error(R.string.error_generic)
+            }
+            createNewUser(householdId, user)
+        }
+        return Response.Success<Nothing>()
     }
 }

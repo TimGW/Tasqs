@@ -9,8 +9,10 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.StringRes
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.Query
-import com.timgortworst.roomy.domain.model.QuerySnapshotLiveData
+import com.timgortworst.roomy.R
 
 fun Context.showToast(stringResource: Int, length: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, getString(stringResource), length).show()
@@ -42,6 +44,17 @@ fun String.fromHtml(): Spanned {
     }
 }
 
-fun Query.asSnapshotLiveData(): QuerySnapshotLiveData {
-    return QuerySnapshotLiveData(this)
+//fun Query.asSnapshotLiveData(): QuerySnapshotLiveData {
+//    return QuerySnapshotLiveData(this)
+//}
+
+fun View.showSnackbar(
+    @StringRes message: Int = R.string.empty_string,
+    @StringRes actionMessage: Int = R.string.empty_string,
+    length: Int = Snackbar.LENGTH_LONG,
+    action: (() -> Unit)? = null
+) {
+    val snackbar = Snackbar.make(this, message, length)
+    if(action != null) snackbar.setAction(actionMessage) { action.invoke() }
+    snackbar.show()
 }
