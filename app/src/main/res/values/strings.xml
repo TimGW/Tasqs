@@ -140,7 +140,7 @@
     <string name="preferences_account_header">Account</string>
     <string name="username">Username</string>
     <string name="logout">Logout</string>
-    <string name="preferences_account_logout_summary">Erases all settings and tasks from device</string>
+    <string name="preferences_account_logout_summary">Erases all settings and reminders from this device</string>
     <string name="confirm_logout_message">Are you sure you want to logout?</string>
     <string name="sign_in_cancelled">sign in cancelled</string>
 </resources>

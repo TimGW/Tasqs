@@ -52,7 +52,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
 
         val userNamePref = (findPreference("preferences_account_name_key") as? Preference)
         settingsViewModel.fetchUser().observe(viewLifecycleOwner, Observer { user ->
-            userNamePref?.summary = user?.name ?: ""
+            user?.name?.let { userNamePref?.summary = it }
         })
 
         (findPreference("preferences_account_logout_key") as? Preference)
@@ -100,13 +100,20 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
             }
 
         (findPreference("privacy_policy_key") as? Preference)?.setOnPreferenceClickListener {
-            HtmlTextActivity.start(parentActivity, getString(R.string.privacy_policy), "Privacy policy")
+            HtmlTextActivity.start(
+                parentActivity,
+                getString(R.string.privacy_policy),
+                "Privacy policy"
+            )
             true
         }
 
         (findPreference("preferences_rate_app_key") as? Preference)?.setOnPreferenceClickListener {
             val intent = try {
-                Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${parentActivity.packageName}"))
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=${parentActivity.packageName}")
+                )
             } catch (ex: ActivityNotFoundException) {
                 Intent(
                     Intent.ACTION_VIEW,

@@ -133,7 +133,7 @@
     <string name="preferences_account_header">Account</string>
     <string name="username">Gebruikersnaam</string>
     <string name="logout">Afmelden</string>
-    <string name="preferences_account_logout_summary">Verwijdert alle instellingen en taken van dit apparaat</string>
+    <string name="preferences_account_logout_summary">Verwijdert alle instellingen en reminders van dit apparaat</string>
     <string name="confirm_logout_message">Weet je zeker dat je wilt uitloggen?</string>
     <string name="sign_in_cancelled">inloggen is geanuleerd</string>
 </resources>
