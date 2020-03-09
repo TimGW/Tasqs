@@ -221,6 +221,11 @@ class TaskListFragment : BaseFragment(),
     override fun onActionItemDone(selectedTasks: List<Task>) {
         taskViewModel.viewModelScope.launch {
             taskViewModel.tasksCompleted(selectedTasks)
+
+            parentActivity.binding.bottomNavigationContainer.snackbar(
+                message = getString(R.string.tasks_done, selectedTasks.size),
+                anchorView = parentActivity.binding.fab
+            )
         }
     }
 
@@ -237,7 +242,7 @@ class TaskListFragment : BaseFragment(),
 
             if (task.metaData.recurrence !is TaskRecurrence.SingleTask) {
                 parentActivity.binding.bottomNavigationContainer.snackbar(
-                    message = getString(R.string.task_next, formatDate(task.metaData.startDateTime)),
+                    message = getString(R.string.task_next_snackbar, task.description, formatDate(task.metaData.startDateTime)),
                     anchorView = parentActivity.binding.fab
                 )
             }

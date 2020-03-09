@@ -25,6 +25,7 @@
     <string name="error_list_state_text">Something went wrong, try again later</string>
     <string name="error_list_state_title">Whoops!</string>
     <string name="task_next">Next: %1$s</string>
+    <string name="task_next_snackbar">\'%1$s\' is updated to: %2$s</string>
     <string name="next">next</string>
     <string name="task_overdue">OVERDUE: %1$s</string>
     <string name="generate_categories_button_text">Generate</string>
@@ -84,6 +85,7 @@
     <string name="night_mode_label_on">On</string>
     <string name="task_edit_error_empty_description">Please enter a description</string>
     <string name="button_done_text">Done</string>
+    <string name="tasks_done">%1$d tasks are done and updated</string>
     <string name="empty_string"/>
 
     <string name="repeat_weekday_mo">M</string>

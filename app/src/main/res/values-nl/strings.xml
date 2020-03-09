@@ -25,6 +25,7 @@
     <string name="error_list_state_text">Er is iets misgegaan, probeer het later opnieuw</string>
     <string name="error_list_state_title">Oeps!</string>
     <string name="task_next">Volgende: %1$s</string>
+    <string name="task_next_snackbar">\'%1$s\' is geupdated naar: %2$s</string>
     <string name="task_overdue">TE LAAT: %1$s</string>
     <string name="next">volgende</string>
     <string name="generate_categories_button_text">Genereren</string>
@@ -106,7 +107,7 @@
     <string name="months">maanden</string>
     <string name="year">jaar</string>
     <string name="years">jaren</string>
-    <string name="delete_dialog_text">Weet je zeker dat je %1$d items wilt verwijderen?"</string>
+    <string name="delete_dialog_text">Weet je zeker dat je %1$d taken wilt verwijderen?"</string>
     <string name="delete_account_dialog_text">Weet je zeker dat je dit account wilt verwijderen samen met alle, instellingen, reminders, taken and jezelf van dit huishouden?"</string>
     <string name="is_not_repeated">Wordt niet herhaald</string>
     <string name="on">op:</string>
@@ -143,4 +144,6 @@
     <string name="retry">opnieuw</string>
     <string name="tasks_deleted">%1$d taken verwijderd</string>
     <string name="task_deleted">%1$s verwijderd</string>
+    <string name="tasks_done">%1$d taken zijn klaar en geüpdatet</string>
+
 </resources>
