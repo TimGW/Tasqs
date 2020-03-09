@@ -8,6 +8,7 @@ import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.IdProvider
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.Response
+import com.timgortworst.roomy.domain.model.Role
 
 class SetupUseCase(
     private val householdRepository: HouseholdRepository,
@@ -15,24 +16,29 @@ class SetupUseCase(
     private val taskRepository: TaskRepository,
     private val idProvider: IdProvider
 ) {
-    suspend fun switchHousehold(householdId: String, role: String) {
+    suspend fun switchHousehold(oldId: String, newId: String) {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        userRepository.updateUser(householdId = householdId, role = role)
+        // update user with new household ID and role
+        userRepository.updateUser(
+            userId = currentUserId,
+            householdId = newId,
+            role = Role.NORMAL.name
+        )
 
-        // remove tasks assigned to user
-        taskRepository.getTasksForUser(currentUserId).forEach {
-            taskRepository.deleteTask(it.id)
+        // remove old tasks assigned to user
+        val tasks= taskRepository.getTasksForUser(currentUserId)
+        taskRepository.deleteTasks(tasks)
+
+        // delete old household if no user is assigned to it
+        userRepository.getAllUsersForHousehold(oldId)?.let {
+            if (it.isEmpty()) {
+                householdRepository.deleteHousehold(oldId)
+            }
         }
     }
 
     suspend fun currentHouseholdIdForCurrentUser() = idProvider.getHouseholdId()
-
-    suspend fun userListForCurrentHousehold() = userRepository.getAllUsers()
-
-    suspend fun deleteHousehold(householdId: String) {
-        householdRepository.deleteHousehold(householdId)
-    }
 
     suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
         return referredHouseholdId == idProvider.getHouseholdId()

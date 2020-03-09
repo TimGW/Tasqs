@@ -38,27 +38,21 @@ class SplashPresenter(
     }
 
     private fun referredSetup(referredHouseholdId: String) = scope.launch {
+        val currentHouseholdId = setupUseCase.currentHouseholdIdForCurrentUser()
+
         when {
             setupUseCase.isIdSimilarToActiveId(referredHouseholdId) -> {
                 view.presentAlreadyInHouseholdDialog()
             }
-            setupUseCase.currentHouseholdIdForCurrentUser().isNotBlank() -> {
+            currentHouseholdId.isNotBlank() -> {
                 view.presentHouseholdOverwriteDialog()
             }
-            else -> changeCurrentUserHousehold(referredHouseholdId)
+            else -> changeCurrentUserHousehold(currentHouseholdId, referredHouseholdId)
         }
     }
 
-    fun changeCurrentUserHousehold(newHouseholdId: String) = scope.launch {
-        val oldHouseholdId = setupUseCase.currentHouseholdIdForCurrentUser()
-        setupUseCase.switchHousehold(
-            householdId = newHouseholdId,
-            role = Role.NORMAL.name
-        )
-        setupUseCase.userListForCurrentHousehold()?.let {
-            // todo clear old tasks?
-            if (it.isEmpty()) setupUseCase.deleteHousehold(oldHouseholdId)
-        }
+    fun changeCurrentUserHousehold(oldId: String, newId: String) = scope.launch {
+        setupUseCase.switchHousehold(oldId, newId)
 
         view.goToMainActivity()
     }

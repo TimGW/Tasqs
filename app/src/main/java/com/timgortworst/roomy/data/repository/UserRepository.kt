@@ -58,12 +58,12 @@ class UserRepository(
             .whereEqualTo(USER_HOUSEHOLD_ID_REF, idProvider.getHouseholdId())
     }
 
-    suspend fun getAllUsers(): List<User>? {
-        if (idProvider.getHouseholdId().isEmpty()) return null
+    suspend fun getAllUsersForHousehold(id: String): List<User>? {
+        if (id.isEmpty()) return null
 
         return try {
             userCollection
-                .whereEqualTo(USER_HOUSEHOLD_ID_REF, idProvider.getHouseholdId())
+                .whereEqualTo(USER_HOUSEHOLD_ID_REF, id)
                 .get()
                 .await()
                 .toObjects(User::class.java)

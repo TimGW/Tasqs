@@ -17,7 +17,7 @@ class TaskUseCase(
 ) {
     suspend fun getAllTasksQuery() = taskRepository.getAllTasksQuery()
 
-    suspend fun getAllUsers() = userRepository.getAllUsers()
+    suspend fun getAllUsers() = userRepository.getAllUsersForHousehold(idProvider.getHouseholdId())
 
     suspend fun deleteTasks(tasks: List<Task>) {
         taskRepository.deleteTasks(tasks)
