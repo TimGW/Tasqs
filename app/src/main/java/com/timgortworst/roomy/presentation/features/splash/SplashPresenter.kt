@@ -38,21 +38,19 @@ class SplashPresenter(
     }
 
     private fun referredSetup(referredHouseholdId: String) = scope.launch {
-        val currentHouseholdId = setupUseCase.currentHouseholdIdForCurrentUser()
-
         when {
             setupUseCase.isIdSimilarToActiveId(referredHouseholdId) -> {
                 view.presentAlreadyInHouseholdDialog()
             }
-            currentHouseholdId.isNotBlank() -> {
+            setupUseCase.currentHouseholdIdForCurrentUser().isNotBlank() -> {
                 view.presentHouseholdOverwriteDialog()
             }
-            else -> changeCurrentUserHousehold(currentHouseholdId, referredHouseholdId)
+            else -> changeCurrentUserHousehold(referredHouseholdId)
         }
     }
 
-    fun changeCurrentUserHousehold(oldId: String, newId: String) = scope.launch {
-        setupUseCase.switchHousehold(oldId, newId)
+    fun changeCurrentUserHousehold(newId: String) = scope.launch {
+        setupUseCase.switchHousehold(newId)
 
         view.goToMainActivity()
     }

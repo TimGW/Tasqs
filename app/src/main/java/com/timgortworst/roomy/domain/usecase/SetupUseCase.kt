@@ -16,7 +16,8 @@ class SetupUseCase(
     private val taskRepository: TaskRepository,
     private val idProvider: IdProvider
 ) {
-    suspend fun switchHousehold(oldId: String, newId: String) {
+    suspend fun switchHousehold(newId: String) {
+        val oldId= idProvider.getHouseholdId()
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         // update user with new household ID and role
