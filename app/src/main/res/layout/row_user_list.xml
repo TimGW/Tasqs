@@ -1,35 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/user_title"
-        style="@style/TextAppearance.MyTheme.Headline5"
-        android:layout_width="0dp"
+    <data>
+        <variable
+            name="user"
+            type="com.timgortworst.roomy.domain.model.User" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/keyline_4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/admin_label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="user" />
+        android:clickable="true"
+        android:focusable="true">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/admin_label"
-        style="@style/TextAppearance.MyTheme.Overline"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:padding="@dimen/keyline_4"
-        android:text="@string/admin_label"
-        android:gravity="center_vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/user_title"
+            style="@style/TextAppearance.MyTheme.Headline5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/keyline_4"
+            android:text="@{user.name}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/admin_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="user" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/admin_label"
+            style="@style/TextAppearance.MyTheme.Overline"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:padding="@dimen/keyline_4"
+            android:text="@{user.role}"
+            app:showIfAdmin="@{user.role}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

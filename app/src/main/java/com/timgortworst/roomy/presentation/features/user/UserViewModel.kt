@@ -1,17 +1,14 @@
 package com.timgortworst.roomy.presentation.features.user
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.timgortworst.roomy.data.repository.CustomMapper
-import com.timgortworst.roomy.domain.model.Role
-import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.User
-import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.usecase.UserUseCase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class UserViewModel(
     private val userUseCase: UserUseCase

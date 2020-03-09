@@ -116,9 +116,9 @@ class TaskListFragment : BaseFragment(),
         taskViewModel.showLoading.observe(viewLifecycleOwner, Observer { networkResponse ->
             networkResponse?.let {
                 if (it) {
-                    toggleFadeViews(binding.recyclerView, binding.progress.root)
+                    toggleFadeViews(binding.recyclerView, binding.progress)
                 } else {
-                    toggleFadeViews(binding.progress.root, binding.recyclerView)
+                    toggleFadeViews(binding.progress, binding.recyclerView)
                 }
             }
         })

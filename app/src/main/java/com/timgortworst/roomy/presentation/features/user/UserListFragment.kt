@@ -1,13 +1,10 @@
 package com.timgortworst.roomy.presentation.features.user
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,8 +21,7 @@ import com.timgortworst.roomy.presentation.features.main.MainActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class UserListFragment : BaseFragment(),
-    AdapterStateListener,
-    UserFirestoreAdapter.OnUserLongClickListener {
+    AdapterStateListener {
     private lateinit var userListAdapter: UserFirestoreAdapter
     private lateinit var parentActivity: MainActivity
     private var _binding: FragmentUserListBinding? = null
@@ -81,7 +77,7 @@ class UserListFragment : BaseFragment(),
             .setQuery(query, User::class.java)
             .build()
 
-        userListAdapter = UserFirestoreAdapter(this, this, defaultOptions)
+        userListAdapter = UserFirestoreAdapter(this, defaultOptions)
 
         binding.recyclerView.apply {
             val linearLayoutManager = LinearLayoutManager(parentActivity)
@@ -112,29 +108,6 @@ class UserListFragment : BaseFragment(),
         )
     }
 
-    private fun hideLoadingState() {
-        val animationDuration = resources.getInteger(android.R.integer.config_mediumAnimTime)
-
-        binding.recyclerView.apply {
-            alpha = 0f
-            visibility = View.VISIBLE
-
-            animate()
-                .alpha(1f)
-                .setDuration(animationDuration.toLong())
-                .setListener(null)
-        }
-
-        binding.progress.root.animate()
-            .alpha(0f)
-            .setDuration(animationDuration.toLong())
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    binding.progress.root.visibility = View.GONE
-                }
-            })
-    }
-
     private fun setMsgView(isVisible: Int, title: Int?, text: Int?) {
         binding.layoutListState.apply {
             title?.let { this.stateTitle.text = parentActivity.getString(it) }
@@ -142,27 +115,4 @@ class UserListFragment : BaseFragment(),
             root.visibility = isVisible
         }
     }
-
-    override fun onUserClick(user: User) {
-//       userViewModel.userAdminObservable(user).observe(viewLifecycleOwner, Observer {
-//           it?.let {
-//               showContextMenuFor(user)
-//           }
-//       })
-    }
-//
-//    private fun showContextMenuFor(user: User) {
-//        var bottomSheetMenu: BottomSheetMenu? = null
-//
-//        val items = arrayListOf(
-//            BottomMenuItem(R.drawable.ic_delete, "Delete") {
-//                userViewModel.viewModelScope.launch {
-////                    userViewModel.deleteUser(user) todo
-//                }
-//                bottomSheetMenu?.dismiss()
-//            }
-//        )
-//        bottomSheetMenu = BottomSheetMenu(parentActivity, user.name, items)
-//        bottomSheetMenu.show()
-//    }
 }

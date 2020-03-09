@@ -1,50 +1,32 @@
 package com.timgortworst.roomy.presentation.features.user
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.Role
+import com.timgortworst.roomy.databinding.RowUserListBinding
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 
-
-/**
- * Recyclerview adapter for handling the list items in the task overview
- *
- * Handles clicks by expanding items to show a more detailed description of the category
- */
 class UserFirestoreAdapter(
-    private val onUserLongClickListener: OnUserLongClickListener,
     private val adapterStateListener: AdapterStateListener,
     options: FirestoreRecyclerOptions<User>
 ) : FirestoreRecyclerAdapter<User, UserFirestoreAdapter.ViewHolder>(options) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.row_user_list, parent, false)
-        return ViewHolder(itemView)
+        val layoutBinding = RowUserListBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+
+        return ViewHolder(layoutBinding)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int, user: User) {
-        viewHolder.userTitle.text = user.name
-
-        if (user.role == Role.ADMIN.name) {
-            viewHolder.adminLabel.visibility = View.VISIBLE
-        } else {
-            viewHolder.adminLabel.visibility = View.GONE
-        }
-
-        viewHolder.itemView.setOnLongClickListener {
-            onUserLongClickListener.onUserClick(user)
-            true
-        }
+        viewHolder.bind(user)
     }
 
     override fun getItemCount(): Int = snapshots.size
@@ -57,12 +39,11 @@ class UserFirestoreAdapter(
         adapterStateListener.onError(e)
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val userTitle: TextView = view.findViewById(R.id.user_title)
-        val adminLabel: TextView = view.findViewById(R.id.admin_label)
-    }
+    inner class ViewHolder(private val binding: RowUserListBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-    interface OnUserLongClickListener {
-        fun onUserClick(user: User)
+        fun bind(user: User) {
+            binding.user = user
+        }
     }
 }
