@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.firebase.ui.common.ChangeEventType
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
@@ -88,6 +90,13 @@ class UserListFragment : BaseFragment(),
         }
 
     }
+
+    override fun onChildChanged(
+        type: ChangeEventType,
+        snapshot: DocumentSnapshot,
+        newIndex: Int,
+        oldIndex: Int
+    ) { } // todo remove?
 
     override fun onDataChanged(itemCount: Int) {
         binding.recyclerView.visibility = View.VISIBLE

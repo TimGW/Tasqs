@@ -18,9 +18,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.common.ChangeEventType
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.data.repository.CustomMapper
 import com.timgortworst.roomy.databinding.FragmentTaskListBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskMetaData
@@ -30,7 +32,6 @@ import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 import com.timgortworst.roomy.presentation.base.view.BaseFragment
-import com.timgortworst.roomy.presentation.base.view.ChildChangedListener
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.presenter.TaskListPresenter
 import com.timgortworst.roomy.presentation.features.task.recyclerview.*
@@ -45,9 +46,9 @@ import java.util.*
 
 class TaskListFragment : BaseFragment(),
     ActionModeCallback.ActionItemListener,
-    TaskDoneClickListener,
+    TaskClickListener,
     TaskListView,
-    AdapterStateListener, ChildChangedListener {
+    AdapterStateListener {
 
     private lateinit var parentActivity: MainActivity
     private var _binding: FragmentTaskListBinding? = null
@@ -141,7 +142,6 @@ class TaskListFragment : BaseFragment(),
             .build()
 
         taskListAdapter = TaskFirestoreAdapter(
-            this,
             this,
             this,
             defaultOptions
@@ -242,11 +242,19 @@ class TaskListFragment : BaseFragment(),
 
             if (task.metaData.recurrence !is TaskRecurrence.SingleTask) {
                 parentActivity.binding.bottomNavigationContainer.snackbar(
-                    message = getString(R.string.task_next_snackbar, task.description, formatDate(task.metaData.startDateTime)),
+                    message = getString(
+                        R.string.task_next_snackbar,
+                        task.description,
+                        formatDate(task.metaData.startDateTime)
+                    ),
                     anchorView = parentActivity.binding.fab
                 )
             }
         }
+    }
+
+    override fun onTaskInfoClicked(task: Task) {
+        TaskInfoActivity.start(parentActivity, task)
     }
 
     private fun formatDate(zonedDateTime: ZonedDateTime): String {
@@ -331,8 +339,12 @@ class TaskListFragment : BaseFragment(),
 
     override fun onChildChanged(
         type: ChangeEventType,
-        task: Task?
+        snapshot: DocumentSnapshot,
+        newIndex: Int,
+        oldIndex: Int
     ) {
-        presenter.renderDataState(type, task)
+        if(!snapshot.metadata.hasPendingWrites()) { // todo cloud function when to set reminders?
+            presenter.renderDataState(type, CustomMapper.toTask(snapshot.toObject(TaskJson::class.java)!!)!!)
+        }
     }
 }

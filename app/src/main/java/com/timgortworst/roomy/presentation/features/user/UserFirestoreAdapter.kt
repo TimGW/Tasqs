@@ -3,8 +3,10 @@ package com.timgortworst.roomy.presentation.features.user
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.common.ChangeEventType
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.databinding.RowUserListBinding
 import com.timgortworst.roomy.domain.model.User
@@ -30,6 +32,16 @@ class UserFirestoreAdapter(
     }
 
     override fun getItemCount(): Int = snapshots.size
+
+    override fun onChildChanged(
+        type: ChangeEventType,
+        snapshot: DocumentSnapshot,
+        newIndex: Int,
+        oldIndex: Int
+    ) {
+        super.onChildChanged(type, snapshot, newIndex, oldIndex)
+        adapterStateListener.onChildChanged(type, snapshot, newIndex, oldIndex)
+    }
 
     override fun onDataChanged() {
         adapterStateListener.onDataChanged(itemCount)

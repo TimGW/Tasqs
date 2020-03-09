@@ -15,23 +15,18 @@ import com.google.android.material.button.MaterialButton
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.repository.CustomMapper
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
-import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.presentation.base.customview.RepeatIcon
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
-import com.timgortworst.roomy.presentation.base.view.ChildChangedListener
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 import java.util.*
 
-
 class TaskFirestoreAdapter(
-    private val taskDoneClickListener: TaskDoneClickListener,
+    private val taskClickListener: TaskClickListener,
     private val adapterStateListener: AdapterStateListener,
-    private val childChangedListener: ChildChangedListener,
     options: FirestoreRecyclerOptions<Task>
 ) : FirestoreRecyclerAdapter<Task, TaskFirestoreAdapter.ViewHolder>(options) {
     var tracker: SelectionTracker<String>? = null
@@ -60,12 +55,7 @@ class TaskFirestoreAdapter(
         oldIndex: Int
     ) {
         super.onChildChanged(type, snapshot, newIndex, oldIndex)
-        if(!snapshot.metadata.hasPendingWrites()) { // todo cloud function when to set reminders?
-            childChangedListener.onChildChanged(
-                type,
-                CustomMapper.toTask(snapshot.toObject(TaskJson::class.java)!!)!!
-            )
-        }
+        adapterStateListener.onChildChanged(type, snapshot, newIndex, oldIndex)
     }
 
     override fun getItemId(position: Int): Long {
@@ -121,7 +111,10 @@ class TaskFirestoreAdapter(
             user.text = task.user.name.capitalize()
 
             taskDone.setOnClickListener {
-                taskDoneClickListener.onTaskDoneClicked(task, adapterPosition)
+                taskClickListener.onTaskDoneClicked(task, adapterPosition)
+            }
+            itemView.setOnClickListener {
+                taskClickListener.onTaskInfoClicked(task)
             }
 
             itemView.isActivated = isActivated
