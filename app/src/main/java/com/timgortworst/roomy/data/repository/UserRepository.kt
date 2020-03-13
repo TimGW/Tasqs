@@ -13,7 +13,7 @@ import com.timgortworst.roomy.domain.model.User.Companion.USER_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_EMAIL_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_NAME_REF
-import com.timgortworst.roomy.domain.model.User.Companion.USER_ROLE_REF
+import com.timgortworst.roomy.domain.model.User.Companion.USER_ADMIN_REF
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
@@ -28,11 +28,11 @@ class UserRepository(
             val currentUserDocRef = userCollection.document(fireBaseUser.uid)
             val userDoc = transition.get(currentUserDocRef)
             val newUser = User(
-                fireBaseUser.uid,
-                fireBaseUser.displayName ?: "",
-                fireBaseUser.email ?: "",
-                Role.ADMIN.name,
-                householdId
+                userId = fireBaseUser.uid,
+                name = fireBaseUser.displayName ?: "",
+                email = fireBaseUser.email ?: "",
+                isAdmin = true,
+                householdId = householdId
             )
 
             if (!userDoc.exists()) {
@@ -87,7 +87,7 @@ class UserRepository(
         name?.let { userFieldMap[USER_NAME_REF] = it }
         email?.let { userFieldMap[USER_EMAIL_REF] = it }
         householdId?.let { userFieldMap[USER_HOUSEHOLD_ID_REF] = it }
-        role?.let { userFieldMap[USER_ROLE_REF] = it }
+        role?.let { userFieldMap[USER_ADMIN_REF] = it }
 
         try {
             userDocRef.set(userFieldMap, SetOptions.merge()).await()

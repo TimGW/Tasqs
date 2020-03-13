@@ -79,7 +79,7 @@ class UserListFragment : BaseFragment(),
             .setQuery(query, User::class.java)
             .build()
 
-        userListAdapter = UserFirestoreAdapter(this, defaultOptions)
+        userListAdapter = UserFirestoreAdapter(this, defaultOptions, userViewModel)
 
         binding.recyclerView.apply {
             val linearLayoutManager = LinearLayoutManager(parentActivity)

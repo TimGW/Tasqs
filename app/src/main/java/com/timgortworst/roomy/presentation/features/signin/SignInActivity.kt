@@ -81,7 +81,7 @@ class SignInActivity : BaseActivity(), SignInView {
     }
 
     override fun welcomeBack(displayName: String?) {
-        MainActivity.start(this, displayName)
+        MainActivity.start(this, displayName) // todo check for existing household?
         finish()
     }
 

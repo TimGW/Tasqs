@@ -4,16 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
+
         <variable
             name="user"
             type="com.timgortworst.roomy.domain.model.User" />
+
+        <variable
+            name="userViewModel"
+            type="com.timgortworst.roomy.presentation.features.user.UserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:onLongClick="@{() -> userViewModel.onLongClick(user)}">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/user_title"
@@ -35,8 +42,8 @@
             android:layout_height="0dp"
             android:gravity="center_vertical"
             android:padding="@dimen/keyline_4"
-            android:text="@{user.role}"
-            app:showIfAdmin="@{user.role}"
+            android:text="@string/admin_label"
+            android:visibility="@{user.isAdmin ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

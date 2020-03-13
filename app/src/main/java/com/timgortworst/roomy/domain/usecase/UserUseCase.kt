@@ -31,6 +31,9 @@ class UserUseCase(
         taskRepository.deleteTasks(tasks)
     }
 
+    suspend fun deleteUser(id: String) = userRepository.deleteUser(id)
+
+
     //    private suspend fun addUserToBlackList(userId: String) {
 //        val household = householdRepository.getHousehold(userRepository.getHouseholdIdForUser(userId))
 //        household?.userIdBlackList?.add(userId)

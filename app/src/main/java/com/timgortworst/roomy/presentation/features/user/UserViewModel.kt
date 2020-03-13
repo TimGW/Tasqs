@@ -34,4 +34,11 @@ class UserViewModel(
         loadingJob.cancel()
         _showLoading.value = false
     }
+
+    fun onLongClick(user: User) : Boolean {
+        viewModelScope.launch {
+            userUseCase.deleteUser(user.userId)
+        }
+        return true
+    }
 }

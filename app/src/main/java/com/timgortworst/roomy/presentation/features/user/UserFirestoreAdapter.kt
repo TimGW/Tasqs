@@ -2,6 +2,7 @@ package com.timgortworst.roomy.presentation.features.user
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.common.ChangeEventType
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
@@ -14,7 +15,8 @@ import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 
 class UserFirestoreAdapter(
     private val adapterStateListener: AdapterStateListener,
-    options: FirestoreRecyclerOptions<User>
+    options: FirestoreRecyclerOptions<User>,
+    private val uViewModel: UserViewModel
 ) : FirestoreRecyclerAdapter<User, UserFirestoreAdapter.ViewHolder>(options) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,8 +24,7 @@ class UserFirestoreAdapter(
             LayoutInflater.from(parent.context),
             parent,
             false
-        )
-
+        ).apply { setVariable(BR.userViewModel, uViewModel) }
         return ViewHolder(layoutBinding)
     }
 
