@@ -14,8 +14,6 @@ import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.N
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_MSG_KEY
 import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder.Companion.NOTIFICATION_TITLE_KEY
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
@@ -36,14 +34,14 @@ class ReminderNotificationWorker(
 
         triggerNotification(id.hashCode(), title, text)
 
-        setFutureReminder(id)
+        setTomorrowReminder(id)
 
         Result.success()
     } catch (e: Exception) {
         Result.failure()
     }
 
-    private fun setFutureReminder(
+    private fun setTomorrowReminder(
         id: String
     ) {
         val now = ZonedDateTime.now()
