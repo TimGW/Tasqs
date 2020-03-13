@@ -7,7 +7,8 @@ import com.timgortworst.roomy.databinding.RowUserListBinding
 import com.timgortworst.roomy.domain.model.User
 
 class UserAdapter(
-    private val users: List<User>
+    private val users: MutableList<User>,
+    private val onLongClickListener: OnLongClickListener
 ) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,10 +28,17 @@ class UserAdapter(
         return users.size
     }
 
+    fun addAll(users: List<User>) {
+        this.users.clear()
+        this.users.addAll(users)
+        notifyDataSetChanged()
+    }
+
     inner class ViewHolder(private val binding: RowUserListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(user: User) {
+            binding.userClickListener = onLongClickListener
             binding.user = user
         }
     }

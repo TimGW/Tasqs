@@ -14,7 +14,7 @@ class SettingsViewModel(
         emit(userUseCase.getCurrentUser())
     }
 
-    suspend fun deleteFirestoreData() = withContext(Dispatchers.IO) {
-        userUseCase.deleteFirestoreData()
+    suspend fun deleteUser() = withContext(Dispatchers.IO) {
+        userUseCase.deleteUser(userUseCase.getCurrentUser()?.userId)
     }
 }

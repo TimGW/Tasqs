@@ -3,14 +3,16 @@ package com.timgortworst.roomy.data.repository
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.*
-import com.timgortworst.roomy.domain.model.Role
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.User.Companion.USER_ADMIN_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_EMAIL_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_NAME_REF
-import com.timgortworst.roomy.domain.model.User.Companion.USER_ADMIN_REF
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
@@ -52,6 +54,7 @@ class UserRepository(
     suspend fun getAllUsersForHousehold(id: String): List<User> {
         return userCollection
             .whereEqualTo(USER_HOUSEHOLD_ID_REF, id)
+            .orderBy(USER_ADMIN_REF, Query.Direction.DESCENDING)
             .get()
             .await()
             .toObjects(User::class.java)

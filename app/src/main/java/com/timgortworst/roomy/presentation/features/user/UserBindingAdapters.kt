@@ -29,16 +29,10 @@ fun TextView.messageVisibility(responseState: UIResponseState?) {
 
 @BindingAdapter("users")
 fun RecyclerView.setUsers(responseState: UIResponseState?) {
-    val linearLayoutManager = LinearLayoutManager(context)
-    val dividerItemDecoration = DividerItemDecoration(context, linearLayoutManager.orientation)
-    layoutManager = linearLayoutManager
-    adapter = if (isInstanceOf<UIResponseState.Success<List<User>>>(responseState)) {
+    if (isInstanceOf<UIResponseState.Success<List<User>>>(responseState)) {
         val response = responseState as UIResponseState.Success<List<User>>
-        UserAdapter(response.data)
-    } else {
-        UserAdapter(listOf())
+        (adapter as UserAdapter).addAll(response.data)
     }
-    addItemDecoration(dividerItemDecoration)
 }
 
 inline fun <reified T> isInstanceOf(instance: Any?): Boolean {

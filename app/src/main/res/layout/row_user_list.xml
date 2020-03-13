@@ -11,8 +11,8 @@
             type="com.timgortworst.roomy.domain.model.User" />
 
         <variable
-            name="userViewModel"
-            type="com.timgortworst.roomy.presentation.features.user.UserViewModel" />
+            name="userClickListener"
+            type="com.timgortworst.roomy.presentation.features.user.OnLongClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        android:onLongClick="@{() -> userViewModel.onLongClick(user)}">
+        android:onLongClick="@{() -> userClickListener.onLongClick(user)}">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/user_title"

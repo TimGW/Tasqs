@@ -187,7 +187,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
 
     private fun deleteAccount() { // todo re-authenticatie before removal
         settingsViewModel.viewModelScope.launch {
-            settingsViewModel.deleteFirestoreData()
+            settingsViewModel.deleteUser()
 
             AuthUI.getInstance()
                 .delete(parentActivity)
