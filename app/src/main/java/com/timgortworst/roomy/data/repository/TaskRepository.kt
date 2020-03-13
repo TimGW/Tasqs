@@ -18,12 +18,12 @@ import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
 class TaskRepository(
-    private val idProvider: IdProvider
+    private val idProvider: IdProvider,
+    private val db: FirebaseFirestore
 ) {
 
     private suspend fun taskCollection(): CollectionReference {
-        return FirebaseFirestore
-            .getInstance()
+        return db
             .collection(Household.HOUSEHOLD_COLLECTION_REF)
             .document(idProvider.getHouseholdId())
             .collection(TASK_COLLECTION_REF)
@@ -74,7 +74,7 @@ class TaskRepository(
 
     suspend fun updateTasks(tasks: List<Task>) {
         try {
-            val batch = FirebaseFirestore.getInstance().batch()
+            val batch = db.batch()
             tasks.forEach {
                 batch.update(taskCollection().document(it.id), CustomMapper.convertToMap(it))
             }
@@ -97,7 +97,7 @@ class TaskRepository(
 
     suspend fun deleteTasks(tasks: List<Task>) {
         try {
-            val batch = FirebaseFirestore.getInstance().batch()
+            val batch = db.batch()
             tasks.forEach {
                 batch.delete(taskCollection().document(it.id))
             }

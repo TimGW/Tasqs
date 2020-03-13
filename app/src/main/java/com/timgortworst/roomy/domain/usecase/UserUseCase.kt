@@ -16,7 +16,7 @@ class UserUseCase(
     suspend fun getCurrentUser() =
         userRepository.getUser(FirebaseAuth.getInstance().currentUser?.uid)
 
-    suspend fun getAllUsersQuery() = userRepository.allUsersQuery()
+    suspend fun getAllUsersForHousehold() = userRepository.getAllUsersForHousehold(idProvider.getHouseholdId())
 
     suspend fun getHouseholdIdForUser() = idProvider.getHouseholdId()
 

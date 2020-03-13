@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.timgortworst.roomy.R
+import com.timgortworst.roomy.domain.model.UIResponseState
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import kotlinx.coroutines.delay
@@ -13,11 +15,8 @@ import kotlinx.coroutines.launch
 class UserViewModel(
     private val userUseCase: UserUseCase
 ) : ViewModel() {
-    private val _showLoading = MutableLiveData<Boolean>()
-    val showLoading: LiveData<Boolean> = _showLoading
-
-    private val _data = MutableLiveData<FirestoreRecyclerOptions.Builder<User>>()
-    val data: LiveData<FirestoreRecyclerOptions.Builder<User>> = _data
+    private val _viewState = MutableLiveData<UIResponseState>()
+    val viewState: LiveData<UIResponseState> = _viewState
 
     init {
         loadData()
@@ -26,16 +25,24 @@ class UserViewModel(
     private fun loadData() = viewModelScope.launch {
         val loadingJob = launch {
             delay(500)
-            _showLoading.value = true
+            _viewState.postValue(UIResponseState.Loading)
         }
 
-        _data.value = FirestoreRecyclerOptions.Builder<User>()
-            .setQuery(userUseCase.getAllUsersQuery(), User::class.java)
+        try {
+            val userList = userUseCase.getAllUsersForHousehold()
+            if (userList.isEmpty()) {
+                _viewState.postValue(UIResponseState.Error(R.string.empty_list_state_title_users))
+            } else {
+                _viewState.postValue(UIResponseState.Success(userList))
+            }
+        } catch (e: FirebaseFirestoreException) {
+            _viewState.postValue(UIResponseState.Error(R.string.error_generic))
+        }
+
         loadingJob.cancel()
-        _showLoading.value = false
     }
 
-    fun onLongClick(user: User) : Boolean {
+    fun onLongClick(user: User): Boolean {
         viewModelScope.launch {
             userUseCase.deleteUser(user.userId)
         }

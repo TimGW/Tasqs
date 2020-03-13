@@ -311,7 +311,7 @@ class TaskListFragment : BaseFragment(),
 
 
     private fun setMsgView(isVisible: Int, title: Int?, text: Int?) {
-        binding.layoutListState.apply {
+        binding.layoutStateMessage.apply {
             title?.let { this.stateTitle.text = parentActivity.getString(it) }
             text?.let { this.stateMessage.text = parentActivity.getString(it) }
             root.visibility = isVisible

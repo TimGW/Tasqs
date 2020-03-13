@@ -8,8 +8,10 @@ import com.timgortworst.roomy.domain.model.Household.Companion.HOUSEHOLD_COLLECT
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
-class HouseholdRepository {
-    private val householdsCollectionRef = FirebaseFirestore.getInstance().collection(HOUSEHOLD_COLLECTION_REF)
+class HouseholdRepository(
+    db: FirebaseFirestore
+) {
+    private val householdsCollectionRef = db.collection(HOUSEHOLD_COLLECTION_REF)
 
     suspend fun createHousehold(): String? {
         val household = householdsCollectionRef.document()
