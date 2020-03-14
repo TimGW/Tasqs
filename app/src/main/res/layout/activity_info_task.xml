@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="task"
+            type="com.timgortworst.roomy.domain.model.Task" />
+    </data>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -21,13 +28,14 @@
                 android:text="@string/info_task_next_date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/info_user" />
 
             <TextView
                 android:id="@+id/info_date"
                 style="@style/TextAppearance.MyTheme.Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:formatDate="@{task.metaData.startDateTime}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/info_date_caption" />
@@ -37,7 +45,7 @@
                 style="@style/TextAppearance.MyTheme.Caption"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/info_repeated_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -48,6 +56,7 @@
                 style="@style/TextAppearance.MyTheme.Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:formatRecurrence="@{task}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/info_repeated_caption" />
@@ -57,7 +66,7 @@
                 style="@style/TextAppearance.MyTheme.Caption"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/info_task_description_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,34 +77,28 @@
                 style="@style/TextAppearance.MyTheme.Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text="@{task.description}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/info_description_caption"
                 tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eleifend dignissim lacus, non faucibus ipsum interdum at. Sed pellentesque nunc in lorem ullamcorper, et pulvinar felis ultricies. Maecenas eu elit odio. Phasellus aliquam, felis quis efficitur hendrerit, purus felis bibendum ex, sit amet laoreet ante tortor quis sem. Donec consectetur libero ex, sit amet venenatis eros ullamcorper ac. Duis quis risus non nunc suscipit rhoncus. Cras cursus mauris nunc, nec pharetra nibh cursus eget. Nullam sit amet lacus non enim feugiat tincidunt." />
-
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/user_group"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:constraint_referenced_ids="info_user_caption,info_user" />
 
             <TextView
                 android:id="@+id/info_user_caption"
                 style="@style/TextAppearance.MyTheme.Caption"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:text="@string/info_task_assinged_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/info_description" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/info_user"
                 style="@style/TextAppearance.MyTheme.Body1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text="@{task.user.name}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/info_user_caption"

@@ -21,6 +21,11 @@ fun ProgressBar.loadingVisibility(responseState: UIResponseState?) {
     visibility = if (responseState is UIResponseState.Loading) View.VISIBLE else View.GONE
 }
 
+@BindingAdapter("adminLabelVisibility")
+fun TextView.adminLabelVisibility(isAdmin: Boolean) {
+    visibility = if (isAdmin) View.VISIBLE else View.GONE
+}
+
 @BindingAdapter("messageVisibility")
 fun TextView.messageVisibility(responseState: UIResponseState?) {
     visibility = if (responseState is UIResponseState.Error) View.VISIBLE else View.GONE
