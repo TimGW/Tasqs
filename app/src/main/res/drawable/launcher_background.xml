@@ -4,10 +4,9 @@
     <item android:drawable="@color/color_background" />
 
     <item
-        android:drawable="@drawable/ic_home"
+        android:drawable="@drawable/ic_launcher_foreground"
         android:gravity="center"
-        android:width="150dp"
-        android:height="150dp"
-        android:tint="@color/color_secondary" />
+        android:width="250dp"
+        android:height="250dp" />
 
 </layer-list>
