@@ -14,6 +14,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentUserListBinding
 import com.timgortworst.roomy.domain.model.BottomMenuItem
 import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.presentation.base.EventObserver
 import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import kotlinx.coroutines.launch
@@ -66,10 +67,8 @@ class UserListFragment : Fragment(), OnLongClickListener {
     }
 
     override fun onLongClick(user: User): Boolean {
-        userViewModel.displayBottomSheet(user).observe(viewLifecycleOwner, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                showBottomMenuFor(user)
-            }
+        userViewModel.displayBottomSheet(user).observe(viewLifecycleOwner, EventObserver {
+            showBottomMenuFor(user)
         })
         return true
     }

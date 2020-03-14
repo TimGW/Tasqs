@@ -6,21 +6,18 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NavUtils
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityInfoTaskBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
-import com.timgortworst.roomy.presentation.features.task.presenter.TaskInfoPresenter
-import com.timgortworst.roomy.presentation.features.main.MainActivity
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.TextStyle
+import java.util.*
 
-class TaskInfoActivity : BaseActivity(), TaskInfoView {
+class TaskInfoActivity : BaseActivity() {
     private lateinit var binding: ActivityInfoTaskBinding
-    private val presenter: TaskInfoPresenter by inject {
-        parametersOf(this)
-    }
     private lateinit var task: Task
 
     companion object {
@@ -56,13 +53,13 @@ class TaskInfoActivity : BaseActivity(), TaskInfoView {
             binding.userGroup.visibility = View.VISIBLE
             binding.infoUser.text = task.user.name
         }
-        presenter.formatDate(task.metaData.startDateTime)
+        formatDate(task.metaData.startDateTime)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                navigateUpTo(Intent(this, MainActivity::class.java))
+                parentActivityIntent?.let { NavUtils.navigateUpTo(this, it) }
                 true
             }
             R.id.action_go_to_edit -> {
@@ -78,10 +75,15 @@ class TaskInfoActivity : BaseActivity(), TaskInfoView {
         return true
     }
 
-    override fun presentFormattedDate(formattedDayOfMonth: String, formattedMonth: String?, formattedYear: String) {
+    // todo extract to viewmodel
+    private fun formatDate(zonedDateTime: ZonedDateTime) {
+        val formattedDayOfMonth = zonedDateTime.dayOfMonth.toString()
+        val formattedMonth = zonedDateTime.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        val formattedYear = zonedDateTime.year.toString()
         binding.infoDate.text = "$formattedDayOfMonth $formattedMonth $formattedYear"
     }
 
+    // todo extract to viewmodel
     private fun buildRepeatText(task: Task): String {
         with(task.metaData.recurrence) {
             return if (this is TaskRecurrence.SingleTask) {
@@ -99,6 +101,7 @@ class TaskInfoActivity : BaseActivity(), TaskInfoView {
         }
     }
 
+    // todo extract to viewmodel
     private fun formatWeekdays(daysOfWeek: List<Int>?): String {
         return daysOfWeek?.joinToString {
             when (it) {

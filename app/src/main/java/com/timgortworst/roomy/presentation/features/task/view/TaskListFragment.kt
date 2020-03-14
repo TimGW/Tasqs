@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
@@ -25,21 +24,16 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.repository.CustomMapper
 import com.timgortworst.roomy.databinding.FragmentTaskListBinding
 import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.TaskMetaData
 import com.timgortworst.roomy.domain.model.TaskRecurrence
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
-import com.timgortworst.roomy.domain.utils.NotificationWorkerBuilder
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 import com.timgortworst.roomy.presentation.base.view.BaseFragment
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import com.timgortworst.roomy.presentation.features.task.presenter.TaskListPresenter
 import com.timgortworst.roomy.presentation.features.task.recyclerview.*
-import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskViewModel
+import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskListViewModel
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.*
@@ -47,18 +41,15 @@ import java.util.*
 class TaskListFragment : BaseFragment(),
     ActionModeCallback.ActionItemListener,
     TaskClickListener,
-    TaskListView,
     AdapterStateListener {
 
     private lateinit var parentActivity: MainActivity
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
     private lateinit var taskListAdapter: TaskFirestoreAdapter
-    private lateinit var notificationWorkerBuilder: NotificationWorkerBuilder
     private var tracker: SelectionTracker<String>? = null
     private var actionMode: ActionMode? = null
-    private val taskViewModel by viewModel<TaskViewModel>()
-    private val presenter: TaskListPresenter by inject { parametersOf(this) }
+    private val taskViewModel by viewModel<TaskListViewModel>()
 
     companion object {
         const val TASK_SELECTION_ID = "Task-selection"
@@ -98,8 +89,6 @@ class TaskListFragment : BaseFragment(),
         _binding = FragmentTaskListBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
-
-        notificationWorkerBuilder = NotificationWorkerBuilder(parentActivity)
 
         return binding.root
     }
@@ -174,12 +163,24 @@ class TaskListFragment : BaseFragment(),
         tracker?.addObserver(object : SelectionTracker.SelectionObserver<String>() {
             override fun onSelectionChanged() {
                 super.onSelectionChanged()
-                tracker?.let { presenter.onSelectionChanged(it, actionMode) }
+                tracker?.let { onSelectionChanged(it, actionMode) }
             }
         })
     }
 
-    override fun startActionMode(tracker: SelectionTracker<String>) {
+    private fun onSelectionChanged(tracker: SelectionTracker<String>, actionMode: ActionMode?) {
+        if (tracker.hasSelection() && actionMode == null) {
+            startActionMode(tracker)
+            setActionModeTitle(tracker.selection.size())
+        } else if (!tracker.hasSelection() && actionMode != null) {
+            stopActionMode()
+        } else {
+            setActionModeTitle(tracker.selection.size())
+            invalidateActionMode()
+        }
+    }
+
+    private fun startActionMode(tracker: SelectionTracker<String>) {
         actionMode = parentActivity.startSupportActionMode(
             ActionModeCallback(
                 this@TaskListFragment,
@@ -189,16 +190,16 @@ class TaskListFragment : BaseFragment(),
         )
     }
 
-    override fun stopActionMode() {
+    private fun stopActionMode() {
         actionMode?.finish()
         actionMode = null
     }
 
-    override fun invalidateActionMode() {
+    private fun invalidateActionMode() {
         actionMode?.invalidate()
     }
 
-    override fun setActionModeTitle(size: Int) {
+    private fun setActionModeTitle(size: Int) {
         actionMode?.apply {
             menu?.findItem(R.id.edit)?.isVisible = size == 1
             menu?.findItem(R.id.info)?.isVisible = size == 1
@@ -227,10 +228,6 @@ class TaskListFragment : BaseFragment(),
                 anchorView = parentActivity.binding.fab
             )
         }
-    }
-
-    override fun showToast(stringRes: Int) {
-        Toast.makeText(parentActivity, getString(stringRes), Toast.LENGTH_LONG).show()
     }
 
     override fun onTaskDoneClicked(
@@ -262,24 +259,6 @@ class TaskListFragment : BaseFragment(),
         val formattedMonth = zonedDateTime.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         val formattedYear = zonedDateTime.year.toString()
         return "$formattedDayOfMonth $formattedMonth $formattedYear"
-    }
-
-    override fun enqueueNotification(
-        taskId: String,
-        taskMetaData: TaskMetaData,
-        taskName: String,
-        userName: String
-    ) {
-        notificationWorkerBuilder.enqueueNotification(
-            taskId,
-            taskMetaData,
-            userName,
-            taskName
-        )
-    }
-
-    override fun removePendingNotificationReminder(taskId: String) {
-        notificationWorkerBuilder.removePendingNotificationReminder(taskId)
     }
 
     private fun askForDeleteDialog(tasks: List<Task>, mode: ActionMode) =
@@ -344,7 +323,7 @@ class TaskListFragment : BaseFragment(),
         oldIndex: Int
     ) {
         if(!snapshot.metadata.hasPendingWrites()) { // todo cloud function when to set reminders?
-            presenter.renderDataState(type, CustomMapper.toTask(snapshot.toObject(TaskJson::class.java)!!)!!)
+            taskViewModel.updateNotifications(type, CustomMapper.toTask(snapshot.toObject(TaskJson::class.java)!!)!!)
         }
     }
 }

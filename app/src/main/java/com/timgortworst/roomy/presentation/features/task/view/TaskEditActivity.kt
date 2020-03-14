@@ -54,7 +54,6 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initAnimation()
         super.onCreate(savedInstanceState)
         binding = ActivityEditTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -62,20 +61,6 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
         task = intent.getParcelableExtra(INTENT_EXTRA_EDIT_TASK) as? Task ?: Task()
 
         setupUI()
-    }
-
-    private fun initAnimation() {
-        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
-        findViewById<View>(android.R.id.content).transitionName = "shared_element_container"
-        setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-
-        val transform = MaterialContainerTransform(this).apply {
-            addTarget(android.R.id.content)
-            duration = resources.getInteger(android.R.integer.config_mediumAnimTime).toLong()
-        }
-
-        window.sharedElementEnterTransition = transform
-        window.sharedElementReturnTransition = transform
     }
 
     private fun setupUI() {

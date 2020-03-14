@@ -43,9 +43,6 @@
             android:name=".presentation.features.main.MainActivity"
             android:launchMode="singleTop" />
         <activity android:name=".presentation.base.view.BaseActivity" />
-<!--        <activity-->
-<!--            android:name=".presentation.features.onboarding.OnboardingActivity"-->
-<!--            android:theme="@style/MyTheme.NoActionBar" />-->
         <activity
             android:name=".presentation.features.signin.SignInActivity"
             android:screenOrientation="fullSensor"
@@ -55,7 +52,8 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".presentation.features.task.view.TaskInfoActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:parentActivityName=".presentation.features.main.MainActivity"/>
         <activity
             android:name=".presentation.features.settings.HtmlTextActivity"
             android:label=""

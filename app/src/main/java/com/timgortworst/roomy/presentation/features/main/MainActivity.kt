@@ -63,7 +63,6 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initAnimation()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -87,12 +86,6 @@ class MainActivity : BaseActivity(), MainView {
                 anchorView = binding.fab
             )
         }
-    }
-
-    private fun initAnimation() {
-        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
-        setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        window.sharedElementsUseOverlay = false
     }
 
     override fun onResume() {
