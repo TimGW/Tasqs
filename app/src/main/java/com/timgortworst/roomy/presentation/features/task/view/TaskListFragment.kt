@@ -299,6 +299,7 @@ class TaskListFragment : BaseFragment(),
 
     override fun onDataChanged(itemCount: Int) {
         binding.recyclerView.visibility = View.VISIBLE
+        binding.recyclerView.scheduleLayoutAnimation()
         val visibility = if (itemCount == 0) View.VISIBLE else View.GONE
         setMsgView(
             visibility,

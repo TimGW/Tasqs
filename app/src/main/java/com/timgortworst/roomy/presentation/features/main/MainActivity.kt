@@ -250,13 +250,7 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun openTaskEditActivity() {
         val intent = Intent(this, TaskEditActivity::class.java)
-        val options = ActivityOptions.makeSceneTransitionAnimation(
-            this,
-            binding.fab,
-            "shared_element_container"
-        )
-
-        startActivity(intent, options.toBundle())
+        startActivity(intent)
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
