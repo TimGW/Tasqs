@@ -50,6 +50,7 @@ class TaskListFragment : BaseFragment(),
     private var tracker: SelectionTracker<String>? = null
     private var actionMode: ActionMode? = null
     private val taskViewModel by viewModel<TaskListViewModel>()
+    private var showListAnimation = true
 
     companion object {
         const val TASK_SELECTION_ID = "Task-selection"
@@ -299,7 +300,7 @@ class TaskListFragment : BaseFragment(),
 
     override fun onDataChanged(itemCount: Int) {
         binding.recyclerView.visibility = View.VISIBLE
-        binding.recyclerView.scheduleLayoutAnimation()
+        if (showListAnimation) binding.recyclerView.scheduleLayoutAnimation(); showListAnimation = false
         val visibility = if (itemCount == 0) View.VISIBLE else View.GONE
         setMsgView(
             visibility,
