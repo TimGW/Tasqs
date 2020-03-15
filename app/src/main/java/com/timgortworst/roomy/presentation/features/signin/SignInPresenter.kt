@@ -4,7 +4,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
-import com.timgortworst.roomy.domain.model.Response
+import com.timgortworst.roomy.domain.model.ResponseState
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -25,14 +25,14 @@ class SignInPresenter(
 
     fun handleLoginResult(response: IdpResponse) = scope.launch {
         when(val result = setupUseCase.handleLoginResult(auth.currentUser, response.isNewUser)) {
-            is Response.Success<*> -> {
+            is ResponseState.Success<*> -> {
                 if (response.isNewUser) {
                     view.loginSuccessful()
                 } else {
                     view.welcomeBack(auth.currentUser?.displayName)
                 }
             }
-            is Response.Error -> view.loginFailed(result.message)
+            is ResponseState.Error -> view.loginFailed(result.message)
         }
     }
 }

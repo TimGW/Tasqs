@@ -3,11 +3,11 @@ package com.timgortworst.roomy.domain.usecase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.IdProvider
+import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.model.Response
+import com.timgortworst.roomy.domain.model.ResponseState
 import com.timgortworst.roomy.domain.model.Role
 
 class SetupUseCase(
@@ -48,16 +48,16 @@ class SetupUseCase(
     suspend fun handleLoginResult(
         fbUser: FirebaseUser?,
         newUser: Boolean
-    ): Response {
-        val user = fbUser ?: return Response.Error(R.string.error_generic)
+    ): ResponseState {
+        val user = fbUser ?: return ResponseState.Error(R.string.error_generic)
 
         if (newUser) {
             val householdId = createNewHousehold() ?: run {
-                return Response.Error(R.string.error_generic)
+                return ResponseState.Error(R.string.error_generic)
             }
             createNewUser(householdId, user)
         }
-        return Response.Success<Nothing>()
+        return ResponseState.Success(Unit)
     }
 
     private suspend fun createNewHousehold() = householdRepository.createHousehold()

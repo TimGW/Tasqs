@@ -3,7 +3,7 @@ package com.timgortworst.roomy.presentation.features.user
 import androidx.lifecycle.*
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.UIResponseState
+import com.timgortworst.roomy.domain.model.ResponseState
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.Event
@@ -15,8 +15,8 @@ import kotlinx.coroutines.withContext
 class UserViewModel(
     private val userUseCase: UserUseCase
 ) : ViewModel() {
-    private val _viewState = MutableLiveData<UIResponseState>()
-    val viewState: LiveData<UIResponseState>
+    private val _viewState = MutableLiveData<ResponseState>()
+    val viewState: LiveData<ResponseState>
         get() = _viewState
 
     init {
@@ -26,18 +26,18 @@ class UserViewModel(
     private fun loadData() = viewModelScope.launch {
         val loadingJob = launch {
             delay(500)
-            _viewState.postValue(UIResponseState.Loading)
+            _viewState.postValue(ResponseState.Loading)
         }
 
         try {
             val userList = userUseCase.getAllUsersForHousehold()
             if (userList.isEmpty()) {
-                _viewState.postValue(UIResponseState.Error(R.string.empty_list_state_title_users))
+                _viewState.postValue(ResponseState.Error(R.string.empty_list_state_title_users))
             } else {
-                _viewState.postValue(UIResponseState.Success(userList))
+                _viewState.postValue(ResponseState.Success(userList))
             }
         } catch (e: FirebaseFirestoreException) {
-            _viewState.postValue(UIResponseState.Error(R.string.error_generic))
+            _viewState.postValue(ResponseState.Error(R.string.error_generic))
         }
 
         loadingJob.cancel()

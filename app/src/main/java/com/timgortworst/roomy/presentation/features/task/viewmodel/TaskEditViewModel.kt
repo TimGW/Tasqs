@@ -2,7 +2,6 @@ package com.timgortworst.roomy.presentation.features.task.viewmodel
 
 import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.UIResponseState
 import com.timgortworst.roomy.domain.usecase.TaskUseCase
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import kotlinx.coroutines.Dispatchers
