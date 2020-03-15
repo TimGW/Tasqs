@@ -54,6 +54,11 @@ class UserListFragment : Fragment(), OnLongClickListener {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setupRecyclerView() {
         binding.recyclerView.apply {
             val linearLayoutManager = LinearLayoutManager(parentActivity)

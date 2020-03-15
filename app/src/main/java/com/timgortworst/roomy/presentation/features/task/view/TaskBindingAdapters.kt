@@ -40,7 +40,6 @@ fun TextView.formatRecurrence(task: Task) {
     }
 }
 
-// todo extract to viewmodel
 private fun formatWeekdays(context: Context, daysOfWeek: List<Int>?): String {
     return daysOfWeek?.joinToString {
         when (it) {
