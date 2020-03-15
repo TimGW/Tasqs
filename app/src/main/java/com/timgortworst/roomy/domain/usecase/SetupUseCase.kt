@@ -57,7 +57,7 @@ class SetupUseCase(
             }
             createNewUser(householdId, user)
         }
-        return ResponseState.Success(Unit)
+        return ResponseState.Success(fbUser.displayName)
     }
 
     private suspend fun createNewHousehold() = householdRepository.createHousehold()

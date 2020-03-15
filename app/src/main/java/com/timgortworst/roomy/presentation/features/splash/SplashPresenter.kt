@@ -3,8 +3,6 @@ package com.timgortworst.roomy.presentation.features.splash
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.auth.FirebaseAuth
-import com.timgortworst.roomy.domain.model.Response
-import com.timgortworst.roomy.domain.model.Role
 import com.timgortworst.roomy.domain.usecase.SetupUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers

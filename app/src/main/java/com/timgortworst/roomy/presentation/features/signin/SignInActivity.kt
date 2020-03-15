@@ -4,19 +4,20 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.domain.model.ResponseState
 import com.timgortworst.roomy.domain.utils.toast
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
+import org.koin.android.viewmodel.ext.android.viewModel
 
-class SignInActivity : BaseActivity(), SignInView {
-    private val signInPresenter: SignInPresenter by inject { parametersOf(this) }
+class SignInActivity : BaseActivity() {
+    private val viewModel by viewModel<SignInViewModel>()
 
     companion object {
         private const val RC_SIGN_IN = 123
@@ -56,7 +57,9 @@ class SignInActivity : BaseActivity(), SignInView {
         if (requestCode == RC_SIGN_IN) {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK && response != null) {
-                signInPresenter.handleLoginResult(response)
+                viewModel.handleLoginResult(response).observe(this@SignInActivity, Observer {
+                    it.getContentIfNotHandled()?.let { event -> handResponse(event, response) }
+                })
             } else {
                 when {
                     response == null -> {
@@ -75,18 +78,31 @@ class SignInActivity : BaseActivity(), SignInView {
         }
     }
 
-    override fun loginSuccessful() {
+    private fun loginSuccessful() {
         MainActivity.start(this)
         finish()
     }
 
-    override fun welcomeBack(displayName: String?) {
+    private fun welcomeBack(displayName: String?) {
         MainActivity.start(this, displayName) // todo check for existing household?
         finish()
     }
 
-    override fun loginFailed(errorMessage: Int) {
+    private fun loginFailed(errorMessage: Int) {
         toast(errorMessage)
         finishAffinity()
+    }
+
+    private fun handResponse(response: ResponseState, idpResponse: IdpResponse) {
+        when(response) {
+            is ResponseState.Success<*> -> {
+                if (idpResponse.isNewUser) {
+                    loginSuccessful()
+                } else {
+                    welcomeBack(response.data as? String)
+                }
+            }
+            is ResponseState.Error -> loginFailed(response.message)
+        }
     }
 }

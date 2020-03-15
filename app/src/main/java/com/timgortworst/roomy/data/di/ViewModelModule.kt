@@ -1,6 +1,7 @@
 package com.timgortworst.roomy.data.di
 
 import com.timgortworst.roomy.presentation.features.settings.SettingsViewModel
+import com.timgortworst.roomy.presentation.features.signin.SignInViewModel
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskEditViewModel
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskListViewModel
 import com.timgortworst.roomy.presentation.features.user.UserViewModel
@@ -13,4 +14,5 @@ val viewModelModule = module {
     viewModel { TaskEditViewModel(get(), get()) }
     viewModel { UserViewModel(get()) }
     viewModel { SettingsViewModel(get()) }
+    viewModel { SignInViewModel(get()) }
 }
