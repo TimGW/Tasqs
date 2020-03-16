@@ -65,7 +65,7 @@ class UserRepository(
         name: String? = null,
         email: String? = null,
         householdId: String? = null,
-        role: String? = null
+        isAdmin: Boolean? = null
     ) {
         userId ?: return
         val userDocRef = userCollection.document(userId)
@@ -74,25 +74,12 @@ class UserRepository(
         name?.let { userFieldMap[USER_NAME_REF] = it }
         email?.let { userFieldMap[USER_EMAIL_REF] = it }
         householdId?.let { userFieldMap[USER_HOUSEHOLD_ID_REF] = it }
-        role?.let { userFieldMap[USER_ADMIN_REF] = it }
+        isAdmin?.let { userFieldMap[USER_ADMIN_REF] = it }
 
-        try {
-            userDocRef.set(userFieldMap, SetOptions.merge()).await()
-        } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage.orEmpty())
-        }
+        userDocRef.set(userFieldMap, SetOptions.merge()).await()
     }
 
-    suspend fun deleteUser(
-        id: String
-    ) {
-        try {
-            userCollection
-                .document(id)
-                .delete()
-                .await()
-        } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage.orEmpty())
-        }
+    suspend fun deleteUser(id: String) {
+        userCollection.document(id).delete().await()
     }
 }

@@ -1,11 +1,8 @@
 package com.timgortworst.roomy.data.repository
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.domain.model.Household
 import com.timgortworst.roomy.domain.model.Household.Companion.HOUSEHOLD_COLLECTION_REF
-import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
 class HouseholdRepository(
@@ -13,21 +10,13 @@ class HouseholdRepository(
 ) {
     private val householdsCollectionRef = db.collection(HOUSEHOLD_COLLECTION_REF)
 
-    suspend fun createHousehold(): String? {
+    suspend fun createHousehold(): String {
         val household = householdsCollectionRef.document()
-        return try {
-            household.set(Household(householdId = household.id)).await()
-            household.id
-        } catch (e: FirebaseFirestoreException) {
-            null
-        }
+        household.set(Household(householdId = household.id)).await()
+        return household.id
     }
 
     suspend fun deleteHousehold(householdId: String) {
-        try {
-            householdsCollectionRef.document(householdId).delete().await()
-        } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage.orEmpty())
-        }
+        householdsCollectionRef.document(householdId).delete().await()
     }
 }

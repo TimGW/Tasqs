@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.ResponseState
 import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.usecase.TaskUseCase
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.Event
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +45,7 @@ class UserViewModel(
     }
 
     suspend fun removeFromHousehold(user: User) = withContext(Dispatchers.IO) {
-        userUseCase.deleteUser(user.userId)
+        userUseCase.removeUserFromHousehold(user.userId)
     }
 
     fun displayBottomSheet(user: User) = liveData {

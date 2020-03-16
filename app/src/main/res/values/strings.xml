@@ -152,4 +152,5 @@
     <string name="retry">retry</string>
     <string name="tasks_deleted">%1$d tasks deleted</string>
     <string name="task_deleted">%1$s deleted</string>
+    <string name="removed">removed %1$s</string>
 </resources>

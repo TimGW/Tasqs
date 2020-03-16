@@ -25,7 +25,7 @@ class TaskRepository(
     private suspend fun taskCollection(): CollectionReference {
         return db
             .collection(Household.HOUSEHOLD_COLLECTION_REF)
-            .document(idProvider.getHouseholdId())
+            .document(idProvider.fetchHouseholdId())
             .collection(TASK_COLLECTION_REF)
     }
 
@@ -53,22 +53,17 @@ class TaskRepository(
     suspend fun getTasksForUser(userId: String): List<Task> {
         if (userId.isBlank()) return emptyList()
 
-        return try {
-            taskCollection()
-                .whereEqualTo("$TASK_USER_REF.$USER_ID_REF", userId)
-                .get()
-                .await()
-                .toObjects(TaskJson::class.java)
-                .mapNotNull { CustomMapper.toTask(it) }
-        } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage.orEmpty())
-            emptyList()
-        }
+        return taskCollection()
+            .whereEqualTo("$TASK_USER_REF.$USER_ID_REF", userId)
+            .get()
+            .await()
+            .toObjects(TaskJson::class.java)
+            .mapNotNull { CustomMapper.toTask(it) }
     }
 
     suspend fun getAllTasksQuery(): Query {
         return taskCollection()
-            .whereEqualTo(TASK_HOUSEHOLD_ID_REF, idProvider.getHouseholdId())
+            .whereEqualTo(TASK_HOUSEHOLD_ID_REF, idProvider.fetchHouseholdId())
             .orderBy("$TASK_META_DATA_REF.$TASK_DATE_TIME_REF", Query.Direction.ASCENDING)
     }
 

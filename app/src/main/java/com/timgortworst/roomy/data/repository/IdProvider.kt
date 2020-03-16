@@ -12,32 +12,16 @@ import kotlinx.coroutines.tasks.await
 /**
  * Class to retrieve the household ID for the current signed in user.
  */
-class IdProvider(
-    private val sharedPrefs: SharedPrefs
-) {
+class IdProvider {
     private val userCollection = FirebaseFirestore
         .getInstance()
         .collection(User.USER_COLLECTION_REF)
 
     /**
-     * retrieve the household ID for the current signed in user.
-     * May be fetched locally or remote
-     *
-     * @return the users' household ID
-     */
-    suspend fun getHouseholdId(): String {
-        return if (getLocalHouseholdId().isNotBlank()) {
-            getLocalHouseholdId()
-        } else {
-            getRemoteHouseholdId()
-        }
-    }
-
-    /**
      * Perform a User 'GET' request
      * @return the users' household ID
      */
-    private suspend fun getRemoteHouseholdId(): String {
+    suspend fun fetchHouseholdId(): String {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return ""
         val userDocRef = userCollection.document(userId)
         val user = try {
@@ -46,13 +30,6 @@ class IdProvider(
             Log.e(RoomyApp.TAG, e.localizedMessage.orEmpty())
             null
         }
-        sharedPrefs.setHouseholdId(user?.householdId.orEmpty())
         return user?.householdId.orEmpty()
     }
-
-    /**
-     * Retrieve the household ID from the local cache
-     * @return the users' household ID
-     */
-    private fun getLocalHouseholdId() = sharedPrefs.getHouseholdId()
 }

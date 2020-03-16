@@ -21,7 +21,6 @@ import org.koin.core.parameter.parametersOf
 
 class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpdateNeededListener {
     private val presenter: SplashPresenter by inject { parametersOf(this) }
-    private lateinit var referredHouseholdId: String
 
     companion object {
         fun start(context: Context) {
@@ -52,7 +51,7 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
         finish()
     }
 
-    override fun presentHouseholdOverwriteDialog() {
+    override fun presentHouseholdOverwriteDialog(referredHouseholdId: String) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.dialog_household_overwrite_title))
             .setMessage(getString(R.string.dialog_household_overwrite_text))

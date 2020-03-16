@@ -34,6 +34,12 @@ class UserAdapter(
         notifyDataSetChanged()
     }
 
+    fun remove(user: User) {
+        val index= users.indexOf(user)
+        users.removeAt(index)
+        notifyItemRemoved(index)
+    }
+
     inner class ViewHolder(private val binding: RowUserListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 

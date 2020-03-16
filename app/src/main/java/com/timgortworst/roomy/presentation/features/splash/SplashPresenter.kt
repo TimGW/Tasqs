@@ -41,7 +41,7 @@ class SplashPresenter(
                 view.presentAlreadyInHouseholdDialog()
             }
             setupUseCase.currentHouseholdIdForCurrentUser().isNotBlank() -> {
-                view.presentHouseholdOverwriteDialog()
+                view.presentHouseholdOverwriteDialog(referredHouseholdId)
             }
             else -> changeCurrentUserHousehold(referredHouseholdId)
         }

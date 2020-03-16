@@ -145,5 +145,6 @@
     <string name="tasks_deleted">%1$d taken verwijderd</string>
     <string name="task_deleted">%1$s verwijderd</string>
     <string name="tasks_done">%1$d taken zijn klaar en geüpdatet</string>
+    <string name="removed">%1$s verwijderd</string>
 
 </resources>

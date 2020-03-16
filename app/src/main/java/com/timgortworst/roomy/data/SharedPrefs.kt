@@ -15,10 +15,6 @@ class SharedPrefs(context: Context) {
     fun setDarkModeSetting(darkMode: Int) { setIntValue(SHARED_PREF_DARK_MODE, darkMode) }
     fun getDarkModeSetting()= getIntValue(SHARED_PREF_DARK_MODE)
 
-    fun setHouseholdId(id: String) { setStringValue(SHARED_PREF_HOUSEHOLD_ID, id) }
-    fun getHouseholdId() = getStringValue(SHARED_PREF_HOUSEHOLD_ID)
-
-
     private fun getStringValue(key: String) = sharedPreferences.getString(key, "") ?: ""
     private fun setStringValue(key: String, value: String) =
         sharedPreferences.edit().putString(key, value).apply()
@@ -33,7 +29,6 @@ class SharedPrefs(context: Context) {
         sharedPreferences.edit().putBoolean(key, value).apply()
 
     companion object {
-        const val SHARED_PREF_HOUSEHOLD_ID = "SHARED_PREF_HOUSEHOLD_ID"
         const val SHARED_PREF_ADS = "SHARED_PREF_ADS"
         const val SHARED_PREF_DARK_MODE = "SHARED_PREF_DARK_THEME"
     }

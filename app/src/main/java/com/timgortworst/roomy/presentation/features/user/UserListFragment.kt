@@ -13,6 +13,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentUserListBinding
 import com.timgortworst.roomy.domain.model.BottomMenuItem
 import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.EventObserver
 import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
 import com.timgortworst.roomy.presentation.features.main.MainActivity
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class UserListFragment : Fragment(), OnLongClickListener {
+    private lateinit var userAdapter: UserAdapter
     private lateinit var parentActivity: MainActivity
     private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
@@ -60,12 +62,13 @@ class UserListFragment : Fragment(), OnLongClickListener {
     }
 
     private fun setupRecyclerView() {
+        userAdapter = UserAdapter(mutableListOf(), this@UserListFragment)
         binding.recyclerView.apply {
             val linearLayoutManager = LinearLayoutManager(parentActivity)
             val dividerItemDecoration =
                 DividerItemDecoration(parentActivity, linearLayoutManager.orientation)
             layoutManager = linearLayoutManager
-            adapter = UserAdapter(mutableListOf(), this@UserListFragment)
+            adapter = userAdapter
             addItemDecoration(dividerItemDecoration)
         }
     }
@@ -82,6 +85,12 @@ class UserListFragment : Fragment(), OnLongClickListener {
             BottomMenuItem(R.drawable.ic_delete, getString(R.string.delete)) {
                 userViewModel.viewModelScope.launch {
                     userViewModel.removeFromHousehold(user)
+                    userAdapter.remove(user) // update local list
+
+                    parentActivity.binding.bottomNavigationContainer.snackbar(
+                        message = getString(R.string.removed, user.name),
+                        anchorView = parentActivity.binding.fab
+                    )
                 }
                 bottomSheetMenu?.dismiss()
             }

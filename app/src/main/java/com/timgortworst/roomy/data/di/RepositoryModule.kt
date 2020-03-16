@@ -12,7 +12,7 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
     single { FirebaseFirestore.getInstance() }
-    single { IdProvider(get()) }
+    single { IdProvider() }
     single { TaskRepository(get(), get()) }
     single { HouseholdRepository(get()) }
     single { UserRepository(get()) }

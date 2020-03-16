@@ -17,7 +17,7 @@ class TaskUseCase(
 ) {
     suspend fun getAllTasksQuery() = taskRepository.getAllTasksQuery()
 
-    suspend fun getAllUsers() = userRepository.getAllUsersForHousehold(idProvider.getHouseholdId())
+    suspend fun getAllUsers() = userRepository.getAllUsersForHousehold(idProvider.fetchHouseholdId())
 
     suspend fun deleteTasks(tasks: List<Task>) {
         taskRepository.deleteTasks(tasks)
@@ -56,7 +56,7 @@ class TaskUseCase(
 
     suspend fun createOrUpdateTask(task: Task) {
         if (task.id.isEmpty()) {
-            task.householdId = idProvider.getHouseholdId()
+            task.householdId = idProvider.fetchHouseholdId()
             taskRepository.createTask(task)
         } else {
             taskRepository.updateTask(task)
