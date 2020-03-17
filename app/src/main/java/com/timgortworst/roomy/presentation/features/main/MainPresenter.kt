@@ -40,5 +40,5 @@ class MainPresenter(
         }
     }
 
-    fun showOrHideAd() = if (sharedPrefs.isAdsEnabled()) view.showAd() else view.hideAd()
+    fun showOrHideAd() = if (sharedPrefs.isAdsEnabled()) view.showAdContainer() else view.hideAdContainer()
 }

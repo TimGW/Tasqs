@@ -4,12 +4,11 @@ import android.net.Uri
 import androidx.annotation.StringRes
 
 interface MainView {
-    fun logout()
     fun share(householdId: String)
     fun presentShareLinkUri(linkUri: Uri)
     fun showToast(@StringRes stringRes: Int)
     fun openTaskEditActivity()
     fun loadAd()
-    fun hideAd()
-    fun showAd()
+    fun hideAdContainer()
+    fun showAdContainer()
 }

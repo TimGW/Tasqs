@@ -1,18 +1,15 @@
 package com.timgortworst.roomy.presentation.features.main
 
-import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.Window
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.android.material.transition.MaterialContainerTransformSharedElementCallback
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityMainBinding
@@ -20,7 +17,6 @@ import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
-import com.timgortworst.roomy.presentation.features.splash.SplashActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
 import com.timgortworst.roomy.presentation.features.user.UserListFragment
@@ -171,11 +167,6 @@ class MainActivity : BaseActivity(), MainView {
         binding.fab.setOnClickListener(clickTask)
     }
 
-    override fun logout() {
-        finishAffinity()
-        SplashActivity.start(this)
-    }
-
     override fun share(householdId: String) {
         presenter.buildInviteLink(householdId)
     }
@@ -197,7 +188,7 @@ class MainActivity : BaseActivity(), MainView {
             }
 
             override fun onAdFailedToLoad(errorCode: Int) {
-                hideAd()
+                hideAdContainer()
             }
         }
         loadAd()
@@ -207,11 +198,11 @@ class MainActivity : BaseActivity(), MainView {
         binding.adView.loadAd(adRequest)
     }
 
-    override fun showAd() {
+    override fun showAdContainer() {
         binding.adViewContainer.visibility = View.VISIBLE
     }
 
-    override fun hideAd() {
+    override fun hideAdContainer() {
         binding.adViewContainer.visibility = View.GONE
     }
 
