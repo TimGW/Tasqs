@@ -48,16 +48,6 @@ class TaskFirestoreAdapter(
         }
     }
 
-    override fun onChildChanged(
-        type: ChangeEventType,
-        snapshot: DocumentSnapshot,
-        newIndex: Int,
-        oldIndex: Int
-    ) {
-        super.onChildChanged(type, snapshot, newIndex, oldIndex)
-        adapterStateListener.onChildChanged(type, snapshot, newIndex, oldIndex)
-    }
-
     override fun getItemId(position: Int): Long {
         val task: Task = snapshots[position]
         return task.id.hashCode().toLong()

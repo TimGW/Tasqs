@@ -30,7 +30,7 @@ class TaskEditPresenter(
     }
 
     fun getUsers() = scope.launch {
-        taskUseCase.getAllUsers()?.let { userList ->
+        taskUseCase.getAllUsers().let { userList ->
             val currentUser = userUseCase.getCurrentUser()
 
             if (userList.filterNot { it.userId == currentUser?.userId }.isEmpty()) {

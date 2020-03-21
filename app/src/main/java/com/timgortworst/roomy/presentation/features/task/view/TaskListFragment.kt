@@ -14,14 +14,11 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.common.ChangeEventType
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.repository.CustomMapper
 import com.timgortworst.roomy.databinding.FragmentTaskListBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
@@ -316,16 +313,5 @@ class TaskListFragment : BaseFragment(),
             R.string.error_list_state_title,
             R.string.error_list_state_text
         )
-    }
-
-    override fun onChildChanged(
-        type: ChangeEventType,
-        snapshot: DocumentSnapshot,
-        newIndex: Int,
-        oldIndex: Int
-    ) {
-        if(!snapshot.metadata.hasPendingWrites()) { // todo cloud function when to set reminders?
-            taskViewModel.updateNotifications(type, CustomMapper.toTask(snapshot.toObject(TaskJson::class.java)!!)!!)
-        }
     }
 }

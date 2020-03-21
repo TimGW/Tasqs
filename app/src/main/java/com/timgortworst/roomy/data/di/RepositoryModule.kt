@@ -13,8 +13,9 @@ import org.koin.dsl.module
 val repositoryModule = module {
     single { FirebaseFirestore.getInstance() }
     single { IdProvider() }
+    single { SharedPrefs(androidContext()) }
+
     single { TaskRepository(get(), get()) }
     single { HouseholdRepository(get()) }
     single { UserRepository(get()) }
-    single { SharedPrefs(androidContext()) }
 }

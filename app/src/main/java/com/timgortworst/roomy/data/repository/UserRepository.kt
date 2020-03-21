@@ -13,6 +13,7 @@ import com.timgortworst.roomy.domain.model.User.Companion.USER_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_EMAIL_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_NAME_REF
+import com.timgortworst.roomy.domain.model.User.Companion.USER_TOKENS_REF
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.TAG
 import kotlinx.coroutines.tasks.await
 
@@ -65,7 +66,8 @@ class UserRepository(
         name: String? = null,
         email: String? = null,
         householdId: String? = null,
-        isAdmin: Boolean? = null
+        isAdmin: Boolean? = null,
+        tokens: MutableList<String>? = null
     ) {
         userId ?: return
         val userDocRef = userCollection.document(userId)
@@ -75,6 +77,7 @@ class UserRepository(
         email?.let { userFieldMap[USER_EMAIL_REF] = it }
         householdId?.let { userFieldMap[USER_HOUSEHOLD_ID_REF] = it }
         isAdmin?.let { userFieldMap[USER_ADMIN_REF] = it }
+        tokens?.let { userFieldMap[USER_TOKENS_REF] = it }
 
         userDocRef.set(userFieldMap, SetOptions.merge()).await()
     }

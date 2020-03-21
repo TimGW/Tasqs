@@ -57,4 +57,13 @@ class UserUseCase(
         val tasks = taskRepository.getTasksForUser(userId)
         taskRepository.deleteTasks(tasks)
     }
+
+    suspend fun addTokenToUser(token: String) {
+        val tokens = getCurrentUser()?.registrationTokens ?: return
+
+        if (tokens.contains(token)) return
+
+        tokens.add(token)
+        userRepository.updateUser(tokens = tokens)
+    }
 }
