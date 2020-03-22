@@ -48,6 +48,6 @@ class NotificationWorker(
             .setInputData(inputData)
             .build()
 
-        workManager.beginUniqueWork(id, ExistingWorkPolicy.REPLACE, workRequest).enqueue()
+        workManager.enqueueUniqueWork(id, ExistingWorkPolicy.REPLACE, workRequest)
     }
 }

@@ -31,7 +31,7 @@ class NotificationWorkManager(context: Context) {
             .setInputData(inputData)
             .build()
 
-        workManager.beginUniqueWork(taskId, ExistingWorkPolicy.REPLACE, workRequest).enqueue()
+        workManager.enqueueUniqueWork(taskId, ExistingWorkPolicy.REPLACE, workRequest)
     }
 
     fun removePendingNotificationReminder(taskId: String) {
