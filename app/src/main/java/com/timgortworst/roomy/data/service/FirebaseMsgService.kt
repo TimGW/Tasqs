@@ -3,8 +3,8 @@ package com.timgortworst.roomy.data.service
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.timgortworst.roomy.domain.usecase.UserUseCase
-import com.timgortworst.roomy.domain.utils.NotificationBuilder
-import com.timgortworst.roomy.domain.utils.NotificationWorkManager
+import com.timgortworst.roomy.presentation.features.notifications.NotificationBuilder
+import com.timgortworst.roomy.presentation.features.notifications.NotificationWorkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

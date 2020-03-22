@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.utils
+package com.timgortworst.roomy.presentation.features.notifications
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -18,7 +18,9 @@ object NotificationBuilder {
     private const val NOTIFICATION_GROUP_ID = 1
 
     fun triggerNotification(context: Context, id: Int, userName: String, taskDescription: String) {
-        createNotificationChannelIfRequired(context)
+        createNotificationChannelIfRequired(
+            context
+        )
 
         val pendingIntent = PendingIntent.getActivity(
             context,
@@ -31,10 +33,19 @@ object NotificationBuilder {
         val notificationText = context.getString(R.string.notification_message, taskDescription)
 
         with(NotificationManagerCompat.from(context)) {
-            notify(id, buildNotification(context, notificationTitle, notificationText, pendingIntent).build())
+            notify(id, buildNotification(
+                context,
+                notificationTitle,
+                notificationText,
+                pendingIntent
+            ).build())
             notify(
                 NOTIFICATION_GROUP_ID,
-                buildSummaryNotification(context, notificationTitle, notificationText).build()
+                buildSummaryNotification(
+                    context,
+                    notificationTitle,
+                    notificationText
+                ).build()
             )
         }
     }
@@ -44,7 +55,9 @@ object NotificationBuilder {
         title: String,
         text: String
     ): NotificationCompat.Builder {
-        return NotificationCompat.Builder(context, CHANNEL_ID)
+        return NotificationCompat.Builder(context,
+            CHANNEL_ID
+        )
             .setSmallIcon(R.drawable.ic_home)
             .setContentTitle(title)
             .setContentText(text)
@@ -58,7 +71,9 @@ object NotificationBuilder {
         notificationTitle: String,
         notificationMessage: String,
         notificationPendingIntent: PendingIntent
-    ) = NotificationCompat.Builder(context, CHANNEL_ID)
+    ) = NotificationCompat.Builder(context,
+        CHANNEL_ID
+    )
         .setSmallIcon(R.drawable.ic_home)
         .setContentTitle(notificationTitle)
         .setContentText(notificationMessage)
@@ -76,7 +91,8 @@ object NotificationBuilder {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel =
                 NotificationChannel(CHANNEL_ID, name, importance).apply {
-                    description = CHANNEL_DESC
+                    description =
+                        CHANNEL_DESC
                 }
             // Register the channel with the system
             val notificationManager: NotificationManager =
