@@ -50,18 +50,21 @@ class SetupUseCase(
 
     suspend fun handleLoginResult(
         fbUser: FirebaseUser?,
-        newUser: Boolean
+        newUser: Boolean,
+        registrationToken: String
     ): ResponseState {
         val fireBaseUser = fbUser ?: return ResponseState.Error(R.string.error_generic)
 
-        if (newUser) {
-            try {
+        return try {
+            if (newUser) {
                 val householdId = householdRepository.createHousehold()
-                userRepository.createUser(householdId, fireBaseUser)
-            } catch (e: FirebaseFirestoreException) {
-                return ResponseState.Error(R.string.error_generic)
+                userRepository.createUser(householdId, fireBaseUser, registrationToken)
+            } else {
+                userRepository.addUserToken(fireBaseUser.uid, registrationToken)
             }
+            ResponseState.Success(fbUser.displayName)
+        } catch (e: FirebaseFirestoreException) {
+            ResponseState.Error(R.string.error_generic)
         }
-        return ResponseState.Success(fbUser.displayName)
     }
 }

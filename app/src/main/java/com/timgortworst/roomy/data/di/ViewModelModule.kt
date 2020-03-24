@@ -14,5 +14,5 @@ val viewModelModule = module {
     viewModel { TaskEditViewModel(get(), get()) }
     viewModel { UserViewModel(get()) }
     viewModel { SettingsViewModel(get()) }
-    viewModel { SignInViewModel(get(), get()) }
+    viewModel { SignInViewModel(get()) }
 }

@@ -3,10 +3,7 @@ package com.timgortworst.roomy.data.repository
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.*
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.User.Companion.USER_ADMIN_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_COLLECTION_REF
@@ -22,7 +19,11 @@ class UserRepository(
 ) {
     private val userCollection = db.collection(USER_COLLECTION_REF)
 
-    suspend fun createUser(householdId: String, fireBaseUser: FirebaseUser) {
+    suspend fun createUser(
+        householdId: String,
+        fireBaseUser: FirebaseUser,
+        registrationToken: String
+    ) {
         db.runTransaction { transition ->
             val currentUserDocRef = userCollection.document(fireBaseUser.uid)
             val userDoc = transition.get(currentUserDocRef)
@@ -31,7 +32,8 @@ class UserRepository(
                 name = fireBaseUser.displayName ?: "",
                 email = fireBaseUser.email ?: "",
                 isAdmin = true,
-                householdId = householdId
+                householdId = householdId,
+                registrationTokens = mutableListOf(registrationToken)
             )
 
             if (!userDoc.exists()) {
@@ -80,6 +82,15 @@ class UserRepository(
         tokens?.let { userFieldMap[USER_TOKENS_REF] = it }
 
         userDocRef.set(userFieldMap, SetOptions.merge()).await()
+    }
+
+    suspend fun addUserToken(
+        userId: String? = FirebaseAuth.getInstance().currentUser?.uid,
+        token: String
+    ) {
+        userId ?: return
+        val userDocRef = userCollection.document(userId)
+        userDocRef.update(USER_TOKENS_REF, FieldValue.arrayUnion(token)).await()
     }
 
     suspend fun deleteUser(id: String) {

@@ -24,7 +24,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.domain.utils.snackbar
-import com.timgortworst.roomy.presentation.features.splash.SplashActivity
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -73,22 +72,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
                     .setMessage(getString(R.string.confirm_logout_message))
                     .setPositiveButton(android.R.string.yes) { _, _ ->
                         signOut()
-                    }
-                    .setNegativeButton(android.R.string.no) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
-
-                true
-            }
-
-        (findPreference("preferences_account_delete_key") as? Preference)
-            ?.setOnPreferenceClickListener {
-                AlertDialog.Builder(parentActivity)
-                    .setTitle(getString(R.string.delete))
-                    .setMessage(getString(R.string.delete_account_dialog_text))
-                    .setPositiveButton(android.R.string.yes) { _, _ ->
-                        deleteAccount()
                     }
                     .setNegativeButton(android.R.string.no) { dialog, _ ->
                         dialog.dismiss()
@@ -175,39 +158,19 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
         }
     }
 
-    private fun signOut() {
-        AuthUI.getInstance()
-            .signOut(parentActivity)
-            .addOnCompleteListener {
+    private fun signOut() = settingsViewModel.viewModelScope.launch {
+//        settingsViewModel.deleteUser()
+
+        // todo reauthenticate for delete
+        AuthUI.getInstance().signOut(parentActivity)
+            .addOnSuccessListener {
                 context?.cacheDir?.deleteRecursively() // clear cache
-
-                SplashActivity.start(parentActivity)
+                (context?.getSystemService(ACTIVITY_SERVICE) as? ActivityManager)
+                    ?.clearApplicationUserData() // clear app data
             }
-    }
-
-    private fun deleteAccount() { // todo re-authenticatie before removal
-        settingsViewModel.viewModelScope.launch {
-            settingsViewModel.deleteUser()
-
-            AuthUI.getInstance()
-                .delete(parentActivity)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        context?.cacheDir?.deleteRecursively() // clear cache
-                        (context?.getSystemService(ACTIVITY_SERVICE) as? ActivityManager)
-                            ?.clearApplicationUserData() // clear app data
-                    } else {
-                        val rootView = activity?.findViewById<View>(android.R.id.content)
-                            ?: return@addOnCompleteListener
-                        rootView.snackbar(
-                            message = getString(R.string.delete_account_fail_msg),
-                            actionMessage = getString(R.string.retry)
-                        ) {
-                            deleteAccount()
-                        }
-                    }
-                }
-        }
+            .addOnFailureListener {
+                errorMessage()
+            }
     }
 
     override fun easterEggMsg(stringRes: Int, argument: Int?) {
@@ -219,5 +182,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
         }
         snackbar?.setText(snackText)
         snackbar?.show()
+    }
+
+    private fun errorMessage() {
+        val rootView = activity?.findViewById<View>(android.R.id.content) ?: return
+        rootView.snackbar(
+            message = getString(R.string.delete_account_fail_msg),
+            actionMessage = getString(R.string.retry)
+        ) {
+            signOut()
+        }
     }
 }

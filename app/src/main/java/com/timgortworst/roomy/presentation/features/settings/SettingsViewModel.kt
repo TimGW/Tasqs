@@ -15,6 +15,6 @@ class SettingsViewModel(
     }
 
     suspend fun deleteUser() = withContext(Dispatchers.IO) {
-        userUseCase.deleteUser(userUseCase.getCurrentUser()?.userId)
+        userUseCase.removeAccount(userUseCase.getCurrentUser()?.userId)
     }
 }

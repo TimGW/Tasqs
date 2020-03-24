@@ -24,15 +24,22 @@ class UserUseCase(
 
     suspend fun getHouseholdIdForUser() = idProvider.fetchHouseholdId()
 
-    suspend fun deleteUser(userId: String?) {
+    suspend fun removeAccount(userId: String?) {
         userId ?: return
 
         try {
             removeEventsAssignedToUser(userId)
 
+            // delete old household if no other user is left
+            val household = idProvider.fetchHouseholdId()
+            userRepository.getAllUsersForHousehold(household).let {
+                if (it.size <= 1) householdRepository.deleteHousehold(household)
+            }
+
+            // remove user data
             userRepository.deleteUser(userId)
         } catch (e: FirebaseFirestoreException) {
-            // todo update UI with error
+            // todo handle errors
             Log.e(RoomyApp.TAG, e.localizedMessage.orEmpty())
         }
     }
@@ -59,11 +66,6 @@ class UserUseCase(
     }
 
     suspend fun addTokenToUser(token: String) {
-        val tokens = getCurrentUser()?.registrationTokens ?: return
-
-        if (tokens.contains(token)) return
-
-        tokens.add(token)
-        userRepository.updateUser(tokens = tokens)
+        userRepository.addUserToken(token = token)
     }
 }
