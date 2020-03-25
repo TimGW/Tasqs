@@ -61,6 +61,7 @@ object NotificationBuilder {
             .setSmallIcon(R.drawable.ic_home)
             .setContentTitle(title)
             .setContentText(text)
+            .setAutoCancel(true)
             .setGroupSummary(true)
             .setGroup(NOTIFICATION_GROUP_KEY)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))

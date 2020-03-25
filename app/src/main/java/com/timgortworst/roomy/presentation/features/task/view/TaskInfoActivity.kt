@@ -1,10 +1,10 @@
 package com.timgortworst.roomy.presentation.features.task.view
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityInfoTaskBinding
@@ -15,12 +15,12 @@ class TaskInfoActivity : BaseActivity() {
     private lateinit var binding: ActivityInfoTaskBinding
 
     companion object {
-        const val INTENT_EXTRA_INFO_TASK = "INTENT_EXTRA_INFO_TASK"
+        private const val INTENT_EXTRA_INFO_TASK = "INTENT_EXTRA_INFO_TASK"
 
-        fun start(context: AppCompatActivity, task: Task) {
+        fun intentBuilder(context: Context, task: Task): Intent {
             val intent = Intent(context, TaskInfoActivity::class.java)
             intent.putExtra(INTENT_EXTRA_INFO_TASK, task)
-            context.startActivity(intent)
+            return intent
         }
     }
 

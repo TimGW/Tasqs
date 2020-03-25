@@ -214,7 +214,7 @@ class TaskListFragment : BaseFragment(),
     }
 
     override fun onActionItemInfo(selectedTask: Task) {
-        TaskInfoActivity.start(parentActivity, selectedTask)
+        startActivity(TaskInfoActivity.intentBuilder(parentActivity, selectedTask))
     }
 
     override fun onActionItemDone(selectedTasks: List<Task>) {
@@ -249,7 +249,7 @@ class TaskListFragment : BaseFragment(),
     }
 
     override fun onTaskInfoClicked(task: Task) {
-        TaskInfoActivity.start(parentActivity, task)
+        startActivity(TaskInfoActivity.intentBuilder(parentActivity, task))
     }
 
     private fun formatDate(zonedDateTime: ZonedDateTime): String {
