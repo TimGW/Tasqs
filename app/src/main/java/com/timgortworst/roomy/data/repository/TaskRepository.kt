@@ -10,7 +10,6 @@ import com.timgortworst.roomy.domain.model.Household
 import com.timgortworst.roomy.domain.model.User.Companion.USER_ID_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_COLLECTION_REF
-import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_META_DATA_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_USER_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson.Companion.TASK_DATE_TIME_REF
@@ -63,8 +62,11 @@ class TaskRepository(
 
     suspend fun getAllTasksQuery(): Query {
         return taskCollection()
-            .whereEqualTo(TASK_HOUSEHOLD_ID_REF, idProvider.fetchHouseholdId())
             .orderBy("$TASK_META_DATA_REF.$TASK_DATE_TIME_REF", Query.Direction.ASCENDING)
+    }
+
+    suspend fun getTasksForUserQuery(userId: String): Query {
+        return taskCollection().whereEqualTo("$TASK_USER_REF.$USER_ID_REF", userId)
     }
 
     suspend fun updateTasks(tasks: List<Task>) {

@@ -2,9 +2,7 @@ package com.timgortworst.roomy.presentation.features.task.view
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
@@ -14,15 +12,12 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentTaskListBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
-import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 import com.timgortworst.roomy.presentation.base.view.BaseFragment
@@ -43,7 +38,7 @@ class TaskListFragment : BaseFragment(),
     private lateinit var parentActivity: MainActivity
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
-    private lateinit var taskListAdapter: TaskFirestoreAdapter
+    private var taskListAdapter: TaskFirestoreAdapter? = null
     private var tracker: SelectionTracker<String>? = null
     private var actionMode: ActionMode? = null
     private val taskViewModel by viewModel<TaskListViewModel>()
@@ -79,6 +74,11 @@ class TaskListFragment : BaseFragment(),
         parentActivity = (activity as? MainActivity) ?: return
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -86,7 +86,11 @@ class TaskListFragment : BaseFragment(),
     ): View? {
         _binding = FragmentTaskListBinding.inflate(inflater, container, false)
 
-        setupRecyclerView()
+        taskViewModel.viewModelScope.launch {
+            taskViewModel.loadInitialQuery()
+
+            setupRecyclerView()
+        }
 
         return binding.root
     }
@@ -94,21 +98,19 @@ class TaskListFragment : BaseFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        taskViewModel.data.observe(viewLifecycleOwner, Observer { networkResponse ->
-            networkResponse?.let {
-                val options = it.setLifecycleOwner(this).build()
-                taskListAdapter.updateOptions(options)
+        taskViewModel.showLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+            if (isLoading == true) {
+                toggleFadeViews(binding.recyclerView, binding.progress)
+            } else {
+                toggleFadeViews(binding.progress, binding.recyclerView)
             }
         })
 
-        taskViewModel.showLoading.observe(viewLifecycleOwner, Observer { networkResponse ->
-            networkResponse?.let {
-                if (it) {
-                    toggleFadeViews(binding.recyclerView, binding.progress)
-                } else {
-                    toggleFadeViews(binding.progress, binding.recyclerView)
-                }
-            }
+        taskViewModel.liveQueryOptions.observe(viewLifecycleOwner, Observer {
+            val options = it.setLifecycleOwner(this).build()
+            taskListAdapter?.stopListening()
+            taskListAdapter?.updateOptions(options)
+            taskListAdapter?.startListening()
         })
     }
 
@@ -117,21 +119,34 @@ class TaskListFragment : BaseFragment(),
         _binding = null
     }
 
-    private fun setupRecyclerView() {
-        // todo remove this placeholder options
-        val query =
-            FirebaseFirestore.getInstance().collection(TaskJson.TASK_COLLECTION_REF).whereEqualTo(
-                TaskJson.TASK_HOUSEHOLD_ID_REF, ""
-            )
-        val defaultOptions = FirestoreRecyclerOptions
-            .Builder<Task>()
-            .setQuery(query, Task::class.java)
-            .build()
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.task_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.filter_all -> {
+                taskViewModel.viewModelScope.launch {
+                    taskViewModel.allDataQuery()
+                }
+                true
+            }
+            R.id.filter_me -> {
+                taskViewModel.viewModelScope.launch {
+                    taskViewModel.filterDataQuery()
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun setupRecyclerView() {
         taskListAdapter = TaskFirestoreAdapter(
             this,
             this,
-            defaultOptions
+            taskViewModel.liveQueryOptions.value!!.setLifecycleOwner(this).build()
         )
 
         binding.recyclerView.apply {
@@ -156,7 +171,7 @@ class TaskListFragment : BaseFragment(),
             true
         }.build()
 
-        taskListAdapter.tracker = tracker
+        taskListAdapter?.tracker = tracker
 
         tracker?.addObserver(object : SelectionTracker.SelectionObserver<String>() {
             override fun onSelectionChanged() {
@@ -183,7 +198,7 @@ class TaskListFragment : BaseFragment(),
             ActionModeCallback(
                 this@TaskListFragment,
                 tracker,
-                taskListAdapter.snapshots
+                taskListAdapter?.snapshots!!
             )
         )
     }
@@ -297,7 +312,8 @@ class TaskListFragment : BaseFragment(),
 
     override fun onDataChanged(itemCount: Int) {
         binding.recyclerView.visibility = View.VISIBLE
-        if (showListAnimation) binding.recyclerView.scheduleLayoutAnimation(); showListAnimation = false
+        if (showListAnimation) binding.recyclerView.scheduleLayoutAnimation(); showListAnimation =
+            false
         val visibility = if (itemCount == 0) View.VISIBLE else View.GONE
         setMsgView(
             visibility,

@@ -146,5 +146,7 @@
     <string name="task_deleted">%1$s verwijderd</string>
     <string name="tasks_done">%1$d taken zijn klaar en geüpdatet</string>
     <string name="removed">%1$s verwijderd</string>
-
+    <string name="filter">filter</string>
+    <string name="filter_just_me">Toon alleen mij</string>
+    <string name="filter_show_all">Toon alles</string>
 </resources>

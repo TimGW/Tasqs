@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.domain.usecase
 
+import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.IdProvider
 import com.timgortworst.roomy.data.repository.UserRepository
@@ -16,6 +17,10 @@ class TaskUseCase(
     private val idProvider: IdProvider
 ) {
     suspend fun getAllTasksQuery() = taskRepository.getAllTasksQuery()
+
+    suspend fun getTasksForUserQuery(
+        userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
+    ) = taskRepository.getTasksForUserQuery(userId)
 
     suspend fun getAllUsers() = userRepository.getAllUsersForHousehold(idProvider.fetchHouseholdId())
 
