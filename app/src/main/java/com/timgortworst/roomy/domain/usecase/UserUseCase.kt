@@ -4,7 +4,6 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.data.repository.HouseholdRepository
-import com.timgortworst.roomy.data.repository.IdProvider
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.TaskUser
@@ -13,8 +12,7 @@ import com.timgortworst.roomy.presentation.RoomyApp
 class UserUseCase(
     private val userRepository: UserRepository,
     private val taskRepository: TaskRepository,
-    private val householdRepository: HouseholdRepository,
-    private val idProvider: IdProvider
+    private val householdRepository: HouseholdRepository
 ) {
 
     suspend fun getCurrentUser() =
@@ -26,9 +24,9 @@ class UserUseCase(
     }
 
     suspend fun getAllUsersForHousehold() =
-        userRepository.getAllUsersForHousehold(idProvider.fetchHouseholdId())
+        userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())
 
-    suspend fun getHouseholdIdForUser() = idProvider.fetchHouseholdId()
+    suspend fun getHouseholdIdForUser() = householdRepository.getHouseholdId()
 
     suspend fun removeAccount(userId: String?) {
         userId ?: return
@@ -37,7 +35,7 @@ class UserUseCase(
             removeEventsAssignedToUser(userId)
 
             // delete old household if no other user is left
-            val household = idProvider.fetchHouseholdId()
+            val household = householdRepository.getHouseholdId()
             userRepository.getAllUsersForHousehold(household).let {
                 if (it.size <= 1) householdRepository.deleteHousehold(household)
             }

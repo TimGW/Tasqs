@@ -1,8 +1,8 @@
 package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
+import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.TaskRepository
-import com.timgortworst.roomy.data.repository.IdProvider
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskMetaData
@@ -15,7 +15,7 @@ import org.threeten.bp.ZonedDateTime
 class TaskUseCase(
     private val taskRepository: TaskRepository,
     private val userRepository: UserRepository,
-    private val idProvider: IdProvider
+    private val householdRepository: HouseholdRepository
 ) {
     suspend fun getAllTasksQuery() = taskRepository.getAllTasksQuery()
 
@@ -24,10 +24,10 @@ class TaskUseCase(
     ) = taskRepository.getTasksForUserQuery(userId)
 
     suspend fun getAllUsers() =
-        userRepository.getAllUsersForHousehold(idProvider.fetchHouseholdId())
+        userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())
 
     suspend fun getAllTaskUsers(): List<TaskUser> {
-        val result = userRepository.getAllUsersForHousehold(idProvider.fetchHouseholdId())
+        val result = userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())
         return result.map { TaskUser(it.userId, it.name) }
     }
 
@@ -68,7 +68,6 @@ class TaskUseCase(
 
     suspend fun createOrUpdateTask(task: Task) {
         if (task.id.isEmpty()) {
-            task.householdId = idProvider.fetchHouseholdId()
             taskRepository.createTask(task)
         } else {
             taskRepository.updateTask(task)

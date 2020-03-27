@@ -5,7 +5,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.repository.HouseholdRepository
-import com.timgortworst.roomy.data.repository.IdProvider
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.ResponseState
@@ -13,11 +12,10 @@ import com.timgortworst.roomy.domain.model.ResponseState
 class SetupUseCase(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository,
-    private val taskRepository: TaskRepository,
-    private val idProvider: IdProvider
+    private val taskRepository: TaskRepository
 ) {
     suspend fun switchHousehold(newId: String) {
-        val oldId = idProvider.fetchHouseholdId()
+        val oldId = householdRepository.getHouseholdId()
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         try {
@@ -41,10 +39,10 @@ class SetupUseCase(
         }
     }
 
-    suspend fun currentHouseholdIdForCurrentUser() = idProvider.fetchHouseholdId()
+    suspend fun currentHouseholdIdForCurrentUser() = householdRepository.getHouseholdId()
 
     suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
-        return referredHouseholdId == idProvider.fetchHouseholdId()
+        return referredHouseholdId == householdRepository.getHouseholdId()
     }
 
     suspend fun handleLoginResult(

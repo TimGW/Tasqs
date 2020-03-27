@@ -18,28 +18,37 @@ import org.threeten.bp.ZoneId
  */
 object CustomMapper {
     fun toTask(taskJson: TaskJson): Task? {
-        if (taskJson.id == null || taskJson.description == null || taskJson.metaData == null ||
-                taskJson.user == null || taskJson.householdId == null) {
+        if (
+            taskJson.id == null ||
+            taskJson.description == null ||
+            taskJson.metaData == null ||
+            taskJson.user == null
+        ) {
             return null
         }
 
         return Task(
-                taskJson.id!!,
-                taskJson.description!!,
-                taskJson.metaData!!.toTaskMetaData(),
-                TaskUser(taskJson.user!!.userId, taskJson.user!!.name),
-                taskJson.householdId!!)
+            taskJson.id!!,
+            taskJson.description!!,
+            taskJson.metaData!!.toTaskMetaData(),
+            TaskUser(taskJson.user!!.userId, taskJson.user!!.name)
+        )
     }
 
     private fun TaskMetaDataJson.toTaskMetaData(): TaskMetaData {
         return TaskMetaData(
-                Instant
-                        .ofEpochMilli(startDateTime!!)
-                        .atZone(ZoneId.of(timeZone!!)),
-                buildRecurrence(recurrenceType, frequency ?: 1, onDaysOfWeek.orEmpty()))
+            Instant
+                .ofEpochMilli(startDateTime!!)
+                .atZone(ZoneId.of(timeZone!!)),
+            buildRecurrence(recurrenceType, frequency ?: 1, onDaysOfWeek.orEmpty())
+        )
     }
 
-    private fun buildRecurrence(recurrenceType: String?, frequency: Int, onDaysOfWeek: List<Int>): TaskRecurrence {
+    private fun buildRecurrence(
+        recurrenceType: String?,
+        frequency: Int,
+        onDaysOfWeek: List<Int>
+    ): TaskRecurrence {
         return when (recurrenceType) {
             DAILY_TASK -> TaskRecurrence.Daily(frequency)
             WEEKLY_TASK -> TaskRecurrence.Weekly(frequency, onDaysOfWeek)
@@ -55,7 +64,6 @@ object CustomMapper {
         result[TaskJson.TASK_DESCRIPTION_REF] = task.description
         result[TaskJson.TASK_META_DATA_REF] = task.metaData.toMap()
         result[TaskJson.TASK_USER_REF] = task.user
-        result[TaskJson.TASK_HOUSEHOLD_ID_REF] = task.householdId
         return result
     }
 
@@ -63,9 +71,12 @@ object CustomMapper {
         val result = mutableMapOf<String, Any?>()
         result[TaskMetaDataJson.TASK_DATE_TIME_REF] = startDateTime.toInstant().toEpochMilli()
         result[TaskMetaDataJson.TASK_TIME_ZONE_REF] = startDateTime.zone.id
-        if (recurrence !is TaskRecurrence.SingleTask) result[TaskMetaDataJson.TASK_FREQUENCY] = recurrence.frequency
+        if (recurrence !is TaskRecurrence.SingleTask) result[TaskMetaDataJson.TASK_FREQUENCY] =
+            recurrence.frequency
         result[TaskMetaDataJson.TASK_RECURRENCE] = recurrence.id
-        (recurrence as? TaskRecurrence.Weekly)?.let { result[TaskMetaDataJson.TASK_ON_DAYS] = it.onDaysOfWeek }
+        (recurrence as? TaskRecurrence.Weekly)?.let {
+            result[TaskMetaDataJson.TASK_ON_DAYS] = it.onDaysOfWeek
+        }
         return result
     }
 }

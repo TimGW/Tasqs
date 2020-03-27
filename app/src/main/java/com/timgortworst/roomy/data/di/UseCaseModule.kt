@@ -15,6 +15,6 @@ val useCaseModule = module {
         )
     }
     factory { TaskUseCase(get(), get(), get()) }
-    factory { SetupUseCase(get(), get(), get(), get()) }
-    factory { UserUseCase(get(), get(), get(), get()) }
+    factory { SetupUseCase(get(), get(), get()) }
+    factory { UserUseCase(get(), get(), get()) }
 }

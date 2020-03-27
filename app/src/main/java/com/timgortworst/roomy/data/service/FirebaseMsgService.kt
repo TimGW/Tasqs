@@ -14,6 +14,7 @@ import org.koin.core.KoinComponent
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
+import java.lang.Exception
 
 class FirebaseMsgService : FirebaseMessagingService(), KoinComponent {
     private val workerNotification: NotificationWorkManager by inject()
