@@ -16,6 +16,7 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.*
 
+// todo refactor this class to a viewmodel
 class TaskEditPresenter(
     private val view: TaskEditView,
     private val taskUseCase: TaskUseCase,

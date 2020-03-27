@@ -7,9 +7,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.domain.model.SplashAction
 import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.domain.utils.snackbar
@@ -17,10 +19,9 @@ import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.signin.SignInActivity
 import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 
-class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpdateNeededListener {
-    private val presenter: SplashPresenter by inject { parametersOf(this) }
+class SplashActivity : AppCompatActivity(), ForceUpdateUseCase.OnUpdateNeededListener {
+    private val viewModel: SplashViewModel by inject()
 
     companion object {
         fun intentBuilder(context: Context): Intent {
@@ -38,24 +39,33 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
         ForceUpdateUseCase.with(remoteConfig)
             .onUpdateNeeded(this)
             .check(currentVersion)
+
+        viewModel.action.observe(this, Observer {
+            when(it) {
+                SplashAction.SignInActivity -> goToSignInActivity()
+                SplashAction.MainActivity -> goToMainActivity()
+                SplashAction.DialogAlreadyInHousehold -> presentAlreadyInHouseholdDialog()
+                is SplashAction.DialogOverride -> presentHouseholdOverwriteDialog(it.id)
+            }
+        })
     }
 
-    override fun goToSignInActivity() {
+    private fun goToSignInActivity() {
         startActivity(SignInActivity.intentBuilder(this))
         finish()
     }
 
-    override fun goToMainActivity() {
+    private fun goToMainActivity() {
         startActivity(MainActivity.intentBuilder(this))
         finish()
     }
 
-    override fun presentHouseholdOverwriteDialog(referredHouseholdId: String) {
+    private fun presentHouseholdOverwriteDialog(referredHouseholdId: String) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.dialog_household_overwrite_title))
             .setMessage(getString(R.string.dialog_household_overwrite_text))
             .setPositiveButton(android.R.string.yes) { _, _ ->
-                presenter.changeCurrentUserHousehold(referredHouseholdId)
+                viewModel.changeCurrentUserHousehold(referredHouseholdId)
             }
             .setNegativeButton(android.R.string.no) { _, _ ->
                 goToMainActivity()
@@ -63,7 +73,7 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
             .show()
     }
 
-    override fun presentAlreadyInHouseholdDialog() {
+    private fun presentAlreadyInHouseholdDialog() {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.dialog_household_similar_title))
             .setMessage(getString(R.string.dialog_household_similar_text))
@@ -108,7 +118,7 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
     override fun noUpdateNeeded() {
         FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnSuccessListener {
             val referredHouseholdId = it?.link?.getQueryParameter(QUERY_PARAM_HOUSEHOLD).orEmpty()
-            presenter.handleAppStartup(referredHouseholdId)
+            viewModel.handleAppStartup(referredHouseholdId)
         }.addOnFailureListener {
             val content = findViewById<View>(android.R.id.content)
             content.snackbar(getString(R.string.error_generic))
