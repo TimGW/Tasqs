@@ -13,15 +13,13 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
-import com.timgortworst.roomy.data.di.presenterModule
-import com.timgortworst.roomy.data.di.repositoryModule
-import com.timgortworst.roomy.data.di.useCaseModule
-import com.timgortworst.roomy.data.di.viewModelModule
+import com.timgortworst.roomy.data.di.*
 import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import org.koin.core.module.Module
 import java.util.*
 
@@ -31,6 +29,7 @@ import java.util.*
 class RoomyApp : Application(), Configuration.Provider {
     private val sharedPref: SharedPrefs by inject()
     private val appComponent: List<Module> = listOf(
+        appModule,
         repositoryModule,
         useCaseModule,
         presenterModule,
@@ -45,7 +44,7 @@ class RoomyApp : Application(), Configuration.Provider {
         super.onCreate()
 
         startKoin {
-            androidLogger()
+            if (BuildConfig.DEBUG) androidLogger(Level.DEBUG)
             androidContext(this@RoomyApp)
             modules(appComponent)
         }

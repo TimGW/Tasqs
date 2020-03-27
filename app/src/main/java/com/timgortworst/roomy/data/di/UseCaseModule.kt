@@ -9,11 +9,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val useCaseModule = module {
-    factory {
-        NotificationWorkManager(
-            androidContext()
-        )
-    }
     factory { TaskUseCase(get(), get(), get()) }
     factory { SetupUseCase(get(), get(), get()) }
     factory { UserUseCase(get(), get(), get()) }
