@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.features.task.view
+package com.timgortworst.roomy.presentation.features.task.adapter
 
 import android.content.Context
 import android.widget.TextView

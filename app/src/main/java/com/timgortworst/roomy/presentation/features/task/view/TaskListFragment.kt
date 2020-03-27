@@ -22,7 +22,7 @@ import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 import com.timgortworst.roomy.presentation.base.view.BaseFragment
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import com.timgortworst.roomy.presentation.features.task.recyclerview.*
+import com.timgortworst.roomy.presentation.features.task.adapter.*
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskListViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel

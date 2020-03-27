@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.features.task.recyclerview
+package com.timgortworst.roomy.presentation.features.task.adapter
 
 import androidx.recyclerview.selection.ItemKeyProvider
 import androidx.recyclerview.widget.RecyclerView
