@@ -241,8 +241,7 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun openTaskEditActivity() {
-        val intent = Intent(this, TaskEditActivity::class.java)
-        startActivity(intent)
+        startActivity(TaskEditActivity.intentBuilder(this))
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
