@@ -9,9 +9,8 @@ import com.timgortworst.roomy.presentation.base.view.BaseActivity
 class SettingsActivity : BaseActivity() {
 
     companion object {
-        fun start(context: Context) {
-            val intent = Intent(context, SettingsActivity::class.java)
-            context.startActivity(intent)
+        fun intentBuilder(context: Context): Intent {
+            return Intent(context, SettingsActivity::class.java)
         }
     }
 

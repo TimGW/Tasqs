@@ -17,6 +17,7 @@ import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
+import com.timgortworst.roomy.presentation.features.signin.SignInActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
 import com.timgortworst.roomy.presentation.features.user.UserListFragment
@@ -38,10 +39,10 @@ class MainActivity : BaseActivity(), MainView {
         private const val ACTIVE_FRAG_KEY = "activeFragment"
         private const val INTENT_EXTRA_WELCOME_MSG = "INTENT_EXTRA_WELCOME_MSG"
 
-        fun start(context: Context, welcomeUserBack: String? = null) {
+        fun intentBuilder(context: Context, welcomeUserBack: String? = null): Intent {
             val intent = Intent(context, MainActivity::class.java)
             welcomeUserBack?.let { intent.putExtra(INTENT_EXTRA_WELCOME_MSG, it) }
-            context.startActivity(intent)
+            return intent
         }
     }
 
@@ -113,7 +114,7 @@ class MainActivity : BaseActivity(), MainView {
                     userListFragment,
                     userListFragment::class.java.toString()
                 )
-                R.id.appbar_settings_id -> SettingsActivity.start(this)
+                R.id.appbar_settings_id -> startActivity(SettingsActivity.intentBuilder(this))
             }
             true
         }

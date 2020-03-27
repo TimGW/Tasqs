@@ -24,6 +24,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.domain.utils.snackbar
+import com.timgortworst.roomy.presentation.features.splash.SplashActivity
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -115,10 +116,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
             }
 
         (findPreference("privacy_policy_key") as? Preference)?.setOnPreferenceClickListener {
-            HtmlTextActivity.start(
-                parentActivity,
-                getString(R.string.privacy_policy),
-                getString(R.string.privacy_policy_title)
+            startActivity(
+                HtmlTextActivity.intentBuilder(
+                    parentActivity,
+                    getString(R.string.privacy_policy),
+                    getString(R.string.privacy_policy_title)
+                )
             )
             true
         }
@@ -159,13 +162,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
     }
 
     private fun signOut() = settingsViewModel.viewModelScope.launch {
-//        settingsViewModel.deleteUser() // todo reauthenticate for delete
+        //        settingsViewModel.deleteUser() // todo reauthenticate for delete
 
         AuthUI.getInstance().signOut(parentActivity)
             .addOnSuccessListener {
                 context?.cacheDir?.deleteRecursively() // clear cache
-                (context?.getSystemService(ACTIVITY_SERVICE) as? ActivityManager)
-                    ?.clearApplicationUserData() // clear app data
+                parentActivity.finishAffinity()
+                startActivity(SplashActivity.intentBuilder(parentActivity))
+//                (context?.getSystemService(ACTIVITY_SERVICE) as? ActivityManager)
+//                    ?.clearApplicationUserData() // clear app data
             }
             .addOnFailureListener {
                 errorMessage()

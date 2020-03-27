@@ -9,7 +9,7 @@ import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.ResponseState
 
-class SetupUseCase(
+class HouseholdUseCase(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository,
     private val taskRepository: TaskRepository
@@ -43,25 +43,5 @@ class SetupUseCase(
 
     suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
         return referredHouseholdId == householdRepository.getHouseholdId()
-    }
-
-    suspend fun handleLoginResult(
-        fbUser: FirebaseUser?,
-        newUser: Boolean,
-        registrationToken: String
-    ): ResponseState {
-        val fireBaseUser = fbUser ?: return ResponseState.Error(R.string.error_generic)
-
-        return try {
-            if (newUser) {
-                val householdId = householdRepository.createHousehold()
-                userRepository.createUser(householdId, fireBaseUser, registrationToken)
-            } else {
-                userRepository.addUserToken(fireBaseUser.uid, registrationToken)
-            }
-            ResponseState.Success(fbUser.displayName)
-        } catch (e: FirebaseFirestoreException) {
-            ResponseState.Error(R.string.error_generic)
-        }
     }
 }

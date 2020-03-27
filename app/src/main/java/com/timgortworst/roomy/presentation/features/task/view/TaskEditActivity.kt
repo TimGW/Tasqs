@@ -47,10 +47,10 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
     companion object {
         const val INTENT_EXTRA_EDIT_TASK = "INTENT_EXTRA_EDIT_TASK"
 
-        fun start(context: AppCompatActivity, task: Task? = null) {
+        fun intentBuilder(context: AppCompatActivity, task: Task? = null): Intent {
             val intent = Intent(context, TaskEditActivity::class.java)
             task?.let { intent.putExtra(INTENT_EXTRA_EDIT_TASK, it) }
-            context.startActivity(intent)
+            return intent
         }
     }
 

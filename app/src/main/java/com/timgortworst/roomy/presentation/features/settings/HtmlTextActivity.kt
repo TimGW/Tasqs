@@ -32,11 +32,11 @@ class HtmlTextActivity : AppCompatActivity() {
         private const val INTENT_EXTRA_HTML_TEXT = "INTENT_EXTRA_HTML_TEXT"
         private const val INTENT_EXTRA_TITLE = "INTENT_EXTRA_TITLE"
 
-        fun start(context: Context, htmlText: String, title: String) {
+        fun intentBuilder(context: Context, htmlText: String, title: String): Intent {
             val intent = Intent(context, HtmlTextActivity::class.java)
             intent.putExtra(INTENT_EXTRA_HTML_TEXT, htmlText)
             intent.putExtra(INTENT_EXTRA_TITLE, title)
-            context.startActivity(intent)
+            return intent
         }
     }
 }

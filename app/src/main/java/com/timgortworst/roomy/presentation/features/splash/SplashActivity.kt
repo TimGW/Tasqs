@@ -23,9 +23,8 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
     private val presenter: SplashPresenter by inject { parametersOf(this) }
 
     companion object {
-        fun start(context: Context) {
-            val intent = Intent(context, SplashActivity::class.java)
-            context.startActivity(intent)
+        fun intentBuilder(context: Context): Intent {
+            return Intent(context, SplashActivity::class.java)
         }
     }
 
@@ -42,12 +41,12 @@ class SplashActivity : AppCompatActivity(), SplashView, ForceUpdateUseCase.OnUpd
     }
 
     override fun goToSignInActivity() {
-        SignInActivity.start(this)
+        startActivity(SignInActivity.intentBuilder(this))
         finish()
     }
 
     override fun goToMainActivity() {
-        MainActivity.start(this)
+        startActivity(MainActivity.intentBuilder(this))
         finish()
     }
 

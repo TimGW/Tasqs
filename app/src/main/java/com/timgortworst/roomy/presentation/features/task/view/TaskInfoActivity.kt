@@ -49,7 +49,7 @@ class TaskInfoActivity : BaseActivity() {
                 true
             }
             R.id.action_go_to_edit -> {
-                TaskEditActivity.start(this, binding.task)
+                startActivity(TaskEditActivity.intentBuilder(this, binding.task))
                 true
             }
             else -> super.onOptionsItemSelected(item)

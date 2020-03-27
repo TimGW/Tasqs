@@ -3,14 +3,14 @@ package com.timgortworst.roomy.presentation.features.splash
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.auth.FirebaseAuth
-import com.timgortworst.roomy.domain.usecase.SetupUseCase
+import com.timgortworst.roomy.domain.usecase.HouseholdUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SplashPresenter(
     private val view: SplashView,
-    private val setupUseCase: SetupUseCase
+    private val householdUseCase: HouseholdUseCase
 ) : DefaultLifecycleObserver {
     private val scope = CoroutineLifecycleScope(Dispatchers.Main)
     private val auth = FirebaseAuth.getInstance()
@@ -24,8 +24,8 @@ class SplashPresenter(
     fun handleAppStartup(referredHouseholdId: String) = scope.launch {
         when {
             // first check if user has valid authentication
-            auth.currentUser == null ||
-                    auth.currentUser?.uid?.isBlank() == true -> view.goToSignInActivity()
+            (auth.currentUser == null ||
+                    auth.currentUser?.uid?.isBlank() == true) -> view.goToSignInActivity()
 
             // then check if the user accepted an invite link
             referredHouseholdId.isNotBlank() -> referredSetup(referredHouseholdId)
@@ -37,10 +37,10 @@ class SplashPresenter(
 
     private fun referredSetup(referredHouseholdId: String) = scope.launch {
         when {
-            setupUseCase.isIdSimilarToActiveId(referredHouseholdId) -> {
+            householdUseCase.isIdSimilarToActiveId(referredHouseholdId) -> {
                 view.presentAlreadyInHouseholdDialog()
             }
-            setupUseCase.currentHouseholdIdForCurrentUser().isNotBlank() -> {
+            householdUseCase.currentHouseholdIdForCurrentUser().isNotBlank() -> {
                 view.presentHouseholdOverwriteDialog(referredHouseholdId)
             }
             else -> changeCurrentUserHousehold(referredHouseholdId)
@@ -48,7 +48,7 @@ class SplashPresenter(
     }
 
     fun changeCurrentUserHousehold(newId: String) = scope.launch {
-        setupUseCase.switchHousehold(newId)
+        householdUseCase.switchHousehold(newId)
 
         view.goToMainActivity()
     }

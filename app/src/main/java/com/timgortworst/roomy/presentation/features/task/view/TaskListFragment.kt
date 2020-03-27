@@ -225,7 +225,7 @@ class TaskListFragment : BaseFragment(),
     }
 
     override fun onActionItemEdit(selectedTask: Task) {
-        TaskEditActivity.start(parentActivity, selectedTask)
+        startActivity(TaskEditActivity.intentBuilder(parentActivity, selectedTask))
     }
 
     override fun onActionItemInfo(selectedTask: Task) {

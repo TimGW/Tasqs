@@ -11,19 +11,21 @@ import com.firebase.ui.auth.IdpResponse
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.ResponseState
+import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.utils.toast
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
+import com.timgortworst.roomy.presentation.features.task.view.TaskInfoActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SignInActivity : BaseActivity() {
-    private val viewModel by viewModel<SignInViewModel>()
+    private val viewModel : SignInViewModel by viewModel()
 
     companion object {
         private const val RC_SIGN_IN = 123
 
-        fun start(context: Context) {
-            context.startActivity(Intent(context, SignInActivity::class.java))
+        fun intentBuilder(context: Context): Intent {
+            return Intent(context, SignInActivity::class.java)
         }
     }
 
@@ -79,12 +81,12 @@ class SignInActivity : BaseActivity() {
     }
 
     private fun loginSuccessful() {
-        MainActivity.start(this)
+        startActivity(MainActivity.intentBuilder(this))
         finish()
     }
 
     private fun welcomeBack(displayName: String?) {
-        MainActivity.start(this, displayName)
+        startActivity(MainActivity.intentBuilder(this, displayName))
         finish()
     }
 
