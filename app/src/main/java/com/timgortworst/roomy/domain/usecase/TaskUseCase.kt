@@ -13,23 +13,13 @@ import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 
 class TaskUseCase(
-    private val taskRepository: TaskRepository,
-    private val userRepository: UserRepository,
-    private val householdRepository: HouseholdRepository
+    private val taskRepository: TaskRepository
 ) {
     suspend fun getAllTasksQuery() = taskRepository.getAllTasksQuery()
 
     suspend fun getTasksForUserQuery(
         userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
     ) = taskRepository.getTasksForUserQuery(userId)
-
-    suspend fun getAllUsers() =
-        userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())
-
-    suspend fun getAllTaskUsers(): List<TaskUser> {
-        val result = userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())
-        return result.map { TaskUser(it.userId, it.name) }
-    }
 
     suspend fun deleteTasks(tasks: List<Task>) {
         taskRepository.deleteTasks(tasks)

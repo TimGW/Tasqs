@@ -9,7 +9,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val useCaseModule = module {
-    factory { TaskUseCase(get(), get(), get()) }
+    factory { TaskUseCase(get()) }
     factory { SetupUseCase(get(), get(), get()) }
     factory { UserUseCase(get(), get(), get()) }
 }

@@ -26,6 +26,11 @@ class UserUseCase(
     suspend fun getAllUsersForHousehold() =
         userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())
 
+    suspend fun getAllTaskUsers(): List<TaskUser> {
+        val result = userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())
+        return result.map { TaskUser(it.userId, it.name) }
+    }
+
     suspend fun getHouseholdIdForUser() = householdRepository.getHouseholdId()
 
     suspend fun removeAccount(userId: String?) {

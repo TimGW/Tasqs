@@ -1,9 +1,9 @@
 package com.timgortworst.roomy.presentation.features.task.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.firestore.FirebaseFirestore
 import com.timgortworst.roomy.data.repository.CustomMapper
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
@@ -14,9 +14,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TaskListViewModel(
-    private val taskUseCase: TaskUseCase,
-    application: Application
-) : AndroidViewModel(application) {
+    private val taskUseCase: TaskUseCase
+) : ViewModel() {
 
     private val _showLoading = MutableLiveData<Boolean>()
     val showLoading: LiveData<Boolean> = _showLoading

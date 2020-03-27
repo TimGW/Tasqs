@@ -10,8 +10,7 @@ import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { TaskListViewModel(get(), androidApplication()) }
-    viewModel { TaskEditViewModel(get(), get()) }
+    viewModel { TaskListViewModel(get()) }
     viewModel { UserViewModel(get()) }
     viewModel { SettingsViewModel(get()) }
     viewModel { SignInViewModel(get()) }
