@@ -28,7 +28,7 @@ class TaskRepository(
             .collection(TASK_COLLECTION_REF)
     }
 
-    suspend fun createTask(task: Task): String? { // todo only store user id + name
+    suspend fun createTask(task: Task): String? {
         val document = taskCollection().document()
 
         return try {

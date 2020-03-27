@@ -7,6 +7,7 @@ import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.IdProvider
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.model.TaskUser
 import com.timgortworst.roomy.presentation.RoomyApp
 
 class UserUseCase(
@@ -18,6 +19,11 @@ class UserUseCase(
 
     suspend fun getCurrentUser() =
         userRepository.getUser(FirebaseAuth.getInstance().currentUser?.uid)
+
+    suspend fun getCurrentTaskUser(): TaskUser? {
+        val result = userRepository.getUser(FirebaseAuth.getInstance().currentUser?.uid) ?: return null
+        return TaskUser(result.userId, result.name)
+    }
 
     suspend fun getAllUsersForHousehold() =
         userRepository.getAllUsersForHousehold(idProvider.fetchHouseholdId())

@@ -20,6 +20,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityEditTaskBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
+import com.timgortworst.roomy.domain.model.TaskUser
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
@@ -33,7 +34,7 @@ import org.threeten.bp.temporal.ChronoField
 class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSetListener {
     private lateinit var binding: ActivityEditTaskBinding
     private val presenter: TaskEditPresenter by inject { parametersOf(this) }
-    private var userList: List<User> = listOf()
+    private var userList: List<TaskUser> = listOf()
     private lateinit var task: Task
     private lateinit var recurrenceAdapter: ArrayAdapter<String>
     private val recurrences = listOf(
@@ -229,7 +230,7 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
             } // map checked buttons to weekday index 0..6 (mo - su)
     }
 
-    override fun presentUserList(filteredUserList: List<User>) {
+    override fun presentUserList(filteredUserList: List<TaskUser>) {
         this.userList = filteredUserList
 
         binding.userGroup.visibility = View.VISIBLE
@@ -247,7 +248,7 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
         }
     }
 
-    override fun presentCurrentUser(currentUser: User?) {
+    override fun presentCurrentUser(currentUser: TaskUser?) {
         currentUser?.let { task.user = it }
     }
 

@@ -10,6 +10,6 @@ data class Task(
     var id: String = "",
     var description: String = "",
     var metaData: TaskMetaData = TaskMetaData(),
-    var user: User = User(),
+    var user: TaskUser = TaskUser(),
     var householdId: String = ""
 ) : Parcelable

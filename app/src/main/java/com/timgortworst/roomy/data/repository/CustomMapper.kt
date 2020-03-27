@@ -7,6 +7,7 @@ import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.ANNUAL_TASK
 import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.DAILY_TASK
 import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.MONTHLY_TASK
 import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.WEEKLY_TASK
+import com.timgortworst.roomy.domain.model.TaskUser
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson
 import org.threeten.bp.Instant
@@ -26,7 +27,7 @@ object CustomMapper {
                 taskJson.id!!,
                 taskJson.description!!,
                 taskJson.metaData!!.toTaskMetaData(),
-                taskJson.user!!,
+                TaskUser(taskJson.user!!.userId, taskJson.user!!.name),
                 taskJson.householdId!!)
     }
 

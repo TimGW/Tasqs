@@ -159,9 +159,8 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
     }
 
     private fun signOut() = settingsViewModel.viewModelScope.launch {
-//        settingsViewModel.deleteUser()
+//        settingsViewModel.deleteUser() // todo reauthenticate for delete
 
-        // todo reauthenticate for delete
         AuthUI.getInstance().signOut(parentActivity)
             .addOnSuccessListener {
                 context?.cacheDir?.deleteRecursively() // clear cache

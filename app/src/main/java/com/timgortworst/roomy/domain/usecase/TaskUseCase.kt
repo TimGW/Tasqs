@@ -7,6 +7,7 @@ import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskMetaData
 import com.timgortworst.roomy.domain.model.TaskRecurrence
+import com.timgortworst.roomy.domain.model.TaskUser
 import com.timgortworst.roomy.domain.utils.TimeOperations
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
@@ -22,7 +23,13 @@ class TaskUseCase(
         userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
     ) = taskRepository.getTasksForUserQuery(userId)
 
-    suspend fun getAllUsers() = userRepository.getAllUsersForHousehold(idProvider.fetchHouseholdId())
+    suspend fun getAllUsers() =
+        userRepository.getAllUsersForHousehold(idProvider.fetchHouseholdId())
+
+    suspend fun getAllTaskUsers(): List<TaskUser> {
+        val result = userRepository.getAllUsersForHousehold(idProvider.fetchHouseholdId())
+        return result.map { TaskUser(it.userId, it.name) }
+    }
 
     suspend fun deleteTasks(tasks: List<Task>) {
         taskRepository.deleteTasks(tasks)
@@ -68,3 +75,4 @@ class TaskUseCase(
         }
     }
 }
+
