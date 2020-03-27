@@ -31,9 +31,8 @@ class SetupUseCase(
                 if (it.size <= 1) householdRepository.deleteHousehold(oldId)
             }
 
-            // update user with new household ID and role
+            // update current user with new household ID and role
             userRepository.updateUser(
-                userId = currentUserId,
                 householdId = newId,
                 isAdmin = false
             )

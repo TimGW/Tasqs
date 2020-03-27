@@ -35,7 +35,7 @@ class TaskRepository(
             document.set(CustomMapper.convertToMap(task.apply { id = document.id })).await()
             document.id
         } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage.orEmpty())
+            Log.e(TAG, e.localizedMessage.orEmpty()) // todo handle error
             null
         }
     }
@@ -45,7 +45,7 @@ class TaskRepository(
         try {
             document.update(CustomMapper.convertToMap(task)).await()
         } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage.orEmpty())
+            Log.e(TAG, e.localizedMessage.orEmpty()) // todo handle error
         }
     }
 
@@ -76,17 +76,6 @@ class TaskRepository(
                 batch.update(taskCollection().document(it.id), CustomMapper.convertToMap(it))
             }
             batch.commit().await()
-        } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, e.localizedMessage.orEmpty())
-        }
-    }
-
-    suspend fun deleteTask(id: String) {
-        try {
-            taskCollection()
-                .document(id)
-                .delete()
-                .await()
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, e.localizedMessage.orEmpty())
         }

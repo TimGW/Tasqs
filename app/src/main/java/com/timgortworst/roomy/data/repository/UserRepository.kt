@@ -65,18 +65,17 @@ class UserRepository(
 
     suspend fun updateUser(
         userId: String? = FirebaseAuth.getInstance().currentUser?.uid,
-        name: String? = null,
-        email: String? = null,
         householdId: String? = null,
         isAdmin: Boolean? = null,
         tokens: MutableList<String>? = null
     ) {
+        // don't update ID and name, since those are also used in tasks.
+        // Otherwise implement cascading update for the tasks
+
         userId ?: return
         val userDocRef = userCollection.document(userId)
 
         val userFieldMap = mutableMapOf<String, Any>()
-        name?.let { userFieldMap[USER_NAME_REF] = it }
-        email?.let { userFieldMap[USER_EMAIL_REF] = it }
         householdId?.let { userFieldMap[USER_HOUSEHOLD_ID_REF] = it }
         isAdmin?.let { userFieldMap[USER_ADMIN_REF] = it }
         tokens?.let { userFieldMap[USER_TOKENS_REF] = it }
