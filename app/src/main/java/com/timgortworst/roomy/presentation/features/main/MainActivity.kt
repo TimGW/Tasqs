@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
@@ -17,21 +18,17 @@ import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
-import com.timgortworst.roomy.presentation.features.signin.SignInActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
 import com.timgortworst.roomy.presentation.features.user.UserListFragment
 import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 
-class MainActivity : BaseActivity(), MainView {
+class MainActivity : BaseActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
-
-    private val presenter: MainPresenter by inject { parametersOf(this) }
+    private val viewModel: MainViewModel by inject()
     private val taskListFragment: Fragment by lazy { TaskListFragment.newInstance() }
     private val userListFragment: Fragment by lazy { UserListFragment.newInstance() }
-
     private var adRequest: AdRequest? = null
     private var activeFragment: Fragment? = null
 
@@ -74,7 +71,9 @@ class MainActivity : BaseActivity(), MainView {
         setupBottomAppBar()
         updateFabAndTitle(activeFragment)
 
-        setupAds()
+        adRequest = AdRequest.Builder().build()
+        loadAd()
+
         setupBroadcastReceivers()
 
         intent.extras?.getString(INTENT_EXTRA_WELCOME_MSG)?.let {
@@ -88,7 +87,9 @@ class MainActivity : BaseActivity(), MainView {
     override fun onResume() {
         super.onResume()
         networkChangeReceiver.register()
-        presenter.showOrHideAd()
+        viewModel.showOrHideAd().observe(this, Observer {
+            if(it) showAdContainer() else hideAdContainer()
+        })
     }
 
     override fun onPause() {
@@ -160,7 +161,9 @@ class MainActivity : BaseActivity(), MainView {
             }
             userListFragment::class.java.toString() -> { _ ->
                 showProgressDialog()
-                presenter.inviteUser()
+                viewModel.inviteUser().observe(this, Observer { event ->
+                    event.getContentIfNotHandled()?.let { presentShareLinkUri(it) }
+                })
             }
             else -> { _ -> }
         }
@@ -168,46 +171,24 @@ class MainActivity : BaseActivity(), MainView {
         binding.fab.setOnClickListener(clickTask)
     }
 
-    override fun share(householdId: String) {
-        presenter.buildInviteLink(householdId)
-    }
-
     private fun setupBroadcastReceivers() {
         networkChangeReceiver = object : NetworkChangeReceiver(this) {
             override fun networkStatusChanged(isEnabled: Boolean) {
-                presenter.networkStatusChanged(isEnabled)
+                if(isEnabled) loadAd() else binding.bottomNavigationContainer.snackbar(
+                    message = getString(R.string.error_connection),
+                    anchorView = binding.fab
+                )
             }
         }
     }
 
-    private fun setupAds() {
-        val builder = AdRequest.Builder()
-        adRequest = builder.build()
-        binding.adView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                presenter.showOrHideAd()
-            }
+    private fun loadAd() { binding.adView.loadAd(adRequest);  }
 
-            override fun onAdFailedToLoad(errorCode: Int) {
-                hideAdContainer()
-            }
-        }
-        loadAd()
-    }
+    private fun showAdContainer() { binding.adViewContainer.visibility = View.VISIBLE }
 
-    override fun loadAd() {
-        binding.adView.loadAd(adRequest)
-    }
+    private fun hideAdContainer() { binding.adViewContainer.visibility = View.GONE }
 
-    override fun showAdContainer() {
-        binding.adViewContainer.visibility = View.VISIBLE
-    }
-
-    override fun hideAdContainer() {
-        binding.adViewContainer.visibility = View.GONE
-    }
-
-    override fun presentShareLinkUri(linkUri: Uri) {
+    private fun presentShareLinkUri(linkUri: Uri) {
         FirebaseDynamicLinks.getInstance().createDynamicLink()
             .setLongLink(linkUri)
             .buildShortDynamicLink()
@@ -236,11 +217,7 @@ class MainActivity : BaseActivity(), MainView {
             }
     }
 
-    override fun showToast(stringRes: Int) {
-        Toast.makeText(this@MainActivity, getString(stringRes), Toast.LENGTH_LONG).show()
-    }
-
-    override fun openTaskEditActivity() {
+    private fun openTaskEditActivity() {
         startActivity(TaskEditActivity.intentBuilder(this))
     }
 
