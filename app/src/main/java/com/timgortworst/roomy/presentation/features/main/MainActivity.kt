@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
@@ -21,6 +22,7 @@ import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
 import com.timgortworst.roomy.presentation.features.user.UserListFragment
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainActivity : BaseActivity() {
@@ -82,6 +84,10 @@ class MainActivity : BaseActivity() {
                 anchorView = binding.fab
             )
         }
+
+        viewModel.uriEvent.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { presentShareLinkUri(it) }
+        })
     }
 
     override fun onResume() {
@@ -161,9 +167,9 @@ class MainActivity : BaseActivity() {
             }
             userListFragment::class.java.toString() -> { _ ->
                 showProgressDialog()
-                viewModel.inviteUser().observe(this, Observer { event ->
-                    event.getContentIfNotHandled()?.let { presentShareLinkUri(it) }
-                })
+                viewModel.viewModelScope.launch {
+                    viewModel.inviteUser()
+                }
             }
             else -> { _ -> }
         }

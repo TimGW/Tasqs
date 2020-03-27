@@ -30,13 +30,10 @@ import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
+class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var parentActivity: SettingsActivity
-
     private val sharedPref: SharedPrefs by inject()
     private val settingsViewModel: SettingsViewModel by viewModel()
-    private val presenter: SettingsPresenter by inject { parametersOf(this) }
-
     private var counter: Int = 0
     private var snackbar: Snackbar? = null
     private var remainingTimeCounter: CountDownTimer? = null
@@ -58,6 +55,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
         displayPrefs()
         privacyPrefs()
         aboutPrefs()
+
+        settingsViewModel.easterEgg.observe(viewLifecycleOwner, Observer {
+            easterEggMsg(it.id, it.data)
+        })
     }
 
     private fun accountPrefs() {
@@ -145,7 +146,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
         }
 
         (findPreference("preferences_app_version_key") as? Preference)?.setOnPreferenceClickListener {
-            presenter.onAppVersionClick(++counter)
+            settingsViewModel.onAppVersionClick(++counter)
 
             remainingTimeCounter?.cancel()
             remainingTimeCounter?.start()
@@ -177,7 +178,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SettingsView {
             }
     }
 
-    override fun easterEggMsg(stringRes: Int, argument: Int?) {
+    private fun easterEggMsg(stringRes: Int, argument: Int?) {
         val rootView = activity?.findViewById<View>(android.R.id.content) ?: return
         val snackText = getString(stringRes, argument)
 
