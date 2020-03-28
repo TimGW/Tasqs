@@ -155,6 +155,23 @@ class TaskListFragment : BaseFragment(),
             adapter = taskListAdapter
             addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
             setupSelectionTracker(this)
+//
+//            val swipeController = SwipeController(object : SwipeControllerActions {
+//                override fun onLeftClicked(position: Int) {}
+//
+//                override fun onRightClicked(position: Int) {
+////                    mAdapter.players.remove(position)
+////                    mAdapter.notifyItemRemoved(position)
+////                    mAdapter.notifyItemRangeChanged(position, mAdapter.itemCount)
+//                }
+//            })
+//            ItemTouchHelper(swipeController).attachToRecyclerView(this)
+//
+//            this.addItemDecoration(object : ItemDecoration() {
+//                override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+//                    swipeController.onDraw(c)
+//                }
+//            })
         }
     }
 

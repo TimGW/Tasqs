@@ -45,7 +45,9 @@ class TaskRepository(
     }
 
     suspend fun getTasksForUserQuery(userId: String): Query {
-        return taskCollection().whereEqualTo("$TASK_USER_REF.$USER_ID_REF", userId)
+        return taskCollection()
+            .whereEqualTo("$TASK_USER_REF.$USER_ID_REF", userId)
+            .orderBy("$TASK_META_DATA_REF.$TASK_DATE_TIME_REF", Query.Direction.ASCENDING)
     }
 
     suspend fun updateTasks(tasks: List<Task>) {
