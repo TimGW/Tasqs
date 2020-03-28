@@ -15,6 +15,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.SharedPrefs
 import com.timgortworst.roomy.data.di.*
 import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
+import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -74,17 +75,17 @@ class RoomyApp : Application(), Configuration.Provider {
         val defaults = HashMap<String, Any>()
         defaults[ForceUpdateUseCase.KEY_CURRENT_REQUIRED_VERSION] = BuildConfig.VERSION_NAME
         defaults[ForceUpdateUseCase.KEY_CURRENT_RECOMMENDED_VERSION] = BuildConfig.VERSION_NAME
+        defaults[KEY_ENABLE_ADS] = true
         defaults[ForceUpdateUseCase.KEY_UPDATE_URL] = "market://details?id=com.timgortworst.roomy"
         firebaseRemoteConfig.setDefaultsAsync(defaults)
 
         val configSettings = FirebaseRemoteConfigSettings.Builder()
-            .setFetchTimeoutInSeconds(5)
+            .setFetchTimeoutInSeconds(0)
+            .setDeveloperModeEnabled(true)
             .build()
 
-        firebaseRemoteConfig.setConfigSettingsAsync(configSettings).addOnCompleteListener {
-            if (it.isSuccessful) {
-                firebaseRemoteConfig.fetchAndActivate()
-            }
+        firebaseRemoteConfig.setConfigSettingsAsync(configSettings).addOnSuccessListener {
+            firebaseRemoteConfig.fetchAndActivate()
         }
     }
 
@@ -100,6 +101,7 @@ class RoomyApp : Application(), Configuration.Provider {
 
     companion object {
         const val TAG = "RoomyApp"
+        const val KEY_ENABLE_ADS = "enable_ads"
         private lateinit var instance: RoomyApp
 
         fun getAppVersion(): String {
