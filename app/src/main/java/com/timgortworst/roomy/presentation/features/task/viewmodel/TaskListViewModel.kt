@@ -18,10 +18,12 @@ class TaskListViewModel(
 ) : ViewModel() {
 
     private val _showLoading = MutableLiveData<Boolean>()
-    val showLoading: LiveData<Boolean> = _showLoading
+    val showLoading: LiveData<Boolean>
+        get() = _showLoading
 
     private val _liveQueryOptions = MutableLiveData<FirestoreRecyclerOptions.Builder<Task>>()
-    val liveQueryOptions: LiveData<FirestoreRecyclerOptions.Builder<Task>> = _liveQueryOptions
+    val liveQueryOptions: LiveData<FirestoreRecyclerOptions.Builder<Task>>
+        get() = _liveQueryOptions
 
     suspend fun tasksCompleted(tasks: List<Task>) = withContext(Dispatchers.IO) {
         taskUseCase.tasksCompleted(tasks)

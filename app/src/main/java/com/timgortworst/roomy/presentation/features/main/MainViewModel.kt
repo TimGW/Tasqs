@@ -17,7 +17,8 @@ class MainViewModel(
 ) : ViewModel() {
 
     private val _uriEvent = MutableLiveData<Event<Uri>>()
-    val uriEvent: LiveData<Event<Uri>> = _uriEvent
+    val uriEvent: LiveData<Event<Uri>>
+        get() = _uriEvent
 
     suspend fun inviteUser() = withContext(Dispatchers.IO) {
         val id = userUseCase.getHouseholdIdForUser()

@@ -17,7 +17,8 @@ class SplashViewModel(
     private val auth = FirebaseAuth.getInstance()
 
     private val _action = MutableLiveData<SplashAction>()
-    val action: LiveData<SplashAction> = _action
+    val action: LiveData<SplashAction>
+        get() = _action
 
     fun handleAppStartup(referredHouseholdId: String) = viewModelScope.launch {
         when {

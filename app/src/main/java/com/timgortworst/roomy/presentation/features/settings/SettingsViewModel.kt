@@ -15,7 +15,8 @@ class SettingsViewModel(
 ) : ViewModel() {
 
     private val _easterEgg = MutableLiveData<EasterEgg>()
-    val easterEgg: LiveData<EasterEgg> = _easterEgg
+    val easterEgg: LiveData<EasterEgg>
+        get() = _easterEgg
 
     fun fetchUser() = liveData {
         emit(userUseCase.getCurrentUser())
