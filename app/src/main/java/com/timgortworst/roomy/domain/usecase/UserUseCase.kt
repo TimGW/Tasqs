@@ -1,13 +1,20 @@
 package com.timgortworst.roomy.domain.usecase
 
-import android.util.Log
+import androidx.lifecycle.liveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.model.TaskUser
-import com.timgortworst.roomy.presentation.RoomyApp
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.produce
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class UserUseCase(
     private val userRepository: UserRepository,
@@ -23,8 +30,14 @@ class UserUseCase(
         return TaskUser(result.userId, result.name)
     }
 
-    suspend fun getAllUsersForHousehold() =
-        userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())
+    fun getAllUsersForHousehold() = flow {
+        emit(Response.Loading)
+        try {
+            emit(Response.Success(userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())))
+        } catch (e: FirebaseFirestoreException) {
+            emit(Response.Error(e))
+        }
+    }.flowOn(Dispatchers.IO)
 
     suspend fun getAllTaskUsers(): List<TaskUser> {
         val result = userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())
@@ -33,25 +46,25 @@ class UserUseCase(
 
     suspend fun getHouseholdIdForUser() = householdRepository.getHouseholdId()
 
-    suspend fun removeAccount(userId: String?) {
-        userId ?: return
-
-        try {
-            removeEventsAssignedToUser(userId)
-
-            // delete old household if no other user is left
-            val household = householdRepository.getHouseholdId()
-            userRepository.getAllUsersForHousehold(household).let {
-                if (it.size <= 1) householdRepository.deleteHousehold(household)
-            }
-
-            // remove user data
-            userRepository.deleteUser(userId)
-        } catch (e: FirebaseFirestoreException) {
-            // todo handle errors
-            Log.e(RoomyApp.TAG, e.localizedMessage.orEmpty())
-        }
-    }
+//    suspend fun removeAccount(userId: String?) {
+//        userId ?: return
+//
+//        try {
+//            removeEventsAssignedToUser(userId)
+//
+//            // delete old household if no other user is left
+//            val household = householdRepository.getHouseholdId()
+//            userRepository.getAllUsersForHousehold(household).let {
+//                if (it.size <= 1) householdRepository.deleteHousehold(household)
+//            }
+//
+//            // remove user data
+//            userRepository.deleteUser(userId)
+//        } catch (e: FirebaseFirestoreException) {
+//            // todo handle errors
+//            Log.e(RoomyApp.TAG, e.localizedMessage.orEmpty())
+//        }
+//    }
 
     suspend fun removeUserFromHousehold(userId: String?) {
         userId ?: return
@@ -65,7 +78,7 @@ class UserUseCase(
 
         } catch (e: FirebaseFirestoreException) {
             // todo update UI with error
-            Log.e(RoomyApp.TAG, e.localizedMessage.orEmpty())
+//            Log.e(RoomyApp.TAG, e.localizedMessage.orEmpty())
         }
     }
 
