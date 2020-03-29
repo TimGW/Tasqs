@@ -6,17 +6,18 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.timgortworst.roomy.domain.model.ResponseState
+import com.timgortworst.roomy.R
+import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.model.User
 
 @BindingAdapter("dataVisibility")
-fun ViewGroup.dataVisibility(responseState: ResponseState?) {
-    visibility = if (responseState is ResponseState.Success<*>) View.VISIBLE else View.GONE
+fun ViewGroup.dataVisibility(responseState: Response<List<User>>?) {
+    visibility = if (responseState is Response.Success) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("loadingVisibility")
-fun ProgressBar.loadingVisibility(responseState: ResponseState?) {
-    visibility = if (responseState is ResponseState.Loading) View.VISIBLE else View.GONE
+fun ProgressBar.loadingVisibility(responseState: Response<List<User>>?) {
+    visibility = if (responseState is Response.Loading) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("adminLabelVisibility")
@@ -25,19 +26,16 @@ fun TextView.adminLabelVisibility(isAdmin: Boolean) {
 }
 
 @BindingAdapter("messageVisibility")
-fun TextView.messageVisibility(responseState: ResponseState?) {
-    visibility = if (responseState is ResponseState.Error) View.VISIBLE else View.GONE
-    (responseState as? ResponseState.Error)?.message?.let { text = context.getString(it) }
-}
-
-@BindingAdapter("users")
-fun RecyclerView.setUsers(responseState: ResponseState?) {
-    if (isInstanceOf<ResponseState.Success<List<User>>>(responseState)) {
-        val response = responseState as ResponseState.Success<List<User>>
-        (adapter as UserAdapter).addAll(response.data)
+fun TextView.messageVisibility(responseState: Response<List<User>>?) {
+    visibility = if (responseState is Response.Error) View.VISIBLE else View.GONE
+    (responseState as? Response.Error)?.message?.let {
+        text = context.getString(R.string.error_generic)
     }
 }
 
-inline fun <reified T> isInstanceOf(instance: Any?): Boolean {
-    return instance is T
+@BindingAdapter("users")
+fun RecyclerView.setUsers(responseState: Response<List<User>>?) {
+    (responseState as? Response.Success)?.let {
+        (adapter as UserAdapter).addAll(it.data)
+    }
 }

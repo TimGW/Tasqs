@@ -10,12 +10,10 @@ import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.ResponseState
-import com.timgortworst.roomy.domain.model.Task
+import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.utils.toast
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import com.timgortworst.roomy.presentation.features.task.view.TaskInfoActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SignInActivity : BaseActivity() {
@@ -95,16 +93,16 @@ class SignInActivity : BaseActivity() {
         finishAffinity()
     }
 
-    private fun handResponse(response: ResponseState, idpResponse: IdpResponse) {
+    private fun handResponse(response: Response<String>, idpResponse: IdpResponse) {
         when(response) {
-            is ResponseState.Success<*> -> {
+            is Response.Success -> {
                 if (idpResponse.isNewUser) {
                     loginSuccessful()
                 } else {
-                    welcomeBack(response.data as? String)
+                    welcomeBack(response.data)
                 }
             }
-            is ResponseState.Error -> loginFailed(response.message)
+            is Response.Error -> finishAffinity() // todo show error
         }
     }
 }
