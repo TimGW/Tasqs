@@ -1,10 +1,8 @@
 package com.timgortworst.roomy.presentation.features.settings
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -22,13 +20,12 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.SharedPrefs
+import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.features.splash.SplashActivity
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var parentActivity: SettingsActivity

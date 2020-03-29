@@ -12,10 +12,9 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.SharedPrefs
+import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.data.di.*
 import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
-import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

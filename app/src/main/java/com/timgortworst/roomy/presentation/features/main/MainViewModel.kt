@@ -3,16 +3,12 @@ package com.timgortworst.roomy.presentation.features.main
 import android.net.Uri
 import androidx.lifecycle.*
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.SharedPrefs
-import com.timgortworst.roomy.domain.model.EasterEgg
+import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.Event
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class MainViewModel(

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.SharedPrefs
+import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.domain.model.EasterEgg
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 
