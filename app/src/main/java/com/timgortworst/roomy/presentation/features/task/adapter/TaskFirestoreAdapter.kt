@@ -72,6 +72,16 @@ class TaskFirestoreAdapter(
         private val repeatIcon: RepeatIcon = view.findViewById(R.id.task_repeat_label)
         private val taskDone: MaterialButton = view.findViewById(R.id.task_done)
 
+        init {
+            itemView.setOnClickListener {
+                taskClickListener.onTaskInfoClicked(snapshots[adapterPosition])
+            }
+
+            taskDone.setOnClickListener {
+                taskClickListener.onTaskDoneClicked(snapshots[adapterPosition], adapterPosition)
+            }
+        }
+
         fun bind(task: Task, isActivated: Boolean) {
             val dateTimeTask = task.metaData.startDateTime
             description.text = task.description
@@ -97,13 +107,6 @@ class TaskFirestoreAdapter(
             }
 
             user.text = task.user.name.capitalize()
-
-            taskDone.setOnClickListener {
-                taskClickListener.onTaskDoneClicked(task, adapterPosition)
-            }
-            itemView.setOnClickListener {
-                taskClickListener.onTaskInfoClicked(task)
-            }
 
             itemView.isActivated = isActivated
         }
