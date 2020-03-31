@@ -17,7 +17,7 @@ object NotificationBuilder {
     private const val NOTIFICATION_GROUP_KEY = "GROUP_1"
     private const val NOTIFICATION_GROUP_ID = 1
 
-    fun triggerNotification(context: Context, id: Int, userName: String, taskDescription: String) {
+    fun triggerNotification(context: Context, id: Int, notificationTitle: String, notificationText: String) {
         createNotificationChannelIfRequired(
             context
         )
@@ -28,9 +28,6 @@ object NotificationBuilder {
             Intent(context, MainActivity::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-
-        val notificationTitle = context.getString(R.string.notification_title, userName)
-        val notificationText = context.getString(R.string.notification_message, taskDescription)
 
         with(NotificationManagerCompat.from(context)) {
             notify(id, buildNotification(

@@ -25,8 +25,8 @@ class NotificationWorker(
         NotificationBuilder.triggerNotification(
             context,
             id.hashCode(),
-            title,
-            text
+            context.getString(R.string.notification_title, title),
+            context.getString(R.string.notification_message, text)
         )
 
         setTomorrowReminder(id)

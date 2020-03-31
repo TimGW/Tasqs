@@ -83,16 +83,19 @@ class TaskFirestoreAdapter(
         }
 
         fun bind(task: Task, isActivated: Boolean) {
-            val dateTimeTask = task.metaData.startDateTime
+            taskDone.isEnabled = task.isDoneEnabled
+            itemView.isActivated = isActivated
+
             description.text = task.description
 
-            repeatIcon.setRepeatLabelText(task.metaData.recurrence)
-            if (task.metaData.recurrence !is TaskRecurrence.SingleTask) {
-                repeatIcon.visibility = View.VISIBLE
+            repeatIcon.visibility = if (task.metaData.recurrence !is TaskRecurrence.SingleTask) {
+                repeatIcon.setRepeatLabelText(task.metaData.recurrence)
+                View.VISIBLE
             } else {
-                repeatIcon.visibility = View.GONE
+                View.GONE
             }
 
+            val dateTimeTask = task.metaData.startDateTime
             dateTime.text = formatDate(dateTimeTask)
             if (dateTimeTask.isBefore(ZonedDateTime.now())) {
                 dateTime.setTextColor(ContextCompat.getColor(itemView.context, R.color.color_error))
@@ -101,14 +104,11 @@ class TaskFirestoreAdapter(
             }
 
             user.visibility = if (task.user.name.isNotBlank()) {
+                user.text = task.user.name.capitalize()
                 View.VISIBLE
             } else {
                 View.GONE
             }
-
-            user.text = task.user.name.capitalize()
-
-            itemView.isActivated = isActivated
         }
 
         private fun formatDate(zonedDateTime: ZonedDateTime) = zonedDateTime.format(

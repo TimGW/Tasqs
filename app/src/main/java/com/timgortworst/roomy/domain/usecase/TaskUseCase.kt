@@ -42,7 +42,9 @@ class TaskUseCase(
     private suspend fun updateNextTaskDate(tasks: List<Task>) {
         tasks.forEach {
             it.metaData.startDateTime = calcNextTaskDate(it.metaData)
+            it.isDoneEnabled = false // temporary disable the done button
         }
+
         taskRepository.updateTasks(tasks)
     }
 
@@ -57,10 +59,13 @@ class TaskUseCase(
     }
 
     suspend fun createOrUpdateTask(task: Task) {
+        // temporary disable the done button
+        val result = task.apply { isDoneEnabled = false }
+
         if (task.id.isEmpty()) {
-            taskRepository.createTask(task)
+            taskRepository.createTask(result)
         } else {
-            taskRepository.updateTask(task)
+            taskRepository.updateTask(result)
         }
     }
 }
