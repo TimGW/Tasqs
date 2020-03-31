@@ -32,6 +32,10 @@ class MainActivity : BaseActivity() {
     private var adRequest: AdRequest? = null
     private var activeFragment: Fragment? = null
 
+    private val welcomeMsg: String? by lazy {
+        intent.extras?.getString(INTENT_EXTRA_WELCOME_MSG)
+    }
+
     companion object {
         private const val ACTIVE_FRAG_KEY = "activeFragment"
         private const val INTENT_EXTRA_WELCOME_MSG = "INTENT_EXTRA_WELCOME_MSG"
@@ -63,6 +67,13 @@ class MainActivity : BaseActivity() {
 
         if (savedInstanceState == null) {
             openFragment(taskListFragment, taskListFragment::class.java.toString())
+
+            welcomeMsg?.let {
+                binding.bottomNavigationContainer.snackbar(
+                    message = getString(R.string.welcome_back, it),
+                    anchorView = binding.fab
+                )
+            }
         } else {
             activeFragment = supportFragmentManager.getFragment(savedInstanceState, ACTIVE_FRAG_KEY)
             activeFragment?.let { openFragment(it, it::class.java.toString()) }
@@ -76,13 +87,6 @@ class MainActivity : BaseActivity() {
 
         setupBroadcastReceivers()
 
-        intent.extras?.getString(INTENT_EXTRA_WELCOME_MSG)?.let {
-            binding.bottomNavigationContainer.snackbar(
-                message = getString(R.string.welcome_back, it),
-                anchorView = binding.fab
-            )
-        }
-
         viewModel.uriEvent.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { presentShareLinkUri(it) }
         })
@@ -92,7 +96,7 @@ class MainActivity : BaseActivity() {
         super.onResume()
         networkChangeReceiver.register()
         viewModel.showOrHideAd().observe(this, Observer {
-            if(it) showAdContainer() else hideAdContainer()
+            if (it) showAdContainer() else hideAdContainer()
         })
     }
 
@@ -178,7 +182,7 @@ class MainActivity : BaseActivity() {
     private fun setupBroadcastReceivers() {
         networkChangeReceiver = object : NetworkChangeReceiver(this) {
             override fun networkStatusChanged(isEnabled: Boolean) {
-                if(isEnabled) loadAd() else binding.bottomNavigationContainer.snackbar(
+                if (isEnabled) loadAd() else binding.bottomNavigationContainer.snackbar(
                     message = getString(R.string.error_connection),
                     anchorView = binding.fab
                 )
@@ -186,11 +190,16 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun loadAd() { binding.adView.loadAd(adRequest);  }
+    private fun loadAd() {
+        binding.adView.loadAd(adRequest); }
 
-    private fun showAdContainer() { binding.adViewContainer.visibility = View.VISIBLE }
+    private fun showAdContainer() {
+        binding.adViewContainer.visibility = View.VISIBLE
+    }
 
-    private fun hideAdContainer() { binding.adViewContainer.visibility = View.GONE }
+    private fun hideAdContainer() {
+        binding.adViewContainer.visibility = View.GONE
+    }
 
     private fun presentShareLinkUri(linkUri: Uri) {
         FirebaseDynamicLinks.getInstance().createDynamicLink()
