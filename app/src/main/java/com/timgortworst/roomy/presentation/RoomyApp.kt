@@ -79,8 +79,8 @@ class RoomyApp : Application(), Configuration.Provider {
         firebaseRemoteConfig.setDefaultsAsync(defaults)
 
         val configSettings = FirebaseRemoteConfigSettings.Builder()
-            .setFetchTimeoutInSeconds(0)
-            .setDeveloperModeEnabled(true)
+            .setMinimumFetchIntervalInSeconds(3600)
+            .setFetchTimeoutInSeconds(60)
             .build()
 
         firebaseRemoteConfig.setConfigSettingsAsync(configSettings).addOnSuccessListener {
