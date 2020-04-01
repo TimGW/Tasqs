@@ -6,10 +6,8 @@ import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.ErrorHandler
-import com.timgortworst.roomy.domain.model.ErrorEntity
-import com.timgortworst.roomy.domain.model.Response
+import com.timgortworst.roomy.domain.model.response.Response
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 

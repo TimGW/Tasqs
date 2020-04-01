@@ -4,9 +4,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.timgortworst.roomy.domain.model.Household
-import com.timgortworst.roomy.domain.model.Household.Companion.HOUSEHOLD_COLLECTION_REF
-import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.firestore.Household
+import com.timgortworst.roomy.domain.model.firestore.Household.Companion.HOUSEHOLD_COLLECTION_REF
+import com.timgortworst.roomy.domain.model.firestore.User
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import kotlinx.coroutines.tasks.await
 
@@ -26,7 +26,11 @@ class HouseholdRepository(
     @Throws(FirebaseFirestoreException::class)
     suspend fun createHousehold(): String {
         val household = householdCollection.document()
-        household.set(Household(householdId = household.id)).await()
+        household.set(
+            Household(
+                householdId = household.id
+            )
+        ).await()
         return household.id
     }
 

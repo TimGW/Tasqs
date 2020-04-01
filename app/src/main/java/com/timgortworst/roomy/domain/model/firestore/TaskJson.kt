@@ -2,14 +2,14 @@ package com.timgortworst.roomy.domain.model.firestore
 
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.firestore.PropertyName
-import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.task.TaskUser
 
 @IgnoreExtraProperties
 data class TaskJson(
     @JvmField @PropertyName(TASK_ID_REF) var id: String? = null,
     @JvmField @PropertyName(TASK_DESCRIPTION_REF) var description: String? = null,
     @JvmField @PropertyName(TASK_META_DATA_REF) var metaData: TaskMetaDataJson? = TaskMetaDataJson(),
-    @JvmField @PropertyName(TASK_USER_REF) var user: User? = null,
+    @JvmField @PropertyName(TASK_USER_REF) var user: TaskUser? = null,
     @JvmField @PropertyName(TASK_HOUSEHOLD_ID_REF) var householdId: String? = null,
     @JvmField @PropertyName(TASK_IS_DONE_ENABLED_REF) var isDoneEnabled: Boolean? = null
 ) {

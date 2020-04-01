@@ -1,13 +1,13 @@
 package com.timgortworst.roomy.data.repository
 
-import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.TaskMetaData
-import com.timgortworst.roomy.domain.model.TaskRecurrence
-import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.ANNUAL_TASK
-import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.DAILY_TASK
-import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.MONTHLY_TASK
-import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.WEEKLY_TASK
-import com.timgortworst.roomy.domain.model.TaskUser
+import com.timgortworst.roomy.domain.model.task.Task
+import com.timgortworst.roomy.domain.model.task.TaskMetaData
+import com.timgortworst.roomy.domain.model.task.TaskRecurrence
+import com.timgortworst.roomy.domain.model.task.TaskRecurrence.Companion.ANNUAL_TASK
+import com.timgortworst.roomy.domain.model.task.TaskRecurrence.Companion.DAILY_TASK
+import com.timgortworst.roomy.domain.model.task.TaskRecurrence.Companion.MONTHLY_TASK
+import com.timgortworst.roomy.domain.model.task.TaskRecurrence.Companion.WEEKLY_TASK
+import com.timgortworst.roomy.domain.model.task.TaskUser
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson
 import org.threeten.bp.Instant
@@ -31,7 +31,7 @@ object CustomMapper {
             taskJson.id!!,
             taskJson.description!!,
             taskJson.metaData!!.toTaskMetaData(),
-            TaskUser(taskJson.user!!.userId, taskJson.user!!.name),
+            taskJson.user!!,
             taskJson.isDoneEnabled!!
         )
     }

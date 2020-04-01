@@ -1,7 +1,6 @@
 package com.timgortworst.roomy.domain.utils
 
-import com.timgortworst.roomy.domain.model.TaskRecurrence
-import org.koin.dsl.module
+import com.timgortworst.roomy.domain.model.task.TaskRecurrence
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
 

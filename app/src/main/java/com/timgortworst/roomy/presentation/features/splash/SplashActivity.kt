@@ -12,7 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.SplashAction
+import com.timgortworst.roomy.domain.model.ui.SplashAction
 import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.domain.utils.snackbar

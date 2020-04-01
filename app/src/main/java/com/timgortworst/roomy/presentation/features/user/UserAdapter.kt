@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.databinding.RowUserListBinding
-import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.firestore.User
 
 class UserAdapter(
     private val users: MutableList<User>,

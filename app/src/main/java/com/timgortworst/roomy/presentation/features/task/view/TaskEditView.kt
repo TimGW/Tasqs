@@ -1,8 +1,7 @@
 package com.timgortworst.roomy.presentation.features.task.view
 
 import androidx.annotation.StringRes
-import com.timgortworst.roomy.domain.model.TaskUser
-import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.task.TaskUser
 
 interface TaskEditView {
     fun presentUserList(filteredUserList: List<TaskUser>)

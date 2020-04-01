@@ -3,7 +3,7 @@ package com.timgortworst.roomy.data.error
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.FirebaseFirestoreException.Code.*
 import com.timgortworst.roomy.domain.ErrorHandler
-import com.timgortworst.roomy.domain.model.ErrorEntity
+import com.timgortworst.roomy.domain.model.response.ErrorEntity
 
 class ErrorHandlerImpl : ErrorHandler {
 

@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentUserListBinding
-import com.timgortworst.roomy.domain.model.BottomMenuItem
-import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.ui.BottomMenuItem
+import com.timgortworst.roomy.domain.model.firestore.User
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.EventObserver
 import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
@@ -82,7 +82,10 @@ class UserListFragment : Fragment(), OnLongClickListener {
 
     private fun showBottomMenuFor(user: User) {
         val items = arrayListOf(
-            BottomMenuItem(R.drawable.ic_delete, getString(R.string.delete)) {
+            BottomMenuItem(
+                R.drawable.ic_delete,
+                getString(R.string.delete)
+            ) {
                 userViewModel.viewModelScope.launch {
                     userViewModel.removeFromHousehold(user)
                     userAdapter.remove(user) // update local list

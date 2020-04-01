@@ -3,18 +3,11 @@ package com.timgortworst.roomy.data.repository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
-import com.timgortworst.roomy.data.error.ErrorHandlerImpl
-import com.timgortworst.roomy.domain.ErrorHandler
-import com.timgortworst.roomy.domain.model.ErrorEntity
-import com.timgortworst.roomy.domain.model.Response
-import com.timgortworst.roomy.domain.model.User
-import com.timgortworst.roomy.domain.model.User.Companion.USER_ADMIN_REF
-import com.timgortworst.roomy.domain.model.User.Companion.USER_COLLECTION_REF
-import com.timgortworst.roomy.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
-import com.timgortworst.roomy.domain.model.User.Companion.USER_TOKENS_REF
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import com.timgortworst.roomy.domain.model.firestore.User
+import com.timgortworst.roomy.domain.model.firestore.User.Companion.USER_ADMIN_REF
+import com.timgortworst.roomy.domain.model.firestore.User.Companion.USER_COLLECTION_REF
+import com.timgortworst.roomy.domain.model.firestore.User.Companion.USER_HOUSEHOLD_ID_REF
+import com.timgortworst.roomy.domain.model.firestore.User.Companion.USER_TOKENS_REF
 import kotlinx.coroutines.tasks.await
 
 class UserRepository(

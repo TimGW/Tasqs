@@ -3,8 +3,8 @@ package com.timgortworst.roomy.data.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.User.Companion.USER_ID_REF
+import com.timgortworst.roomy.domain.model.task.Task
+import com.timgortworst.roomy.domain.model.firestore.User.Companion.USER_ID_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_META_DATA_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_USER_REF

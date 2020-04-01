@@ -1,8 +1,8 @@
 package com.timgortworst.roomy.presentation.features.user
 
 import androidx.lifecycle.*
-import com.timgortworst.roomy.domain.model.Response
-import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.model.firestore.User
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.Event
 import kotlinx.coroutines.Dispatchers

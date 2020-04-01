@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
@@ -14,14 +13,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.transition.MaterialContainerTransform
-import com.google.android.material.transition.MaterialContainerTransformSharedElementCallback
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityEditTaskBinding
-import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.TaskRecurrence
-import com.timgortworst.roomy.domain.model.TaskUser
-import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.task.Task
+import com.timgortworst.roomy.domain.model.task.TaskRecurrence
+import com.timgortworst.roomy.domain.model.task.TaskUser
 import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
@@ -59,7 +55,8 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
         binding = ActivityEditTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        task = intent.getParcelableExtra(INTENT_EXTRA_EDIT_TASK) as? Task ?: Task()
+        task = intent.getParcelableExtra(INTENT_EXTRA_EDIT_TASK) as? Task
+            ?: Task()
 
         setupUI()
     }

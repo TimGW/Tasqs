@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.timgortworst.roomy.domain.model.Response
-import com.timgortworst.roomy.domain.model.SplashAction
+import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.model.ui.SplashAction
 import com.timgortworst.roomy.domain.usecase.HouseholdUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -26,7 +26,8 @@ class SplashViewModel(
         when {
             // first check if user has valid authentication
             (auth.currentUser == null ||
-                    auth.currentUser?.uid?.isBlank() == true) -> _action.postValue(SplashAction.SignInActivity)
+                    auth.currentUser?.uid?.isBlank() == true) -> _action.postValue(
+                SplashAction.SignInActivity)
 
             // then check if the user accepted an invite link
             referredHouseholdId.isNotBlank() -> referredSetup(referredHouseholdId)

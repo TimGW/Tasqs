@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.presentation.features.task.adapter
 
-import com.timgortworst.roomy.domain.model.Task
+import com.timgortworst.roomy.domain.model.task.Task
 
 interface TaskClickListener {
     fun onTaskDoneClicked(task: Task, position: Int)

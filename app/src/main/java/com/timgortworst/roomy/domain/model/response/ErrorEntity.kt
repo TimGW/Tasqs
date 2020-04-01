@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.model
+package com.timgortworst.roomy.domain.model.response
 
 sealed class ErrorEntity {
     abstract val originalException: Throwable

@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.Response
-import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.model.firestore.User
 
 @BindingAdapter("dataVisibility")
 fun ViewGroup.dataVisibility(responseState: Response<List<User>>?) {

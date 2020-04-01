@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.model
+package com.timgortworst.roomy.domain.model.task
 
 import android.os.Parcelable
 import com.google.firebase.firestore.IgnoreExtraProperties
@@ -16,6 +16,8 @@ data class TaskMetaData(
         LocalTime.NOON,
         ZoneId.systemDefault()
     ),
-    var recurrence: TaskRecurrence = TaskRecurrence.SingleTask(1)
+    var recurrence: TaskRecurrence = TaskRecurrence.SingleTask(
+        1
+    )
 ) : Parcelable
 

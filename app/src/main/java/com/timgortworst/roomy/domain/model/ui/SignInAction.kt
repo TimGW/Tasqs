@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.model
+package com.timgortworst.roomy.domain.model.ui
 
 import androidx.annotation.StringRes
 import com.timgortworst.roomy.R

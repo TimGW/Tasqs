@@ -5,9 +5,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.textfield.TextInputEditText
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.Response
-import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.TaskUser
+import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.model.task.Task
+import com.timgortworst.roomy.domain.model.task.TaskUser
 import com.timgortworst.roomy.domain.usecase.TaskUseCase
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
@@ -41,9 +41,19 @@ class TaskEditPresenter(
                 is Response.Success -> {
                     val currentUser = userUseCase.getCurrentUser() ?: return@collect
                     if (response.data!!.filterNot { it.userId == currentUser.userId }.isEmpty()) {
-                        view.presentCurrentUser(TaskUser(currentUser.userId, currentUser.name))
+                        view.presentCurrentUser(
+                            TaskUser(
+                                currentUser.userId,
+                                currentUser.name
+                            )
+                        )
                     } else {
-                        view.presentUserList(response.data.map { TaskUser(it.userId, it.name) })
+                        view.presentUserList(response.data.map {
+                            TaskUser(
+                                it.userId,
+                                it.name
+                            )
+                        })
                     }
                 }
                 is Response.Error -> { } // todo

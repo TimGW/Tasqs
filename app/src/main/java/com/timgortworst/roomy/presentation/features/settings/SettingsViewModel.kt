@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
-import com.timgortworst.roomy.domain.model.EasterEgg
+import com.timgortworst.roomy.domain.model.ui.EasterEgg
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 
 class SettingsViewModel(
@@ -26,14 +26,16 @@ class SettingsViewModel(
         if (sharedPrefs.isAdsEnabled()) {
             when {
                 betweenUntil(counter, CLICKS_FOR_MESSAGE, CLICKS_FOR_EASTER_EGG) -> {
-                    _easterEgg.value = EasterEgg(
-                        R.string.easter_egg_message,
-                        (CLICKS_FOR_EASTER_EGG - counter)
-                    )
+                    _easterEgg.value =
+                        EasterEgg(
+                            R.string.easter_egg_message,
+                            (CLICKS_FOR_EASTER_EGG - counter)
+                        )
                 }
                 counter == CLICKS_FOR_EASTER_EGG -> {
                     sharedPrefs.setAdsEnabled(false)
-                    _easterEgg.value = EasterEgg(R.string.easter_egg_enabled)
+                    _easterEgg.value =
+                        EasterEgg(R.string.easter_egg_enabled)
                 }
                 else -> { /* do nothing */
                 }

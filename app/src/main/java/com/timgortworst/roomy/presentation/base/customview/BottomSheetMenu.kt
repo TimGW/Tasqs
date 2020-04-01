@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.BottomSheetMenuBinding
-import com.timgortworst.roomy.domain.model.BottomMenuItem
-import kotlinx.android.synthetic.main.bottom_sheet_menu.view.*
+import com.timgortworst.roomy.domain.model.ui.BottomMenuItem
 
 class BottomSheetMenu(
     context: Context,

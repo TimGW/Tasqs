@@ -10,7 +10,7 @@ import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.SignInAction
+import com.timgortworst.roomy.domain.model.ui.SignInAction
 import com.timgortworst.roomy.domain.utils.toast
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity

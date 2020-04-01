@@ -4,8 +4,8 @@ import android.content.Context
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.TaskRecurrence
+import com.timgortworst.roomy.domain.model.task.Task
+import com.timgortworst.roomy.domain.model.task.TaskRecurrence
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.*

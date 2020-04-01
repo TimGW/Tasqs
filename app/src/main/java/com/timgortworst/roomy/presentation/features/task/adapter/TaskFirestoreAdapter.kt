@@ -13,8 +13,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.TaskRecurrence
+import com.timgortworst.roomy.domain.model.task.Task
+import com.timgortworst.roomy.domain.model.task.TaskRecurrence
 import com.timgortworst.roomy.presentation.base.customview.RepeatIcon
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 import org.threeten.bp.ZonedDateTime
