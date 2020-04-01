@@ -23,29 +23,27 @@ class FirebaseMsgService : FirebaseMessagingService(), KoinComponent {
     private val serviceJob = Job()
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        if (remoteMessage.data.isNotEmpty()) {
-            with(remoteMessage.data) {
-                val taskId = remoteMessage.data["TASK_ID"].toString()
+    override fun onMessageReceived(rm: RemoteMessage) {
+        val data: Map<String, String> = if (rm.data.isNotEmpty()) rm.data else return
+        val taskId = data["TASK_ID"].toString()
 
-                if (remoteMessage.data["IS_DELETED"].toString().toBoolean()) {
-                    workerNotification.removePendingNotificationReminder(taskId)
-                } else {
-                    val taskDateTime: Long = get("TASK_START_DATE").toString().toLong()
-                    val taskTimeZone: String = get("TASK_TIMEZONE").toString()
-                    val userName = get("USER_NAME").toString()
-                    val taskDescription = get("TASK_DESCRIPTION").toString()
+        if (data["IS_DELETED"].toString().toBoolean()) {
+            workerNotification.removePendingNotificationReminder(taskId)
+        } else {
+            val taskDateTime: Long = data["TASK_START_DATE"].toString().toLong()
+            val taskTimeZone: String = data["TASK_TIMEZONE"].toString()
+            val userName = data["USER_NAME"].toString()
+            val taskDescription = data["TASK_DESCRIPTION"].toString()
 
-                    setPendingNotification(
-                        taskId,
-                        taskDateTime,
-                        taskTimeZone,
-                        userName,
-                        taskDescription
-                    )
-                }
-            }
+            setPendingNotification(
+                taskId,
+                taskDateTime,
+                taskTimeZone,
+                userName,
+                taskDescription
+            )
         }
+
     }
 
     private fun setPendingNotification(
@@ -63,10 +61,9 @@ class FirebaseMsgService : FirebaseMessagingService(), KoinComponent {
         val notificationText = getString(R.string.notification_message, taskDescription)
         val debugNotificationText =
             "username: $userName\n" +
-            "date: ${zonedDateTime.dayOfMonth}-${zonedDateTime.monthValue}-${zonedDateTime.year} " +
-            "time: ${zonedDateTime.hour}:${zonedDateTime.minute} " +
-            "zone: ${zonedDateTime.zone}"
-
+                    "date: ${zonedDateTime.dayOfMonth}-${zonedDateTime.monthValue}-${zonedDateTime.year} " +
+                    "time: ${zonedDateTime.hour}:${zonedDateTime.minute} " +
+                    "zone: ${zonedDateTime.zone}"
 
         if (zonedDateTime.isBefore(ZonedDateTime.now())) {
             handleNow(taskId, notificationTitle, notificationText)
