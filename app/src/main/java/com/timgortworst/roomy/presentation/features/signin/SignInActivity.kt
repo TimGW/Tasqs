@@ -10,14 +10,14 @@ import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.Response
+import com.timgortworst.roomy.domain.model.SignInAction
 import com.timgortworst.roomy.domain.utils.toast
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SignInActivity : BaseActivity() {
-    private val viewModel : SignInViewModel by viewModel()
+    private val viewModel: SignInViewModel by viewModel()
 
     companion object {
         private const val RC_SIGN_IN = 123
@@ -45,6 +45,15 @@ class SignInActivity : BaseActivity() {
                 .build(),
             RC_SIGN_IN
         )
+
+        viewModel.action.observe(this@SignInActivity, Observer {
+            when (it) {
+                SignInAction.LoadingDialog -> showProgressDialog()
+                SignInAction.MainActivity -> loginSuccessful()
+                is SignInAction.WelcomeBack -> welcomeBack(it.userName)
+                is SignInAction.Failed -> loginFailed(it.errorMsg)
+            }
+        })
     }
 
     override fun onActivityResult(
@@ -57,9 +66,7 @@ class SignInActivity : BaseActivity() {
         if (requestCode == RC_SIGN_IN) {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK && response != null) {
-                viewModel.handleLoginResult(response).observe(this@SignInActivity, Observer {
-                    it.getContentIfNotHandled()?.let { event -> handResponse(event, response) }
-                })
+                viewModel.handleLoginResult(response)
             } else {
                 when {
                     response == null -> {
@@ -91,18 +98,5 @@ class SignInActivity : BaseActivity() {
     private fun loginFailed(errorMessage: Int) {
         toast(errorMessage)
         finishAffinity()
-    }
-
-    private fun handResponse(response: Response<String>, idpResponse: IdpResponse) {
-        when(response) {
-            is Response.Success -> {
-                if (idpResponse.isNewUser) {
-                    loginSuccessful()
-                } else {
-                    welcomeBack(response.data)
-                }
-            }
-            is Response.Error -> finishAffinity() // todo show error
-        }
     }
 }

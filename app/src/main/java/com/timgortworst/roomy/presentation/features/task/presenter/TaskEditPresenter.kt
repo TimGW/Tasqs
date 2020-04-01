@@ -5,12 +5,18 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.textfield.TextInputEditText
 import com.timgortworst.roomy.R
+import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.model.Task
+import com.timgortworst.roomy.domain.model.TaskUser
 import com.timgortworst.roomy.domain.usecase.TaskUseCase
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditView
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
@@ -31,13 +37,19 @@ class TaskEditPresenter(
     }
 
     fun getUsers() = scope.launch {
-        userUseCase.getAllTaskUsers().let { userList ->
-            val currentUser = userUseCase.getCurrentTaskUser()
+        userUseCase.getAllUsersForHousehold().collect { response ->
 
-            if (userList.filterNot { it.userId == currentUser?.userId }.isEmpty()) {
-                view.presentCurrentUser(currentUser)
-            } else {
-                view.presentUserList(userList)
+            when (response) {
+                Response.Loading -> { } // todo
+                is Response.Success -> {
+                    val currentUser = userUseCase.getCurrentUser() ?: return@collect
+                    if (response.data!!.filterNot { it.userId == currentUser.userId }.isEmpty()) {
+                        view.presentCurrentUser(TaskUser(currentUser.userId, currentUser.name))
+                    } else {
+                        view.presentUserList(response.data.map { TaskUser(it.userId, it.name) })
+                    }
+                }
+                is Response.Error -> { } // todo
             }
         }
     }

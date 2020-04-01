@@ -1,12 +1,14 @@
 package com.timgortworst.roomy.presentation.features.signin
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
+import com.timgortworst.roomy.domain.model.Response
+import com.timgortworst.roomy.domain.model.SignInAction
 import com.timgortworst.roomy.domain.usecase.LoginUseCase
-import com.timgortworst.roomy.presentation.base.Event
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class SignInViewModel(
@@ -14,15 +16,31 @@ class SignInViewModel(
 ) : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
-    fun handleLoginResult(response: IdpResponse) = liveData {
-        emit(
-            Event(
-                setupUseCase.handleLoginResult(
-                    auth.currentUser,
-                    response.isNewUser,
-                    FirebaseInstanceId.getInstance().instanceId.await().token
-                )
-            )
-        )
+    private val _action = MutableLiveData<SignInAction>()
+    val action: LiveData<SignInAction>
+        get() = _action
+
+
+    fun handleLoginResult(response: IdpResponse) {
+        viewModelScope.launch {
+
+            setupUseCase.handleLoginResult(
+                auth.currentUser,
+                response.isNewUser,
+                FirebaseInstanceId.getInstance().instanceId.await().token
+            ).collect {
+                when (it) {
+                    Response.Loading -> _action.value = SignInAction.LoadingDialog
+                    is Response.Success -> {
+                        if (response.isNewUser) {
+                            _action.value = SignInAction.MainActivity
+                        } else {
+                            _action.value = SignInAction.WelcomeBack(it.data.orEmpty())
+                        }
+                    }
+                    is Response.Error -> _action.value = SignInAction.Failed()
+                }
+            }
+        }
     }
 }

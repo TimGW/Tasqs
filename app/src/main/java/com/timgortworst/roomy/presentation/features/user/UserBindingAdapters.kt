@@ -28,7 +28,7 @@ fun TextView.adminLabelVisibility(isAdmin: Boolean) {
 @BindingAdapter("messageVisibility")
 fun TextView.messageVisibility(responseState: Response<List<User>>?) {
     visibility = if (responseState is Response.Error) View.VISIBLE else View.GONE
-    (responseState as? Response.Error)?.message?.let {
+    (responseState as? Response.Error)?.let {
         text = context.getString(R.string.error_generic)
     }
 }

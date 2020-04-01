@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
@@ -18,6 +19,7 @@ import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.signin.SignInActivity
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class SplashActivity : AppCompatActivity(), ForceUpdateUseCase.OnUpdateNeededListener {
@@ -65,7 +67,9 @@ class SplashActivity : AppCompatActivity(), ForceUpdateUseCase.OnUpdateNeededLis
             .setTitle(getString(R.string.dialog_household_overwrite_title))
             .setMessage(getString(R.string.dialog_household_overwrite_text))
             .setPositiveButton(android.R.string.yes) { _, _ ->
-                viewModel.changeCurrentUserHousehold(referredHouseholdId)
+                viewModel.viewModelScope.launch {
+                    viewModel.changeCurrentUserHousehold(referredHouseholdId)
+                }
             }
             .setNegativeButton(android.R.string.no) { _, _ ->
                 goToMainActivity()

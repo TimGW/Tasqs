@@ -2,15 +2,19 @@ package com.timgortworst.roomy.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.*
+import com.timgortworst.roomy.data.error.ErrorHandlerImpl
+import com.timgortworst.roomy.domain.ErrorHandler
+import com.timgortworst.roomy.domain.model.ErrorEntity
+import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.User.Companion.USER_ADMIN_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_TOKENS_REF
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 
 class UserRepository(
@@ -18,6 +22,7 @@ class UserRepository(
 ) {
     private val userCollection = db.collection(USER_COLLECTION_REF)
 
+    @Throws(FirebaseFirestoreException::class)
     suspend fun createUser(
         householdId: String,
         fireBaseUser: FirebaseUser,
@@ -41,12 +46,14 @@ class UserRepository(
         }.await()
     }
 
+    @Throws(FirebaseFirestoreException::class)
     suspend fun getUser(userId: String?): User? {
         if (userId.isNullOrEmpty()) return null
         val currentUserDocRef = userCollection.document(userId)
         return currentUserDocRef.get().await().toObject(User::class.java)
     }
 
+    @Throws(FirebaseFirestoreException::class)
     suspend fun getAllUsersForHousehold(id: String): List<User> {
         return userCollection
             .whereEqualTo(USER_HOUSEHOLD_ID_REF, id)
@@ -56,6 +63,7 @@ class UserRepository(
             .toObjects(User::class.java)
     }
 
+    @Throws(FirebaseFirestoreException::class)
     suspend fun updateUser(
         userId: String? = FirebaseAuth.getInstance().currentUser?.uid,
         householdId: String? = null,
@@ -76,6 +84,7 @@ class UserRepository(
         userDocRef.set(userFieldMap, SetOptions.merge()).await()
     }
 
+    @Throws(FirebaseFirestoreException::class)
     suspend fun addUserToken(
         userId: String? = FirebaseAuth.getInstance().currentUser?.uid,
         token: String
@@ -83,9 +92,5 @@ class UserRepository(
         userId ?: return
         val userDocRef = userCollection.document(userId)
         userDocRef.update(USER_TOKENS_REF, FieldValue.arrayUnion(token)).await()
-    }
-
-    suspend fun deleteUser(id: String) {
-        userCollection.document(id).delete().await()
     }
 }

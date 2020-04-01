@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.model.SplashAction
 import com.timgortworst.roomy.domain.usecase.HouseholdUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -46,8 +48,14 @@ class SplashViewModel(
         }
     }
 
-    fun changeCurrentUserHousehold(newId: String) = viewModelScope.launch {
-        householdUseCase.switchHousehold(newId)
-        _action.postValue(SplashAction.MainActivity)
+    suspend fun changeCurrentUserHousehold(newId: String)= withContext(Dispatchers.IO) {
+        householdUseCase.switchHousehold(newId).collect {
+            when (it) {
+                Response.Loading -> {} // loading dialog
+                is Response.Success -> _action.value = SplashAction.MainActivity
+                is Response.Error -> {} // todo something went wrong dialog
+            }
+
+        }
     }
 }

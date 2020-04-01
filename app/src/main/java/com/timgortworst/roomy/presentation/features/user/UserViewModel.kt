@@ -5,14 +5,28 @@ import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.Event
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class UserViewModel(
     private val userUseCase: UserUseCase
 ) : ViewModel() {
 
-    var viewState: LiveData<Response<List<User>>> = userUseCase
-        .getAllUsersForHousehold()
-        .asLiveData(viewModelScope.coroutineContext)
+    private var _viewState = MutableLiveData<Response<List<User>>>()
+    val viewState: LiveData<Response<List<User>>>
+        get() = _viewState
+
+    init {
+        getUsers()
+    }
+
+    private fun getUsers() {
+        viewModelScope.launch {
+            userUseCase.getAllUsersForHousehold().collect {
+                _viewState.value = it
+            }
+        }
+    }
 
     suspend fun removeFromHousehold(user: User) {
         userUseCase.removeUserFromHousehold(user.userId)
