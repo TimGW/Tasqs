@@ -1,8 +1,8 @@
 package com.timgortworst.roomy.data.di
 
 
-import com.timgortworst.roomy.data.error.ErrorHandlerImpl
-import com.timgortworst.roomy.domain.ErrorHandler
+import com.timgortworst.roomy.domain.model.response.ErrorHandlerImpl
+import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.usecase.HouseholdUseCase
 import com.timgortworst.roomy.domain.usecase.LoginUseCase
 import com.timgortworst.roomy.domain.usecase.TaskUseCase
@@ -14,5 +14,5 @@ val useCaseModule = module {
     factory { LoginUseCase(get(), get(), get()) }
     factory { UserUseCase(get(), get(), get(), get()) }
     factory { HouseholdUseCase(get(), get(), get(), get()) }
-    factory<ErrorHandler> { ErrorHandlerImpl()  }
+    factory<ErrorHandler> { ErrorHandlerImpl() }
 }

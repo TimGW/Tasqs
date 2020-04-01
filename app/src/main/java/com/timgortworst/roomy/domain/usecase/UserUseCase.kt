@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.ErrorHandler
+import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

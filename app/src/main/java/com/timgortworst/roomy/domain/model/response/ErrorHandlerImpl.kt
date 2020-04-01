@@ -1,11 +1,10 @@
-package com.timgortworst.roomy.data.error
+package com.timgortworst.roomy.domain.model.response
 
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.FirebaseFirestoreException.Code.*
-import com.timgortworst.roomy.domain.ErrorHandler
-import com.timgortworst.roomy.domain.model.response.ErrorEntity
 
-class ErrorHandlerImpl : ErrorHandler {
+class ErrorHandlerImpl :
+    ErrorHandler {
 
     override fun getError(firestoreException: FirebaseFirestoreException): ErrorEntity {
         return when (firestoreException.code) {
