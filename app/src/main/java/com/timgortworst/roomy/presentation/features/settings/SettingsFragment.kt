@@ -160,15 +160,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun signOut() = settingsViewModel.viewModelScope.launch {
-        //        settingsViewModel.deleteUser() // todo reauthenticate for delete
-
         AuthUI.getInstance().signOut(parentActivity)
             .addOnSuccessListener {
                 context?.cacheDir?.deleteRecursively() // clear cache
                 parentActivity.finishAffinity()
                 startActivity(SplashActivity.intentBuilder(parentActivity))
-//                (context?.getSystemService(ACTIVITY_SERVICE) as? ActivityManager)
-//                    ?.clearApplicationUserData() // clear app data
             }
             .addOnFailureListener {
                 errorMessage()

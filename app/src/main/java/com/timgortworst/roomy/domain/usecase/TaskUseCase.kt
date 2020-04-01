@@ -1,19 +1,23 @@
 package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.TaskMetaData
-import com.timgortworst.roomy.domain.model.TaskRecurrence
-import com.timgortworst.roomy.domain.model.TaskUser
+import com.timgortworst.roomy.domain.ErrorHandler
+import com.timgortworst.roomy.domain.model.*
 import com.timgortworst.roomy.domain.utils.TimeOperations
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 
 class TaskUseCase(
-    private val taskRepository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val errorHandler: ErrorHandler
 ) {
     suspend fun getAllTasksQuery() = taskRepository.getAllTasksQuery()
 
@@ -21,32 +25,42 @@ class TaskUseCase(
         userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
     ) = taskRepository.getTasksForUserQuery(userId)
 
-    suspend fun deleteTasks(tasks: List<Task>) {
-        taskRepository.deleteTasks(tasks)
-    }
-
-    suspend fun tasksCompleted(tasks: List<Task>) {
-        tasks.filter {
-            it.metaData.recurrence is TaskRecurrence.SingleTask
-        }.run {
-            deleteTasks(this)
+    fun deleteTasks(tasks: List<Task>) = flow {
+        emit(Response.Loading)
+        try {
+            taskRepository.deleteTasks(tasks)
+            emit(Response.Success())
+        } catch (e: FirebaseFirestoreException) {
+            emit(Response.Error(errorHandler.getError(e)))
         }
+    }.flowOn(Dispatchers.IO)
 
-        tasks.filterNot {
-            it.metaData.recurrence is TaskRecurrence.SingleTask
-        }.run {
-            updateNextTaskDate(this)
+
+    fun tasksCompleted(tasks: List<Task>) = flow {
+        emit(Response.Loading)
+
+        try {
+            tasks.filter {
+                it.metaData.recurrence is TaskRecurrence.SingleTask
+            }.run {
+                taskRepository.deleteTasks(this)
+            }
+
+            tasks.filterNot {
+                it.metaData.recurrence is TaskRecurrence.SingleTask
+            }.run {
+                forEach {
+                    it.metaData.startDateTime = calcNextTaskDate(it.metaData)
+                    it.isDoneEnabled = false // temporary disable the done button
+                }
+
+                taskRepository.updateTasks(this)
+            }
+            emit(Response.Success())
+        } catch (e: FirebaseFirestoreException) {
+            emit(Response.Error(errorHandler.getError(e)))
         }
-    }
-
-    private suspend fun updateNextTaskDate(tasks: List<Task>) {
-        tasks.forEach {
-            it.metaData.startDateTime = calcNextTaskDate(it.metaData)
-            it.isDoneEnabled = false // temporary disable the done button
-        }
-
-        taskRepository.updateTasks(tasks)
-    }
+    }.flowOn(Dispatchers.IO)
 
     private fun calcNextTaskDate(taskMetaData: TaskMetaData): ZonedDateTime {
         val timeOperations = TimeOperations()
@@ -58,15 +72,21 @@ class TaskUseCase(
         }
     }
 
-    suspend fun createOrUpdateTask(task: Task) {
-        // temporary disable the done button
-        val result = task.apply { isDoneEnabled = false }
+    fun createOrUpdateTask(task: Task) = flow {
+        emit(Response.Loading)
+        try {
+            // temporary disable the done button
+            val result = task.apply { isDoneEnabled = false }
 
-        if (task.id.isEmpty()) {
-            taskRepository.createTask(result)
-        } else {
-            taskRepository.updateTask(result)
+            if (task.id.isEmpty()) {
+                taskRepository.createTask(result)
+            } else {
+                taskRepository.updateTask(result)
+            }
+            emit(Response.Success())
+        } catch (e: FirebaseFirestoreException) {
+            emit(Response.Error(errorHandler.getError(e)))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }
 

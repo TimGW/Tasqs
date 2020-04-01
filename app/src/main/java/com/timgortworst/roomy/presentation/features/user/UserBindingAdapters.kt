@@ -36,6 +36,6 @@ fun TextView.messageVisibility(responseState: Response<List<User>>?) {
 @BindingAdapter("users")
 fun RecyclerView.setUsers(responseState: Response<List<User>>?) {
     (responseState as? Response.Success)?.let {
-        (adapter as UserAdapter).addAll(it.data)
+        (adapter as UserAdapter).addAll(it.data!!)
     }
 }

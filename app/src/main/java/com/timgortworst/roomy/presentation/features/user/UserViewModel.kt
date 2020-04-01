@@ -5,8 +5,10 @@ import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.Event
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserViewModel(
     private val userUseCase: UserUseCase
@@ -28,8 +30,8 @@ class UserViewModel(
         }
     }
 
-    suspend fun removeFromHousehold(user: User) {
-        userUseCase.removeUserFromHousehold(user.userId)
+    suspend fun removeFromHousehold(user: User) = withContext(Dispatchers.IO) {
+        userUseCase.removeUserFromHousehold(user.userId).collect()
     }
 
     fun displayBottomSheet(user: User) = liveData {

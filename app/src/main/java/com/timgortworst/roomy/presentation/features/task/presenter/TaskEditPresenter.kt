@@ -14,9 +14,6 @@ import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNot
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
@@ -67,7 +64,7 @@ class TaskEditPresenter(
             return@launch
         }
 
-        taskUseCase.createOrUpdateTask(task)
+        taskUseCase.createOrUpdateTask(task).collect()
 
         view.finishActivity()
     }

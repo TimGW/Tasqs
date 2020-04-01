@@ -34,8 +34,10 @@ class UserUseCase(
 
     suspend fun getHouseholdIdForUser() = householdRepository.getHouseholdId()
 
-    suspend fun removeUserFromHousehold(userId: String?) {
-        userId ?: return
+    fun removeUserFromHousehold(userId: String?) = flow {
+        emit(Response.Loading)
+
+        userId ?: run { emit(Response.Error()); return@flow }
 
         try {
             removeEventsAssignedToUser(userId)
@@ -44,11 +46,11 @@ class UserUseCase(
 
             userRepository.updateUser(userId = userId, householdId = householdId, isAdmin = true)
 
+            emit(Response.Success())
         } catch (e: FirebaseFirestoreException) {
-            // todo update UI with error
-//            Log.e(RoomyApp.TAG, e.localizedMessage.orEmpty())
+            emit(Response.Error(errorHandler.getError(e)))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     private suspend fun removeEventsAssignedToUser(userId: String) {
         val tasks = taskRepository.getTasksForUser(userId)

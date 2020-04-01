@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.timgortworst.roomy.data.repository.CustomMapper
+import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.usecase.TaskUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -25,12 +27,12 @@ class TaskListViewModel(
     val liveQueryOptions: LiveData<FirestoreRecyclerOptions.Builder<Task>>
         get() = _liveQueryOptions
 
-    suspend fun tasksCompleted(tasks: List<Task>) = withContext(Dispatchers.IO) {
-        taskUseCase.tasksCompleted(tasks)
+    fun tasksCompleted(tasks: List<Task>): Flow<Response<Nothing>> {
+        return taskUseCase.tasksCompleted(tasks)
     }
 
-    suspend fun deleteTasks(tasks: List<Task>) = withContext(Dispatchers.IO) {
-        taskUseCase.deleteTasks(tasks)
+    fun deleteTasks(tasks: List<Task>): Flow<Response<Nothing>> {
+        return taskUseCase.deleteTasks(tasks)
     }
 
     suspend fun loadInitialQuery() = withContext(Dispatchers.IO) {

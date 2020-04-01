@@ -16,6 +16,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentTaskListBinding
+import com.timgortworst.roomy.domain.model.Response
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
 import com.timgortworst.roomy.domain.utils.snackbar
@@ -24,6 +25,7 @@ import com.timgortworst.roomy.presentation.base.view.BaseFragment
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.adapter.*
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskListViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.threeten.bp.ZonedDateTime
@@ -251,7 +253,7 @@ class TaskListFragment : BaseFragment(),
 
     override fun onActionItemDone(selectedTasks: List<Task>) {
         taskViewModel.viewModelScope.launch {
-            taskViewModel.tasksCompleted(selectedTasks)
+            taskViewModel.tasksCompleted(selectedTasks).collect()
 
             parentActivity.binding.bottomNavigationContainer.snackbar(
                 message = getString(R.string.tasks_done, selectedTasks.size),
@@ -265,7 +267,7 @@ class TaskListFragment : BaseFragment(),
         position: Int
     ) {
         taskViewModel.viewModelScope.launch {
-            taskViewModel.tasksCompleted(listOf(task))
+            taskViewModel.tasksCompleted(listOf(task)).collect()
 
             if (task.metaData.recurrence !is TaskRecurrence.SingleTask) {
                 parentActivity.binding.bottomNavigationContainer.snackbar(
@@ -298,7 +300,7 @@ class TaskListFragment : BaseFragment(),
             .setIcon(R.drawable.ic_delete)
             .setPositiveButton(R.string.delete) { dialog, _ ->
                 taskViewModel.viewModelScope.launch {
-                    taskViewModel.deleteTasks(tasks)
+                    taskViewModel.deleteTasks(tasks).collect()
 
                     if (tasks.size == 1) {
                         parentActivity.binding.bottomNavigationContainer.snackbar(
