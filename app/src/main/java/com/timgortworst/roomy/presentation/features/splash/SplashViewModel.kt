@@ -52,11 +52,10 @@ class SplashViewModel(
     suspend fun changeCurrentUserHousehold(newId: String)= withContext(Dispatchers.IO) {
         householdUseCase.switchHousehold(newId).collect {
             when (it) {
-                Response.Loading -> {} // loading dialog
-                is Response.Success -> _action.value = SplashAction.MainActivity
-                is Response.Error -> {} // todo something went wrong dialog
+                Response.Loading -> _action.postValue(SplashAction.DialogLoading)
+                is Response.Success -> _action.postValue(SplashAction.MainActivity)
+                is Response.Error -> _action.postValue(SplashAction.DialogError())
             }
-
         }
     }
 }

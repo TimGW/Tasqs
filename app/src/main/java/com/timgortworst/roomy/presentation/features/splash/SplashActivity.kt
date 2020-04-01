@@ -17,12 +17,13 @@ import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
+import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.signin.SignInActivity
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
-class SplashActivity : AppCompatActivity(), ForceUpdateUseCase.OnUpdateNeededListener {
+class SplashActivity : BaseActivity(), ForceUpdateUseCase.OnUpdateNeededListener {
     private val viewModel: SplashViewModel by inject()
 
     companion object {
@@ -43,11 +44,16 @@ class SplashActivity : AppCompatActivity(), ForceUpdateUseCase.OnUpdateNeededLis
             .check(currentVersion)
 
         viewModel.action.observe(this, Observer {
-            when(it) {
+            when (it) {
                 SplashAction.SignInActivity -> goToSignInActivity()
                 SplashAction.MainActivity -> goToMainActivity()
                 SplashAction.DialogAlreadyInHousehold -> presentAlreadyInHouseholdDialog()
                 is SplashAction.DialogOverride -> presentHouseholdOverwriteDialog(it.id)
+                SplashAction.DialogLoading -> showProgressDialog()
+                is SplashAction.DialogError -> {
+                    val rootView = findViewById<View>(android.R.id.content) ?: return@Observer
+                    rootView.snackbar(message = getString(it.errorMsg))
+                }
             }
         })
     }
