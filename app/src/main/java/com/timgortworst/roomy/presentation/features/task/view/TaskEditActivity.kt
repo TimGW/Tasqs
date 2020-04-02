@@ -19,6 +19,7 @@ import com.timgortworst.roomy.domain.model.task.Task
 import com.timgortworst.roomy.domain.model.task.TaskRecurrence
 import com.timgortworst.roomy.domain.model.task.TaskUser
 import com.timgortworst.roomy.domain.utils.clearFocus
+import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.presenter.TaskEditPresenter
@@ -27,7 +28,7 @@ import org.koin.core.parameter.parametersOf
 import org.threeten.bp.*
 import org.threeten.bp.temporal.ChronoField
 
-class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSetListener {
+class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnDateSetListener {
     private lateinit var binding: ActivityEditTaskBinding
     private val presenter: TaskEditPresenter by inject { parametersOf(this) }
     private var userList: List<TaskUser> = listOf()
@@ -284,5 +285,10 @@ class TaskEditActivity : BaseActivity(), TaskEditView, DatePickerDialog.OnDateSe
 
     override fun finishActivity() {
         navigateUpTo(Intent(this, MainActivity::class.java))
+    }
+
+    override fun presentError(stringRes: Int) {
+        val rootView = findViewById<View>(android.R.id.content) ?: return
+        rootView.snackbar(message = getString(stringRes))
     }
 }

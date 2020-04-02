@@ -56,7 +56,7 @@ class TaskEditPresenter(
                         })
                     }
                 }
-                is Response.Error -> { } // todo
+                is Response.Error -> view.presentError(R.string.users_loading_error)
             }
         }
     }

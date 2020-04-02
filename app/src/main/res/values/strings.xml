@@ -156,4 +156,5 @@
     <string name="filter">filter</string>
     <string name="filter_just_me">Show just me</string>
     <string name="filter_show_all">Show everything</string>
+    <string name="users_loading_error">could not load users</string>
 </resources>

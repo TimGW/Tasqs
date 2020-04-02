@@ -149,4 +149,5 @@
     <string name="filter">filter</string>
     <string name="filter_just_me">Toon alleen mij</string>
     <string name="filter_show_all">Toon alles</string>
+    <string name="users_loading_error">Kan gebruikers niet laden</string>
 </resources>
