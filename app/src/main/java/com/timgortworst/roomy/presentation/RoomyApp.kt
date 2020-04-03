@@ -32,7 +32,6 @@ class RoomyApp : Application(), Configuration.Provider {
         appModule,
         repositoryModule,
         useCaseModule,
-        presenterModule,
         viewModelModule
     )
 

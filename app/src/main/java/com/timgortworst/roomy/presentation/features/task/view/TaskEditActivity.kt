@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityEditTaskBinding
@@ -24,16 +25,15 @@ import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.EventObserver
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import com.timgortworst.roomy.presentation.features.task.presenter.TaskEditPresenter
+import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskEditViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 import org.threeten.bp.*
 import org.threeten.bp.temporal.ChronoField
 
 class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnDateSetListener {
     private lateinit var binding: ActivityEditTaskBinding
-    private val presenter: TaskEditPresenter by inject { parametersOf(this) }
+    private val viewModel: TaskEditViewModel by inject()
     private var userList: List<TaskUser> = listOf()
     private lateinit var task: Task
     private lateinit var recurrenceAdapter: ArrayAdapter<String>
@@ -64,9 +64,9 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
 
         setupUI()
 
-        presenter.prettyDate.observe(this, EventObserver { binding.taskDateInput.setText(it) })
+        viewModel.prettyDate.observe(this, EventObserver { binding.taskDateInput.setText(it) })
 
-        presenter.taskDone.observe(this, EventObserver {
+        viewModel.taskDone.observe(this, EventObserver {
             binding.progressBar.visibility = View.INVISIBLE
             when (it) {
                 Response.Loading -> binding.progressBar.visibility = View.VISIBLE
@@ -81,13 +81,13 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
         setupToolbar()
         setupListeners()
 
-        presenter.allUsersLiveData.observe(this, Observer { response ->
+        viewModel.allUsersLiveData.observe(this, Observer { response ->
             binding.progressBar.visibility = View.INVISIBLE
             when (response) {
                 Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Response.Success -> {
-                    presenter.scope.launch {
-                        val currentUser = presenter.currentUser() ?: return@launch
+                    viewModel.viewModelScope.launch {
+                        val currentUser = viewModel.currentUser() ?: return@launch
 
                         if (response.data!!.filterNot { it.userId == currentUser.userId }.isEmpty()) {
                             presentCurrentUser(
@@ -118,7 +118,7 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
         )
         binding.taskRepeatView.spinnerRecurrence.adapter = recurrenceAdapter
 
-        presenter.formatDate(task.metaData.startDateTime)
+        viewModel.formatDate(task.metaData.startDateTime)
 
         if (intent.hasExtra(INTENT_EXTRA_EDIT_TASK) &&
             intent.getParcelableExtra(INTENT_EXTRA_EDIT_TASK) as? Task != null
@@ -130,7 +130,7 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
     private fun setupEditUI() {
         supportActionBar?.title = getString(R.string.toolbar_title_edit_task, task.description)
         binding.taskDescription.setText(task.description)
-        presenter.formatDate(task.metaData.startDateTime)
+        viewModel.formatDate(task.metaData.startDateTime)
 
         val isRepeating = task.metaData.recurrence !is TaskRecurrence.SingleTask
         binding.taskRepeatCheckbox.isChecked = isRepeating
@@ -250,7 +250,7 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
                 val result = binding.spinnerUsers.selectedItemPosition
                 if (result != -1) task.user = userList[result]
                 task.metaData.recurrence = recurrenceFromSelection()
-                presenter.taskDoneClicked(task)
+                viewModel.taskDoneClicked(task)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -326,7 +326,7 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
             LocalTime.NOON,
             ZoneId.systemDefault()
         )
-        presenter.formatDate(task.metaData.startDateTime)
+        viewModel.formatDate(task.metaData.startDateTime)
     }
 
     override fun presentError(stringRes: Int) {
