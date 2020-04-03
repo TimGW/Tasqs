@@ -22,6 +22,7 @@ import com.timgortworst.roomy.domain.model.task.TaskRecurrence
 import com.timgortworst.roomy.domain.model.task.TaskUser
 import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.domain.utils.snackbar
+import com.timgortworst.roomy.presentation.base.EventObserver
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.presenter.TaskEditPresenter
@@ -63,6 +64,8 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
             ?: Task()
 
         setupUI()
+
+        presenter.prettyDate.observe(this, EventObserver { binding.taskDateInput.setText(it) })
     }
 
     private fun setupUI() {
@@ -298,14 +301,6 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
             ZoneId.systemDefault()
         )
         presenter.formatDate(task.metaData.startDateTime)
-    }
-
-    override fun presentFormattedDate(
-        formattedDayOfMonth: String,
-        formattedMonth: String?,
-        formattedYear: String
-    ) {
-        binding.taskDateInput.setText("$formattedDayOfMonth $formattedMonth $formattedYear")
     }
 
     override fun presentEmptyDescriptionError(errorMessage: Int) {

@@ -3,6 +3,8 @@ package com.timgortworst.roomy.presentation.features.task.presenter
 import android.text.Editable
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputEditText
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
@@ -11,6 +13,7 @@ import com.timgortworst.roomy.domain.model.task.TaskUser
 import com.timgortworst.roomy.domain.usecase.TaskUseCase
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.CoroutineLifecycleScope
+import com.timgortworst.roomy.presentation.base.Event
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -28,6 +31,11 @@ class TaskEditPresenter(
     val scope = CoroutineLifecycleScope(Dispatchers.Main)
     val allUsersLiveData = userUseCase.getAllUsersForHousehold()
 
+    private val _prettyDate = MutableLiveData<Event<String>>()
+    val prettyDate: LiveData<Event<String>>
+        get() = _prettyDate
+
+
     suspend fun currentUser() = userUseCase.getCurrentUser()
 
     init {
@@ -40,7 +48,7 @@ class TaskEditPresenter(
         val formattedDayOfMonth = zonedDateTime.dayOfMonth.toString()
         val formattedMonth = zonedDateTime.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         val formattedYear = zonedDateTime.year.toString()
-        view.presentFormattedDate(formattedDayOfMonth, formattedMonth, formattedYear)
+        _prettyDate.value = Event("$formattedDayOfMonth $formattedMonth $formattedYear")
     }
 
     fun editTaskDone(task: Task) = scope.launch {
