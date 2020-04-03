@@ -23,14 +23,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadingVisibility="@{ viewModel.viewState }" />
+            app:userListLoading="@{ viewModel.allUsersLiveData }"
+            app:userRemovalLoading="@{ viewModel.removedUser }"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:dataVisibility="@{ viewModel.viewState }"
-            app:users="@{viewModel.viewState}" />
+            app:dataVisibility="@{ viewModel.allUsersLiveData }"
+            app:users="@{viewModel.allUsersLiveData}" />
 
         <TextView
             android:id="@+id/state_title"
@@ -43,7 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="state_title"
-            app:messageVisibility="@{ viewModel.viewState }" />
+            app:messageVisibility="@{ viewModel.allUsersLiveData }" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

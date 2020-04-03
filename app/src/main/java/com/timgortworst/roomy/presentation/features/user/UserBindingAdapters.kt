@@ -15,9 +15,13 @@ fun ViewGroup.dataVisibility(responseState: Response<List<User>>?) {
     visibility = if (responseState is Response.Success) View.VISIBLE else View.GONE
 }
 
-@BindingAdapter("loadingVisibility")
-fun ProgressBar.loadingVisibility(responseState: Response<List<User>>?) {
-    visibility = if (responseState is Response.Loading) View.VISIBLE else View.GONE
+@BindingAdapter(value = ["userListLoading", "userRemovalLoading"], requireAll = false)
+fun ProgressBar.loadingVisibility(
+    userListResponse: Response<List<User>>?,
+    userRemovalResponse: Response<User>?
+) {
+    visibility = if (userListResponse is Response.Loading ||
+        userRemovalResponse is Response.Loading) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("adminLabelVisibility")

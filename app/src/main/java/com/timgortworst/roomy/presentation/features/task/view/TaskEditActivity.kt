@@ -12,9 +12,11 @@ import android.widget.DatePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.Observer
 import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityEditTaskBinding
+import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.task.Task
 import com.timgortworst.roomy.domain.model.task.TaskRecurrence
 import com.timgortworst.roomy.domain.model.task.TaskUser
@@ -23,6 +25,7 @@ import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.presenter.TaskEditPresenter
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import org.threeten.bp.*
@@ -66,7 +69,34 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
         setupToolbar()
         setupListeners()
 
-        presenter.getUsers()
+        presenter.allUsersLiveData.observe(this, Observer { response ->
+            when (response) {
+                Response.Loading -> { } // todo
+                is Response.Success -> {
+                    presenter.scope.launch {
+                        val currentUser = presenter.currentUser() ?: return@launch
+
+                        if (response.data!!.filterNot { it.userId == currentUser.userId }.isEmpty()) {
+                            presentCurrentUser(
+                                TaskUser(
+                                    currentUser.userId,
+                                    currentUser.name
+                                )
+                            )
+                        } else {
+                            presentUserList(response.data.map {
+                                TaskUser(
+                                    it.userId,
+                                    it.name
+                                )
+                            })
+                        }
+
+                    }
+                }
+                is Response.Error -> presentError(R.string.users_loading_error)
+            }
+        })
 
         recurrenceAdapter = ArrayAdapter(
             this,
@@ -166,8 +196,7 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
                 override fun onNothingSelected(parent: AdapterView<*>) {}
             }
 
-        binding.taskRepeatView.recurrenceWeekPicker.weekdayButtonGroup.addOnButtonCheckedListener {
-                group, checkedId, isChecked ->
+        binding.taskRepeatView.recurrenceWeekPicker.weekdayButtonGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
             clearAllFocus()
         }
     }

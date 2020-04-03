@@ -25,39 +25,14 @@ class TaskEditPresenter(
     private val taskUseCase: TaskUseCase,
     private val userUseCase: UserUseCase
 ) : DefaultLifecycleObserver {
-    private val scope = CoroutineLifecycleScope(Dispatchers.Main)
+    val scope = CoroutineLifecycleScope(Dispatchers.Main)
+    val allUsersLiveData = userUseCase.getAllUsersForHousehold()
+
+    suspend fun currentUser() = userUseCase.getCurrentUser()
 
     init {
         if (view is LifecycleOwner) {
             view.lifecycle.addObserver(scope)
-        }
-    }
-
-    fun getUsers() = scope.launch {
-        userUseCase.getAllUsersForHousehold().collect { response ->
-
-            when (response) {
-                Response.Loading -> { } // todo
-                is Response.Success -> {
-                    val currentUser = userUseCase.getCurrentUser() ?: return@collect
-                    if (response.data!!.filterNot { it.userId == currentUser.userId }.isEmpty()) {
-                        view.presentCurrentUser(
-                            TaskUser(
-                                currentUser.userId,
-                                currentUser.name
-                            )
-                        )
-                    } else {
-                        view.presentUserList(response.data.map {
-                            TaskUser(
-                                it.userId,
-                                it.name
-                            )
-                        })
-                    }
-                }
-                is Response.Error -> view.presentError(R.string.users_loading_error)
-            }
         }
     }
 

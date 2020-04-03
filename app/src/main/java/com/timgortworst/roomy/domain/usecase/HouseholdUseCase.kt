@@ -38,7 +38,7 @@ class HouseholdUseCase(
                 householdId = newId,
                 isAdmin = false
             )
-            emit(Response.Success())
+            emit(Response.Success(newId))
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
         }
