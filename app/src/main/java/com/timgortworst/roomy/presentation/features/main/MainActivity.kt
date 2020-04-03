@@ -23,6 +23,7 @@ import com.timgortworst.roomy.presentation.features.user.UserListFragment
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
+// todo refactor logic to viewmodel / usecase
 class MainActivity : BaseActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var networkChangeReceiver: NetworkChangeReceiver

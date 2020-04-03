@@ -8,7 +8,7 @@ import com.timgortworst.roomy.data.repository.CustomMapper
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.task.Task
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
-import com.timgortworst.roomy.domain.usecase.TaskUseCase
+import com.timgortworst.roomy.domain.usecase.TaskListUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TaskListViewModel(
-    private val taskUseCase: TaskUseCase
+    private val taskUseCase: TaskListUseCase
 ) : ViewModel() {
 
     private val _showLoading = MutableLiveData<Boolean>()

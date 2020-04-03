@@ -7,14 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.ui.SplashAction
-import com.timgortworst.roomy.domain.usecase.HouseholdUseCase
+import com.timgortworst.roomy.domain.usecase.StartupUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SplashViewModel(
-    private val householdUseCase: HouseholdUseCase
+    private val householdUseCase: StartupUseCase
 ) : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 

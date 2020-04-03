@@ -21,7 +21,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
+import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.utils.snackbar
+import com.timgortworst.roomy.presentation.base.EventObserver
 import com.timgortworst.roomy.presentation.features.splash.SplashActivity
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -54,14 +56,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
         aboutPrefs()
 
         settingsViewModel.easterEgg.observe(viewLifecycleOwner, Observer {
-            easterEggMsg(it.id, it.data)
+            it?.let { easterEggMsg(it.id, it.data) }
         })
     }
 
     private fun accountPrefs() {
         val userNamePref = (findPreference("preferences_account_name_key") as? Preference)
-        settingsViewModel.fetchUser().observe(viewLifecycleOwner, Observer { user ->
-            user?.name?.let { userNamePref?.summary = it }
+        settingsViewModel.currentUser.observe(viewLifecycleOwner, EventObserver { response ->
+            when(response) {
+                is Response.Success -> response.data?.name?.let { userNamePref?.summary = it }
+                is Response.Error -> userNamePref?.summary = getString(R.string.error_generic)
+            }
         })
 
         (findPreference("preferences_account_logout_key") as? Preference)

@@ -31,6 +31,7 @@ import org.koin.android.ext.android.inject
 import org.threeten.bp.*
 import org.threeten.bp.temporal.ChronoField
 
+// todo refactor logic to viewmodel / usecase
 class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var binding: ActivityEditTaskBinding
     private val viewModel: TaskEditViewModel by inject()

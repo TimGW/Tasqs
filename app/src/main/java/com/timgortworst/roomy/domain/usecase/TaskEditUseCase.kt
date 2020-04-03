@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 
-class TaskUseCase(
+class TaskEditUseCase(
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler
 ) {

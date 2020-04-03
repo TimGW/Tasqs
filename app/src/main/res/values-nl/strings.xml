@@ -66,6 +66,7 @@
     <string name="toolbar_title_users">Gebruikers</string>
     <string name="easter_egg_enabled">Advertenties zijn nu uitgeschakeld!</string>
     <string name="easter_egg_message">Klik nog %1$d keer om advertenties te verwijderen</string>
+    <string name="easter_egg_already_enabled">Joe joe!</string>
     <string name="edit">Wijzigen</string>
     <string name="info">Info</string>
     <string name="delete">Verwijderen</string>

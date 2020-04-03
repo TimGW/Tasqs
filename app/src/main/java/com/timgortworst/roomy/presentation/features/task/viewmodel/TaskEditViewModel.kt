@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.task.Task
-import com.timgortworst.roomy.domain.usecase.TaskUseCase
+import com.timgortworst.roomy.domain.usecase.TaskListUseCase
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.Event
 import kotlinx.coroutines.flow.collect
@@ -17,7 +17,7 @@ import org.threeten.bp.format.TextStyle
 import java.util.*
 
 class TaskEditViewModel(
-    private val taskUseCase: TaskUseCase,
+    private val taskUseCase: TaskListUseCase,
     private val userUseCase: UserUseCase
 ) : ViewModel() {
     val allUsersLiveData = userUseCase.getAllUsersForHousehold()
