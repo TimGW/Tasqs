@@ -23,6 +23,9 @@ import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 import com.timgortworst.roomy.presentation.base.view.BaseFragment
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.adapter.*
+import com.timgortworst.roomy.presentation.features.task.adapter.actionmode.ActionModeCallback
+import com.timgortworst.roomy.presentation.features.task.adapter.actionmode.TaskItemDetailsLookup
+import com.timgortworst.roomy.presentation.features.task.adapter.actionmode.TaskItemKeyProvider
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskListViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -180,8 +183,12 @@ class TaskListFragment : BaseFragment(),
         tracker = SelectionTracker.Builder<String>(
             TASK_SELECTION_ID,
             recyclerView,
-            TaskItemKeyProvider(recyclerView.adapter),
-            TaskItemDetailsLookup(recyclerView),
+            TaskItemKeyProvider(
+                recyclerView.adapter
+            ),
+            TaskItemDetailsLookup(
+                recyclerView
+            ),
             StorageStrategy.createStringStorage()
         ).withSelectionPredicate(
             SelectionPredicates.createSelectAnything()

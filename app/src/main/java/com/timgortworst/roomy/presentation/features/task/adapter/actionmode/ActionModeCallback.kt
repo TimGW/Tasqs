@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.features.task.adapter
+package com.timgortworst.roomy.presentation.features.task.adapter.actionmode
 
 import android.view.Menu
 import android.view.MenuItem

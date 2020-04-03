@@ -1,8 +1,9 @@
-package com.timgortworst.roomy.presentation.features.task.adapter
+package com.timgortworst.roomy.presentation.features.task.adapter.actionmode
 
 import android.view.MotionEvent
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
+import com.timgortworst.roomy.presentation.features.task.adapter.TaskFirestoreAdapter
 
 class TaskItemDetailsLookup(private val recyclerView: RecyclerView) :
         ItemDetailsLookup<String>() {
