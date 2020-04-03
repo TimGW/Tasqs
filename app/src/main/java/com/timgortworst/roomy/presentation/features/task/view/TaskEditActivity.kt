@@ -23,7 +23,6 @@ import com.timgortworst.roomy.domain.model.task.TaskUser
 import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.EventObserver
-import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.presenter.TaskEditPresenter
 import kotlinx.coroutines.launch
@@ -66,6 +65,16 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
         setupUI()
 
         presenter.prettyDate.observe(this, EventObserver { binding.taskDateInput.setText(it) })
+
+        presenter.taskDone.observe(this, EventObserver {
+            binding.progressBar.visibility = View.INVISIBLE
+            when (it) {
+                Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Response.Success -> navigateUpTo(Intent(this, MainActivity::class.java))
+                is Response.Error -> presentError(R.string.error_generic)
+                is Response.Empty -> binding.taskDescriptionHint.error = getString(it.msg)
+            }
+        })
     }
 
     private fun setupUI() {
@@ -73,8 +82,9 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
         setupListeners()
 
         presenter.allUsersLiveData.observe(this, Observer { response ->
+            binding.progressBar.visibility = View.INVISIBLE
             when (response) {
-                Response.Loading -> { } // todo
+                Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Response.Success -> {
                     presenter.scope.launch {
                         val currentUser = presenter.currentUser() ?: return@launch
@@ -175,11 +185,20 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
         }
 
         binding.taskRepeatView.recurrenceFrequency.setOnFocusChangeListener { v, hasFocus ->
-            presenter.disableEmptyInput(binding.taskRepeatView.recurrenceFrequency, hasFocus)
+            binding.taskRepeatView.recurrenceFrequency.apply {
+                if (text.toString().isBlank() && !hasFocus) {
+                    setText("1")
+                }
+            }
         }
 
         binding.taskRepeatView.recurrenceFrequency.doAfterTextChanged {
-            presenter.disableInputZero(it)
+            it?.let {
+                val input = it.toString()
+                if (input.isNotEmpty() && input.first() == '0') {
+                    it.replace(0, 1, "1")
+                }
+            }
             presenter.checkForPluralRecurrenceSpinner(binding.taskRepeatView.recurrenceFrequency.text.toString())
         }
 
@@ -224,7 +243,7 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
                 val result = binding.spinnerUsers.selectedItemPosition
                 if (result != -1) task.user = userList[result]
                 task.metaData.recurrence = recurrenceFromSelection()
-                presenter.editTaskDone(task)
+                presenter.taskDoneClicked(task)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -301,14 +320,6 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
             ZoneId.systemDefault()
         )
         presenter.formatDate(task.metaData.startDateTime)
-    }
-
-    override fun presentEmptyDescriptionError(errorMessage: Int) {
-        binding.taskDescriptionHint.error = getString(errorMessage)
-    }
-
-    override fun finishActivity() {
-        navigateUpTo(Intent(this, MainActivity::class.java))
     }
 
     override fun presentError(stringRes: Int) {

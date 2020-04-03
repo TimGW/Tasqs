@@ -6,8 +6,6 @@ import com.timgortworst.roomy.domain.model.task.TaskUser
 
 interface TaskEditView {
     fun presentUserList(filteredUserList: List<TaskUser>)
-    fun presentEmptyDescriptionError(@StringRes errorMessage: Int)
-    fun finishActivity()
     fun setPluralSpinner()
     fun setSingularSpinner()
     fun presentCurrentUser(currentUser: TaskUser?)

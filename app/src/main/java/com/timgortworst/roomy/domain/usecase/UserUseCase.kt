@@ -12,6 +12,7 @@ import com.timgortworst.roomy.domain.model.response.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -43,7 +44,7 @@ class UserUseCase(
 
     suspend fun getHouseholdIdForUser() = householdRepository.getHouseholdId()
 
-    fun removeUserFromHousehold(user: User) = channelFlow {
+    fun removeUserFromHousehold(user: User) = callbackFlow {
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(500) // delay 0.5s before showing loading
             offer(Response.Loading)

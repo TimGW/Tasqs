@@ -2,6 +2,7 @@ package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
@@ -9,9 +10,15 @@ import com.timgortworst.roomy.domain.model.task.Task
 import com.timgortworst.roomy.domain.model.task.TaskMetaData
 import com.timgortworst.roomy.domain.model.task.TaskRecurrence
 import com.timgortworst.roomy.domain.utils.TimeOperations
+import com.timgortworst.roomy.presentation.base.Event
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 
@@ -72,8 +79,12 @@ class TaskUseCase(
         }
     }
 
-    fun createOrUpdateTask(task: Task) = flow {
-        emit(Response.Loading)
+    fun createOrUpdateTask(task: Task) = callbackFlow {
+        val loadingJob = CoroutineScope(coroutineContext).launch {
+            delay(500) // delay 0.5s before showing loading
+            offer(Response.Loading)
+        }
+
         try {
             // temporary disable the done button
             val result = task.apply { isDoneEnabled = false }
@@ -83,9 +94,11 @@ class TaskUseCase(
             } else {
                 taskRepository.updateTask(result)
             }
-            emit(Response.Success())
+            offer(Response.Success(task))
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
+        } finally {
+            awaitClose { loadingJob.cancel() }
         }
     }.flowOn(Dispatchers.IO)
 }
