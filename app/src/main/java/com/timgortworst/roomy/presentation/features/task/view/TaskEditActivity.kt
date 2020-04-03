@@ -31,7 +31,7 @@ import org.koin.android.ext.android.inject
 import org.threeten.bp.*
 import org.threeten.bp.temporal.ChronoField
 
-class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnDateSetListener {
+class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var binding: ActivityEditTaskBinding
     private val viewModel: TaskEditViewModel by inject()
     private var userList: List<TaskUser> = listOf()
@@ -286,7 +286,7 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
             } // map checked buttons to weekday index 0..6 (mo - su)
     }
 
-    override fun presentUserList(filteredUserList: List<TaskUser>) {
+    private fun presentUserList(filteredUserList: List<TaskUser>) {
         this.userList = filteredUserList
 
         binding.userGroup.visibility = View.VISIBLE
@@ -304,17 +304,17 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
         }
     }
 
-    override fun presentCurrentUser(currentUser: TaskUser?) {
+    private fun presentCurrentUser(currentUser: TaskUser?) {
         currentUser?.let { task.user = it }
     }
 
-    override fun setPluralSpinner() {
+    private fun setPluralSpinner() {
         recurrenceAdapter.clear()
         recurrenceAdapter.addAll(recurrences.map { getString(it.pluralName) })
         recurrenceAdapter.notifyDataSetChanged()
     }
 
-    override fun setSingularSpinner() {
+    private fun setSingularSpinner() {
         recurrenceAdapter.clear()
         recurrenceAdapter.addAll(recurrences.map { getString(it.name) })
         recurrenceAdapter.notifyDataSetChanged()
@@ -329,7 +329,7 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
         viewModel.formatDate(task.metaData.startDateTime)
     }
 
-    override fun presentError(stringRes: Int) {
+    private fun presentError(stringRes: Int) {
         val rootView = findViewById<View>(android.R.id.content) ?: return
         rootView.snackbar(message = getString(stringRes))
     }
