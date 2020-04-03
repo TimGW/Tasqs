@@ -60,12 +60,4 @@ class TaskEditPresenter(
             _taskDone.value = Event(it)
         }
     }
-
-    fun checkForPluralRecurrenceSpinner(numberInput: String) {
-        when {
-            numberInput.toIntOrNull()?.equals(1) == true || numberInput.isBlank() ->
-                view.setSingularSpinner()
-            else -> view.setPluralSpinner()
-        }
-    }
 }

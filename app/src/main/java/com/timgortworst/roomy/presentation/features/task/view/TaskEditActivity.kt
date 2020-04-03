@@ -199,7 +199,14 @@ class TaskEditActivity : AppCompatActivity(), TaskEditView, DatePickerDialog.OnD
                     it.replace(0, 1, "1")
                 }
             }
-            presenter.checkForPluralRecurrenceSpinner(binding.taskRepeatView.recurrenceFrequency.text.toString())
+
+            val input = binding.taskRepeatView.recurrenceFrequency.text.toString()
+
+            if (input.toIntOrNull()?.equals(1) == true || input.isBlank()) {
+                setSingularSpinner()
+            } else {
+                setPluralSpinner()
+            }
         }
 
         binding.taskRepeatView.spinnerRecurrence.onItemSelectedListener =
