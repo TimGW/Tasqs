@@ -4,7 +4,6 @@ import androidx.lifecycle.liveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.data.repository.HouseholdRepository
-import com.timgortworst.roomy.data.repository.HouseholdRepositoryImpl
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.firestore.User

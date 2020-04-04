@@ -2,7 +2,6 @@ package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
@@ -10,7 +9,6 @@ import com.timgortworst.roomy.domain.model.task.Task
 import com.timgortworst.roomy.domain.model.task.TaskMetaData
 import com.timgortworst.roomy.domain.model.task.TaskRecurrence
 import com.timgortworst.roomy.domain.utils.TimeOperations
-import com.timgortworst.roomy.presentation.base.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
