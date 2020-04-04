@@ -1,7 +1,6 @@
 package com.timgortworst.roomy.domain.usecase
 
 import androidx.lifecycle.liveData
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.data.repository.HouseholdRepository
