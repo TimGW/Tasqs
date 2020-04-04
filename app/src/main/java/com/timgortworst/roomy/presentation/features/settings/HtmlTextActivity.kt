@@ -3,29 +3,28 @@ package com.timgortworst.roomy.presentation.features.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.databinding.ActivityHtmlTextBinding
-import com.timgortworst.roomy.domain.utils.fromHtml
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class HtmlTextActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHtmlTextBinding
     private lateinit var htmlText: String
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHtmlTextBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        with(binding) {
+            viewModel = settingsViewModel
+            lifecycleOwner = this@HtmlTextActivity
+        }
+
         title = intent.getStringExtra(INTENT_EXTRA_TITLE) ?: ""
         htmlText = intent.getStringExtra(INTENT_EXTRA_HTML_TEXT) ?: return
-        setDisclaimerText(htmlText)
-    }
-
-    private fun setDisclaimerText(htmlText: String) {
-        val htmlString = htmlText.fromHtml()
-        binding.htmlText.movementMethod = LinkMovementMethod.getInstance()
-        binding.htmlText.text = htmlString
+        settingsViewModel.setDisclaimerText(htmlText)
     }
 
     companion object {

@@ -13,5 +13,6 @@ val useCaseModule = module {
     factory { UserUseCase(get(), get(), get(), get()) }
     factory { SplashUseCase(get(), get(), get(), get()) }
     factory { SettingsUseCase(get(), get(), get()) }
+    factory { MainUseCase(get(), get(), get()) }
     factory<ErrorHandler> { ErrorHandlerImpl() }
 }

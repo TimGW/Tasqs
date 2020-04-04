@@ -34,15 +34,6 @@ fun View.runBeforeDraw(onFinished: (view: View) -> Unit) {
     viewTreeObserver.addOnPreDrawListener(preDrawListener)
 }
 
-@Suppress("DEPRECATION")
-fun String.fromHtml(): Spanned {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
-    } else {
-        Html.fromHtml(this)
-    }
-}
-
 fun View.snackbar(
     message: String = "",
     actionMessage: String = "",
