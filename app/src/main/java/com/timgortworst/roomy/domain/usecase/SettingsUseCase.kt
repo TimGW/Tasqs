@@ -29,7 +29,7 @@ class SettingsUseCase(
         }
 
         try {
-            emit(Event(Response.Success(userRepository.getUser(FirebaseAuth.getInstance().currentUser?.uid))))
+            emit(Event(Response.Success(userRepository.getUser())))
         } catch (e: FirebaseFirestoreException) {
             emit(Event(Response.Error(errorHandler.getError(e))))
         } finally {

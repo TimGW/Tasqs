@@ -39,7 +39,7 @@ class UserRepositoryImpl(
     }
 
     @Throws(FirebaseFirestoreException::class)
-    override suspend fun getUser(userId: String?): User? {
+    override suspend fun getUser(userId: String?, source: Source): User? {
         if (userId.isNullOrEmpty()) return null
         val currentUserDocRef = userCollection.document(userId)
         return currentUserDocRef.get().await().toObject(User::class.java)

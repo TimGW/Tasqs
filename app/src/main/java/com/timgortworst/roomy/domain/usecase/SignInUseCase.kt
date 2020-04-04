@@ -2,6 +2,7 @@ package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
@@ -31,9 +32,10 @@ class SignInUseCase(
             } else {
                 userRepository.addUserToken(fireBaseUser.uid, registrationToken)
             }
-            Response.Success(fbUser.displayName.orEmpty())
+            userRepository.getUser() // get user to update cache
+            emit(Response.Success(fbUser.displayName.orEmpty()))
         } catch (e: FirebaseFirestoreException) {
-            Response.Error(errorHandler.getError(e))
+            emit(Response.Error(errorHandler.getError(e)))
         }
     }.flowOn(Dispatchers.IO)
 }

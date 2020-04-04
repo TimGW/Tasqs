@@ -2,6 +2,7 @@ package com.timgortworst.roomy.domain.usecase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
@@ -20,7 +21,7 @@ class SplashUseCase(
     fun switchHousehold(newId: String) = flow {
         emit(Response.Loading)
         try {
-            val oldId = householdRepository.getHouseholdId()
+            val oldId = userRepository.getUser()?.householdId ?: return@flow
             val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return@flow
 
             // remove old tasks assigned to user
@@ -44,9 +45,9 @@ class SplashUseCase(
         }
     }.flowOn(Dispatchers.IO)
 
-    suspend fun currentHouseholdIdForCurrentUser() = householdRepository.getHouseholdId()
+    suspend fun fetchHouseholdId()= userRepository.getUser()?.householdId.orEmpty()
 
     suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
-        return referredHouseholdId == householdRepository.getHouseholdId()
+        return referredHouseholdId == userRepository.getUser()?.householdId
     }
 }

@@ -3,6 +3,7 @@ package com.timgortworst.roomy.domain.usecase
 import androidx.lifecycle.liveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
@@ -11,6 +12,7 @@ import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
@@ -24,7 +26,7 @@ class UserUseCase(
     private val errorHandler: ErrorHandler
 ) {
 
-    suspend fun getCurrentUser() = userRepository.getUser(FirebaseAuth.getInstance().currentUser?.uid)
+    suspend fun getCurrentUser() = userRepository.getUser(source = Source.CACHE)
 
     fun getAllUsersForHousehold() = liveData(Dispatchers.IO) {
         val loadingJob = CoroutineScope(coroutineContext).launch {
@@ -32,7 +34,10 @@ class UserUseCase(
             emit(Response.Loading)
         }
         try {
-            emit(Response.Success(userRepository.getAllUsersForHousehold(householdRepository.getHouseholdId())))
+            val householdId = getCurrentUser()?.householdId
+                ?: run { emit(Response.Error()); return@liveData }
+
+            emit(Response.Success(userRepository.getAllUsersForHousehold(householdId)))
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
         } finally {
@@ -54,8 +59,8 @@ class UserUseCase(
             offer(Response.Success(user))
         } catch (e: FirebaseFirestoreException) {
             offer(Response.Error(errorHandler.getError(e)))
-        } finally {
-            loadingJob.cancel()
+        }  finally {
+            awaitClose { loadingJob.cancel() }
         }
     }.flowOn(Dispatchers.IO)
 

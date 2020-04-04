@@ -9,14 +9,9 @@ import com.timgortworst.roomy.domain.model.task.Task
 import com.timgortworst.roomy.domain.model.task.TaskMetaData
 import com.timgortworst.roomy.domain.model.task.TaskRecurrence
 import com.timgortworst.roomy.domain.utils.TimeOperations
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 

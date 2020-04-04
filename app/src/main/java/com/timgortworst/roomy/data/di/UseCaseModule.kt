@@ -8,7 +8,7 @@ import org.koin.dsl.module
 
 val useCaseModule = module {
     factory { TaskListUseCase(get(), get()) }
-    factory { TaskEditUseCase(get(), get(), get(), get()) }
+    factory { TaskEditUseCase(get(), get(), get()) }
     factory { SignInUseCase(get(), get(), get()) }
     factory { UserUseCase(get(), get(), get(), get()) }
     factory { SplashUseCase(get(), get(), get(), get()) }

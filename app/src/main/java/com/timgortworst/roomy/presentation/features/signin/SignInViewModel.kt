@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class SignInViewModel(
-    private val setupUseCase: SignInUseCase
+    private val signInUseCase: SignInUseCase
 ) : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
@@ -24,15 +24,18 @@ class SignInViewModel(
     fun handleLoginResult(response: IdpResponse) {
         viewModelScope.launch {
 
-            setupUseCase.handleLoginResult(
+            val isNewUser = response.isNewUser
+            val token = FirebaseInstanceId.getInstance().instanceId.await().token
+
+            signInUseCase.handleLoginResult(
                 auth.currentUser,
-                response.isNewUser,
-                FirebaseInstanceId.getInstance().instanceId.await().token
+                isNewUser,
+                token
             ).collect {
                 when (it) {
                     Response.Loading -> _action.value = SignInAction.LoadingDialog
                     is Response.Success -> {
-                        if (response.isNewUser) {
+                        if (isNewUser) {
                             _action.value = SignInAction.MainActivity
                         } else {
                             _action.value = SignInAction.WelcomeBack(it.data.orEmpty())

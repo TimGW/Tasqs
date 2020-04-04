@@ -1,22 +1,26 @@
 package com.timgortworst.roomy.data.repository
 
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.*
+import com.timgortworst.roomy.domain.model.firestore.Household
 import com.timgortworst.roomy.domain.model.task.Task
 import com.timgortworst.roomy.domain.model.firestore.User.Companion.USER_ID_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_META_DATA_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_USER_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson.Companion.TASK_DATE_TIME_REF
+import com.timgortworst.roomy.domain.model.firestore.User
 import kotlinx.coroutines.tasks.await
 
 class TaskRepositoryImpl(
     private val db: FirebaseFirestore,
-    private val householdRepository: HouseholdRepository
+    private val userRepository: UserRepository
 ): TaskRepository {
 
-    override suspend fun taskCollection() = householdRepository.taskCollection()
+    private suspend fun taskCollection(): CollectionReference {
+        return db.collection(Household.HOUSEHOLD_COLLECTION_REF)
+            .document(userRepository.getUser(source = Source.CACHE)!!.householdId)
+            .collection(TaskJson.TASK_COLLECTION_REF)
+    }
 
     @Throws(FirebaseFirestoreException::class)
     override suspend fun createTask(task: Task): String? {

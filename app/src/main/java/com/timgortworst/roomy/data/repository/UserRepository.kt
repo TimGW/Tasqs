@@ -18,7 +18,8 @@ interface UserRepository {
         registrationToken: String)
 
     @Throws(FirebaseFirestoreException::class)
-    suspend fun getUser(userId: String? = FirebaseAuth.getInstance().currentUser?.uid): User?
+    suspend fun getUser(userId: String? = FirebaseAuth.getInstance().currentUser?.uid,
+                        source: Source = Source.DEFAULT): User?
 
     @Throws(FirebaseFirestoreException::class)
     suspend fun getAllUsersForHousehold(id: String): List<User>

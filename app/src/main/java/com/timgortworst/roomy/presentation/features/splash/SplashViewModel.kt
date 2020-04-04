@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.ui.SplashAction
 import com.timgortworst.roomy.domain.usecase.SplashUseCase
@@ -33,7 +34,10 @@ class SplashViewModel(
             referredHouseholdId.isNotBlank() -> referredSetup(referredHouseholdId)
 
             // continue to the app
-            else -> _action.postValue(SplashAction.MainActivity)
+            else -> {
+                splashUseCase.fetchHouseholdId() // fetch to update cache
+                _action.postValue(SplashAction.MainActivity)
+            }
         }
     }
 
@@ -42,7 +46,7 @@ class SplashViewModel(
             splashUseCase.isIdSimilarToActiveId(referredHouseholdId) -> {
                 _action.postValue(SplashAction.DialogAlreadyInHousehold)
             }
-            splashUseCase.currentHouseholdIdForCurrentUser().isNotBlank() -> {
+            splashUseCase.fetchHouseholdId().isNotBlank() -> {
                 _action.postValue(SplashAction.DialogOverride(referredHouseholdId))
             }
             else -> changeCurrentUserHousehold(referredHouseholdId)
