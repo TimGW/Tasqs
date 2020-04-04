@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
-            name="viewModel"
-            type="com.timgortworst.roomy.presentation.features.settings.SettingsViewModel" />
+            name="prettyText"
+            type="String" />
     </data>
 
     <ScrollView
@@ -21,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/keyline_4"
             android:lineSpacingMultiplier="1.3"
-            app:htmlText="@{ viewModel.htmlText }" />
+            app:htmlText="@{ prettyText }" />
 
     </ScrollView>
 </layout>

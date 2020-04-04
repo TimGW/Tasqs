@@ -5,26 +5,19 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.databinding.ActivityHtmlTextBinding
-import org.koin.android.viewmodel.ext.android.viewModel
 
 class HtmlTextActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHtmlTextBinding
     private lateinit var htmlText: String
-    private val settingsViewModel: SettingsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHtmlTextBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        with(binding) {
-            viewModel = settingsViewModel
-            lifecycleOwner = this@HtmlTextActivity
-        }
-
         title = intent.getStringExtra(INTENT_EXTRA_TITLE) ?: ""
         htmlText = intent.getStringExtra(INTENT_EXTRA_HTML_TEXT) ?: return
-        settingsViewModel.setDisclaimerText(htmlText)
+        binding.prettyText = htmlText
     }
 
     companion object {
