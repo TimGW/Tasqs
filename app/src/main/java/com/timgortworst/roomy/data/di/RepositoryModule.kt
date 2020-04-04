@@ -4,7 +4,7 @@ import com.timgortworst.roomy.data.repository.*
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single { TaskRepository(get(), get()) }
+    single<TaskRepository> { TaskRepositoryImpl(get(), get()) }
     single<HouseholdRepository> { HouseholdRepositoryImpl(get()) }
     single<UserRepository> { UserRepositoryImpl(get()) }
 }
