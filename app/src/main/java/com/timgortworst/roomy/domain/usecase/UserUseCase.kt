@@ -40,8 +40,6 @@ class UserUseCase(
         }
     }
 
-    suspend fun getHouseholdIdForUser() = householdRepository.getHouseholdId()
-
     fun removeUserFromHousehold(user: User) = callbackFlow {
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(500) // delay 0.5s before showing loading

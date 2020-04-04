@@ -13,8 +13,10 @@ import com.google.android.gms.ads.AdRequest
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityMainBinding
+import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
+import com.timgortworst.roomy.presentation.base.EventObserver
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
@@ -88,8 +90,8 @@ class MainActivity : BaseActivity() {
 
         setupBroadcastReceivers()
 
-        viewModel.uriEvent.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let { presentShareLinkUri(it) }
+        viewModel.uriEvent.observe(this, EventObserver {
+             presentShareLinkUri(it)
         })
     }
 
@@ -170,9 +172,7 @@ class MainActivity : BaseActivity() {
             }
             userListFragment::class.java.toString() -> { _ ->
                 showProgressDialog()
-                viewModel.viewModelScope.launch {
-                    viewModel.inviteUser()
-                }
+                viewModel.inviteUser()
             }
             else -> { _ -> }
         }

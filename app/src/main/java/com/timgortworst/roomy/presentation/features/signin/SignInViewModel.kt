@@ -6,13 +6,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.ui.SignInAction
-import com.timgortworst.roomy.domain.usecase.LoginUseCase
+import com.timgortworst.roomy.domain.usecase.SignInUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class SignInViewModel(
-    private val setupUseCase: LoginUseCase
+    private val setupUseCase: SignInUseCase
 ) : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 

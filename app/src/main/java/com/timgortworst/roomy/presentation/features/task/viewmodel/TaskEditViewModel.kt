@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.task.Task
+import com.timgortworst.roomy.domain.usecase.TaskEditUseCase
 import com.timgortworst.roomy.domain.usecase.TaskListUseCase
 import com.timgortworst.roomy.domain.usecase.UserUseCase
 import com.timgortworst.roomy.presentation.base.Event
@@ -17,10 +18,9 @@ import org.threeten.bp.format.TextStyle
 import java.util.*
 
 class TaskEditViewModel(
-    private val taskUseCase: TaskListUseCase,
-    private val userUseCase: UserUseCase
+    private val taskUseCase: TaskEditUseCase
 ) : ViewModel() {
-    val allUsersLiveData = userUseCase.getAllUsersForHousehold()
+    val allUsersLiveData = taskUseCase.getAllUsersForHousehold()
 
     private val _prettyDate = MutableLiveData<Event<String>>()
     val prettyDate: LiveData<Event<String>>
@@ -31,7 +31,7 @@ class TaskEditViewModel(
         get() = _taskDone
 
 
-    suspend fun currentUser() = userUseCase.getCurrentUser()
+    suspend fun currentUser() = taskUseCase.getCurrentUser()
 
     fun formatDate(zonedDateTime: ZonedDateTime) {
         val formattedDayOfMonth = zonedDateTime.dayOfMonth.toString()

@@ -7,14 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.ui.SplashAction
-import com.timgortworst.roomy.domain.usecase.StartupUseCase
+import com.timgortworst.roomy.domain.usecase.SplashUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SplashViewModel(
-    private val householdUseCase: StartupUseCase
+    private val splashUseCase: SplashUseCase
 ) : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
@@ -39,10 +39,10 @@ class SplashViewModel(
 
     private suspend fun referredSetup(referredHouseholdId: String) = withContext(Dispatchers.IO) {
         when {
-            householdUseCase.isIdSimilarToActiveId(referredHouseholdId) -> {
+            splashUseCase.isIdSimilarToActiveId(referredHouseholdId) -> {
                 _action.postValue(SplashAction.DialogAlreadyInHousehold)
             }
-            householdUseCase.currentHouseholdIdForCurrentUser().isNotBlank() -> {
+            splashUseCase.currentHouseholdIdForCurrentUser().isNotBlank() -> {
                 _action.postValue(SplashAction.DialogOverride(referredHouseholdId))
             }
             else -> changeCurrentUserHousehold(referredHouseholdId)
@@ -50,7 +50,7 @@ class SplashViewModel(
     }
 
     suspend fun changeCurrentUserHousehold(newId: String)= withContext(Dispatchers.IO) {
-        householdUseCase.switchHousehold(newId).collect {
+        splashUseCase.switchHousehold(newId).collect {
             when (it) {
                 Response.Loading -> _action.postValue(SplashAction.DialogLoading)
                 is Response.Success -> _action.postValue(SplashAction.MainActivity)

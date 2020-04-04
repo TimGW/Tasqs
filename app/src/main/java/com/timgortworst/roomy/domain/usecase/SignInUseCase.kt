@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class LoginUseCase(
+class SignInUseCase(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler

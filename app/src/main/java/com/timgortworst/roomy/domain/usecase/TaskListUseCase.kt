@@ -76,28 +76,5 @@ class TaskListUseCase(
             timeOperations.nextTask(taskMetaData.startDateTime, taskMetaData.recurrence)
         }
     }
-
-    fun createOrUpdateTask(task: Task) = callbackFlow {
-        val loadingJob = CoroutineScope(coroutineContext).launch {
-            delay(500) // delay 0.5s before showing loading
-            offer(Response.Loading)
-        }
-
-        try {
-            // temporary disable the done button
-            val result = task.apply { isDoneEnabled = false }
-
-            if (task.id.isEmpty()) {
-                taskRepository.createTask(result)
-            } else {
-                taskRepository.updateTask(result)
-            }
-            offer(Response.Success(task))
-        } catch (e: FirebaseFirestoreException) {
-            offer(Response.Error(errorHandler.getError(e)))
-        } finally {
-            awaitClose { loadingJob.cancel() }
-        }
-    }.flowOn(Dispatchers.IO)
 }
 
