@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flowOn
 class GetUserUseCase(
     private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<User>>>() {
+) : UseCase<Flow<Response<User>>> {
 
     override fun executeUseCase() = flow {
         emit(Response.Loading)

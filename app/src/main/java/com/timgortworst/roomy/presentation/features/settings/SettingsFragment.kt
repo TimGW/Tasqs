@@ -63,7 +63,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun accountPrefs() {
         val userNamePref = (findPreference("preferences_account_name_key") as? Preference)
         settingsViewModel.currentUser.observe(viewLifecycleOwner,
-            EventObserver { response ->
+            Observer { response ->
                 when (response) {
                     is Response.Success -> response.data?.name?.let { userNamePref?.summary = it }
                     is Response.Error -> userNamePref?.summary = getString(R.string.error_generic)

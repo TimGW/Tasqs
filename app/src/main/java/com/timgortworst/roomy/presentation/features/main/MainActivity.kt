@@ -12,6 +12,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityMainBinding
+import com.timgortworst.roomy.domain.entity.response.Response
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.model.EventObserver
@@ -87,10 +88,14 @@ class MainActivity : BaseActivity() {
 
         setupBroadcastReceivers()
 
-        viewModel.uriEvent.observe(this,
-            EventObserver {
-                presentShareLinkUri(it)
-            })
+        viewModel.uriEvent.observe(this, Observer { response ->
+            when (response) {
+                Response.Loading -> TODO()
+                is Response.Success -> response.data?.let { presentShareLinkUri(it) }
+                is Response.Error -> TODO()
+                is Response.Empty -> TODO()
+            }
+        })
     }
 
     override fun onResume() {

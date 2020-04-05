@@ -7,11 +7,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.presentation.base.model.SplashAction
+import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.presentation.base.model.StartUpAction
 import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.domain.utils.snackbar
@@ -19,7 +19,6 @@ import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.signin.SignInActivity
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class SplashActivity : BaseActivity(), ForceUpdateUseCase.OnUpdateNeededListener {
@@ -42,16 +41,20 @@ class SplashActivity : BaseActivity(), ForceUpdateUseCase.OnUpdateNeededListener
             .onUpdateNeeded(this)
             .check(currentVersion)
 
-        viewModel.action.observe(this, Observer {
+        viewModel.startupAction.observe(this, Observer {
             when (it) {
-                SplashAction.SignInActivity -> goToSignInActivity()
-                SplashAction.MainActivity -> goToMainActivity()
-                SplashAction.DialogAlreadyInHousehold -> presentAlreadyInHouseholdDialog()
-                is SplashAction.DialogOverride -> presentHouseholdOverwriteDialog(it.id)
-                SplashAction.DialogLoading -> showProgressDialog()
-                is SplashAction.DialogError -> {
+                Response.Loading -> showProgressDialog()
+                is Response.Error -> {
                     val rootView = findViewById<View>(android.R.id.content) ?: return@Observer
-                    rootView.snackbar(message = getString(it.errorMsg))
+                    rootView.snackbar(message = getString(R.string.error_generic))
+                }
+                is Response.Success -> {
+                    when (it.data) {
+                        StartUpAction.TriggerSignInFlow -> goToSignInActivity()
+                        StartUpAction.TriggerMainFlow -> goToMainActivity()
+                        StartUpAction.DialogSameId -> presentAlreadyInHouseholdDialog()
+                        is StartUpAction.DialogOverrideId -> presentHouseholdOverwriteDialog(it.data.id)
+                    }
                 }
             }
         })
@@ -72,9 +75,7 @@ class SplashActivity : BaseActivity(), ForceUpdateUseCase.OnUpdateNeededListener
             .setTitle(getString(R.string.dialog_household_overwrite_title))
             .setMessage(getString(R.string.dialog_household_overwrite_text))
             .setPositiveButton(android.R.string.yes) { _, _ ->
-                viewModel.viewModelScope.launch {
-                    viewModel.changeCurrentUserHousehold(referredHouseholdId)
-                }
+                viewModel.switchHousehold(referredHouseholdId)
             }
             .setNegativeButton(android.R.string.no) { _, _ ->
                 goToMainActivity()

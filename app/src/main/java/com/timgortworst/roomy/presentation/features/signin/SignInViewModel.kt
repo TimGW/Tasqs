@@ -23,15 +23,10 @@ class SignInViewModel(
 
     fun handleLoginResult(response: IdpResponse) {
         viewModelScope.launch {
-
             val isNewUser = response.isNewUser
             val token = FirebaseInstanceId.getInstance().instanceId.await().token
 
-            signInUseCase.handleLoginResult(
-                auth.currentUser,
-                isNewUser,
-                token
-            ).collect {
+            signInUseCase.init(auth.currentUser, isNewUser, token).executeUseCase().collect {
                 when (it) {
                     Response.Loading -> _action.value = SignInAction.LoadingDialog
                     is Response.Success -> {

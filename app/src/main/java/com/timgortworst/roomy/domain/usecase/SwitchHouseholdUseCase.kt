@@ -5,19 +5,29 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.data.repository.HouseholdRepository
 import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.UseCase
 import com.timgortworst.roomy.domain.entity.response.ErrorHandler
 import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.presentation.base.model.StartUpAction
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class SplashUseCase(
+class SwitchHouseholdUseCase(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository,
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler
-) {
-    fun switchHousehold(newId: String) = flow {
+) : UseCase<Flow<Response<StartUpAction>>> {
+    lateinit var newId: String
+
+    fun init(newId: String): SwitchHouseholdUseCase {
+        this.newId = newId
+        return this
+    }
+
+    override fun executeUseCase()= flow {
         emit(Response.Loading)
         try {
             val oldId = userRepository.getUser()?.householdId ?: return@flow
@@ -38,15 +48,9 @@ class SplashUseCase(
                 householdId = newId,
                 isAdmin = false
             )
-            emit(Response.Success())
+            emit(Response.Success(StartUpAction.TriggerMainFlow))
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
         }
     }.flowOn(Dispatchers.IO)
-
-    suspend fun fetchHouseholdId()= userRepository.getUser()?.householdId.orEmpty()
-
-    suspend fun isIdSimilarToActiveId(referredHouseholdId: String): Boolean {
-        return referredHouseholdId == userRepository.getUser()?.householdId
-    }
 }
