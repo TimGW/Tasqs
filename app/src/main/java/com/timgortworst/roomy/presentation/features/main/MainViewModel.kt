@@ -1,16 +1,21 @@
 package com.timgortworst.roomy.presentation.features.main
 
 import android.net.Uri
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.timgortworst.roomy.domain.entity.response.Response
-import com.timgortworst.roomy.domain.usecase.MainUseCase
+import com.timgortworst.roomy.domain.usecase.AdsVisibleUseCase
+import com.timgortworst.roomy.domain.usecase.GetUserUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
 import com.timgortworst.roomy.presentation.base.model.Event
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val mainUseCase: MainUseCase
+    private val adsVisibleUseCase: AdsVisibleUseCase,
+    private val getUserUseCase: GetUserUseCase
 ) : ViewModel() {
 
     private val _uriEvent = MutableLiveData<Event<Uri>>()
@@ -18,7 +23,7 @@ class MainViewModel(
         get() = _uriEvent
 
     fun inviteUser() = viewModelScope.launch {
-        mainUseCase.getCurrentUser().collect {
+        getUserUseCase.executeUseCase().collect {
             when (it) {
                 Response.Loading -> {} //TODO()
                 is Response.Success -> {
@@ -35,5 +40,5 @@ class MainViewModel(
         }
     }
 
-    fun showOrHideAd() = mainUseCase.showOrHideAds()
+    fun showOrHideAd() = adsVisibleUseCase.executeUseCase()
 }
