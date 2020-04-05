@@ -2,7 +2,7 @@ package com.timgortworst.roomy.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
-import com.timgortworst.roomy.domain.model.task.Task
+import com.timgortworst.roomy.domain.entity.Task
 
 interface TaskRepository {
 

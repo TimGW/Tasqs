@@ -1,15 +1,14 @@
 package com.timgortworst.roomy.domain.usecase
 
 import androidx.lifecycle.liveData
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
-import com.timgortworst.roomy.domain.model.response.ErrorHandler
-import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.model.ui.EasterEgg
-import com.timgortworst.roomy.presentation.base.Event
+import com.timgortworst.roomy.domain.entity.response.ErrorHandler
+import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.presentation.base.model.EasterEgg
+import com.timgortworst.roomy.presentation.base.model.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -29,9 +28,21 @@ class SettingsUseCase(
         }
 
         try {
-            emit(Event(Response.Success(userRepository.getUser())))
+            emit(
+                Event(
+                    Response.Success(
+                        userRepository.getUser()
+                    )
+                )
+            )
         } catch (e: FirebaseFirestoreException) {
-            emit(Event(Response.Error(errorHandler.getError(e))))
+            emit(
+                Event(
+                    Response.Error(
+                        errorHandler.getError(e)
+                    )
+                )
+            )
         } finally {
             loadingJob.cancel()
         }
@@ -43,7 +54,10 @@ class SettingsUseCase(
         if (sharedPrefs.isAdsEnabled()) {
             return when {
                 betweenUntil(counter, CLICKS_FOR_MESSAGE, CLICKS_FOR_EASTER_EGG) -> {
-                    EasterEgg(R.string.easter_egg_message, (CLICKS_FOR_EASTER_EGG - counter))
+                    EasterEgg(
+                        R.string.easter_egg_message,
+                        (CLICKS_FOR_EASTER_EGG - counter)
+                    )
                 }
                 counter == CLICKS_FOR_EASTER_EGG -> {
                     sharedPrefs.setAdsEnabled(false)

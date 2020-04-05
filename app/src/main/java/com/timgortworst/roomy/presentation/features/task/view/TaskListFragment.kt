@@ -16,8 +16,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentTaskListBinding
-import com.timgortworst.roomy.domain.model.task.Task
-import com.timgortworst.roomy.domain.model.task.TaskRecurrence
+import com.timgortworst.roomy.domain.entity.Task
+import com.timgortworst.roomy.domain.entity.TaskRecurrence
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 import com.timgortworst.roomy.presentation.base.view.BaseFragment

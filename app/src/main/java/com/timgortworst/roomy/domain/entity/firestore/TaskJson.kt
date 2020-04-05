@@ -1,8 +1,8 @@
-package com.timgortworst.roomy.domain.model.firestore
+package com.timgortworst.roomy.domain.entity.firestore
 
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.firestore.PropertyName
-import com.timgortworst.roomy.domain.model.task.TaskUser
+import com.timgortworst.roomy.domain.entity.TaskUser
 
 @IgnoreExtraProperties
 data class TaskJson(

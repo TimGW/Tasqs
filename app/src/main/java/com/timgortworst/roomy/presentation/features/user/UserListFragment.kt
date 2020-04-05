@@ -7,19 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentUserListBinding
-import com.timgortworst.roomy.domain.model.ui.BottomMenuItem
-import com.timgortworst.roomy.domain.model.firestore.User
-import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.presentation.base.model.BottomMenuItem
+import com.timgortworst.roomy.domain.entity.User
+import com.timgortworst.roomy.domain.entity.response.Response
 import com.timgortworst.roomy.domain.utils.snackbar
-import com.timgortworst.roomy.presentation.base.EventObserver
+import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 // todo refactor logic to viewmodel / usecase
@@ -62,9 +60,10 @@ class UserListFragment : Fragment(), OnLongClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userViewModel.userOptions.observe(viewLifecycleOwner, EventObserver {
-            showBottomMenuFor(it)
-        })
+        userViewModel.userOptions.observe(viewLifecycleOwner,
+            EventObserver {
+                showBottomMenuFor(it)
+            })
 
         userViewModel.removedUser.observe(viewLifecycleOwner, Observer { response ->
             when (response) {

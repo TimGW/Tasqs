@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.model.firestore
+package com.timgortworst.roomy.domain.entity
 
 import android.os.Parcelable
 import com.google.firebase.firestore.IgnoreExtraProperties

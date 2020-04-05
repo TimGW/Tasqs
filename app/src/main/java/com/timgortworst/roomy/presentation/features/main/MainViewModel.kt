@@ -2,16 +2,12 @@ package com.timgortworst.roomy.presentation.features.main
 
 import android.net.Uri
 import androidx.lifecycle.*
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.entity.response.Response
 import com.timgortworst.roomy.domain.usecase.MainUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
-import com.timgortworst.roomy.presentation.RoomyApp
-import com.timgortworst.roomy.presentation.base.Event
-import kotlinx.coroutines.Dispatchers
+import com.timgortworst.roomy.presentation.base.model.Event
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainViewModel(
     private val mainUseCase: MainUseCase
@@ -27,7 +23,11 @@ class MainViewModel(
                 Response.Loading -> {} //TODO()
                 is Response.Success -> {
                     val id = it.data?.householdId ?: return@collect
-                    _uriEvent.postValue(Event(InviteLinkBuilder.Builder().householdId(id).build()))
+                    _uriEvent.postValue(
+                        Event(
+                            InviteLinkBuilder.Builder().householdId(id).build()
+                        )
+                    )
                 }
                 is Response.Error -> {} //TODO()
                 is Response.Empty -> {} //TODO()

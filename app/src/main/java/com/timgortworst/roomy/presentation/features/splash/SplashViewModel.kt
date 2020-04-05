@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.Source
-import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.model.ui.SplashAction
+import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.presentation.base.model.SplashAction
 import com.timgortworst.roomy.domain.usecase.SplashUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect

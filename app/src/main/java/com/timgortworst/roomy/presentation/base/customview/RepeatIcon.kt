@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.CustomRepeatIconBinding
-import com.timgortworst.roomy.domain.model.task.TaskRecurrence
+import com.timgortworst.roomy.domain.entity.TaskRecurrence
 
 class RepeatIcon
 @JvmOverloads

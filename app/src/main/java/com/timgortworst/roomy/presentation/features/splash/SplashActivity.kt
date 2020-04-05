@@ -6,13 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.ui.SplashAction
+import com.timgortworst.roomy.presentation.base.model.SplashAction
 import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.domain.utils.snackbar

@@ -8,21 +8,18 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
 import com.google.android.gms.ads.AdRequest
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityMainBinding
-import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
-import com.timgortworst.roomy.presentation.base.EventObserver
+import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
 import com.timgortworst.roomy.presentation.features.user.UserListFragment
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 // todo refactor logic to viewmodel / usecase
@@ -90,9 +87,10 @@ class MainActivity : BaseActivity() {
 
         setupBroadcastReceivers()
 
-        viewModel.uriEvent.observe(this, EventObserver {
-             presentShareLinkUri(it)
-        })
+        viewModel.uriEvent.observe(this,
+            EventObserver {
+                presentShareLinkUri(it)
+            })
     }
 
     override fun onResume() {

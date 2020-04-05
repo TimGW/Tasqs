@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.domain.utils
 
-import com.timgortworst.roomy.domain.model.task.TaskRecurrence
+import com.timgortworst.roomy.domain.entity.TaskRecurrence
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
 

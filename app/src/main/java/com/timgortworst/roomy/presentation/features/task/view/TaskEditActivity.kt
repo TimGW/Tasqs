@@ -17,13 +17,13 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityEditTaskBinding
-import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.model.task.Task
-import com.timgortworst.roomy.domain.model.task.TaskRecurrence
-import com.timgortworst.roomy.domain.model.task.TaskUser
+import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.domain.entity.Task
+import com.timgortworst.roomy.domain.entity.TaskRecurrence
+import com.timgortworst.roomy.domain.entity.TaskUser
 import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.domain.utils.snackbar
-import com.timgortworst.roomy.presentation.base.EventObserver
+import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskEditViewModel
 import kotlinx.coroutines.launch
@@ -65,17 +65,21 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
         setupUI()
 
-        viewModel.prettyDate.observe(this, EventObserver { binding.taskDateInput.setText(it) })
+        viewModel.prettyDate.observe(this,
+            EventObserver {
+                binding.taskDateInput.setText(it)
+            })
 
-        viewModel.taskDone.observe(this, EventObserver {
-            binding.progressBar.visibility = View.INVISIBLE
-            when (it) {
-                Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                is Response.Success -> navigateUpTo(Intent(this, MainActivity::class.java))
-                is Response.Error -> presentError(R.string.error_generic)
-                is Response.Empty -> binding.taskDescriptionHint.error = getString(it.msg)
-            }
-        })
+        viewModel.taskDone.observe(this,
+            EventObserver {
+                binding.progressBar.visibility = View.INVISIBLE
+                when (it) {
+                    Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Response.Success -> navigateUpTo(Intent(this, MainActivity::class.java))
+                    is Response.Error -> presentError(R.string.error_generic)
+                    is Response.Empty -> binding.taskDescriptionHint.error = getString(it.msg)
+                }
+            })
     }
 
     private fun setupUI() {

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="user"
-            type="com.timgortworst.roomy.domain.model.firestore.User" />
+            type="com.timgortworst.roomy.domain.entity.User" />
 
         <variable
             name="userClickListener"

@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.timgortworst.roomy.data.repository.CustomMapper
-import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.model.task.Task
-import com.timgortworst.roomy.domain.model.firestore.TaskJson
+import com.timgortworst.roomy.data.utils.CustomMapper
+import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.domain.entity.Task
+import com.timgortworst.roomy.domain.entity.firestore.TaskJson
 import com.timgortworst.roomy.domain.usecase.TaskListUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

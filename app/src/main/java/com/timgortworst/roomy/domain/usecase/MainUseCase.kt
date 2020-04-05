@@ -5,8 +5,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
-import com.timgortworst.roomy.domain.model.response.ErrorHandler
-import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.entity.response.ErrorHandler
+import com.timgortworst.roomy.domain.entity.response.Response
 import com.timgortworst.roomy.presentation.RoomyApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

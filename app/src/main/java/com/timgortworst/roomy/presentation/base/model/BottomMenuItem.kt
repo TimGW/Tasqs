@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.model.ui
+package com.timgortworst.roomy.presentation.base.model
 
 data class BottomMenuItem(
     val resId: Int,

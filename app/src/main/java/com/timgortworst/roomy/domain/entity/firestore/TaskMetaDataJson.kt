@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.model.firestore
+package com.timgortworst.roomy.domain.entity.firestore
 
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.firestore.PropertyName

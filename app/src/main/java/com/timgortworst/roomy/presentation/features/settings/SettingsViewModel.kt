@@ -3,7 +3,7 @@ package com.timgortworst.roomy.presentation.features.settings
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.timgortworst.roomy.domain.model.ui.EasterEgg
+import com.timgortworst.roomy.presentation.base.model.EasterEgg
 import com.timgortworst.roomy.domain.usecase.SettingsUseCase
 
 class SettingsViewModel(

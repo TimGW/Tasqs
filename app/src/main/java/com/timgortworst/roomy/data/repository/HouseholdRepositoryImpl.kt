@@ -1,8 +1,8 @@
 package com.timgortworst.roomy.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.timgortworst.roomy.domain.model.firestore.Household
-import com.timgortworst.roomy.domain.model.firestore.Household.Companion.HOUSEHOLD_COLLECTION_REF
+import com.timgortworst.roomy.domain.entity.Household
+import com.timgortworst.roomy.domain.entity.Household.Companion.HOUSEHOLD_COLLECTION_REF
 import kotlinx.coroutines.tasks.await
 
 class HouseholdRepositoryImpl(

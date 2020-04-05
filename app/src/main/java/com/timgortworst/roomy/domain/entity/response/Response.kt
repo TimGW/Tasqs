@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.model.response
+package com.timgortworst.roomy.domain.entity.response
 
 import com.timgortworst.roomy.R
 

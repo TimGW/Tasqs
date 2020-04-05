@@ -1,7 +1,9 @@
-package com.timgortworst.roomy.domain.model.task
+package com.timgortworst.roomy.domain.entity
 
 import android.os.Parcelable
 import com.google.firebase.firestore.IgnoreExtraProperties
+import com.timgortworst.roomy.domain.entity.TaskMetaData
+import com.timgortworst.roomy.domain.entity.TaskUser
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

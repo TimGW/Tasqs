@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.timgortworst.roomy.databinding.BottomSheetMenuBinding
-import com.timgortworst.roomy.domain.model.ui.BottomMenuItem
+import com.timgortworst.roomy.presentation.base.model.BottomMenuItem
 
 class BottomSheetMenu(
     context: Context,

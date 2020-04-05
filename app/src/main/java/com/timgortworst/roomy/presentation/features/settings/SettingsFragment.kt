@@ -21,9 +21,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
-import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.entity.response.Response
 import com.timgortworst.roomy.domain.utils.snackbar
-import com.timgortworst.roomy.presentation.base.EventObserver
+import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.features.splash.SplashActivity
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -62,12 +62,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun accountPrefs() {
         val userNamePref = (findPreference("preferences_account_name_key") as? Preference)
-        settingsViewModel.currentUser.observe(viewLifecycleOwner, EventObserver { response ->
-            when(response) {
-                is Response.Success -> response.data?.name?.let { userNamePref?.summary = it }
-                is Response.Error -> userNamePref?.summary = getString(R.string.error_generic)
-            }
-        })
+        settingsViewModel.currentUser.observe(viewLifecycleOwner,
+            EventObserver { response ->
+                when (response) {
+                    is Response.Success -> response.data?.name?.let { userNamePref?.summary = it }
+                    is Response.Error -> userNamePref?.summary = getString(R.string.error_generic)
+                }
+            })
 
         (findPreference("preferences_account_logout_key") as? Preference)
             ?.setOnPreferenceClickListener {

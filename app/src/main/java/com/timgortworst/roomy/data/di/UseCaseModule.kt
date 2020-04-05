@@ -1,8 +1,8 @@
 package com.timgortworst.roomy.data.di
 
 
-import com.timgortworst.roomy.domain.model.response.ErrorHandlerImpl
-import com.timgortworst.roomy.domain.model.response.ErrorHandler
+import com.timgortworst.roomy.domain.entity.response.ErrorHandlerImpl
+import com.timgortworst.roomy.domain.entity.response.ErrorHandler
 import com.timgortworst.roomy.domain.usecase.*
 import org.koin.dsl.module
 

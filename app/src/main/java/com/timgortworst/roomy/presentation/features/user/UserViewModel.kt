@@ -1,17 +1,12 @@
 package com.timgortworst.roomy.presentation.features.user
 
 import androidx.lifecycle.*
-import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.model.firestore.User
+import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.domain.entity.User
 import com.timgortworst.roomy.domain.usecase.UserUseCase
-import com.timgortworst.roomy.domain.utils.snackbar
-import com.timgortworst.roomy.presentation.base.Event
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import com.timgortworst.roomy.presentation.base.model.Event
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class UserViewModel(
     private val userUseCase: UserUseCase
@@ -39,7 +34,8 @@ class UserViewModel(
         viewModelScope.launch {
             val currentUser = userUseCase.getCurrentUser() ?: return@launch
             if (currentUser.isAdmin && currentUser.userId != user.userId) {
-                _userOptions.value = Event(user)
+                _userOptions.value =
+                    Event(user)
             }
         }
     }

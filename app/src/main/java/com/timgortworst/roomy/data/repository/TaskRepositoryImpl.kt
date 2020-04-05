@@ -1,14 +1,14 @@
 package com.timgortworst.roomy.data.repository
 
 import com.google.firebase.firestore.*
-import com.timgortworst.roomy.domain.model.firestore.Household
-import com.timgortworst.roomy.domain.model.task.Task
-import com.timgortworst.roomy.domain.model.firestore.User.Companion.USER_ID_REF
-import com.timgortworst.roomy.domain.model.firestore.TaskJson
-import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_META_DATA_REF
-import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_USER_REF
-import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson.Companion.TASK_DATE_TIME_REF
-import com.timgortworst.roomy.domain.model.firestore.User
+import com.timgortworst.roomy.data.utils.CustomMapper
+import com.timgortworst.roomy.domain.entity.Household
+import com.timgortworst.roomy.domain.entity.Task
+import com.timgortworst.roomy.domain.entity.User.Companion.USER_ID_REF
+import com.timgortworst.roomy.domain.entity.firestore.TaskJson
+import com.timgortworst.roomy.domain.entity.firestore.TaskJson.Companion.TASK_META_DATA_REF
+import com.timgortworst.roomy.domain.entity.firestore.TaskJson.Companion.TASK_USER_REF
+import com.timgortworst.roomy.domain.entity.firestore.TaskMetaDataJson.Companion.TASK_DATE_TIME_REF
 import kotlinx.coroutines.tasks.await
 
 class TaskRepositoryImpl(
