@@ -67,15 +67,16 @@ class UserListFragment : Fragment(), OnLongClickListener {
 
         userViewModel.removedUser.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
-                is Response.Success -> { response.data?.let { user ->
-                        userAdapter.remove(user) // update local list
-
+                is Response.Success -> {
+                    response.data?.let { userId ->
+                        val userName = userAdapter.getUser(userId)?.name.orEmpty()
                         parentActivity.binding.bottomNavigationContainer.snackbar(
-                            message = getString(R.string.removed, user.name),
+                            message = getString(R.string.removed, userName),
                             anchorView = parentActivity.binding.fab
                         )
-                    }
 
+                        userAdapter.remove(userId) // update local list
+                    }
                 }
                 is Response.Error -> {
                     parentActivity.binding.bottomNavigationContainer.snackbar(

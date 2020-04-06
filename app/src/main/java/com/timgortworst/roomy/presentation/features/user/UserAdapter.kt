@@ -34,8 +34,12 @@ class UserAdapter(
         notifyDataSetChanged()
     }
 
-    fun remove(user: User) {
-        val index= users.indexOf(user)
+    fun getUser(userId: String): User? {
+       return users.find { it.userId == userId }
+    }
+
+    fun remove(userId: String) {
+        val index= users.indexOfFirst { it.userId == userId }
         users.removeAt(index)
         notifyItemRemoved(index)
     }

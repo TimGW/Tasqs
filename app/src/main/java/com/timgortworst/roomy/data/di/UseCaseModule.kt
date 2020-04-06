@@ -17,4 +17,6 @@ val useCaseModule = module {
     factory { EasterEggUseCase(get()) }
     factory { SwitchHouseholdUseCase(get(), get(), get(), get()) }
     factory { AppStartupUseCase(get(), get()) }
+    factory { GetAllUsersUseCase(get(), get()) }
+    factory { RemoveUserUseCase(get(), get(), get(), get()) }
 }

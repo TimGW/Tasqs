@@ -18,7 +18,7 @@ fun ViewGroup.dataVisibility(responseState: Response<List<User>>?) {
 @BindingAdapter(value = ["userListLoading", "userRemovalLoading"], requireAll = false)
 fun ProgressBar.loadingVisibility(
     userListResponse: Response<List<User>>?,
-    userRemovalResponse: Response<User>?
+    userRemovalResponse: Response<String>?
 ) {
     visibility = if (userListResponse is Response.Loading ||
         userRemovalResponse is Response.Loading) View.VISIBLE else View.GONE
