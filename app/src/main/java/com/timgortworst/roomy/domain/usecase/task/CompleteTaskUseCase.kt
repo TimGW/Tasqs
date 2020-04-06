@@ -1,42 +1,32 @@
 package com.timgortworst.roomy.domain.usecase.task
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.timgortworst.roomy.domain.repository.TaskRepository
-import com.timgortworst.roomy.domain.model.response.ErrorHandler
-import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskMetaData
 import com.timgortworst.roomy.domain.model.TaskRecurrence
+import com.timgortworst.roomy.domain.model.response.ErrorHandler
+import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.repository.TaskRepository
+import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.utils.TimeOperations
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 
-class TaskListUseCase(
+class CompleteTaskUseCase(
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler
-) {
-    suspend fun getAllTasksQuery() = taskRepository.getAllTasksQuery()
+) : UseCase<Flow<Response<Nothing>>> {
+    private lateinit var tasks: List<Task>
 
-    suspend fun getTasksForUserQuery(
-        userId: String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
-    ) = taskRepository.getTasksForUserQuery(userId)
-
-    fun deleteTasks(tasks: List<Task>) = flow {
-        emit(Response.Loading)
-        try {
-            taskRepository.deleteTasks(tasks)
-            emit(Response.Success())
-        } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
-        }
-    }.flowOn(Dispatchers.IO)
-
-
-    fun tasksCompleted(tasks: List<Task>) = flow {
+    fun init(tasks: List<Task>): CompleteTaskUseCase {
+        this.tasks = tasks
+        return this
+    }
+    override fun invoke()= flow {
         emit(Response.Loading)
 
         try {

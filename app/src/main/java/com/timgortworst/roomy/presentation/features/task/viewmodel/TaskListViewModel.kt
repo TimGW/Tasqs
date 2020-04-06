@@ -8,7 +8,10 @@ import com.timgortworst.roomy.data.utils.CustomMapper
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
-import com.timgortworst.roomy.domain.usecase.task.TaskListUseCase
+import com.timgortworst.roomy.domain.usecase.task.CompleteTaskUseCase
+import com.timgortworst.roomy.domain.usecase.task.DeleteTaskUseCase
+import com.timgortworst.roomy.domain.usecase.task.GetAllTasksUseCase
+import com.timgortworst.roomy.domain.usecase.task.GetTasksForUserUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +19,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TaskListViewModel(
-    private val taskUseCase: TaskListUseCase
+    private val completeTaskUseCase: CompleteTaskUseCase,
+    private val deleteTaskUseCase: DeleteTaskUseCase,
+    private val getAllTasksUseCase: GetAllTasksUseCase,
+    private val getTasksForUserUseCase: GetTasksForUserUseCase
 ) : ViewModel() {
 
     private val _showLoading = MutableLiveData<Boolean>()
@@ -28,11 +34,11 @@ class TaskListViewModel(
         get() = _liveQueryOptions
 
     fun tasksCompleted(tasks: List<Task>): Flow<Response<Nothing>> {
-        return taskUseCase.tasksCompleted(tasks)
+        return completeTaskUseCase.init(tasks).invoke()
     }
 
     fun deleteTasks(tasks: List<Task>): Flow<Response<Nothing>> {
-        return taskUseCase.deleteTasks(tasks)
+        return deleteTaskUseCase.init(tasks).invoke()
     }
 
     suspend fun loadInitialQuery() = withContext(Dispatchers.IO) {
@@ -51,14 +57,14 @@ class TaskListViewModel(
 
     suspend fun allDataQuery() = withContext(Dispatchers.IO) {
         _liveQueryOptions.postValue(FirestoreRecyclerOptions.Builder<Task>()
-            .setQuery(taskUseCase.getAllTasksQuery()) {
+            .setQuery(getAllTasksUseCase.invoke()) {
                 CustomMapper.toTask(it.toObject(TaskJson::class.java)!!)!!
             })
     }
 
     suspend fun filterDataQuery() = withContext(Dispatchers.IO) {
         _liveQueryOptions.postValue(FirestoreRecyclerOptions.Builder<Task>()
-            .setQuery(taskUseCase.getTasksForUserQuery()) {
+            .setQuery(getTasksForUserUseCase.invoke()) {
                 CustomMapper.toTask(it.toObject(TaskJson::class.java)!!)!!
             })
     }

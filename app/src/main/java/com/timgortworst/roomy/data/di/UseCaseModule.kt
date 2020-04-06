@@ -9,7 +9,7 @@ import com.timgortworst.roomy.domain.model.response.ErrorHandlerImpl
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.usecase.household.SwitchHouseholdUseCase
 import com.timgortworst.roomy.domain.usecase.task.CreateOrUpdateTaskUseCase
-import com.timgortworst.roomy.domain.usecase.task.TaskListUseCase
+import com.timgortworst.roomy.domain.usecase.task.GetTasksForUserUseCase
 import com.timgortworst.roomy.domain.usecase.user.GetAllUsersUseCase
 import com.timgortworst.roomy.domain.usecase.user.GetUserUseCase
 import com.timgortworst.roomy.domain.usecase.user.RemoveUserUseCase
@@ -19,7 +19,7 @@ import org.koin.dsl.module
 val useCaseModule = module {
     factory<ErrorHandler> { ErrorHandlerImpl() }
     factory {
-        TaskListUseCase(
+        GetTasksForUserUseCase(
             get(),
             get()
         )
