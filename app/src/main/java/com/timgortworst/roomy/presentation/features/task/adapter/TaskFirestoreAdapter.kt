@@ -74,11 +74,13 @@ class TaskFirestoreAdapter(
 
         init {
             itemView.setOnClickListener {
-                taskClickListener.onTaskInfoClicked(snapshots[adapterPosition])
+                if (adapterPosition != RecyclerView.NO_POSITION)
+                    taskClickListener.onTaskInfoClicked(snapshots[adapterPosition])
             }
 
             taskDone.setOnClickListener {
-                taskClickListener.onTaskDoneClicked(snapshots[adapterPosition], adapterPosition)
+                if (adapterPosition != RecyclerView.NO_POSITION)
+                    taskClickListener.onTaskDoneClicked(snapshots[adapterPosition], adapterPosition)
             }
         }
 

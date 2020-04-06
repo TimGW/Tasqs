@@ -24,8 +24,6 @@ class AppStartupUseCase(
         return this
     }
 
-    // todo: or use executeUseCase(varargs params: Any) -> params[0]
-    // todo: or find a way to force the init method
     override fun executeUseCase() = flow {
         emit(Response.Loading)
         try {

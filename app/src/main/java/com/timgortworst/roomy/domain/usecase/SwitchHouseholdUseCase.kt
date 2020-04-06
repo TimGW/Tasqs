@@ -20,7 +20,7 @@ class SwitchHouseholdUseCase(
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler
 ) : UseCase<Flow<Response<StartUpAction>>> {
-    lateinit var newId: String
+    private lateinit var newId: String
 
     fun init(newId: String): SwitchHouseholdUseCase {
         this.newId = newId

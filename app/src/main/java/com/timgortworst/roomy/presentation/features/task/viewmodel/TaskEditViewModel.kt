@@ -4,9 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.Auth
+import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.entity.response.Response
 import com.timgortworst.roomy.domain.entity.Task
+import com.timgortworst.roomy.domain.usecase.GetAllUsersUseCase
+import com.timgortworst.roomy.domain.usecase.GetUserUseCase
 import com.timgortworst.roomy.domain.usecase.TaskEditUseCase
 import com.timgortworst.roomy.presentation.base.model.Event
 import kotlinx.coroutines.flow.collect
@@ -16,9 +20,11 @@ import org.threeten.bp.format.TextStyle
 import java.util.*
 
 class TaskEditViewModel(
-    private val taskUseCase: TaskEditUseCase
+    private val taskUseCase: TaskEditUseCase,
+    getAllUsersUseCase: GetAllUsersUseCase,
+    private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
-    val allUsersLiveData = taskUseCase.getAllUsersForHousehold()
+    val allUsersLiveData = getAllUsersUseCase.executeUseCase()
 
     private val _prettyDate = MutableLiveData<Event<String>>()
     val prettyDate: LiveData<Event<String>>
@@ -29,27 +35,22 @@ class TaskEditViewModel(
         get() = _taskDone
 
 
-    suspend fun currentUser() = taskUseCase.getCurrentUser()
+    fun currentUserId() = firebaseAuth.currentUser?.uid.orEmpty()
 
     fun formatDate(zonedDateTime: ZonedDateTime) {
         val formattedDayOfMonth = zonedDateTime.dayOfMonth.toString()
         val formattedMonth = zonedDateTime.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         val formattedYear = zonedDateTime.year.toString()
-        _prettyDate.value =
-            Event("$formattedDayOfMonth $formattedMonth $formattedYear")
+        _prettyDate.value = Event("$formattedDayOfMonth $formattedMonth $formattedYear")
     }
 
     fun taskDoneClicked(task: Task) = viewModelScope.launch {
         if (task.description.isEmpty()) {
-            _taskDone.value =
-                Event(
-                    Response.Empty(R.string.task_edit_error_empty_description)
-                )
+            _taskDone.value = Event(Response.Empty(R.string.task_edit_error_empty_description))
             return@launch
         }
         taskUseCase.createOrUpdateTask(task).collect {
-            _taskDone.value =
-                Event(it)
+            _taskDone.value = Event(it)
         }
     }
 }

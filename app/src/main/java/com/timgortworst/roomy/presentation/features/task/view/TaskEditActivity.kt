@@ -65,26 +65,17 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
         setupUI()
 
-        viewModel.prettyDate.observe(this,
-            EventObserver {
-                binding.taskDateInput.setText(it)
-            })
+        viewModel.prettyDate.observe(this, EventObserver { binding.taskDateInput.setText(it) })
 
-        viewModel.taskDone.observe(this,
-            EventObserver {
-                binding.progressBar.visibility = View.INVISIBLE
-                when (it) {
-                    Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Response.Success -> navigateUpTo(Intent(this, MainActivity::class.java))
-                    is Response.Error -> presentError(R.string.error_generic)
-                    is Response.Empty -> binding.taskDescriptionHint.error = getString(it.msg)
-                }
-            })
-    }
-
-    private fun setupUI() {
-        setupToolbar()
-        setupListeners()
+        viewModel.taskDone.observe(this, EventObserver {
+            binding.progressBar.visibility = View.INVISIBLE
+            when (it) {
+                Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Response.Success -> navigateUpTo(Intent(this, MainActivity::class.java))
+                is Response.Error -> presentError(R.string.error_generic)
+                is Response.Empty -> binding.taskDescriptionHint.error = getString(it.msg)
+            }
+        })
 
         viewModel.allUsersLiveData.observe(this, Observer { response ->
             binding.progressBar.visibility = View.INVISIBLE
@@ -92,9 +83,11 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Response.Success -> {
                     viewModel.viewModelScope.launch {
-                        val currentUser = viewModel.currentUser() ?: return@launch
+                        val currentUser = response.data?.find {
+                            it.userId == viewModel.currentUserId()
+                        } ?: return@launch
 
-                        if (response.data!!.filterNot { it.userId == currentUser.userId }.isEmpty()) {
+                        if (response.data.filterNot { it.userId == currentUser.userId }.isEmpty()) {
                             presentCurrentUser(
                                 TaskUser(
                                     currentUser.userId,
@@ -115,6 +108,11 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 is Response.Error -> presentError(R.string.users_loading_error)
             }
         })
+    }
+
+    private fun setupUI() {
+        setupToolbar()
+        setupListeners()
 
         recurrenceAdapter = ArrayAdapter(
             this,

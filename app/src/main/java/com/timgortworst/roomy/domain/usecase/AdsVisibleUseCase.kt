@@ -6,11 +6,12 @@ import com.timgortworst.roomy.domain.UseCase
 import com.timgortworst.roomy.presentation.RoomyApp
 
 class AdsVisibleUseCase(
-    private val sharedPrefs: SharedPrefs
+    private val sharedPrefs: SharedPrefs,
+    private val remoteConfig: FirebaseRemoteConfig
 ) : UseCase<Boolean> {
 
     override fun executeUseCase(): Boolean {
-        val remoteValue = FirebaseRemoteConfig.getInstance().getBoolean(RoomyApp.KEY_ENABLE_ADS)
+        val remoteValue = remoteConfig.getBoolean(RoomyApp.KEY_ENABLE_ADS)
         val localValue = sharedPrefs.isAdsEnabled()
         return remoteValue && localValue
     }

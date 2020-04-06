@@ -25,23 +25,6 @@ class TaskEditUseCase(
 
     suspend fun getCurrentUser() = userRepository.getUser(source = Source.CACHE)
 
-    fun getAllUsersForHousehold() = liveData(Dispatchers.IO) {
-        val loadingJob = CoroutineScope(coroutineContext).launch {
-            delay(500) // delay 0.5s before showing loading
-            emit(Response.Loading)
-        }
-        try {
-            val householdId = getCurrentUser()?.householdId
-                ?: run { emit(Response.Error()); return@liveData }
-
-            emit(Response.Success(userRepository.getAllUsersForHousehold(householdId)))
-        } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
-        } finally {
-            loadingJob.cancel()
-        }
-    }
-
     fun createOrUpdateTask(task: Task) = callbackFlow {
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(500) // delay 0.5s before showing loading

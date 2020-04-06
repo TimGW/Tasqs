@@ -12,7 +12,7 @@ val useCaseModule = module {
     factory { TaskEditUseCase(get(), get(), get()) }
     factory { SignInUseCase(get(), get(), get()) }
     factory { UserUseCase(get(), get(), get(), get()) }
-    factory { AdsVisibleUseCase(get()) }
+    factory { AdsVisibleUseCase(get(), get()) }
     factory { GetUserUseCase(get(), get()) }
     factory { EasterEggUseCase(get()) }
     factory { SwitchHouseholdUseCase(get(), get(), get(), get()) }
