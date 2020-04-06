@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.presentation.features.task.adapter
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,8 +26,14 @@ import java.util.*
 class TaskFirestoreAdapter(
     private val taskClickListener: TaskClickListener,
     private val adapterStateListener: AdapterStateListener,
-    options: FirestoreRecyclerOptions<Task>
-) : FirestoreRecyclerAdapter<Task, TaskFirestoreAdapter.ViewHolder>(options) {
+    options: FirestoreRecyclerOptions<Task>,
+    savedInstanceState: Bundle?,
+    recyclerView: RecyclerView
+) : SavedStateAdapter<Task, TaskFirestoreAdapter.ViewHolder>(
+    options,
+    savedInstanceState,
+    recyclerView
+) {
     var tracker: SelectionTracker<String>? = null
 
     init {

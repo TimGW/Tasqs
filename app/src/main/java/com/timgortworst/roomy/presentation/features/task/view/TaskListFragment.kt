@@ -71,6 +71,7 @@ class TaskListFragment : BaseFragment(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         tracker?.onSaveInstanceState(outState)
+        taskListAdapter?.onSaveInstanceState(outState)
         outState.putBoolean(IS_IN_ACTION_MODE_KEY, actionMode != null)
     }
 
@@ -91,9 +92,15 @@ class TaskListFragment : BaseFragment(),
     ): View? {
         _binding = FragmentTaskListBinding.inflate(inflater, container, false)
 
-        taskViewModel.viewModelScope.launch {
-            taskViewModel.loadInitialQuery()
+        if(savedInstanceState == null) {
+            taskViewModel.viewModelScope.launch {
+                taskViewModel.loadInitialQuery()
 
+                setupAdapter(savedInstanceState)
+                setupRecyclerView()
+            }
+        } else {
+            setupAdapter(savedInstanceState)
             setupRecyclerView()
         }
 
@@ -147,13 +154,17 @@ class TaskListFragment : BaseFragment(),
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun setupAdapter(savedInstanceState: Bundle?) {
         taskListAdapter = TaskFirestoreAdapter(
             this,
             this,
-            taskViewModel.liveQueryOptions.value!!.setLifecycleOwner(this).build()
+            taskViewModel.liveQueryOptions.value!!.setLifecycleOwner(this).build(),
+            savedInstanceState,
+            binding.recyclerView
         )
+    }
 
+    private fun setupRecyclerView() {
         binding.recyclerView.apply {
             val linearLayoutManager = LinearLayoutManager(parentActivity)
             layoutManager = linearLayoutManager
