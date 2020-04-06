@@ -3,7 +3,7 @@ package com.timgortworst.roomy.presentation.features.settings
 import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.application.user.GetUserUseCase
 import com.timgortworst.roomy.presentation.base.model.EasterEgg
-import com.timgortworst.roomy.domain.application.EasterEggUseCase
+import com.timgortworst.roomy.domain.application.easteregg.EasterEggUseCase
 
 class SettingsViewModel(
     private val easterEggUseCase: EasterEggUseCase,

@@ -1,7 +1,8 @@
-package com.timgortworst.roomy.domain.application
+package com.timgortworst.roomy.domain.application.ads
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
+import com.timgortworst.roomy.domain.application.UseCase
 import com.timgortworst.roomy.presentation.RoomyApp
 
 class AdsVisibleUseCase(

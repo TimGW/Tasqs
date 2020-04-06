@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.application
+package com.timgortworst.roomy.domain.application.forcedupdate
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.BuildConfig

@@ -1,8 +1,8 @@
 package com.timgortworst.roomy.data.di
 
 
-import com.timgortworst.roomy.domain.application.AdsVisibleUseCase
-import com.timgortworst.roomy.domain.application.EasterEggUseCase
+import com.timgortworst.roomy.domain.application.ads.AdsVisibleUseCase
+import com.timgortworst.roomy.domain.application.easteregg.EasterEggUseCase
 import com.timgortworst.roomy.domain.application.account.ValidationUseCase
 import com.timgortworst.roomy.domain.application.account.SignInUseCase
 import com.timgortworst.roomy.domain.model.response.ErrorHandlerImpl
@@ -57,7 +57,11 @@ val useCaseModule = module {
             get()
         )
     }
-    factory { EasterEggUseCase(get()) }
+    factory {
+        EasterEggUseCase(
+            get()
+        )
+    }
     factory {
         SwitchHouseholdUseCase(
             get(),
