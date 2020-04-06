@@ -2,9 +2,9 @@ package com.timgortworst.roomy.presentation.features.splash
 
 import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.application.account.ValidationUseCase
+import com.timgortworst.roomy.domain.usecase.account.ValidationUseCase
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
-import com.timgortworst.roomy.domain.application.household.SwitchHouseholdUseCase
+import com.timgortworst.roomy.domain.usecase.household.SwitchHouseholdUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 

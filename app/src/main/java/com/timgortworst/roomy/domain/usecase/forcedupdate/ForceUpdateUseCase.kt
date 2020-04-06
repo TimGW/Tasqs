@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.application.forcedupdate
+package com.timgortworst.roomy.domain.usecase.forcedupdate
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.BuildConfig
@@ -14,8 +14,12 @@ class ForceUpdateUseCase(private val onUpdateNeededListener: OnUpdateNeededListe
 
     fun check(remoteConfig: FirebaseRemoteConfig, appVersion: String) {
         currentVersion = stripVersionNameSuffix(appVersion)
-        val requiredVersion = stripVersionNameSuffix(remoteConfig.getString(KEY_CURRENT_REQUIRED_VERSION))
-        val recommendedVersion = stripVersionNameSuffix(remoteConfig.getString(KEY_CURRENT_RECOMMENDED_VERSION))
+        val requiredVersion = stripVersionNameSuffix(remoteConfig.getString(
+            KEY_CURRENT_REQUIRED_VERSION
+        ))
+        val recommendedVersion = stripVersionNameSuffix(remoteConfig.getString(
+            KEY_CURRENT_RECOMMENDED_VERSION
+        ))
 
         val requiredVersionInt: Int = requiredVersion.replace(".", "", ignoreCase = true).toInt()
         val recommendedVersionInt: Int = recommendedVersion.replace(".", "", ignoreCase = true).toInt()

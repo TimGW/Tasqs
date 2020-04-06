@@ -1,19 +1,19 @@
 package com.timgortworst.roomy.data.di
 
 
-import com.timgortworst.roomy.domain.application.ads.AdsVisibleUseCase
-import com.timgortworst.roomy.domain.application.easteregg.EasterEggUseCase
-import com.timgortworst.roomy.domain.application.account.ValidationUseCase
-import com.timgortworst.roomy.domain.application.account.SignInUseCase
+import com.timgortworst.roomy.domain.usecase.ads.AdsVisibleUseCase
+import com.timgortworst.roomy.domain.usecase.easteregg.EasterEggUseCase
+import com.timgortworst.roomy.domain.usecase.account.ValidationUseCase
+import com.timgortworst.roomy.domain.usecase.account.SignInUseCase
 import com.timgortworst.roomy.domain.model.response.ErrorHandlerImpl
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
-import com.timgortworst.roomy.domain.application.household.SwitchHouseholdUseCase
-import com.timgortworst.roomy.domain.application.task.CreateOrUpdateTaskUseCase
-import com.timgortworst.roomy.domain.application.task.TaskListUseCase
-import com.timgortworst.roomy.domain.application.user.GetAllUsersUseCase
-import com.timgortworst.roomy.domain.application.user.GetUserUseCase
-import com.timgortworst.roomy.domain.application.user.RemoveUserUseCase
-import com.timgortworst.roomy.domain.application.user.UserUseCase
+import com.timgortworst.roomy.domain.usecase.household.SwitchHouseholdUseCase
+import com.timgortworst.roomy.domain.usecase.task.CreateOrUpdateTaskUseCase
+import com.timgortworst.roomy.domain.usecase.task.TaskListUseCase
+import com.timgortworst.roomy.domain.usecase.user.GetAllUsersUseCase
+import com.timgortworst.roomy.domain.usecase.user.GetUserUseCase
+import com.timgortworst.roomy.domain.usecase.user.RemoveUserUseCase
+import com.timgortworst.roomy.domain.usecase.user.UserUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {

@@ -1,8 +1,8 @@
-package com.timgortworst.roomy.domain.application.task
+package com.timgortworst.roomy.domain.usecase.task
 
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.domain.repository.TaskRepository
-import com.timgortworst.roomy.domain.application.UseCase
+import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response

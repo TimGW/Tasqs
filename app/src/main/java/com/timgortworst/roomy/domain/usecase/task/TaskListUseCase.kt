@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.application.task
+package com.timgortworst.roomy.domain.usecase.task
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException

@@ -1,8 +1,8 @@
-package com.timgortworst.roomy.domain.application.easteregg
+package com.timgortworst.roomy.domain.usecase.easteregg
 
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
-import com.timgortworst.roomy.domain.application.UseCase
+import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.presentation.base.model.EasterEgg
 
 class EasterEggUseCase(

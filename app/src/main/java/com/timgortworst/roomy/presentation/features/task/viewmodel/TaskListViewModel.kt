@@ -8,7 +8,7 @@ import com.timgortworst.roomy.data.utils.CustomMapper
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
-import com.timgortworst.roomy.domain.application.task.TaskListUseCase
+import com.timgortworst.roomy.domain.usecase.task.TaskListUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.application.user
+package com.timgortworst.roomy.domain.usecase.user
 
 import androidx.lifecycle.liveData
 import com.google.firebase.firestore.FirebaseFirestoreException

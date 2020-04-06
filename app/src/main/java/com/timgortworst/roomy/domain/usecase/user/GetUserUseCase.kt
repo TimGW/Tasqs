@@ -1,10 +1,10 @@
-package com.timgortworst.roomy.domain.application.user
+package com.timgortworst.roomy.domain.usecase.user
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.domain.application.UseCase
+import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response

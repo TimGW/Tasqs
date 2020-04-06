@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.application.user.GetAllUsersUseCase
-import com.timgortworst.roomy.domain.application.task.CreateOrUpdateTaskUseCase
-import com.timgortworst.roomy.domain.application.user.GetFbUserUseCase
+import com.timgortworst.roomy.domain.usecase.user.GetAllUsersUseCase
+import com.timgortworst.roomy.domain.usecase.task.CreateOrUpdateTaskUseCase
+import com.timgortworst.roomy.domain.usecase.user.GetFbUserUseCase
 import com.timgortworst.roomy.presentation.base.model.Event
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

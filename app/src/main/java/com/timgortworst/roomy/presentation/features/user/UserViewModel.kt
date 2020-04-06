@@ -3,8 +3,8 @@ package com.timgortworst.roomy.presentation.features.user
 import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.User
-import com.timgortworst.roomy.domain.application.user.GetAllUsersUseCase
-import com.timgortworst.roomy.domain.application.user.RemoveUserUseCase
+import com.timgortworst.roomy.domain.usecase.user.GetAllUsersUseCase
+import com.timgortworst.roomy.domain.usecase.user.RemoveUserUseCase
 import com.timgortworst.roomy.presentation.base.model.Event
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

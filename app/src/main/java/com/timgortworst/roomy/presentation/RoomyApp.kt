@@ -14,7 +14,7 @@ import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.data.di.*
-import com.timgortworst.roomy.domain.application.forcedupdate.ForceUpdateUseCase
+import com.timgortworst.roomy.domain.usecase.forcedupdate.ForceUpdateUseCase
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
