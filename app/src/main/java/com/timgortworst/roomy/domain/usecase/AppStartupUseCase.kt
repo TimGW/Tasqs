@@ -24,7 +24,7 @@ class AppStartupUseCase(
         return this
     }
 
-    override fun executeUseCase() = flow {
+    override fun invoke() = flow {
         emit(Response.Loading)
         try {
             val currentId = fetchHouseholdId() // fetch here to update local cache

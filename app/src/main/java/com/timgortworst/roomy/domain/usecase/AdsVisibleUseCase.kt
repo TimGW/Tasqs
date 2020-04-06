@@ -10,7 +10,7 @@ class AdsVisibleUseCase(
     private val remoteConfig: FirebaseRemoteConfig
 ) : UseCase<Boolean> {
 
-    override fun executeUseCase(): Boolean {
+    override fun invoke(): Boolean {
         val remoteValue = remoteConfig.getBoolean(RoomyApp.KEY_ENABLE_ADS)
         val localValue = sharedPrefs.isAdsEnabled()
         return remoteValue && localValue

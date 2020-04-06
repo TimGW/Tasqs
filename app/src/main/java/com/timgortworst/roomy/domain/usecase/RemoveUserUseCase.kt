@@ -30,7 +30,7 @@ class RemoveUserUseCase(
         return this
     }
 
-    override fun executeUseCase() = callbackFlow {
+    override fun invoke() = callbackFlow {
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(500) // delay 0.5s before showing loading
             offer(Response.Loading)

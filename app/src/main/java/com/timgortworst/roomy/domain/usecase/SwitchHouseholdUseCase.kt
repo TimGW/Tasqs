@@ -27,7 +27,7 @@ class SwitchHouseholdUseCase(
         return this
     }
 
-    override fun executeUseCase()= flow {
+    override fun invoke()= flow {
         emit(Response.Loading)
         try {
             val oldId = userRepository.getUser()?.householdId ?: return@flow

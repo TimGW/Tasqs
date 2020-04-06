@@ -25,7 +25,7 @@ class GetAllUsersUseCase(
     private val errorHandler: ErrorHandler
 ) : UseCase<LiveData<Response<List<User>>>> {
 
-    override fun executeUseCase()= liveData(Dispatchers.IO) {
+    override fun invoke()= liveData(Dispatchers.IO) {
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(500) // delay 0.5s before showing loading
             emit(Response.Loading)

@@ -17,7 +17,7 @@ class EasterEggUseCase(
         return this
     }
 
-    override fun executeUseCase(): EasterEgg? {
+    override fun invoke(): EasterEgg? {
         if (count == null) {
             throw IllegalArgumentException("init not called, or called with null argument.")
         }

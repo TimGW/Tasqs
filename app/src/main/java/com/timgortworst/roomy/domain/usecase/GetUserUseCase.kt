@@ -27,7 +27,7 @@ class GetUserUseCase(
         this.source = source
     }
 
-    override fun executeUseCase() = flow {
+    override fun invoke() = flow {
         emit(Response.Loading)
         try {
             emit(Response.Success(userRepository.getUser(userId, source)))

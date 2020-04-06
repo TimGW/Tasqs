@@ -29,7 +29,7 @@ class SignInUseCase(
         return this
     }
 
-    override fun executeUseCase() = flow {
+    override fun invoke() = flow {
         if (fbUser == null || registrationToken == null || newUser == null) {
             throw IllegalArgumentException("init not called, or called with null argument.")
         }

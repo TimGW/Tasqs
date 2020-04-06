@@ -14,9 +14,9 @@ class SettingsViewModel(
     val easterEgg: LiveData<EasterEgg?>
         get() = _easterEgg
 
-    val currentUser = getUserUseCase.executeUseCase().asLiveData(viewModelScope.coroutineContext)
+    val currentUser = getUserUseCase.invoke().asLiveData(viewModelScope.coroutineContext)
 
     fun onAppVersionClick(count: Int) {
-        _easterEgg.value = easterEggUseCase.init(count).executeUseCase()
+        _easterEgg.value = easterEggUseCase.init(count).invoke()
     }
 }

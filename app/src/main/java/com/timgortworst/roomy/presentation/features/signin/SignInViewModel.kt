@@ -26,7 +26,7 @@ class SignInViewModel(
             val isNewUser = response.isNewUser
             val token = FirebaseInstanceId.getInstance().instanceId.await().token
 
-            signInUseCase.init(auth.currentUser, isNewUser, token).executeUseCase().collect {
+            signInUseCase.init(auth.currentUser, isNewUser, token).invoke().collect {
                 when (it) {
                     Response.Loading -> _action.value = SignInAction.LoadingDialog
                     is Response.Success -> {

@@ -6,9 +6,7 @@ import com.timgortworst.roomy.domain.entity.response.Response
 import com.timgortworst.roomy.domain.usecase.AdsVisibleUseCase
 import com.timgortworst.roomy.domain.usecase.GetUserUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
-import com.timgortworst.roomy.presentation.base.model.Event
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -22,7 +20,7 @@ class MainViewModel(
 
     fun inviteUser() = viewModelScope.launch {
         //todo combine loading of getUser and build uri
-        getUserUseCase.executeUseCase().collect { response ->
+        getUserUseCase.invoke().collect { response ->
             when (response) {
                 Response.Loading -> _uriEvent.value = Response.Loading
                 is Response.Success -> {
@@ -35,5 +33,5 @@ class MainViewModel(
         }
     }
 
-    fun showOrHideAd()= liveData { emit(adsVisibleUseCase.executeUseCase()) }
+    fun showOrHideAd()= liveData { emit(adsVisibleUseCase.invoke()) }
 }

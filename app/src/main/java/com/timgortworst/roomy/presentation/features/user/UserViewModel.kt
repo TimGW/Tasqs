@@ -14,7 +14,7 @@ class UserViewModel(
     getAllUsersUseCase: GetAllUsersUseCase
 ) : ViewModel() {
 
-    val allUsers = getAllUsersUseCase.executeUseCase()
+    val allUsers = getAllUsersUseCase.invoke()
 
     private val _userOptions = MutableLiveData<Event<User>>()
     val userOptions: LiveData<Event<User>>
@@ -26,7 +26,7 @@ class UserViewModel(
 
     fun removeFromHousehold(user: User) {
         viewModelScope.launch {
-            removeUserUseCase.init(user.userId).executeUseCase().collect {
+            removeUserUseCase.init(user.userId).invoke().collect {
                 _userRemoved.value = it
             }
         }

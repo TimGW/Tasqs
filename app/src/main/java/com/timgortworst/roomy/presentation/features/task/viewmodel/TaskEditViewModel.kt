@@ -4,13 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.auth.api.Auth
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.entity.response.Response
 import com.timgortworst.roomy.domain.entity.Task
 import com.timgortworst.roomy.domain.usecase.GetAllUsersUseCase
-import com.timgortworst.roomy.domain.usecase.GetUserUseCase
 import com.timgortworst.roomy.domain.usecase.TaskEditUseCase
 import com.timgortworst.roomy.presentation.base.model.Event
 import kotlinx.coroutines.flow.collect
@@ -24,7 +22,7 @@ class TaskEditViewModel(
     getAllUsersUseCase: GetAllUsersUseCase,
     private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
-    val allUsersLiveData = getAllUsersUseCase.executeUseCase()
+    val allUsersLiveData = getAllUsersUseCase.invoke()
 
     private val _prettyDate = MutableLiveData<Event<String>>()
     val prettyDate: LiveData<Event<String>>

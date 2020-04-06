@@ -19,7 +19,7 @@ class SplashViewModel(
 
     fun handleAppStartup(referredHouseholdId: String) {
         viewModelScope.launch {
-            appStartupUseCase.init(referredHouseholdId).executeUseCase().collect {
+            appStartupUseCase.init(referredHouseholdId).invoke().collect {
                 _startupAction.value = it
             }
         }
@@ -27,7 +27,7 @@ class SplashViewModel(
 
     fun switchHousehold(newId: String) {
         viewModelScope.launch {
-            switchHouseholdUseCase.init(newId).executeUseCase().collect {
+            switchHouseholdUseCase.init(newId).invoke().collect {
                 _startupAction.value = it
             }
         }
