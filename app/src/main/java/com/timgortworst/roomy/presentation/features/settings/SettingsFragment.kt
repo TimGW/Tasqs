@@ -21,9 +21,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
-import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.utils.snackbar
-import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.features.splash.SplashActivity
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject

@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.usecase
+package com.timgortworst.roomy.domain.application
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.BuildConfig
@@ -43,7 +43,9 @@ class ForceUpdateUseCase(private val onUpdateNeededListener: OnUpdateNeededListe
         }
 
         fun build(): ForceUpdateUseCase {
-            return ForceUpdateUseCase(onUpdateNeededListener)
+            return ForceUpdateUseCase(
+                onUpdateNeededListener
+            )
         }
 
         fun check(appVersion: String): ForceUpdateUseCase {
@@ -60,7 +62,9 @@ class ForceUpdateUseCase(private val onUpdateNeededListener: OnUpdateNeededListe
         const val KEY_UPDATE_URL = "store_url_android"
 
         fun with(remoteConfig: FirebaseRemoteConfig): Builder {
-            return Builder(remoteConfig)
+            return Builder(
+                remoteConfig
+            )
         }
     }
 }

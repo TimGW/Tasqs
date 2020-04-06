@@ -1,16 +1,16 @@
 package com.timgortworst.roomy.presentation.features.splash
 
 import androidx.lifecycle.*
-import com.timgortworst.roomy.domain.entity.response.Response
-import com.timgortworst.roomy.domain.usecase.AppStartupUseCase
+import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.application.account.ValidationUseCase
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
-import com.timgortworst.roomy.domain.usecase.SwitchHouseholdUseCase
+import com.timgortworst.roomy.domain.application.household.SwitchHouseholdUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SplashViewModel(
     private val switchHouseholdUseCase: SwitchHouseholdUseCase,
-    private val appStartupUseCase: AppStartupUseCase
+    private val appStartupUseCase: ValidationUseCase
 ) : ViewModel() {
 
     private val _startupAction = MutableLiveData<Response<StartUpAction>>()

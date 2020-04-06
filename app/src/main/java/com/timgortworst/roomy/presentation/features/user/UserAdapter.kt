@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.roomy.databinding.RowUserListBinding
-import com.timgortworst.roomy.domain.entity.User
+import com.timgortworst.roomy.domain.model.User
 
 class UserAdapter(
     private val users: MutableList<User>,

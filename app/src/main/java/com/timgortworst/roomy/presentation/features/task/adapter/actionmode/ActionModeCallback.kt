@@ -5,7 +5,7 @@ import android.view.MenuItem
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.selection.SelectionTracker
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.entity.Task
+import com.timgortworst.roomy.domain.model.Task
 
 class ActionModeCallback(private var actionItemListener: ActionItemListener?,
                          private val tracker: SelectionTracker<String>,

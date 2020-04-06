@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.entity.response
+package com.timgortworst.roomy.domain.model.response
 
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.FirebaseFirestoreException.Code.*

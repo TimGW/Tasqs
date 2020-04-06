@@ -1,22 +1,17 @@
-package com.timgortworst.roomy.domain.usecase
+package com.timgortworst.roomy.domain.application.user
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Source
-import com.timgortworst.roomy.data.repository.HouseholdRepository
-import com.timgortworst.roomy.data.repository.TaskRepository
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.UseCase
-import com.timgortworst.roomy.domain.entity.User
-import com.timgortworst.roomy.domain.entity.response.ErrorHandler
-import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.domain.application.UseCase
+import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.model.response.ErrorHandler
+import com.timgortworst.roomy.domain.model.response.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlin.coroutines.coroutineContext
 

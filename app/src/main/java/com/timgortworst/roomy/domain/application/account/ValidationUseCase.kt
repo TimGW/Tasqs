@@ -1,25 +1,25 @@
-package com.timgortworst.roomy.domain.usecase
+package com.timgortworst.roomy.domain.application.account
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.UseCase
-import com.timgortworst.roomy.domain.entity.response.ErrorHandler
-import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.domain.application.UseCase
+import com.timgortworst.roomy.domain.model.response.ErrorHandler
+import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class AppStartupUseCase(
+class ValidationUseCase(
     private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler
 ) : UseCase<Flow<Response<StartUpAction>>> {
     private val auth = FirebaseAuth.getInstance()
     lateinit var referredId: String
 
-    fun init(householdId: String): AppStartupUseCase {
+    fun init(householdId: String): ValidationUseCase {
         this.referredId = householdId
         return this
     }

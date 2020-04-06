@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.entity.response.Response
-import com.timgortworst.roomy.domain.entity.Task
-import com.timgortworst.roomy.domain.usecase.GetAllUsersUseCase
-import com.timgortworst.roomy.domain.usecase.TaskEditUseCase
+import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.model.Task
+import com.timgortworst.roomy.domain.application.user.GetAllUsersUseCase
+import com.timgortworst.roomy.domain.application.task.CreateOrUpdateTaskUseCase
+import com.timgortworst.roomy.domain.application.user.GetFbUserUseCase
 import com.timgortworst.roomy.presentation.base.model.Event
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -18,9 +18,9 @@ import org.threeten.bp.format.TextStyle
 import java.util.*
 
 class TaskEditViewModel(
-    private val taskUseCase: TaskEditUseCase,
+    private val createOrUpdateTaskUseCase: CreateOrUpdateTaskUseCase,
     getAllUsersUseCase: GetAllUsersUseCase,
-    private val firebaseAuth: FirebaseAuth
+    private val getCurrentFbUserUseCase: GetFbUserUseCase
 ) : ViewModel() {
     val allUsersLiveData = getAllUsersUseCase.invoke()
 
@@ -32,8 +32,7 @@ class TaskEditViewModel(
     val taskDone: LiveData<Event<Response<Task>>>
         get() = _taskDone
 
-
-    fun currentUserId() = firebaseAuth.currentUser?.uid.orEmpty()
+    fun currentUserId() = getCurrentFbUserUseCase.invoke()?.uid.orEmpty()
 
     fun formatDate(zonedDateTime: ZonedDateTime) {
         val formattedDayOfMonth = zonedDateTime.dayOfMonth.toString()
@@ -47,7 +46,7 @@ class TaskEditViewModel(
             _taskDone.value = Event(Response.Empty(R.string.task_edit_error_empty_description))
             return@launch
         }
-        taskUseCase.createOrUpdateTask(task).collect {
+        createOrUpdateTaskUseCase.init(task).invoke().collect {
             _taskDone.value = Event(it)
         }
     }

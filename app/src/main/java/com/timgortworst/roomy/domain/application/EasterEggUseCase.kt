@@ -1,10 +1,7 @@
-package com.timgortworst.roomy.domain.usecase
+package com.timgortworst.roomy.domain.application
 
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.repository.UserRepository
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
-import com.timgortworst.roomy.domain.UseCase
-import com.timgortworst.roomy.domain.entity.response.ErrorHandler
 import com.timgortworst.roomy.presentation.base.model.EasterEgg
 
 class EasterEggUseCase(
@@ -24,7 +21,10 @@ class EasterEggUseCase(
 
         if (sharedPrefs.isAdsEnabled()) {
             return when {
-                betweenUntil(count!!, CLICKS_FOR_MESSAGE, CLICKS_FOR_EASTER_EGG) -> {
+                betweenUntil(count!!,
+                    CLICKS_FOR_MESSAGE,
+                    CLICKS_FOR_EASTER_EGG
+                ) -> {
                     EasterEgg(
                         R.string.easter_egg_message,
                         (CLICKS_FOR_EASTER_EGG - count!!)

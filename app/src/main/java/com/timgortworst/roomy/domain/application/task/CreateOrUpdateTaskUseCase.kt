@@ -1,26 +1,32 @@
-package com.timgortworst.roomy.domain.usecase
+package com.timgortworst.roomy.domain.application.task
 
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.data.repository.TaskRepository
-import com.timgortworst.roomy.data.repository.UserRepository
-import com.timgortworst.roomy.domain.entity.Task
-import com.timgortworst.roomy.domain.entity.response.ErrorHandler
-import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.domain.application.UseCase
+import com.timgortworst.roomy.domain.model.Task
+import com.timgortworst.roomy.domain.model.response.ErrorHandler
+import com.timgortworst.roomy.domain.model.response.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
-class TaskEditUseCase(
+class CreateOrUpdateTaskUseCase(
     private val taskRepository: TaskRepository,
-    private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler
-) {
+) : UseCase<Flow<Response<Task>>> {
+    private lateinit var task: Task
 
-    fun createOrUpdateTask(task: Task) = callbackFlow {
+    fun init(task: Task): CreateOrUpdateTaskUseCase {
+        this.task = task
+        return this
+    }
+
+    override fun invoke() = callbackFlow {
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(500) // delay 0.5s before showing loading
             offer(Response.Loading)

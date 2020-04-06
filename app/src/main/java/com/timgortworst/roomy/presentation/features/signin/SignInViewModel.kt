@@ -4,9 +4,9 @@ import androidx.lifecycle.*
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
-import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.base.model.SignInAction
-import com.timgortworst.roomy.domain.usecase.SignInUseCase
+import com.timgortworst.roomy.domain.application.account.SignInUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await

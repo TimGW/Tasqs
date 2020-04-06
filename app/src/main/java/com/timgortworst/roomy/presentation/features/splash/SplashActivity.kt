@@ -10,9 +10,9 @@ import androidx.lifecycle.Observer
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.entity.response.Response
+import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
-import com.timgortworst.roomy.domain.usecase.ForceUpdateUseCase
+import com.timgortworst.roomy.domain.application.ForceUpdateUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp

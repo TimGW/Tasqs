@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.domain.utils
 
-import com.timgortworst.roomy.domain.entity.TaskRecurrence
+import com.timgortworst.roomy.domain.model.TaskRecurrence
 import org.junit.Test
 
 import org.junit.Assert.*

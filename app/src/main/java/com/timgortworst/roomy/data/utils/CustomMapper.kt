@@ -1,14 +1,14 @@
 package com.timgortworst.roomy.data.utils
 
-import com.timgortworst.roomy.domain.entity.Task
-import com.timgortworst.roomy.domain.entity.TaskMetaData
-import com.timgortworst.roomy.domain.entity.TaskRecurrence
-import com.timgortworst.roomy.domain.entity.TaskRecurrence.Companion.ANNUAL_TASK
-import com.timgortworst.roomy.domain.entity.TaskRecurrence.Companion.DAILY_TASK
-import com.timgortworst.roomy.domain.entity.TaskRecurrence.Companion.MONTHLY_TASK
-import com.timgortworst.roomy.domain.entity.TaskRecurrence.Companion.WEEKLY_TASK
-import com.timgortworst.roomy.domain.entity.firestore.TaskJson
-import com.timgortworst.roomy.domain.entity.firestore.TaskMetaDataJson
+import com.timgortworst.roomy.domain.model.Task
+import com.timgortworst.roomy.domain.model.TaskMetaData
+import com.timgortworst.roomy.domain.model.TaskRecurrence
+import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.ANNUAL_TASK
+import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.DAILY_TASK
+import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.MONTHLY_TASK
+import com.timgortworst.roomy.domain.model.TaskRecurrence.Companion.WEEKLY_TASK
+import com.timgortworst.roomy.domain.model.firestore.TaskJson
+import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 

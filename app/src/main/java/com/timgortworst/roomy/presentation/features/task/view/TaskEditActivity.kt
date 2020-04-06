@@ -17,10 +17,10 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityEditTaskBinding
-import com.timgortworst.roomy.domain.entity.response.Response
-import com.timgortworst.roomy.domain.entity.Task
-import com.timgortworst.roomy.domain.entity.TaskRecurrence
-import com.timgortworst.roomy.domain.entity.TaskUser
+import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.model.Task
+import com.timgortworst.roomy.domain.model.TaskRecurrence
+import com.timgortworst.roomy.domain.model.TaskUser
 import com.timgortworst.roomy.domain.utils.clearFocus
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.model.EventObserver

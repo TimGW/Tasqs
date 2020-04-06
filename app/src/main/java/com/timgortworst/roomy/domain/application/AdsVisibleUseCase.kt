@@ -1,8 +1,7 @@
-package com.timgortworst.roomy.domain.usecase
+package com.timgortworst.roomy.domain.application
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
-import com.timgortworst.roomy.domain.UseCase
 import com.timgortworst.roomy.presentation.RoomyApp
 
 class AdsVisibleUseCase(

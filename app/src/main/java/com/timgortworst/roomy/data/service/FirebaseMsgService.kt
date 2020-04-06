@@ -4,7 +4,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.usecase.UserUseCase
+import com.timgortworst.roomy.domain.application.user.UserUseCase
 import com.timgortworst.roomy.presentation.features.notifications.NotificationBuilder
 import com.timgortworst.roomy.presentation.features.notifications.NotificationWorkManager
 import kotlinx.coroutines.CoroutineScope

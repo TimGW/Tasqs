@@ -8,7 +8,7 @@ import android.view.MenuItem
 import androidx.core.app.NavUtils
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityInfoTaskBinding
-import com.timgortworst.roomy.domain.entity.Task
+import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 
 class TaskInfoActivity : BaseActivity() {
