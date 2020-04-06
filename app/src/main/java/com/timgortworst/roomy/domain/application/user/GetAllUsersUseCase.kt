@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Source
-import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.domain.application.UseCase
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.ErrorHandler

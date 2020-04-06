@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.data.repository
+package com.timgortworst.roomy.domain.repository
 
 import com.google.firebase.firestore.FirebaseFirestoreException
 

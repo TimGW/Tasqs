@@ -8,6 +8,7 @@ import com.timgortworst.roomy.domain.model.User.Companion.USER_ADMIN_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_COLLECTION_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
 import com.timgortworst.roomy.domain.model.User.Companion.USER_TOKENS_REF
+import com.timgortworst.roomy.domain.repository.UserRepository
 import kotlinx.coroutines.tasks.await
 
 class UserRepositoryImpl(

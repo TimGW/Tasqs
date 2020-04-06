@@ -27,7 +27,6 @@ val useCaseModule = module {
     factory {
         CreateOrUpdateTaskUseCase(
             get(),
-            get(),
             get()
         )
     }

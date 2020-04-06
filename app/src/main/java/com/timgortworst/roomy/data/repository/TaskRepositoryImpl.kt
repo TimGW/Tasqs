@@ -9,6 +9,8 @@ import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_META_DATA_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_USER_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson.Companion.TASK_DATE_TIME_REF
+import com.timgortworst.roomy.domain.repository.TaskRepository
+import com.timgortworst.roomy.domain.repository.UserRepository
 import kotlinx.coroutines.tasks.await
 
 class TaskRepositoryImpl(

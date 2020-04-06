@@ -3,6 +3,7 @@ package com.timgortworst.roomy.data.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.timgortworst.roomy.domain.model.Household
 import com.timgortworst.roomy.domain.model.Household.Companion.HOUSEHOLD_COLLECTION_REF
+import com.timgortworst.roomy.domain.repository.HouseholdRepository
 import kotlinx.coroutines.tasks.await
 
 class HouseholdRepositoryImpl(

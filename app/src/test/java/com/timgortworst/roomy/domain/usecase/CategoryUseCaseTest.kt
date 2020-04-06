@@ -1,7 +1,7 @@
 //package com.timgortworst.roomy.domain.usecase
 //
 //import com.timgortworst.roomy.TestCoroutineRule
-//import com.timgortworst.roomy.data.repository.UserRepository
+//import com.timgortworst.roomy.domain.repository.UserRepository
 //import org.junit.Before
 //import org.junit.Rule
 //import org.junit.Test

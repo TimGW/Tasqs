@@ -1,7 +1,7 @@
 package com.timgortworst.roomy.domain.application.user
 
 import com.google.firebase.auth.FirebaseUser
-import com.timgortworst.roomy.data.repository.UserRepository
+import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.domain.application.UseCase
 
 class GetFbUserUseCase(
