@@ -14,21 +14,19 @@ import kotlinx.coroutines.flow.flowOn
 
 class ValidationUseCase(
     private val userRepository: UserRepository,
-    private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<StartUpAction>>> {
-    private val auth = FirebaseAuth.getInstance()
-    lateinit var referredId: String
+    private val errorHandler: ErrorHandler,
+    private val auth: FirebaseAuth
+) : UseCase<Flow<Response<StartUpAction>>, ValidationUseCase.Params> {
 
-    fun init(householdId: String): ValidationUseCase {
-        this.referredId = householdId
-        return this
-    }
+    data class Params(val referredId: String)
 
-    override fun invoke() = flow {
+    override fun execute(params: Params?) = flow {
+        checkNotNull(params)
+
         emit(Response.Loading)
         try {
             val currentId = fetchHouseholdId() // fetch here to update local cache
-            emit(validate(currentId, referredId))
+            emit(validate(currentId, params.referredId))
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
         }

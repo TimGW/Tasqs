@@ -16,21 +16,19 @@ import kotlinx.coroutines.flow.flowOn
 class GetUserUseCase(
     private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<User>>> {
+) : UseCase<Flow<Response<User>>, GetUserUseCase.Params> {
 
-    private var source: Source = Source.DEFAULT
-    private var userId: String? = FirebaseAuth.getInstance().currentUser?.uid
+    data class Params(
+        val source: Source = Source.DEFAULT,
+        val userId: String? = FirebaseAuth.getInstance().currentUser?.uid
+    )
 
-    fun init(userId: String?,
-             source: Source) {
-        this.userId = userId
-        this.source = source
-    }
+    override fun execute(params: Params?) = flow {
+        checkNotNull(params)
 
-    override fun invoke() = flow {
         emit(Response.Loading)
         try {
-            emit(Response.Success(userRepository.getUser(userId, source)))
+            emit(Response.Success(userRepository.getUser(params.userId, params.source)))
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
         }

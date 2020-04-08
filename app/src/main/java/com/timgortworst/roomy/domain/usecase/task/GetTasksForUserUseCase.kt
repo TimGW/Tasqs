@@ -8,9 +8,9 @@ import com.timgortworst.roomy.domain.usecase.SuspendUseCase
 class GetTasksForUserUseCase(
     private val taskRepository: TaskRepository,
     private val userRepository: UserRepository
-) : SuspendUseCase<Query> {
+) : SuspendUseCase<Query, Unit> {
 
-    override suspend fun invoke()= taskRepository.getTasksForUserQuery(
+    override suspend fun execute(params: Unit?)= taskRepository.getTasksForUserQuery(
         userRepository.getFbUser()?.uid.orEmpty()
     )
 }

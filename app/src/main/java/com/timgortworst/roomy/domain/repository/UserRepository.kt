@@ -30,6 +30,6 @@ interface UserRepository {
 
     @Throws(FirebaseFirestoreException::class)
     suspend fun addUserToken(
-        userId: String? = FirebaseAuth.getInstance().currentUser?.uid,
+        userId: String?,
         token: String)
 }

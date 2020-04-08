@@ -2,6 +2,7 @@ package com.timgortworst.roomy.data.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.data.sharedpref.SharedPrefManager
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
@@ -14,6 +15,7 @@ val appModule = module {
     single { FirebaseFirestore.getInstance() }
     single { FirebaseRemoteConfig.getInstance() }
     single { FirebaseAuth.getInstance() }
+    single { FirebaseInstanceId.getInstance() }
     single { SharedPrefManager(androidContext()) }
     single { SharedPrefs(get()) }
 }

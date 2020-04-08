@@ -7,38 +7,33 @@ import com.timgortworst.roomy.presentation.base.model.EasterEgg
 
 class EasterEggUseCase(
     private val sharedPrefs: SharedPrefs
-) : UseCase<EasterEgg?> {
-    private var count : Int? = null
+) : UseCase<EasterEgg?, EasterEggUseCase.Params> {
 
-    fun init(count: Int): EasterEggUseCase {
-        this.count = count
-        return this
-    }
+    data class Params(internal val count: Int)
 
-    override fun invoke(): EasterEgg? {
-        if (count == null) {
-            throw IllegalArgumentException("init not called, or called with null argument.")
-        }
+    override fun execute(params: Params?): EasterEgg? {
+        checkNotNull(params)
 
         if (sharedPrefs.isAdsEnabled()) {
             return when {
-                betweenUntil(count!!,
+                betweenUntil(
+                    params.count,
                     CLICKS_FOR_MESSAGE,
                     CLICKS_FOR_EASTER_EGG
                 ) -> {
                     EasterEgg(
                         R.string.easter_egg_message,
-                        (CLICKS_FOR_EASTER_EGG - count!!)
+                        (CLICKS_FOR_EASTER_EGG - params.count)
                     )
                 }
-                count!! == CLICKS_FOR_EASTER_EGG -> {
+                params.count == CLICKS_FOR_EASTER_EGG -> {
                     sharedPrefs.setAdsEnabled(false)
                     EasterEgg(R.string.easter_egg_enabled)
                 }
                 else -> null
             }
         } else {
-            return if (count!! == CLICKS_FOR_EASTER_EGG) {
+            return if (params.count == CLICKS_FOR_EASTER_EGG) {
                 EasterEgg(R.string.easter_egg_already_enabled)
             } else {
                 null

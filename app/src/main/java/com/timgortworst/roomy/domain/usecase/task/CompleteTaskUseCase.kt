@@ -19,24 +19,23 @@ import org.threeten.bp.ZonedDateTime
 class CompleteTaskUseCase(
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<Nothing>>> {
-    private lateinit var tasks: List<Task>
+) : UseCase<Flow<Response<Nothing>>, CompleteTaskUseCase.Params> {
 
-    fun init(tasks: List<Task>): CompleteTaskUseCase {
-        this.tasks = tasks
-        return this
-    }
-    override fun invoke()= flow {
+    data class Params(val tasks: List<Task>)
+
+    override fun execute(params: Params?)= flow {
+        checkNotNull(params)
+
         emit(Response.Loading)
 
         try {
-            tasks.filter {
+            params.tasks.filter {
                 it.metaData.recurrence is TaskRecurrence.SingleTask
             }.run {
                 taskRepository.deleteTasks(this)
             }
 
-            tasks.filterNot {
+            params.tasks.filterNot {
                 it.metaData.recurrence is TaskRecurrence.SingleTask
             }.run {
                 forEach {

@@ -21,26 +21,24 @@ class RemoveUserUseCase(
     private val taskRepository: TaskRepository,
     private val householdRepository: HouseholdRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<String>>> {
-    private lateinit var id: String
+) : UseCase<Flow<Response<String>>, RemoveUserUseCase.Params> {
 
-    fun init(id: String): RemoveUserUseCase {
-        this.id = id
-        return this
-    }
+    data class Params(val id: String)
 
-    override fun invoke() = callbackFlow {
+    override fun execute(params: Params?) = callbackFlow {
+        checkNotNull(params)
+
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(500) // delay 0.5s before showing loading
             offer(Response.Loading)
         }
 
         try {
-            removeEventsAssignedToUser(id)
+            removeEventsAssignedToUser(params.id)
             val householdId = householdRepository.createHousehold()
-            userRepository.updateUser(userId = id, householdId = householdId, isAdmin = true)
+            userRepository.updateUser(userId = params.id, householdId = householdId, isAdmin = true)
 
-            offer(Response.Success(id))
+            offer(Response.Success(params.id))
         } catch (e: FirebaseFirestoreException) {
             offer(Response.Error(errorHandler.getError(e)))
         }  finally {

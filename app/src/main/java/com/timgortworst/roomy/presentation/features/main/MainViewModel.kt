@@ -2,16 +2,19 @@ package com.timgortworst.roomy.presentation.features.main
 
 import android.net.Uri
 import androidx.lifecycle.*
+import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.usecase.ads.AdsVisibleUseCase
 import com.timgortworst.roomy.domain.usecase.user.GetUserUseCase
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val adsVisibleUseCase: AdsVisibleUseCase,
-    private val getUserUseCase: GetUserUseCase
+    private val adsVisibleUseCase: UseCase<Boolean, Unit>,
+    private val getUserUseCase: UseCase<Flow<Response<User>>, GetUserUseCase.Params>
 ) : ViewModel() {
 
     private val _uriEvent = MutableLiveData<Response<Uri>>()
@@ -20,7 +23,7 @@ class MainViewModel(
 
     fun inviteUser() = viewModelScope.launch {
         //todo combine loading of getUser and build uri
-        getUserUseCase.invoke().collect { response ->
+        getUserUseCase.execute().collect { response ->
             when (response) {
                 Response.Loading -> _uriEvent.value = Response.Loading
                 is Response.Success -> {
@@ -33,5 +36,5 @@ class MainViewModel(
         }
     }
 
-    fun showOrHideAd()= liveData { emit(adsVisibleUseCase.invoke()) }
+    fun showOrHideAd()= liveData { emit(adsVisibleUseCase.execute()) }
 }

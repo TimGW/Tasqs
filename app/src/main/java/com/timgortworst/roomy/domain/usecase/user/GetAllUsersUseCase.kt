@@ -18,9 +18,9 @@ import kotlin.coroutines.coroutineContext
 class GetAllUsersUseCase(
     private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<LiveData<Response<List<User>>>> {
+) : UseCase<LiveData<Response<List<User>>>, Unit> {
 
-    override fun invoke()= liveData(Dispatchers.IO) {
+    override fun execute(params: Unit?)= liveData(Dispatchers.IO) {
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(500) // delay 0.5s before showing loading
             emit(Response.Loading)

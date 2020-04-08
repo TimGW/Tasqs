@@ -6,7 +6,7 @@ import com.timgortworst.roomy.domain.usecase.UseCase
 
 class GetFbUserUseCase(
     private val userRepository: UserRepository
-) : UseCase<FirebaseUser?> {
+) : UseCase<FirebaseUser?, Unit> {
 
-    override fun invoke()= userRepository.getFbUser()
+    override fun execute(params: Unit?) = userRepository.getFbUser()
 }

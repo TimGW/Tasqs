@@ -18,20 +18,19 @@ class SwitchHouseholdUseCase(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository,
     private val taskRepository: TaskRepository,
-    private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<StartUpAction>>> {
-    private lateinit var newId: String
+    private val errorHandler: ErrorHandler,
+    private val fbAuth: FirebaseAuth
+) : UseCase<Flow<Response<StartUpAction>>, SwitchHouseholdUseCase.Params> {
 
-    fun init(newId: String): SwitchHouseholdUseCase {
-        this.newId = newId
-        return this
-    }
+    data class Params(val newId: String)
 
-    override fun invoke()= flow {
+    override fun execute(params: Params?)= flow {
+        checkNotNull(params)
+
         emit(Response.Loading)
         try {
             val oldId = userRepository.getUser()?.householdId ?: return@flow
-            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return@flow
+            val currentUserId = fbAuth.currentUser?.uid ?: return@flow
 
             // remove old tasks assigned to user
             taskRepository.deleteTasks(
@@ -45,7 +44,7 @@ class SwitchHouseholdUseCase(
 
             // update current user with new household ID and role
             userRepository.updateUser(
-                householdId = newId,
+                householdId = params.newId,
                 isAdmin = false
             )
             emit(Response.Success(StartUpAction.TriggerMainFlow))

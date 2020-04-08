@@ -14,18 +14,16 @@ import kotlinx.coroutines.flow.flowOn
 class DeleteTaskUseCase(
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<Nothing>>> {
-    private lateinit var tasks: List<Task>
+) : UseCase<Flow<Response<Nothing>>, DeleteTaskUseCase.Params> {
 
-    fun init(tasks: List<Task>): DeleteTaskUseCase {
-        this.tasks = tasks
-        return this
-    }
+    data class Params(val tasks: List<Task>)
 
-    override fun invoke() = flow {
+    override fun execute(params: Params?) = flow {
+        checkNotNull(params)
+
         emit(Response.Loading)
         try {
-            taskRepository.deleteTasks(tasks)
+            taskRepository.deleteTasks(params.tasks)
             emit(Response.Success())
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))

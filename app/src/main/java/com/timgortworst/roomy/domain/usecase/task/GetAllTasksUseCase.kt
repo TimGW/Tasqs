@@ -6,8 +6,8 @@ import com.timgortworst.roomy.domain.usecase.SuspendUseCase
 
 class GetAllTasksUseCase(
     private val taskRepository: TaskRepository
-) : SuspendUseCase<Query> {
+) : SuspendUseCase<Query, Unit> {
 
-    override suspend fun invoke() = taskRepository.getAllTasksQuery()
+    override suspend fun execute(params: Unit?) = taskRepository.getAllTasksQuery()
 }
 

@@ -1,11 +1,11 @@
 package com.timgortworst.roomy.domain.usecase.task
 
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.timgortworst.roomy.domain.repository.TaskRepository
-import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.repository.TaskRepository
+import com.timgortworst.roomy.domain.usecase.UseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -18,15 +18,13 @@ import kotlinx.coroutines.launch
 class CreateOrUpdateTaskUseCase(
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<Task>>> {
-    private lateinit var task: Task
+) : UseCase<Flow<Response<Task>>, CreateOrUpdateTaskUseCase.Params> {
 
-    fun init(task: Task): CreateOrUpdateTaskUseCase {
-        this.task = task
-        return this
-    }
+    data class Params(val task: Task)
 
-    override fun invoke() = callbackFlow {
+    override fun execute(params: Params?) = callbackFlow {
+        checkNotNull(params)
+
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(500) // delay 0.5s before showing loading
             offer(Response.Loading)
@@ -34,14 +32,14 @@ class CreateOrUpdateTaskUseCase(
 
         try {
             // temporary disable the done button
-            val result = task.apply { isDoneEnabled = false }
+            val result = params.task.apply { isDoneEnabled = false }
 
-            if (task.id.isEmpty()) {
+            if (params.task.id.isEmpty()) {
                 taskRepository.createTask(result)
             } else {
                 taskRepository.updateTask(result)
             }
-            offer(Response.Success(task))
+            offer(Response.Success(params.task))
         } catch (e: FirebaseFirestoreException) {
             offer(Response.Error(errorHandler.getError(e)))
         } finally {
