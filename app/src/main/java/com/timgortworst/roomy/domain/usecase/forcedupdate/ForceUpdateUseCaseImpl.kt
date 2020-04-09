@@ -2,15 +2,10 @@ package com.timgortworst.roomy.domain.usecase.forcedupdate
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.BuildConfig
+import com.timgortworst.roomy.presentation.usecase.ForceUpdateUseCase
 
-class ForceUpdateUseCaseImpl(private val onUpdateNeededListener: OnUpdateNeededListener?) {
+class ForceUpdateUseCaseImpl(private val onUpdateNeededListener: ForceUpdateUseCase?) {
     private var currentVersion: String = "1.0.0" // fallback
-
-    interface OnUpdateNeededListener {
-        fun onUpdateNeeded(updateUrl: String)
-        fun onUpdateRecommended(updateUrl: String)
-        fun noUpdateNeeded()
-    }
 
     fun check(remoteConfig: FirebaseRemoteConfig, appVersion: String) {
         currentVersion = stripVersionNameSuffix(appVersion)
@@ -39,9 +34,9 @@ class ForceUpdateUseCaseImpl(private val onUpdateNeededListener: OnUpdateNeededL
     }
 
     class Builder(private val remoteConfig: FirebaseRemoteConfig) {
-        private var onUpdateNeededListener: OnUpdateNeededListener? = null
+        private var onUpdateNeededListener: ForceUpdateUseCase? = null
 
-        fun onUpdateNeeded(onUpdateNeededListener: OnUpdateNeededListener): Builder {
+        fun onUpdateNeeded(onUpdateNeededListener: ForceUpdateUseCase): Builder {
             this.onUpdateNeededListener = onUpdateNeededListener
             return this
         }
