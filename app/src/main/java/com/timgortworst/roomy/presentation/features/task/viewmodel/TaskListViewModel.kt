@@ -11,8 +11,12 @@ import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
 import com.timgortworst.roomy.domain.usecase.SuspendUseCase
 import com.timgortworst.roomy.domain.usecase.UseCase
-import com.timgortworst.roomy.domain.usecase.task.CompleteTaskUseCase
-import com.timgortworst.roomy.domain.usecase.task.DeleteTaskUseCase
+import com.timgortworst.roomy.domain.usecase.task.CompleteTaskUseCaseImpl
+import com.timgortworst.roomy.domain.usecase.task.DeleteTaskUseCaseImpl
+import com.timgortworst.roomy.presentation.usecase.CompleteTaskUseCase
+import com.timgortworst.roomy.presentation.usecase.DeleteTaskUseCase
+import com.timgortworst.roomy.presentation.usecase.GetAllTasksUseCase
+import com.timgortworst.roomy.presentation.usecase.GetTasksForUserUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -20,10 +24,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TaskListViewModel(
-    private val completeTaskUseCase: UseCase<Flow<Response<Nothing>>, CompleteTaskUseCase.Params>,
-    private val deleteTaskUseCase: UseCase<Flow<Response<Nothing>>, DeleteTaskUseCase.Params>,
-    private val getAllTasksUseCase: SuspendUseCase<Query, Unit>,
-    private val getTasksForUserUseCase: SuspendUseCase<Query, Unit>
+    private val completeTaskUseCase: CompleteTaskUseCase,
+    private val deleteTaskUseCase: DeleteTaskUseCase,
+    private val getAllTasksUseCase: GetAllTasksUseCase,
+    private val getTasksForUserUseCase: GetTasksForUserUseCase
 ) : ViewModel() {
 
     private val _showLoading = MutableLiveData<Boolean>()
@@ -35,11 +39,11 @@ class TaskListViewModel(
         get() = _liveQueryOptions
 
     fun tasksCompleted(tasks: List<Task>): Flow<Response<Nothing>> {
-        return completeTaskUseCase.execute(CompleteTaskUseCase.Params(tasks))
+        return completeTaskUseCase.execute(CompleteTaskUseCaseImpl.Params(tasks))
     }
 
     fun deleteTasks(tasks: List<Task>): Flow<Response<Nothing>> {
-        return deleteTaskUseCase.execute(DeleteTaskUseCase.Params(tasks))
+        return deleteTaskUseCase.execute(DeleteTaskUseCaseImpl.Params(tasks))
     }
 
     suspend fun loadInitialQuery() = withContext(Dispatchers.IO) {

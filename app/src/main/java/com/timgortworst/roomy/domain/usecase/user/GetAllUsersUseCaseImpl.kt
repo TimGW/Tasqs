@@ -1,24 +1,22 @@
 package com.timgortworst.roomy.domain.usecase.user
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Source
-import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.domain.usecase.UseCase
-import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.repository.UserRepository
+import com.timgortworst.roomy.presentation.usecase.GetAllUsersUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.coroutines.coroutineContext
 
-class GetAllUsersUseCase(
+class GetAllUsersUseCaseImpl(
     private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<LiveData<Response<List<User>>>, Unit> {
+) : GetAllUsersUseCase {
 
     override fun execute(params: Unit?)= liveData(Dispatchers.IO) {
         val loadingJob = CoroutineScope(coroutineContext).launch {

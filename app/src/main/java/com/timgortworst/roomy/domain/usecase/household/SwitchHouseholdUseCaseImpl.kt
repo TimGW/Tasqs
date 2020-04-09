@@ -2,25 +2,24 @@ package com.timgortworst.roomy.domain.usecase.household
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.timgortworst.roomy.domain.model.response.ErrorHandler
+import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.HouseholdRepository
 import com.timgortworst.roomy.domain.repository.TaskRepository
 import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.domain.usecase.UseCase
-import com.timgortworst.roomy.domain.model.response.ErrorHandler
-import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
+import com.timgortworst.roomy.presentation.usecase.SwitchHouseholdUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class SwitchHouseholdUseCase(
+class SwitchHouseholdUseCaseImpl(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository,
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler,
     private val fbAuth: FirebaseAuth
-) : UseCase<Flow<Response<StartUpAction>>, SwitchHouseholdUseCase.Params> {
+) : SwitchHouseholdUseCase {
 
     data class Params(val newId: String)
 

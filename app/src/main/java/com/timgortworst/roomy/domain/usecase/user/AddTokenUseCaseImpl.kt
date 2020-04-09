@@ -2,10 +2,11 @@ package com.timgortworst.roomy.domain.usecase.user
 
 import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.domain.usecase.SuspendUseCase
+import com.timgortworst.roomy.presentation.usecase.AddTokenUseCase
 
-class AddTokenUseCase(
+class AddTokenUseCaseImpl(
     private val userRepository: UserRepository
-) : SuspendUseCase<Unit, AddTokenUseCase.Params> {
+) : AddTokenUseCase {
 
     data class Params(val token: String)
 

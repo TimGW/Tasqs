@@ -4,19 +4,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.domain.usecase.UseCase
-import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.presentation.usecase.GetUserUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class GetUserUseCase(
+class GetUserUseCaseImpl(
     private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<User>>, GetUserUseCase.Params> {
+) : GetUserUseCase {
 
     data class Params(
         val source: Source = Source.DEFAULT,

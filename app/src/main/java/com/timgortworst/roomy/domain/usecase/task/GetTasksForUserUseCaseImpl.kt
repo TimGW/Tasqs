@@ -1,14 +1,13 @@
 package com.timgortworst.roomy.domain.usecase.task
 
-import com.google.firebase.firestore.Query
 import com.timgortworst.roomy.domain.repository.TaskRepository
 import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.domain.usecase.SuspendUseCase
+import com.timgortworst.roomy.presentation.usecase.GetTasksForUserUseCase
 
-class GetTasksForUserUseCase(
+class GetTasksForUserUseCaseImpl(
     private val taskRepository: TaskRepository,
     private val userRepository: UserRepository
-) : SuspendUseCase<Query, Unit> {
+) : GetTasksForUserUseCase {
 
     override suspend fun execute(params: Unit?)= taskRepository.getTasksForUserQuery(
         userRepository.getFbUser()?.uid.orEmpty()

@@ -12,7 +12,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
-import com.timgortworst.roomy.domain.usecase.forcedupdate.ForceUpdateUseCase
+import com.timgortworst.roomy.domain.usecase.forcedupdate.ForceUpdateUseCaseImpl
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
@@ -21,7 +21,7 @@ import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.signin.SignInActivity
 import org.koin.android.ext.android.inject
 
-class SplashActivity : BaseActivity(), ForceUpdateUseCase.OnUpdateNeededListener {
+class SplashActivity : BaseActivity(), ForceUpdateUseCaseImpl.OnUpdateNeededListener {
     private val viewModel: SplashViewModel by inject()
 
     companion object {
@@ -37,7 +37,7 @@ class SplashActivity : BaseActivity(), ForceUpdateUseCase.OnUpdateNeededListener
         val remoteConfig = FirebaseRemoteConfig.getInstance()
         val currentVersion = RoomyApp.getAppVersion()
 
-        ForceUpdateUseCase.with(remoteConfig)
+        ForceUpdateUseCaseImpl.with(remoteConfig)
             .onUpdateNeeded(this)
             .check(currentVersion)
 

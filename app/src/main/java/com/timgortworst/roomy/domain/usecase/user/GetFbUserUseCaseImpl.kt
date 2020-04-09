@@ -1,12 +1,11 @@
 package com.timgortworst.roomy.domain.usecase.user
 
-import com.google.firebase.auth.FirebaseUser
 import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.domain.usecase.UseCase
+import com.timgortworst.roomy.presentation.usecase.GetFbUserUseCase
 
-class GetFbUserUseCase(
+class GetFbUserUseCaseImpl(
     private val userRepository: UserRepository
-) : UseCase<FirebaseUser?, Unit> {
+) : GetFbUserUseCase {
 
     override fun execute(params: Unit?) = userRepository.getFbUser()
 }

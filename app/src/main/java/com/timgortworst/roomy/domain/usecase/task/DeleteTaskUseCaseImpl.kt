@@ -5,16 +5,15 @@ import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.TaskRepository
-import com.timgortworst.roomy.domain.usecase.UseCase
+import com.timgortworst.roomy.presentation.usecase.DeleteTaskUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class DeleteTaskUseCase(
+class DeleteTaskUseCaseImpl(
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<Nothing>>, DeleteTaskUseCase.Params> {
+) : DeleteTaskUseCase {
 
     data class Params(val tasks: List<Task>)
 

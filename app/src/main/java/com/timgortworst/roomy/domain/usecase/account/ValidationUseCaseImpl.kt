@@ -7,16 +7,17 @@ import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
+import com.timgortworst.roomy.presentation.usecase.ValidationUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class ValidationUseCase(
+class ValidationUseCaseImpl(
     private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler,
     private val auth: FirebaseAuth
-) : UseCase<Flow<Response<StartUpAction>>, ValidationUseCase.Params> {
+) : ValidationUseCase {
 
     data class Params(val referredId: String)
 

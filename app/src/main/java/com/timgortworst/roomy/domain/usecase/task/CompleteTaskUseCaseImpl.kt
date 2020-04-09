@@ -7,19 +7,18 @@ import com.timgortworst.roomy.domain.model.TaskRecurrence
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.TaskRepository
-import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.utils.TimeOperations
+import com.timgortworst.roomy.presentation.usecase.CompleteTaskUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 
-class CompleteTaskUseCase(
+class CompleteTaskUseCaseImpl(
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<Nothing>>, CompleteTaskUseCase.Params> {
+) : CompleteTaskUseCase {
 
     data class Params(val tasks: List<Task>)
 

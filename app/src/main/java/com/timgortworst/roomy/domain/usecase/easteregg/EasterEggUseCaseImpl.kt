@@ -4,10 +4,11 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.presentation.base.model.EasterEgg
+import com.timgortworst.roomy.presentation.usecase.EasterEggUseCase
 
-class EasterEggUseCase(
+class EasterEggUseCaseImpl(
     private val sharedPrefs: SharedPrefs
-) : UseCase<EasterEgg?, EasterEggUseCase.Params> {
+) : EasterEggUseCase {
 
     data class Params(internal val count: Int)
 

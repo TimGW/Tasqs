@@ -1,29 +1,25 @@
-package com.timgortworst.roomy.domain.usecase.user
+package com.timgortworst.roomy.domain.usecase.task
 
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.timgortworst.roomy.domain.repository.HouseholdRepository
-import com.timgortworst.roomy.domain.repository.TaskRepository
-import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.domain.usecase.UseCase
+import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.repository.TaskRepository
+import com.timgortworst.roomy.presentation.usecase.CreateOrUpdateTaskUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
-class RemoveUserUseCase(
-    private val userRepository: UserRepository,
+class CreateOrUpdateTaskUseCaseImpl(
     private val taskRepository: TaskRepository,
-    private val householdRepository: HouseholdRepository,
     private val errorHandler: ErrorHandler
-) : UseCase<Flow<Response<String>>, RemoveUserUseCase.Params> {
+) : CreateOrUpdateTaskUseCase {
 
-    data class Params(val id: String)
+    data class Params(val task: Task)
 
     override fun execute(params: Params?) = callbackFlow {
         checkNotNull(params)
@@ -34,20 +30,20 @@ class RemoveUserUseCase(
         }
 
         try {
-            removeEventsAssignedToUser(params.id)
-            val householdId = householdRepository.createHousehold()
-            userRepository.updateUser(userId = params.id, householdId = householdId, isAdmin = true)
+            // temporary disable the done button
+            val result = params.task.apply { isDoneEnabled = false }
 
-            offer(Response.Success(params.id))
+            if (params.task.id.isEmpty()) {
+                taskRepository.createTask(result)
+            } else {
+                taskRepository.updateTask(result)
+            }
+            offer(Response.Success(params.task))
         } catch (e: FirebaseFirestoreException) {
             offer(Response.Error(errorHandler.getError(e)))
-        }  finally {
+        } finally {
             awaitClose { loadingJob.cancel() }
         }
     }.flowOn(Dispatchers.IO)
-
-    private suspend fun removeEventsAssignedToUser(userId: String) {
-        val tasks = taskRepository.getTasksForUser(userId)
-        taskRepository.deleteTasks(tasks)
-    }
 }
+

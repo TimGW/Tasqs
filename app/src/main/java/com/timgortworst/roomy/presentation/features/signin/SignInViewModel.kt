@@ -5,19 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firebase.ui.auth.IdpResponse
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.iid.FirebaseInstanceId
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.usecase.UseCase
-import com.timgortworst.roomy.domain.usecase.account.SignInUseCase
+import com.timgortworst.roomy.domain.usecase.account.SignInUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.SignInAction
+import com.timgortworst.roomy.presentation.usecase.SignInUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class SignInViewModel(
-    private val signInUseCase: UseCase<Flow<Response<String>>, SignInUseCase.Params>
+    private val signInUseCase: SignInUseCase
 ) : ViewModel() {
 
     private val _action = MutableLiveData<SignInAction>()
@@ -29,7 +27,7 @@ class SignInViewModel(
         viewModelScope.launch {
             val isNewUser = response.isNewUser
 
-            val params = SignInUseCase.Params(isNewUser)
+            val params = SignInUseCaseImpl.Params(isNewUser)
             signInUseCase.execute(params).collect {
                 when (it) {
                     Response.Loading -> _action.value = SignInAction.LoadingDialog

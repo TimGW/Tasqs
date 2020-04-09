@@ -5,16 +5,17 @@ import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.usecase.UseCase
-import com.timgortworst.roomy.domain.usecase.ads.AdsVisibleUseCase
-import com.timgortworst.roomy.domain.usecase.user.GetUserUseCase
+import com.timgortworst.roomy.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
+import com.timgortworst.roomy.presentation.usecase.AdsVisibleUseCase
+import com.timgortworst.roomy.presentation.usecase.GetUserUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val adsVisibleUseCase: UseCase<Boolean, Unit>,
-    private val getUserUseCase: UseCase<Flow<Response<User>>, GetUserUseCase.Params>
+    private val adsVisibleUseCase: AdsVisibleUseCase,
+    private val getUserUseCase: GetUserUseCase
 ) : ViewModel() {
 
     private val _uriEvent = MutableLiveData<Response<Uri>>()

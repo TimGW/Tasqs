@@ -4,24 +4,23 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.usecase.SuspendUseCase
-import com.timgortworst.roomy.domain.usecase.user.AddTokenUseCase
+import com.timgortworst.roomy.domain.usecase.user.AddTokenUseCaseImpl
 import com.timgortworst.roomy.presentation.features.notifications.NotificationBuilder
 import com.timgortworst.roomy.presentation.features.notifications.NotificationWorkManager
+import com.timgortworst.roomy.presentation.usecase.AddTokenUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinComponent
-import org.koin.core.qualifier.named
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 
 class FirebaseMsgService : FirebaseMessagingService(), KoinComponent {
     private val workerNotification: NotificationWorkManager by inject()
-    private val addTokenUseCase: SuspendUseCase<Unit, AddTokenUseCase.Params> by inject(named("AddTokenUseCase"))
+    private val addTokenUseCase: AddTokenUseCase by inject()
     private val serviceJob = Job()
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
@@ -105,7 +104,7 @@ class FirebaseMsgService : FirebaseMessagingService(), KoinComponent {
 
     override fun onNewToken(token: String) {
         serviceScope.launch {
-            addTokenUseCase.execute(AddTokenUseCase.Params(token))
+            addTokenUseCase.execute(AddTokenUseCaseImpl.Params(token))
         }
     }
 

@@ -4,14 +4,16 @@ import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.usecase.UseCase
-import com.timgortworst.roomy.domain.usecase.user.GetUserUseCase
+import com.timgortworst.roomy.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.EasterEgg
-import com.timgortworst.roomy.domain.usecase.easteregg.EasterEggUseCase
+import com.timgortworst.roomy.domain.usecase.easteregg.EasterEggUseCaseImpl
+import com.timgortworst.roomy.presentation.usecase.EasterEggUseCase
+import com.timgortworst.roomy.presentation.usecase.GetUserUseCase
 import kotlinx.coroutines.flow.Flow
 
 class SettingsViewModel(
-    private val easterEggUseCase: UseCase<EasterEgg?, EasterEggUseCase.Params>,
-    getUserUseCase: UseCase<Flow<Response<User>>, GetUserUseCase.Params>
+    private val easterEggUseCase: EasterEggUseCase,
+    getUserUseCase: GetUserUseCase
 ) : ViewModel() {
 
     private val _easterEgg = MutableLiveData<EasterEgg?>()
@@ -20,10 +22,10 @@ class SettingsViewModel(
 
     val currentUser =
         getUserUseCase.execute(
-            GetUserUseCase.Params()
+            GetUserUseCaseImpl.Params()
         ).asLiveData(viewModelScope.coroutineContext)
 
     fun onAppVersionClick(count: Int) {
-        _easterEgg.value = easterEggUseCase.execute(EasterEggUseCase.Params(count))
+        _easterEgg.value = easterEggUseCase.execute(EasterEggUseCaseImpl.Params(count))
     }
 }

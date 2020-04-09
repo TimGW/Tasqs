@@ -10,9 +10,11 @@ import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.usecase.UseCase
-import com.timgortworst.roomy.domain.usecase.user.GetAllUsersUseCase
-import com.timgortworst.roomy.domain.usecase.task.CreateOrUpdateTaskUseCase
+import com.timgortworst.roomy.domain.usecase.task.CreateOrUpdateTaskUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.Event
+import com.timgortworst.roomy.presentation.usecase.CreateOrUpdateTaskUseCase
+import com.timgortworst.roomy.presentation.usecase.GetAllUsersUseCase
+import com.timgortworst.roomy.presentation.usecase.GetFbUserUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -21,9 +23,9 @@ import org.threeten.bp.format.TextStyle
 import java.util.*
 
 class TaskEditViewModel(
-    private val createOrUpdateTaskUseCase: UseCase<Flow<Response<Task>>, CreateOrUpdateTaskUseCase.Params>,
-    private val getCurrentFbUserUseCase: UseCase<FirebaseUser?, Unit>,
-    getAllUsersUseCase: UseCase<LiveData<Response<List<User>>>, Unit>
+    private val createOrUpdateTaskUseCase: CreateOrUpdateTaskUseCase,
+    private val getCurrentFbUserUseCase: GetFbUserUseCase,
+    getAllUsersUseCase: GetAllUsersUseCase
 ) : ViewModel() {
     val allUsersLiveData = getAllUsersUseCase.execute()
 
@@ -49,7 +51,7 @@ class TaskEditViewModel(
             _taskDone.value = Event(Response.Empty(R.string.task_edit_error_empty_description))
             return@launch
         }
-        val params = CreateOrUpdateTaskUseCase.Params(task)
+        val params = CreateOrUpdateTaskUseCaseImpl.Params(task)
         createOrUpdateTaskUseCase.execute(params).collect {
             _taskDone.value = Event(it)
         }
