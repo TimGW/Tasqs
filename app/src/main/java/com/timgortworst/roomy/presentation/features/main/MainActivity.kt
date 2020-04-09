@@ -89,10 +89,17 @@ class MainActivity : BaseActivity() {
 
         viewModel.uriEvent.observe(this, Observer { response ->
             when (response) {
-                Response.Loading -> TODO()
-                is Response.Success -> response.data?.let { presentShareLinkUri(it) }
-                is Response.Error -> TODO()
-                is Response.Empty -> TODO()
+                Response.Loading -> showProgressDialog()
+                is Response.Success -> {
+                    hideProgressDialog()
+                    response.data?.let { presentShareLinkUri(it) }
+                }
+                is Response.Error -> {
+                    binding.bottomNavigationContainer.snackbar(
+                        message = getString(R.string.error_connection),
+                        anchorView = binding.fab
+                    )
+                }
             }
         })
     }
@@ -173,7 +180,6 @@ class MainActivity : BaseActivity() {
                 openTaskEditActivity()
             }
             userListFragment::class.java.toString() -> { _ ->
-                showProgressDialog()
                 viewModel.inviteUser()
             }
             else -> { _ -> }
@@ -229,7 +235,6 @@ class MainActivity : BaseActivity() {
                 } else {
                     Log.e(RoomyApp.TAG, task.exception?.message!!)
                 }
-                hideProgressDialog()
             }
     }
 

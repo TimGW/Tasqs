@@ -26,7 +26,13 @@ class GetUserUseCaseImpl(
 
         emit(Response.Loading)
         try {
-            emit(Response.Success(userRepository.getUser(params.userId, params.source)))
+            val user = userRepository.getUser(params.userId, params.source)
+
+            if (user != null) {
+                emit(Response.Success(user))
+            } else {
+                emit(Response.Empty())
+            }
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
         }

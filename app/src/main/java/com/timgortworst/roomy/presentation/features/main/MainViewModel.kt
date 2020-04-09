@@ -23,7 +23,6 @@ class MainViewModel(
         get() = _uriEvent
 
     fun inviteUser() = viewModelScope.launch {
-        //todo combine loading of getUser and build uri
         getUserUseCase.execute().collect { response ->
             when (response) {
                 Response.Loading -> _uriEvent.value = Response.Loading
