@@ -1,18 +1,14 @@
 package com.timgortworst.roomy.presentation.features.task.viewmodel
 
 import androidx.lifecycle.*
-import com.google.firebase.auth.FirebaseUser
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.User
-import com.timgortworst.roomy.domain.usecase.UseCase
+import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.usecase.task.CreateOrUpdateTaskUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.Event
 import com.timgortworst.roomy.presentation.usecase.CreateOrUpdateTaskUseCase
 import com.timgortworst.roomy.presentation.usecase.GetAllUsersUseCase
 import com.timgortworst.roomy.presentation.usecase.GetFbUserUseCase
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime

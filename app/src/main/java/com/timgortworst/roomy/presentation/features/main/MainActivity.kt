@@ -22,7 +22,6 @@ import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
 import com.timgortworst.roomy.presentation.features.user.UserListFragment
 import org.koin.android.ext.android.inject
 
-// todo refactor logic to viewmodel / usecase
 class MainActivity : BaseActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
@@ -108,7 +107,7 @@ class MainActivity : BaseActivity() {
         super.onResume()
         networkChangeReceiver.register()
         viewModel.showOrHideAd().observe(this, Observer {
-            if (it) showAdContainer() else hideAdContainer()
+            if (it is Response.Success && it.data == true) showAdContainer() else hideAdContainer()
         })
     }
 

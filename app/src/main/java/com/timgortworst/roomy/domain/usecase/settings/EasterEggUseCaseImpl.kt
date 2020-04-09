@@ -1,9 +1,8 @@
-package com.timgortworst.roomy.domain.usecase.easteregg
+package com.timgortworst.roomy.domain.usecase.settings
 
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.presentation.base.model.EasterEgg
 import com.timgortworst.roomy.presentation.usecase.EasterEggUseCase
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +20,10 @@ class EasterEggUseCaseImpl(
 
         if (sharedPrefs.isAdsEnabled()) {
             when {
-                betweenUntil(params.count, CLICKS_FOR_MESSAGE, CLICKS_FOR_EASTER_EGG) -> {
+                betweenUntil(params.count,
+                    CLICKS_FOR_MESSAGE,
+                    CLICKS_FOR_EASTER_EGG
+                ) -> {
                     emit(
                         Response.Success(
                             EasterEgg(

@@ -1,20 +1,22 @@
 package com.timgortworst.roomy.presentation.features.settings
 
 import androidx.lifecycle.*
-import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.EasterEgg
-import com.timgortworst.roomy.domain.usecase.easteregg.EasterEggUseCaseImpl
+import com.timgortworst.roomy.domain.usecase.settings.EasterEggUseCaseImpl
+import com.timgortworst.roomy.domain.usecase.settings.SetDarkModeUseCaseImpl
+import com.timgortworst.roomy.presentation.usecase.SetDarkModeUseCase
 import com.timgortworst.roomy.presentation.usecase.EasterEggUseCase
+import com.timgortworst.roomy.presentation.usecase.GetDarkModeUseCase
 import com.timgortworst.roomy.presentation.usecase.GetUserUseCase
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val easterEggUseCase: EasterEggUseCase,
+    private val setDarkModeUseCase: SetDarkModeUseCase,
+    private val getDarkModeUseCase: GetDarkModeUseCase,
     getUserUseCase: GetUserUseCase
 ) : ViewModel() {
 
@@ -33,5 +35,11 @@ class SettingsViewModel(
                 _easterEgg.value = it
             }
         }
+    }
+
+    fun getDarkModeSetting() = getDarkModeUseCase.execute().asLiveData()
+
+    fun setDarkModeSetting(darkModeSetting: Int) {
+        setDarkModeUseCase.execute(SetDarkModeUseCaseImpl.Params(darkModeSetting))
     }
 }

@@ -30,7 +30,6 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var parentActivity: SettingsActivity
-    private val sharedPref: SharedPrefs by inject()
     private val settingsViewModel: SettingsViewModel by viewModel()
     private var counter: Int = 0
     private var snackbar: Snackbar? = null
@@ -90,8 +89,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun displayPrefs() {
         val darkModePref = (findPreference("dark_mode_key") as? ListPreference)
-        darkModePref?.summary =
-            resources.getStringArray(R.array.night_mode_items)[sharedPref.getDarkModeSetting()]
+
+        settingsViewModel.getDarkModeSetting().observe(viewLifecycleOwner,
+            Observer { response ->
+                when (response) {
+                    is Response.Success -> darkModePref?.summary = resources.getStringArray(R.array.night_mode_items)[response.data!!]
+                    is Response.Error -> darkModePref?.summary = "-"
+                }
+            })
+
         darkModePref?.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _, newValue ->
                 val darkModeSetting =
@@ -103,7 +109,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     else -> AppCompatDelegate.MODE_NIGHT_UNSPECIFIED
                 }
                 AppCompatDelegate.setDefaultNightMode(nightMode)
-                sharedPref.setDarkModeSetting(darkModeSetting)
+                settingsViewModel.setDarkModeSetting(darkModeSetting)
                 darkModePref?.summary =
                     resources.getStringArray(R.array.night_mode_items)[darkModeSetting]
                 true
