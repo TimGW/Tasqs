@@ -36,5 +36,5 @@ class MainViewModel(
         }
     }
 
-    fun showOrHideAd()= liveData { emit(adsVisibleUseCase.execute()) }
+    fun showOrHideAd()= adsVisibleUseCase.execute()
 }
