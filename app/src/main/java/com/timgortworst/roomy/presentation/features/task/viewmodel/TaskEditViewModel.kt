@@ -1,9 +1,6 @@
 package com.timgortworst.roomy.presentation.features.task.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseUser
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
@@ -27,7 +24,7 @@ class TaskEditViewModel(
     private val getCurrentFbUserUseCase: GetFbUserUseCase,
     getAllUsersUseCase: GetAllUsersUseCase
 ) : ViewModel() {
-    val allUsersLiveData = getAllUsersUseCase.execute()
+    val allUsersLiveData = getAllUsersUseCase.execute().asLiveData(viewModelScope.coroutineContext)
 
     private val _prettyDate = MutableLiveData<Event<String>>()
     val prettyDate: LiveData<Event<String>>

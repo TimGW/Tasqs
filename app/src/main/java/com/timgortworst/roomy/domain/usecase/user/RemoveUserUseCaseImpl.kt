@@ -6,14 +6,18 @@ import com.timgortworst.roomy.domain.repository.TaskRepository
 import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.presentation.RoomyApp
+import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
 import com.timgortworst.roomy.presentation.usecase.RemoveUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 class RemoveUserUseCaseImpl(
     private val userRepository: UserRepository,
@@ -24,12 +28,12 @@ class RemoveUserUseCaseImpl(
 
     data class Params(val id: String)
 
-    override fun execute(params: Params?) = callbackFlow {
+    override fun execute(params: Params?) = flow {
         checkNotNull(params)
 
         val loadingJob = CoroutineScope(coroutineContext).launch {
-            delay(500) // delay 0.5s before showing loading
-            offer(Response.Loading)
+            delay(LOADING_DELAY)
+            emit(Response.Loading)
         }
 
         try {
@@ -37,11 +41,11 @@ class RemoveUserUseCaseImpl(
             val householdId = householdRepository.createHousehold()
             userRepository.updateUser(userId = params.id, householdId = householdId, isAdmin = true)
 
-            offer(Response.Success(params.id))
+            emit(Response.Success(params.id))
         } catch (e: FirebaseFirestoreException) {
-            offer(Response.Error(errorHandler.getError(e)))
-        }  finally {
-            awaitClose { loadingJob.cancel() }
+            emit(Response.Error(errorHandler.getError(e)))
+        } finally {
+            loadingJob.cancel()
         }
     }.flowOn(Dispatchers.IO)
 

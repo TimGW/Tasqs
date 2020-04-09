@@ -15,10 +15,10 @@ import org.koin.dsl.module
 val useCaseModule = module {
     factory<ErrorHandler> { ErrorHandlerImpl() }
 
-    factory<AddTokenUseCase> { AddTokenUseCaseImpl(get()) }
+    factory<AddTokenUseCase> { AddTokenUseCaseImpl(get(), get()) }
     factory<GetTasksForUserUseCase> { GetTasksForUserUseCaseImpl(get(), get()) }
     factory<GetAllTasksUseCase> { GetAllTasksUseCaseImpl(get()) }
-    factory<GetFbUserUseCase> { GetFbUserUseCaseImpl(get()) }
+    factory<GetFbUserUseCase> { GetFbUserUseCaseImpl(get(), get()) }
     factory<DeleteTaskUseCase> { DeleteTaskUseCaseImpl(get(), get()) }
     factory<CompleteTaskUseCase> { CompleteTaskUseCaseImpl(get(), get()) }
     factory<CreateOrUpdateTaskUseCase> { CreateOrUpdateTaskUseCaseImpl(get(), get()) }

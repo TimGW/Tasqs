@@ -18,7 +18,7 @@ class UserViewModel(
     getAllUsersUseCase: GetAllUsersUseCase
 ) : ViewModel() {
 
-    val allUsers = getAllUsersUseCase.execute()
+    val allUsers = getAllUsersUseCase.execute().asLiveData(viewModelScope.coroutineContext)
 
     private val _userOptions = MutableLiveData<Event<User>>()
     val userOptions: LiveData<Event<User>>

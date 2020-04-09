@@ -54,8 +54,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         privacyPrefs()
         aboutPrefs()
 
-        settingsViewModel.easterEgg.observe(viewLifecycleOwner, Observer {
-            it?.let { easterEggMsg(it.id, it.data) }
+        settingsViewModel.easterEgg.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Response.Success -> { response.data?.let { easterEggMsg(it.id, it.data) } }
+            }
         })
     }
 

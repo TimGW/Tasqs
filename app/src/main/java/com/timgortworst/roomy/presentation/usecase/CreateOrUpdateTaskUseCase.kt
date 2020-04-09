@@ -7,4 +7,4 @@ import com.timgortworst.roomy.domain.usecase.task.CreateOrUpdateTaskUseCaseImpl
 import kotlinx.coroutines.flow.Flow
 
 interface CreateOrUpdateTaskUseCase :
-    UseCase<Flow<Response<Task>>, CreateOrUpdateTaskUseCaseImpl.Params>
+    UseCase<Task, CreateOrUpdateTaskUseCaseImpl.Params>

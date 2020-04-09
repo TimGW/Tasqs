@@ -8,12 +8,18 @@ import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.TaskRepository
 import com.timgortworst.roomy.domain.utils.TimeOperations
+import com.timgortworst.roomy.presentation.RoomyApp
+import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
 import com.timgortworst.roomy.presentation.usecase.CompleteTaskUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
+import kotlin.coroutines.coroutineContext
 
 class CompleteTaskUseCaseImpl(
     private val taskRepository: TaskRepository,
@@ -25,7 +31,10 @@ class CompleteTaskUseCaseImpl(
     override fun execute(params: Params?)= flow {
         checkNotNull(params)
 
-        emit(Response.Loading)
+        val loadingJob = CoroutineScope(coroutineContext).launch {
+            delay(LOADING_DELAY)
+            emit(Response.Loading)
+        }
 
         try {
             params.tasks.filter {
@@ -47,6 +56,8 @@ class CompleteTaskUseCaseImpl(
             emit(Response.Success())
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
+        } finally {
+            loadingJob.cancel()
         }
     }.flowOn(Dispatchers.IO)
 

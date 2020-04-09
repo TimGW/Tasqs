@@ -10,14 +10,16 @@ import com.timgortworst.roomy.domain.usecase.easteregg.EasterEggUseCaseImpl
 import com.timgortworst.roomy.presentation.usecase.EasterEggUseCase
 import com.timgortworst.roomy.presentation.usecase.GetUserUseCase
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val easterEggUseCase: EasterEggUseCase,
     getUserUseCase: GetUserUseCase
 ) : ViewModel() {
 
-    private val _easterEgg = MutableLiveData<EasterEgg?>()
-    val easterEgg: LiveData<EasterEgg?>
+    private val _easterEgg = MutableLiveData<Response<EasterEgg?>>()
+    val easterEgg: LiveData<Response<EasterEgg?>>
         get() = _easterEgg
 
     val currentUser =
@@ -26,6 +28,10 @@ class SettingsViewModel(
         ).asLiveData(viewModelScope.coroutineContext)
 
     fun onAppVersionClick(count: Int) {
-        _easterEgg.value = easterEggUseCase.execute(EasterEggUseCaseImpl.Params(count))
+        viewModelScope.launch {
+            easterEggUseCase.execute(EasterEggUseCaseImpl.Params(count)).collect {
+                _easterEgg.value = it
+            }
+        }
     }
 }

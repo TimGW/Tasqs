@@ -6,10 +6,16 @@ import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.presentation.RoomyApp
+import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
 import com.timgortworst.roomy.presentation.usecase.GetUserUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 class GetUserUseCaseImpl(
     private val userRepository: UserRepository,
@@ -24,7 +30,11 @@ class GetUserUseCaseImpl(
     override fun execute(params: Params?) = flow {
         checkNotNull(params)
 
-        emit(Response.Loading)
+        val loadingJob = CoroutineScope(coroutineContext).launch {
+            delay(LOADING_DELAY)
+            emit(Response.Loading)
+        }
+
         try {
             val user = userRepository.getUser(params.userId, params.source)
 
@@ -35,6 +45,8 @@ class GetUserUseCaseImpl(
             }
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
+        } finally {
+            loadingJob.cancel()
         }
     }.flowOn(Dispatchers.IO)
 }

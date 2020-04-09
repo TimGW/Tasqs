@@ -2,16 +2,19 @@ package com.timgortworst.roomy.domain.usecase.account
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.repository.UserRepository
+import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
 import com.timgortworst.roomy.presentation.usecase.ValidationUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 class ValidationUseCaseImpl(
     private val userRepository: UserRepository,
@@ -24,12 +27,18 @@ class ValidationUseCaseImpl(
     override fun execute(params: Params?) = flow {
         checkNotNull(params)
 
-        emit(Response.Loading)
+        val loadingJob = CoroutineScope(coroutineContext).launch {
+            delay(RoomyApp.LOADING_DELAY)
+            emit(Response.Loading)
+        }
+
         try {
             val currentId = fetchHouseholdId() // fetch here to update local cache
             emit(validate(currentId, params.referredId))
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
+        } finally {
+            loadingJob.cancel()
         }
     }.flowOn(Dispatchers.IO)
 

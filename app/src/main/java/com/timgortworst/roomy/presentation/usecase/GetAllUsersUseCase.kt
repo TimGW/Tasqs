@@ -1,8 +1,8 @@
 package com.timgortworst.roomy.presentation.usecase
 
-import androidx.lifecycle.LiveData
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.usecase.UseCase
+import kotlinx.coroutines.flow.Flow
 
-interface GetAllUsersUseCase : UseCase<LiveData<Response<List<User>>>, Unit>
+interface GetAllUsersUseCase : UseCase<List<User>, Unit>

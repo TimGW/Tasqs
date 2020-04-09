@@ -100,6 +100,7 @@ class RoomyApp : Application(), Configuration.Provider {
     companion object {
         const val TAG = "RoomyApp"
         const val KEY_ENABLE_ADS = "enable_ads"
+        const val LOADING_DELAY = 500L
         private lateinit var instance: RoomyApp
 
         fun getAppVersion(): String {

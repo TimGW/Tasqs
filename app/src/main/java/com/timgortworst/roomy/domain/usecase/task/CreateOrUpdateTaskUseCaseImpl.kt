@@ -5,14 +5,18 @@ import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.TaskRepository
+import com.timgortworst.roomy.presentation.RoomyApp
+import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
 import com.timgortworst.roomy.presentation.usecase.CreateOrUpdateTaskUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 class CreateOrUpdateTaskUseCaseImpl(
     private val taskRepository: TaskRepository,
@@ -21,12 +25,12 @@ class CreateOrUpdateTaskUseCaseImpl(
 
     data class Params(val task: Task)
 
-    override fun execute(params: Params?) = callbackFlow {
+    override fun execute(params: Params?) = flow {
         checkNotNull(params)
 
         val loadingJob = CoroutineScope(coroutineContext).launch {
-            delay(500) // delay 0.5s before showing loading
-            offer(Response.Loading)
+            delay(LOADING_DELAY)
+            emit(Response.Loading)
         }
 
         try {
@@ -38,11 +42,11 @@ class CreateOrUpdateTaskUseCaseImpl(
             } else {
                 taskRepository.updateTask(result)
             }
-            offer(Response.Success(params.task))
+            emit(Response.Success(params.task))
         } catch (e: FirebaseFirestoreException) {
-            offer(Response.Error(errorHandler.getError(e)))
+            emit(Response.Error(errorHandler.getError(e)))
         } finally {
-            awaitClose { loadingJob.cancel() }
+           loadingJob.cancel()
         }
     }.flowOn(Dispatchers.IO)
 }
