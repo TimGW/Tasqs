@@ -1,6 +1,6 @@
 package com.timgortworst.roomy.presentation.usecase
 
-import androidx.lifecycle.LiveData
 import com.timgortworst.roomy.domain.usecase.UseCase
+import kotlinx.coroutines.flow.Flow
 
-interface AdsVisibleUseCase : UseCase<LiveData<Boolean>, Unit>
+interface AdsVisibleUseCase : UseCase<Flow<Boolean>, Unit>

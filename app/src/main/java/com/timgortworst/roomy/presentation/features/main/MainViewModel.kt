@@ -36,5 +36,5 @@ class MainViewModel(
         }
     }
 
-    fun showOrHideAd()= adsVisibleUseCase.execute()
+    fun showOrHideAd()= adsVisibleUseCase.execute().asLiveData(viewModelScope.coroutineContext)
 }
