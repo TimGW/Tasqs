@@ -15,8 +15,7 @@ class SharedPrefManager(context: Context) {
         sharedPreferences.edit().putLong(key, value).apply()
 
     fun getIntValue(key: String, default: Int = 0) = sharedPreferences.getInt(key, default)
-    fun setIntValue(key: String, value: Int) =
-        sharedPreferences.edit().putInt(key, value).apply()
+    fun setIntValue(key: String, value: Int) = sharedPreferences.edit().putInt(key, value).apply()
 
     fun getBoolValue(key: String, default: Boolean = false) =
         sharedPreferences.getBoolean(key, default)

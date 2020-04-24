@@ -90,13 +90,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun displayPrefs() {
         val darkModePref = (findPreference("dark_mode_key") as? ListPreference)
 
-        settingsViewModel.getDarkModeSetting().observe(viewLifecycleOwner,
-            Observer { response ->
-                when (response) {
-                    is Response.Success -> darkModePref?.summary = resources.getStringArray(R.array.night_mode_items)[response.data!!]
-                    is Response.Error -> darkModePref?.summary = "-"
-                }
-            })
+        darkModePref?.summary = resources
+            .getStringArray(R.array.night_mode_items)[settingsViewModel.getDarkModeSetting()]
 
         darkModePref?.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _, newValue ->

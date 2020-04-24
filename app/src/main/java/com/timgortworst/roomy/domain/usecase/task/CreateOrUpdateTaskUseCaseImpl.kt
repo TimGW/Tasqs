@@ -10,10 +10,9 @@ import com.timgortworst.roomy.presentation.usecase.task.CreateOrUpdateTaskUseCas
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class CreateOrUpdateTaskUseCaseImpl(
     private val taskRepository: TaskRepository,
@@ -22,12 +21,12 @@ class CreateOrUpdateTaskUseCaseImpl(
 
     data class Params(val task: Task)
 
-    override fun execute(params: Params?) = flow {
+    override fun execute(params: Params?) = channelFlow {
         checkNotNull(params)
 
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(LOADING_DELAY)
-            emit(Response.Loading)
+            offer(Response.Loading)
         }
 
         try {
@@ -39,9 +38,9 @@ class CreateOrUpdateTaskUseCaseImpl(
             } else {
                 taskRepository.updateTask(result)
             }
-            emit(Response.Success(params.task))
+            offer(Response.Success(params.task))
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
         } finally {
            loadingJob.cancel()
         }

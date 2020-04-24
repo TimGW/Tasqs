@@ -3,18 +3,17 @@ package com.timgortworst.roomy.domain.usecase.user
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Source
-import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
 import com.timgortworst.roomy.presentation.usecase.user.GetUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class GetUserUseCaseImpl(
     private val userRepository: UserRepository,
@@ -26,24 +25,24 @@ class GetUserUseCaseImpl(
         val userId: String? = FirebaseAuth.getInstance().currentUser?.uid
     )
 
-    override fun execute(params: Params?) = flow {
+    override fun execute(params: Params?) = channelFlow {
         checkNotNull(params)
 
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(LOADING_DELAY)
-            emit(Response.Loading)
+            offer(Response.Loading)
         }
 
         try {
             val user = userRepository.getUser(params.userId, params.source)
 
             if (user != null) {
-                emit(Response.Success(user))
+                offer(Response.Success(user))
             } else {
-                emit(Response.Empty())
+                offer(Response.Empty())
             }
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
         } finally {
             loadingJob.cancel()
         }

@@ -13,10 +13,9 @@ import com.timgortworst.roomy.presentation.usecase.household.SwitchHouseholdUseC
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class SwitchHouseholdUseCaseImpl(
     private val householdRepository: HouseholdRepository,
@@ -28,17 +27,17 @@ class SwitchHouseholdUseCaseImpl(
 
     data class Params(val newId: String)
 
-    override fun execute(params: Params?)= flow {
+    override fun execute(params: Params?) = channelFlow {
         checkNotNull(params)
 
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(LOADING_DELAY)
-            emit(Response.Loading)
+            offer(Response.Loading)
         }
 
         try {
-            val oldId = userRepository.getUser()?.householdId ?: return@flow
-            val currentUserId = fbAuth.currentUser?.uid ?: return@flow
+            val oldId = userRepository.getUser()?.householdId ?: return@channelFlow
+            val currentUserId = fbAuth.currentUser?.uid ?: return@channelFlow
 
             // remove old tasks assigned to user
             taskRepository.deleteTasks(
@@ -55,9 +54,9 @@ class SwitchHouseholdUseCaseImpl(
                 householdId = params.newId,
                 isAdmin = false
             )
-            emit(Response.Success(StartUpAction.TriggerMainFlow))
+            offer(Response.Success(StartUpAction.TriggerMainFlow))
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
         } finally {
             loadingJob.cancel()
         }

@@ -10,10 +10,9 @@ import com.timgortworst.roomy.presentation.usecase.task.DeleteTaskUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class DeleteTaskUseCaseImpl(
     private val taskRepository: TaskRepository,
@@ -22,19 +21,19 @@ class DeleteTaskUseCaseImpl(
 
     data class Params(val tasks: List<Task>)
 
-    override fun execute(params: Params?) = flow {
+    override fun execute(params: Params?) = channelFlow {
         checkNotNull(params)
 
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(LOADING_DELAY)
-            emit(Response.Loading)
+            offer(Response.Loading)
         }
 
         try {
             taskRepository.deleteTasks(params.tasks)
-            emit(Response.Success())
+            offer(Response.Success())
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
         } finally {
             loadingJob.cancel()
         }

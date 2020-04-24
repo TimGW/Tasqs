@@ -13,12 +13,11 @@ import com.timgortworst.roomy.presentation.usecase.task.CompleteTaskUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
-import kotlin.coroutines.coroutineContext
 
 class CompleteTaskUseCaseImpl(
     private val taskRepository: TaskRepository,
@@ -27,12 +26,12 @@ class CompleteTaskUseCaseImpl(
 
     data class Params(val tasks: List<Task>)
 
-    override fun execute(params: Params?)= flow {
+    override fun execute(params: Params?) = channelFlow {
         checkNotNull(params)
 
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(LOADING_DELAY)
-            emit(Response.Loading)
+            offer(Response.Loading)
         }
 
         try {
@@ -52,9 +51,9 @@ class CompleteTaskUseCaseImpl(
 
                 taskRepository.updateTasks(this)
             }
-            emit(Response.Success())
+            offer(Response.Success())
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
         } finally {
             loadingJob.cancel()
         }

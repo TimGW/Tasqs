@@ -10,29 +10,28 @@ import com.timgortworst.roomy.presentation.usecase.user.GetAllUsersUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class GetAllUsersUseCaseImpl(
     private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler
 ) : GetAllUsersUseCase {
 
-    override fun execute(params: Unit?)= flow {
+    override fun execute(params: Unit?) = channelFlow {
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(LOADING_DELAY)
-            emit(Response.Loading)
+            offer(Response.Loading)
         }
 
         try {
             val householdId = userRepository.getUser(source = Source.CACHE)?.householdId
-                ?: run { emit(Response.Error()); return@flow }
+                ?: run { offer(Response.Error()); return@channelFlow }
 
-            emit(Response.Success(userRepository.getAllUsersForHousehold(householdId)))
+            offer(Response.Success(userRepository.getAllUsersForHousehold(householdId)))
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
         } finally {
             loadingJob.cancel()
         }

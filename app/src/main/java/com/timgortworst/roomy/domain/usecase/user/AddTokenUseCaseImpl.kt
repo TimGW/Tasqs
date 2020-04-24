@@ -9,10 +9,9 @@ import com.timgortworst.roomy.presentation.usecase.settings.AddTokenUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class AddTokenUseCaseImpl(
     private val userRepository: UserRepository,
@@ -21,19 +20,19 @@ class AddTokenUseCaseImpl(
 
     data class Params(val token: String)
 
-    override fun execute(params: Params?) = flow {
+    override fun execute(params: Params?) = channelFlow {
         checkNotNull(params)
 
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(LOADING_DELAY)
-            emit(Response.Loading)
+            offer(Response.Loading)
         }
 
         try {
             userRepository.addUserToken(userRepository.getFbUser()?.uid, params.token)
-            emit(Response.Success())
+            offer(Response.Success())
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
         }finally {
             loadingJob.cancel()
         }

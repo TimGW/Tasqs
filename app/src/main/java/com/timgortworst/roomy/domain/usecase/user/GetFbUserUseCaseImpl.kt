@@ -9,26 +9,25 @@ import com.timgortworst.roomy.presentation.usecase.user.GetFbUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class GetFbUserUseCaseImpl(
     private val userRepository: UserRepository,
     private val errorHandler: ErrorHandler
 ) : GetFbUserUseCase {
 
-    override fun execute(params: Unit?) = flow {
+    override fun execute(params: Unit?) = channelFlow {
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(LOADING_DELAY)
-            emit(Response.Loading)
+            offer(Response.Loading)
         }
 
         try {
-            emit(Response.Success(userRepository.getFbUser()))
+            offer(Response.Success(userRepository.getFbUser()))
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
         } finally {
             loadingJob.cancel()
         }
