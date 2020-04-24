@@ -2,7 +2,7 @@ package com.timgortworst.roomy.domain.usecase.task
 
 import com.timgortworst.roomy.domain.repository.TaskRepository
 import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.presentation.usecase.GetTasksForUserUseCase
+import com.timgortworst.roomy.presentation.usecase.task.GetTasksForUserUseCase
 
 class GetTasksForUserUseCaseImpl(
     private val taskRepository: TaskRepository,

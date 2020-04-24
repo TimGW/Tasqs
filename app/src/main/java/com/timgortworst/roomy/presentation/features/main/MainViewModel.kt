@@ -2,14 +2,10 @@ package com.timgortworst.roomy.presentation.features.main
 
 import android.net.Uri
 import androidx.lifecycle.*
-import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.usecase.UseCase
-import com.timgortworst.roomy.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
-import com.timgortworst.roomy.presentation.usecase.AdsVisibleUseCase
-import com.timgortworst.roomy.presentation.usecase.GetUserUseCase
-import kotlinx.coroutines.flow.Flow
+import com.timgortworst.roomy.presentation.usecase.settings.AdsVisibleUseCase
+import com.timgortworst.roomy.presentation.usecase.user.GetUserUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 

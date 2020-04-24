@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.usecase
+package com.timgortworst.roomy.presentation.usecase.task
 
 import com.google.firebase.firestore.Query
 import com.timgortworst.roomy.domain.usecase.SuspendUseCase

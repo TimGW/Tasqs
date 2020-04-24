@@ -3,19 +3,19 @@ package com.timgortworst.roomy.presentation.features.user
 import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.User
-import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.usecase.user.RemoveUserUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.Event
-import com.timgortworst.roomy.presentation.usecase.GetAllUsersUseCase
-import com.timgortworst.roomy.presentation.usecase.GetUserUseCase
-import com.timgortworst.roomy.presentation.usecase.RemoveUserUseCase
-import kotlinx.coroutines.flow.Flow
+import com.timgortworst.roomy.presentation.usecase.user.GetAllUsersUseCase
+import com.timgortworst.roomy.presentation.usecase.user.GetFbUserUseCase
+import com.timgortworst.roomy.presentation.usecase.user.GetUserUseCase
+import com.timgortworst.roomy.presentation.usecase.user.RemoveUserUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class UserViewModel(
     private val removeUserUseCase: RemoveUserUseCase,
-    getAllUsersUseCase: GetAllUsersUseCase
+    getAllUsersUseCase: GetAllUsersUseCase,
+    private val getUserUseCase: GetUserUseCase
 ) : ViewModel() {
 
     val allUsers = getAllUsersUseCase.execute().asLiveData(viewModelScope.coroutineContext)
@@ -38,8 +38,17 @@ class UserViewModel(
 
     fun shouldDisplayBottomSheetFor(user: User) {
         viewModelScope.launch {
-            if (user.isAdmin && user.userId != user.userId) {
-                _userOptions.value = Event(user)
+
+            getUserUseCase.execute().collect { response ->
+                when (response) {
+                    is Response.Success -> {
+                        if (response.data?.isAdmin == true &&
+                            response.data.userId != user.userId
+                        ) {
+                            _userOptions.value = Event(user)
+                        }
+                    }
+                }
             }
         }
     }

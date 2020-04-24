@@ -5,14 +5,11 @@ import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.TaskRepository
-import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
-import com.timgortworst.roomy.presentation.usecase.CreateOrUpdateTaskUseCase
+import com.timgortworst.roomy.presentation.usecase.task.CreateOrUpdateTaskUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch

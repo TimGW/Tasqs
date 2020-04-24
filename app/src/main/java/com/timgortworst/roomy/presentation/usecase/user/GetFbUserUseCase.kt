@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.usecase
+package com.timgortworst.roomy.presentation.usecase.user
 
 import com.google.firebase.auth.FirebaseUser
 import com.timgortworst.roomy.domain.usecase.UseCase

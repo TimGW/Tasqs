@@ -4,7 +4,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.RoomyApp
-import com.timgortworst.roomy.presentation.usecase.AdsVisibleUseCase
+import com.timgortworst.roomy.presentation.usecase.settings.AdsVisibleUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn

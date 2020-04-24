@@ -1,12 +1,11 @@
 package com.timgortworst.roomy.domain.usecase.user
 
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
-import com.timgortworst.roomy.presentation.usecase.GetFbUserUseCase
+import com.timgortworst.roomy.presentation.usecase.user.GetFbUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

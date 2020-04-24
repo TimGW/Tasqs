@@ -2,7 +2,7 @@ package com.timgortworst.roomy.domain.usecase.settings
 
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.presentation.usecase.GetDarkModeUseCase
+import com.timgortworst.roomy.presentation.usecase.settings.GetDarkModeUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn

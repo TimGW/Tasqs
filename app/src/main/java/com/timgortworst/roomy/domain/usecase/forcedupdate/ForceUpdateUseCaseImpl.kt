@@ -2,7 +2,7 @@ package com.timgortworst.roomy.domain.usecase.forcedupdate
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.BuildConfig
-import com.timgortworst.roomy.presentation.usecase.ForceUpdateUseCase
+import com.timgortworst.roomy.presentation.usecase.settings.ForceUpdateUseCase
 
 class ForceUpdateUseCaseImpl(private val onUpdateNeededListener: ForceUpdateUseCase?) {
     private var currentVersion: String = "1.0.0" // fallback

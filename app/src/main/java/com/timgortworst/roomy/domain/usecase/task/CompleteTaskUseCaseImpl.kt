@@ -8,9 +8,8 @@ import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.TaskRepository
 import com.timgortworst.roomy.domain.utils.TimeOperations
-import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
-import com.timgortworst.roomy.presentation.usecase.CompleteTaskUseCase
+import com.timgortworst.roomy.presentation.usecase.task.CompleteTaskUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

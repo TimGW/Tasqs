@@ -19,7 +19,7 @@ import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.signin.SignInActivity
-import com.timgortworst.roomy.presentation.usecase.ForceUpdateUseCase
+import com.timgortworst.roomy.presentation.usecase.settings.ForceUpdateUseCase
 import org.koin.android.ext.android.inject
 
 class SplashActivity : BaseActivity(), ForceUpdateUseCase {

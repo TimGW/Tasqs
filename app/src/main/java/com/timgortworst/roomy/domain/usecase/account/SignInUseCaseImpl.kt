@@ -5,15 +5,13 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.iid.FirebaseInstanceId
 import com.timgortworst.roomy.domain.repository.HouseholdRepository
 import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.RoomyApp
-import com.timgortworst.roomy.presentation.usecase.SignInUseCase
+import com.timgortworst.roomy.presentation.usecase.signin.SignInUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch

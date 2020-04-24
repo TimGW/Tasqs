@@ -7,10 +7,9 @@ import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.HouseholdRepository
 import com.timgortworst.roomy.domain.repository.TaskRepository
 import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
-import com.timgortworst.roomy.presentation.usecase.SwitchHouseholdUseCase
+import com.timgortworst.roomy.presentation.usecase.household.SwitchHouseholdUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

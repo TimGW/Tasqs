@@ -11,7 +11,15 @@ import com.timgortworst.roomy.domain.usecase.settings.GetDarkModeUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.settings.SetDarkModeUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.task.*
 import com.timgortworst.roomy.domain.usecase.user.*
-import com.timgortworst.roomy.presentation.usecase.*
+import com.timgortworst.roomy.presentation.usecase.household.SwitchHouseholdUseCase
+import com.timgortworst.roomy.presentation.usecase.settings.*
+import com.timgortworst.roomy.presentation.usecase.signin.SignInUseCase
+import com.timgortworst.roomy.presentation.usecase.signin.ValidationUseCase
+import com.timgortworst.roomy.presentation.usecase.task.*
+import com.timgortworst.roomy.presentation.usecase.user.GetAllUsersUseCase
+import com.timgortworst.roomy.presentation.usecase.user.GetFbUserUseCase
+import com.timgortworst.roomy.presentation.usecase.user.GetUserUseCase
+import com.timgortworst.roomy.presentation.usecase.user.RemoveUserUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {

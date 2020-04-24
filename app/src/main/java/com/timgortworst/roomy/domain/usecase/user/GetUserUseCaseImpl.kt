@@ -6,9 +6,8 @@ import com.google.firebase.firestore.Source
 import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
-import com.timgortworst.roomy.presentation.usecase.GetUserUseCase
+import com.timgortworst.roomy.presentation.usecase.user.GetUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

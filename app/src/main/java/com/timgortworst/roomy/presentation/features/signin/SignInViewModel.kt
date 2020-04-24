@@ -6,11 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firebase.ui.auth.IdpResponse
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.usecase.UseCase
 import com.timgortworst.roomy.domain.usecase.account.SignInUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.SignInAction
-import com.timgortworst.roomy.presentation.usecase.SignInUseCase
-import kotlinx.coroutines.flow.Flow
+import com.timgortworst.roomy.presentation.usecase.signin.SignInUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 

@@ -6,18 +6,14 @@ import com.timgortworst.roomy.domain.repository.TaskRepository
 import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
-import com.timgortworst.roomy.presentation.usecase.RemoveUserUseCase
+import com.timgortworst.roomy.presentation.usecase.user.RemoveUserUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class RemoveUserUseCaseImpl(
     private val userRepository: UserRepository,
@@ -28,12 +24,12 @@ class RemoveUserUseCaseImpl(
 
     data class Params(val id: String)
 
-    override fun execute(params: Params?) = flow {
+    override fun execute(params: Params?) = channelFlow {
         checkNotNull(params)
 
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(LOADING_DELAY)
-            emit(Response.Loading)
+            offer(Response.Loading)
         }
 
         try {
@@ -41,9 +37,9 @@ class RemoveUserUseCaseImpl(
             val householdId = householdRepository.createHousehold()
             userRepository.updateUser(userId = params.id, householdId = householdId, isAdmin = true)
 
-            emit(Response.Success(params.id))
+            offer(Response.Success(params.id))
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
         } finally {
             loadingJob.cancel()
         }

@@ -7,14 +7,13 @@ import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
-import com.timgortworst.roomy.presentation.usecase.ValidationUseCase
+import com.timgortworst.roomy.presentation.usecase.signin.ValidationUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 class ValidationUseCaseImpl(
     private val userRepository: UserRepository,
@@ -24,19 +23,19 @@ class ValidationUseCaseImpl(
 
     data class Params(val referredId: String)
 
-    override fun execute(params: Params?) = flow {
+    override fun execute(params: Params?) = channelFlow {
         checkNotNull(params)
 
         val loadingJob = CoroutineScope(coroutineContext).launch {
             delay(RoomyApp.LOADING_DELAY)
-            emit(Response.Loading)
+            offer(Response.Loading)
         }
 
         try {
             val currentId = fetchHouseholdId() // fetch here to update local cache
-            emit(validate(currentId, params.referredId))
+            offer(validate(currentId, params.referredId))
         } catch (e: FirebaseFirestoreException) {
-            emit(Response.Error(errorHandler.getError(e)))
+            offer(Response.Error(errorHandler.getError(e)))
         } finally {
             loadingJob.cancel()
         }

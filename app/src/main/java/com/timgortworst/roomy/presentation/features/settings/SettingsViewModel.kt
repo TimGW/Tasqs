@@ -6,10 +6,10 @@ import com.timgortworst.roomy.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.EasterEgg
 import com.timgortworst.roomy.domain.usecase.settings.EasterEggUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.settings.SetDarkModeUseCaseImpl
-import com.timgortworst.roomy.presentation.usecase.SetDarkModeUseCase
-import com.timgortworst.roomy.presentation.usecase.EasterEggUseCase
-import com.timgortworst.roomy.presentation.usecase.GetDarkModeUseCase
-import com.timgortworst.roomy.presentation.usecase.GetUserUseCase
+import com.timgortworst.roomy.presentation.usecase.settings.SetDarkModeUseCase
+import com.timgortworst.roomy.presentation.usecase.settings.EasterEggUseCase
+import com.timgortworst.roomy.presentation.usecase.settings.GetDarkModeUseCase
+import com.timgortworst.roomy.presentation.usecase.user.GetUserUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 

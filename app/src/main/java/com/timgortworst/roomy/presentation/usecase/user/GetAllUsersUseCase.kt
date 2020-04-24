@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.presentation.usecase
+package com.timgortworst.roomy.presentation.usecase.user
 
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.Response
