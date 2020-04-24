@@ -6,9 +6,9 @@ import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.usecase.task.CreateOrUpdateTaskUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.Event
-import com.timgortworst.roomy.presentation.usecase.CreateOrUpdateTaskUseCase
-import com.timgortworst.roomy.presentation.usecase.GetAllUsersUseCase
-import com.timgortworst.roomy.presentation.usecase.GetFbUserUseCase
+import com.timgortworst.roomy.presentation.usecase.task.CreateOrUpdateTaskUseCase
+import com.timgortworst.roomy.presentation.usecase.user.GetAllUsersUseCase
+import com.timgortworst.roomy.presentation.usecase.user.GetFbUserUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
@@ -17,7 +17,6 @@ import java.util.*
 
 class TaskEditViewModel(
     private val createOrUpdateTaskUseCase: CreateOrUpdateTaskUseCase,
-    private val getCurrentFbUserUseCase: GetFbUserUseCase,
     getAllUsersUseCase: GetAllUsersUseCase
 ) : ViewModel() {
     val allUsersLiveData = getAllUsersUseCase.execute().asLiveData(viewModelScope.coroutineContext)
@@ -29,8 +28,6 @@ class TaskEditViewModel(
     private val _taskDone = MutableLiveData<Event<Response<Task>>>()
     val taskDone: LiveData<Event<Response<Task>>>
         get() = _taskDone
-
-    fun currentUserId() = getCurrentFbUserUseCase.execute()?.uid.orEmpty()
 
     fun formatDate(zonedDateTime: ZonedDateTime) {
         val formattedDayOfMonth = zonedDateTime.dayOfMonth.toString()

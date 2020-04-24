@@ -15,6 +15,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityEditTaskBinding
 import com.timgortworst.roomy.domain.model.response.Response
@@ -84,7 +85,7 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 is Response.Success -> {
                     viewModel.viewModelScope.launch {
                         val currentUser = response.data?.find {
-                            it.userId == viewModel.currentUserId()
+                            it.userId == FirebaseAuth.getInstance().currentUser?.uid
                         } ?: return@launch
 
                         if (response.data.filterNot { it.userId == currentUser.userId }.isEmpty()) {
