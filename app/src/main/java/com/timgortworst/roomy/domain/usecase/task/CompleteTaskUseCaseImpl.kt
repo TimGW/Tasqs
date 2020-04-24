@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalTime
@@ -26,13 +27,8 @@ class CompleteTaskUseCaseImpl(
 
     data class Params(val tasks: List<Task>)
 
-    override fun execute(params: Params?) = channelFlow {
+    override fun execute(params: Params?) = flow {
         checkNotNull(params)
-
-        val loadingJob = CoroutineScope(coroutineContext).launch {
-            delay(LOADING_DELAY)
-            offer(Response.Loading)
-        }
 
         try {
             params.tasks.filter {
@@ -51,11 +47,9 @@ class CompleteTaskUseCaseImpl(
 
                 taskRepository.updateTasks(this)
             }
-            offer(Response.Success())
+            emit(Response.Success<Nothing>())
         } catch (e: FirebaseFirestoreException) {
-            offer(Response.Error(errorHandler.getError(e)))
-        } finally {
-            loadingJob.cancel()
+            emit(Response.Error(errorHandler.getError(e)))
         }
     }.flowOn(Dispatchers.IO)
 

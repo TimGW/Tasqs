@@ -263,35 +263,8 @@ class TaskListFragment : BaseFragment(),
         }
     }
 
-    override fun onTaskDoneClicked(
-        task: Task,
-        position: Int
-    ) {
-        taskViewModel.viewModelScope.launch {
-            taskViewModel.tasksCompleted(listOf(task)).collect()
-
-            if (task.metaData.recurrence !is TaskRecurrence.SingleTask) {
-                parentActivity.binding.bottomNavigationContainer.snackbar(
-                    message = getString(
-                        R.string.task_next_snackbar,
-                        task.description,
-                        formatDate(task.metaData.startDateTime)
-                    ),
-                    anchorView = parentActivity.binding.fab
-                )
-            }
-        }
-    }
-
     override fun onTaskInfoClicked(task: Task) {
         startActivity(TaskInfoActivity.intentBuilder(parentActivity, task))
-    }
-
-    private fun formatDate(zonedDateTime: ZonedDateTime): String {
-        val formattedDayOfMonth = zonedDateTime.dayOfMonth.toString()
-        val formattedMonth = zonedDateTime.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-        val formattedYear = zonedDateTime.year.toString()
-        return "$formattedDayOfMonth $formattedMonth $formattedYear"
     }
 
     private fun askForDeleteDialog(tasks: List<Task>, mode: ActionMode) =
@@ -332,11 +305,14 @@ class TaskListFragment : BaseFragment(),
 
     override fun onDataChanged(itemCount: Int) {
         binding.recyclerView.visibility = View.VISIBLE
-        if (showListAnimation) binding.recyclerView.scheduleLayoutAnimation(); showListAnimation =
-            false
-        val visibility = if (itemCount == 0) View.VISIBLE else View.GONE
+
+        if (showListAnimation) {
+            binding.recyclerView.scheduleLayoutAnimation()
+            showListAnimation = false
+        }
+
         setMsgView(
-            visibility,
+            if (itemCount == 0) View.VISIBLE else View.GONE,
             R.string.empty_list_state_title_tasks,
             R.string.empty_list_state_text_tasks
         )

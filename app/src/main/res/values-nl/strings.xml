@@ -80,7 +80,7 @@
     <string name="night_mode_label_off">Uit</string>
     <string name="night_mode_label_on">Aan</string>
     <string name="task_edit_error_empty_description">Voer een beschrijving in</string>
-    <string name="button_done_text">Klaar</string>
+    <string name="button_done_text">Taak klaar ✓</string>
     <string name="empty_string" />
 
     <string name="repeat_weekday_mo">M</string>

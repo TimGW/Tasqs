@@ -3,10 +3,10 @@ package com.timgortworst.roomy.presentation.features.user
 import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.User
+import com.timgortworst.roomy.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.user.RemoveUserUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.Event
 import com.timgortworst.roomy.presentation.usecase.user.GetAllUsersUseCase
-import com.timgortworst.roomy.presentation.usecase.user.GetFbUserUseCase
 import com.timgortworst.roomy.presentation.usecase.user.GetUserUseCase
 import com.timgortworst.roomy.presentation.usecase.user.RemoveUserUseCase
 import kotlinx.coroutines.flow.collect
@@ -39,7 +39,7 @@ class UserViewModel(
     fun shouldDisplayBottomSheetFor(user: User) {
         viewModelScope.launch {
 
-            getUserUseCase.execute().collect { response ->
+            getUserUseCase.execute(GetUserUseCaseImpl.Params()).collect { response ->
                 when (response) {
                     is Response.Success -> {
                         if (response.data?.isAdmin == true &&

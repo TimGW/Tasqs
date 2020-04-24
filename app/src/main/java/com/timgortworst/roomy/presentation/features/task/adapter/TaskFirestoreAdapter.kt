@@ -9,9 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.android.material.button.MaterialButton
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Task
@@ -77,22 +75,15 @@ class TaskFirestoreAdapter(
         private val dateTime: TextView = view.findViewById(R.id.task_date_time)
         private val description: TextView = view.findViewById(R.id.task_name)
         private val repeatIcon: RepeatIcon = view.findViewById(R.id.task_repeat_label)
-        private val taskDone: MaterialButton = view.findViewById(R.id.task_done)
 
         init {
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION)
                     taskClickListener.onTaskInfoClicked(snapshots[adapterPosition])
             }
-
-            taskDone.setOnClickListener {
-                if (adapterPosition != RecyclerView.NO_POSITION)
-                    taskClickListener.onTaskDoneClicked(snapshots[adapterPosition], adapterPosition)
-            }
         }
 
         fun bind(task: Task, isActivated: Boolean) {
-            taskDone.isEnabled = task.isDoneEnabled
             itemView.isActivated = isActivated
 
             description.text = task.description

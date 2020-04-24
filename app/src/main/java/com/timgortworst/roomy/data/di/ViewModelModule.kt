@@ -5,6 +5,7 @@ import com.timgortworst.roomy.presentation.features.settings.SettingsViewModel
 import com.timgortworst.roomy.presentation.features.signin.SignInViewModel
 import com.timgortworst.roomy.presentation.features.splash.SplashViewModel
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskEditViewModel
+import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskInfoViewModel
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskListViewModel
 import com.timgortworst.roomy.presentation.features.user.UserViewModel
 import org.koin.android.viewmodel.dsl.viewModel
@@ -19,4 +20,5 @@ val viewModelModule = module {
     viewModel { MainViewModel(get(), get()) }
     viewModel { SplashViewModel(get(), get()) }
     viewModel { TaskEditViewModel(get(), get()) }
+    viewModel { TaskInfoViewModel(get()) }
 }

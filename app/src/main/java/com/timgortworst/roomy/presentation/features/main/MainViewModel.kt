@@ -3,6 +3,7 @@ package com.timgortworst.roomy.presentation.features.main
 import android.net.Uri
 import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.model.response.Response
+import com.timgortworst.roomy.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.roomy.domain.utils.InviteLinkBuilder
 import com.timgortworst.roomy.presentation.usecase.settings.AdsVisibleUseCase
 import com.timgortworst.roomy.presentation.usecase.user.GetUserUseCase
@@ -19,7 +20,7 @@ class MainViewModel(
         get() = _uriEvent
 
     fun inviteUser() = viewModelScope.launch {
-        getUserUseCase.execute().collect { response ->
+        getUserUseCase.execute(GetUserUseCaseImpl.Params()).collect { response ->
             when (response) {
                 Response.Loading -> _uriEvent.value = Response.Loading
                 is Response.Success -> {
