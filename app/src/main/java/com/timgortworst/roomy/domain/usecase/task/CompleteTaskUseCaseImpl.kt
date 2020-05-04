@@ -42,7 +42,6 @@ class CompleteTaskUseCaseImpl(
             }.run {
                 forEach {
                     it.metaData.startDateTime = calcNextTaskDate(it.metaData)
-                    it.isDoneEnabled = false // temporary disable the done button
                 }
 
                 taskRepository.updateTasks(this)

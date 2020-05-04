@@ -30,8 +30,7 @@ object CustomMapper {
             taskJson.id!!,
             taskJson.description!!,
             taskJson.metaData!!.toTaskMetaData(),
-            taskJson.user!!,
-            taskJson.isDoneEnabled!!
+            taskJson.user!!
         )
     }
 
@@ -68,7 +67,6 @@ object CustomMapper {
         result[TaskJson.TASK_DESCRIPTION_REF] = task.description
         result[TaskJson.TASK_META_DATA_REF] = task.metaData.toMap()
         result[TaskJson.TASK_USER_REF] = task.user
-        result[TaskJson.TASK_IS_DONE_ENABLED_REF] = task.isDoneEnabled
         return result
     }
 

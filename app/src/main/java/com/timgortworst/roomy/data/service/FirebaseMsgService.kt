@@ -30,6 +30,7 @@ class FirebaseMsgService : FirebaseMessagingService(), KoinComponent {
 
         if (data["IS_DELETED"].toString().toBoolean()) {
             workerNotification.removePendingNotificationReminder(taskId)
+            if (BuildConfig.DEBUG) handleNow(taskId, "Notification removed for", taskId)
         } else {
             val taskDateTime: Long = data["TASK_START_DATE"].toString().toLong()
             val taskTimeZone: String = data["TASK_TIMEZONE"].toString()

@@ -10,8 +10,7 @@ data class TaskJson(
     @JvmField @PropertyName(TASK_DESCRIPTION_REF) var description: String? = null,
     @JvmField @PropertyName(TASK_META_DATA_REF) var metaData: TaskMetaDataJson? = TaskMetaDataJson(),
     @JvmField @PropertyName(TASK_USER_REF) var user: TaskUser? = null,
-    @JvmField @PropertyName(TASK_HOUSEHOLD_ID_REF) var householdId: String? = null,
-    @JvmField @PropertyName(TASK_IS_DONE_ENABLED_REF) var isDoneEnabled: Boolean? = null
+    @JvmField @PropertyName(TASK_HOUSEHOLD_ID_REF) var householdId: String? = null
 ) {
     companion object {
         const val TASK_ID_REF = "id"
@@ -20,6 +19,5 @@ data class TaskJson(
         const val TASK_DESCRIPTION_REF = "description"
         const val TASK_META_DATA_REF = "meta_data"
         const val TASK_HOUSEHOLD_ID_REF = "household_id"
-        const val TASK_IS_DONE_ENABLED_REF = "is_done_enabled"
     }
 }

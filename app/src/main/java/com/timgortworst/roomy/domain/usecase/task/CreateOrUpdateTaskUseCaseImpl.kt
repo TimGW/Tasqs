@@ -30,8 +30,7 @@ class CreateOrUpdateTaskUseCaseImpl(
         }
 
         try {
-            // temporary disable the done button
-            val result = params.task.apply { isDoneEnabled = false }
+            val result = params.task
 
             if (params.task.id.isEmpty()) {
                 taskRepository.createTask(result)
