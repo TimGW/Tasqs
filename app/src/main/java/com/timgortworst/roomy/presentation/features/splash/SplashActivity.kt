@@ -13,7 +13,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
 import com.timgortworst.roomy.domain.usecase.forcedupdate.ForceUpdateUseCaseImpl
-import com.timgortworst.roomy.domain.utils.InviteLinkBuilder.Companion.QUERY_PARAM_HOUSEHOLD
+import com.timgortworst.roomy.domain.usecase.user.InviteLinkBuilderUseCaseImpl.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
