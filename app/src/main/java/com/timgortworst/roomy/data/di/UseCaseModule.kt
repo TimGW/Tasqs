@@ -14,10 +14,7 @@ import com.timgortworst.roomy.presentation.usecase.settings.*
 import com.timgortworst.roomy.presentation.usecase.signin.SignInUseCase
 import com.timgortworst.roomy.presentation.usecase.signin.ValidationUseCase
 import com.timgortworst.roomy.presentation.usecase.task.*
-import com.timgortworst.roomy.presentation.usecase.user.GetAllUsersUseCase
-import com.timgortworst.roomy.presentation.usecase.user.GetFbUserUseCase
-import com.timgortworst.roomy.presentation.usecase.user.GetUserUseCase
-import com.timgortworst.roomy.presentation.usecase.user.RemoveUserUseCase
+import com.timgortworst.roomy.presentation.usecase.user.*
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -39,4 +36,5 @@ val useCaseModule = module {
     factory<ValidationUseCase> { ValidationUseCaseImpl(get(), get()) }
     factory<GetAllUsersUseCase> { GetAllUsersUseCaseImpl(get(), get()) }
     factory<RemoveUserUseCase> { RemoveUserUseCaseImpl(get(), get(), get(), get()) }
+    factory<InviteUserUseCase> { InviteLinkBuilderUseCaseImpl(get()) }
 }
