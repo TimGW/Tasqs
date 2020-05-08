@@ -8,11 +8,11 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.CustomRepeatIconBinding
 import com.timgortworst.roomy.domain.model.TaskRecurrence
 
-class RepeatIcon
-@JvmOverloads
-constructor(context: Context,
-            attrs: AttributeSet? = null,
-            defStyleAttr: Int = 0) : RelativeLayout(context, attrs, defStyleAttr) {
+class RepeatIcon @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : RelativeLayout(context, attrs, defStyleAttr) {
 
     private var _binding: CustomRepeatIconBinding? = null
     private val binding get() = _binding!!

@@ -6,9 +6,7 @@ import com.timgortworst.roomy.R
 
 open class BaseActivity : AppCompatActivity() {
 
-    val progressDialog by lazy {
-        ProgressDialog(this)
-    }
+    private val progressDialog by lazy { ProgressDialog(this) }
 
     fun showProgressDialog() {
         progressDialog.setMessage(getString(R.string.loading))

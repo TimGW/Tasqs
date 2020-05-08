@@ -9,8 +9,9 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.base.model.BottomMenuItem
 import kotlinx.android.synthetic.main.bottom_sheet_menu_row.view.*
 
-class BottomSheetMenuAdapter(private val items: List<BottomMenuItem>) :
-    RecyclerView.Adapter<BottomSheetMenuAdapter.BottomSheetMenuViewHolder>() {
+class BottomSheetMenuAdapter(
+    private val items: List<BottomMenuItem>
+) : RecyclerView.Adapter<BottomSheetMenuAdapter.BottomSheetMenuViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BottomSheetMenuViewHolder {
         return BottomSheetMenuViewHolder(

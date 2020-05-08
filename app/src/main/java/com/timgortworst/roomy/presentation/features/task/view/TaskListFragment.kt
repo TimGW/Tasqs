@@ -1,9 +1,12 @@
 package com.timgortworst.roomy.presentation.features.task.view
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.view.ActionMode
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.selection.SelectionPredicates
@@ -19,7 +22,6 @@ import com.timgortworst.roomy.databinding.FragmentTaskListBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
-import com.timgortworst.roomy.presentation.base.view.BaseFragment
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.adapter.*
 import com.timgortworst.roomy.presentation.features.task.adapter.actionmode.ActionModeCallback
@@ -30,7 +32,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class TaskListFragment : BaseFragment(),
+class TaskListFragment : Fragment(),
     ActionModeCallback.ActionItemListener,
     TaskClickListener,
     AdapterStateListener {
@@ -45,8 +47,9 @@ class TaskListFragment : BaseFragment(),
     private var showListAnimation = true
 
     companion object {
-        const val TASK_SELECTION_ID = "Task-selection"
-        const val IS_IN_ACTION_MODE_KEY = "ActionMode"
+        private const val TASK_SELECTION_ID = "Task-selection"
+        private const val IS_IN_ACTION_MODE_KEY = "ActionMode"
+        private const val ANIM_DURATION = 400L
 
         fun newInstance(): TaskListFragment {
             return TaskListFragment()
@@ -313,5 +316,26 @@ class TaskListFragment : BaseFragment(),
             R.string.error_list_state_title,
             R.string.error_list_state_text
         )
+    }
+
+    private fun toggleFadeViews(fromView: View, toView: View) {
+        toView.apply {
+            alpha = 0f
+            visibility = View.VISIBLE
+
+            animate()
+                .alpha(1f)
+                .setDuration(ANIM_DURATION)
+                .setListener(null)
+        }
+
+        fromView.animate()
+            .alpha(0f)
+            .setDuration(ANIM_DURATION)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    fromView.visibility = View.GONE
+                }
+            })
     }
 }

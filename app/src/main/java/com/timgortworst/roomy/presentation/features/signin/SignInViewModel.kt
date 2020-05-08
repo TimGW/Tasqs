@@ -20,7 +20,6 @@ class SignInViewModel(
     val action: LiveData<SignInAction>
         get() = _action
 
-
     fun handleLoginResult(response: IdpResponse) {
         viewModelScope.launch {
             val isNewUser = response.isNewUser

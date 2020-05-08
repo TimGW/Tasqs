@@ -6,7 +6,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 
-abstract class NetworkChangeReceiver(private val context: Context) : BroadcastReceiver() {
+abstract class NetworkChangeReceiver(
+    private val context: Context
+) : BroadcastReceiver() {
+
     override fun onReceive(context: Context, intent: Intent) {
         try {
             if (isOnline(context)) {

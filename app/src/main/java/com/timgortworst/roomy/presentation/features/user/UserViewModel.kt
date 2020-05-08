@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 
 class UserViewModel(
     private val removeUserUseCase: RemoveUserUseCase,
-    getAllUsersUseCase: GetAllUsersUseCase,
-    private val getUserUseCase: GetUserUseCase
+    private val getUserUseCase: GetUserUseCase,
+    getAllUsersUseCase: GetAllUsersUseCase
 ) : ViewModel() {
 
     val allUsers = getAllUsersUseCase.execute().asLiveData(viewModelScope.coroutineContext)

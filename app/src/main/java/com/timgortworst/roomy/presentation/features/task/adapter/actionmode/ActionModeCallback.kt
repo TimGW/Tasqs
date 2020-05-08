@@ -7,9 +7,11 @@ import androidx.recyclerview.selection.SelectionTracker
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Task
 
-class ActionModeCallback(private var actionItemListener: ActionItemListener?,
-                         private val tracker: SelectionTracker<String>,
-                         private val taskList: List<Task>) : ActionMode.Callback {
+class ActionModeCallback(
+    private var actionItemListener: ActionItemListener?,
+    private val tracker: SelectionTracker<String>,
+    private val taskList: List<Task>
+) : ActionMode.Callback {
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.action_mode_menu, menu)
