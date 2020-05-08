@@ -170,12 +170,8 @@ class TaskListFragment : BaseFragment(),
         tracker = SelectionTracker.Builder<String>(
             TASK_SELECTION_ID,
             recyclerView,
-            TaskItemKeyProvider(
-                recyclerView.adapter
-            ),
-            TaskItemDetailsLookup(
-                recyclerView
-            ),
+            TaskItemKeyProvider(recyclerView.adapter),
+            TaskItemDetailsLookup(recyclerView),
             StorageStrategy.createStringStorage()
         ).withSelectionPredicate(
             SelectionPredicates.createSelectAnything()
