@@ -1,6 +1,8 @@
 package com.timgortworst.roomy.data.sharedpref
 
-class SharedPrefs(private val spm: SharedPrefManager) {
+class SharedPrefs(
+    private val spm: SharedPrefManager
+) {
 
     fun isAdsEnabled() = spm.getBoolValue(SHARED_PREF_ADS, true)
     fun setAdsEnabled(setAdsEnabled: Boolean) { spm.setBoolValue(SHARED_PREF_ADS, setAdsEnabled) }

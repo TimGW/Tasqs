@@ -3,7 +3,9 @@ package com.timgortworst.roomy.data.sharedpref
 import android.content.Context
 import androidx.preference.PreferenceManager
 
-class SharedPrefManager(context: Context) {
+class SharedPrefManager(
+    context: Context
+) {
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     fun getStringValue(key: String) = sharedPreferences.getString(key, "") ?: ""
