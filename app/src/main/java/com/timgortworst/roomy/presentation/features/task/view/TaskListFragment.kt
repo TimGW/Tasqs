@@ -1,7 +1,5 @@
 package com.timgortworst.roomy.presentation.features.task.view
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.os.Bundle
 import android.view.*
@@ -22,8 +20,10 @@ import com.timgortworst.roomy.databinding.FragmentTaskListBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
+import com.timgortworst.roomy.presentation.base.view.ViewFadeAnimator.toggleFadeViews
 import com.timgortworst.roomy.presentation.features.main.MainActivity
-import com.timgortworst.roomy.presentation.features.task.adapter.*
+import com.timgortworst.roomy.presentation.features.task.adapter.TaskClickListener
+import com.timgortworst.roomy.presentation.features.task.adapter.TaskFirestoreAdapter
 import com.timgortworst.roomy.presentation.features.task.adapter.actionmode.ActionModeCallback
 import com.timgortworst.roomy.presentation.features.task.adapter.actionmode.TaskItemDetailsLookup
 import com.timgortworst.roomy.presentation.features.task.adapter.actionmode.TaskItemKeyProvider
@@ -49,7 +49,6 @@ class TaskListFragment : Fragment(),
     companion object {
         private const val TASK_SELECTION_ID = "Task-selection"
         private const val IS_IN_ACTION_MODE_KEY = "ActionMode"
-        private const val ANIM_DURATION = 400L
 
         fun newInstance(): TaskListFragment {
             return TaskListFragment()
@@ -89,14 +88,8 @@ class TaskListFragment : Fragment(),
     ): View? {
         _binding = FragmentTaskListBinding.inflate(inflater, container, false)
 
-        if(savedInstanceState == null) {
-            taskViewModel.viewModelScope.launch {
-                taskViewModel.loadInitialQuery()
-
-                setupAdapter()
-                setupRecyclerView()
-            }
-        } else {
+        taskViewModel.viewModelScope.launch {
+            if (savedInstanceState == null) taskViewModel.loadInitialQuery()
             setupAdapter()
             setupRecyclerView()
         }
@@ -316,26 +309,5 @@ class TaskListFragment : Fragment(),
             R.string.error_list_state_title,
             R.string.error_list_state_text
         )
-    }
-
-    private fun toggleFadeViews(fromView: View, toView: View) {
-        toView.apply {
-            alpha = 0f
-            visibility = View.VISIBLE
-
-            animate()
-                .alpha(1f)
-                .setDuration(ANIM_DURATION)
-                .setListener(null)
-        }
-
-        fromView.animate()
-            .alpha(0f)
-            .setDuration(ANIM_DURATION)
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    fromView.visibility = View.GONE
-                }
-            })
     }
 }

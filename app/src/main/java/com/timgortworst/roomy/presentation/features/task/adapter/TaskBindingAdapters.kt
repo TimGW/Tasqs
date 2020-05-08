@@ -20,8 +20,8 @@ fun TextView.formatDate(zonedDateTime: ZonedDateTime) {
 }
 
 @BindingAdapter("formatRecurrence")
-fun TextView.formatRecurrence(task: Task) {
-    with(task.metaData.recurrence) {
+fun TextView.formatRecurrence(recurrence: TaskRecurrence) {
+    with(recurrence) {
         text = if (this is TaskRecurrence.SingleTask) {
             context.getString(R.string.is_not_repeated)
         } else {
