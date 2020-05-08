@@ -37,12 +37,12 @@ class TaskListFragment : Fragment(),
     TaskClickListener,
     AdapterStateListener {
     private var _binding: FragmentTaskListBinding? = null
-    private val binding get() = _binding!!
     private var taskListAdapter: TaskFirestoreAdapter? = null
     private var tracker: SelectionTracker<String>? = null
     private var actionMode: ActionMode? = null
-    private val taskViewModel by viewModel<TaskListViewModel>()
     private var showListAnimation = true
+    private val taskViewModel by viewModel<TaskListViewModel>()
+    private val binding get() = _binding!!
 
     companion object {
         private const val TASK_SELECTION_ID = "Task-selection"

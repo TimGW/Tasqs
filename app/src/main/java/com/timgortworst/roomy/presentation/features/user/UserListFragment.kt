@@ -21,10 +21,10 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class UserListFragment : Fragment(), OnLongClickListener {
     private lateinit var userAdapter: UserAdapter
+    private var bottomSheetMenu: BottomSheetMenu? = null
     private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
     private val userViewModel by viewModel<UserViewModel>()
-    private var bottomSheetMenu: BottomSheetMenu? = null
 
     companion object {
         fun newInstance(): UserListFragment {

@@ -35,10 +35,10 @@ import org.threeten.bp.temporal.ChronoField
 
 class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var binding: ActivityEditTaskBinding
-    private val viewModel: TaskEditViewModel by inject()
-    private var userList: List<TaskUser> = listOf()
     private lateinit var task: Task
     private lateinit var recurrenceAdapter: ArrayAdapter<String>
+    private var userList: List<TaskUser> = listOf()
+    private val viewModel: TaskEditViewModel by inject()
     private val recurrences = listOf(
         TaskRecurrence.Daily(),
         TaskRecurrence.Weekly(),
