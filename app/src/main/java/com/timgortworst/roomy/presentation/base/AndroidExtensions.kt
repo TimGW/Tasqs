@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.utils
+package com.timgortworst.roomy.presentation.base
 
 import android.app.Activity
 import android.content.Context
@@ -21,17 +21,6 @@ fun Activity.clearFocus(view: View) {
     view.clearFocus()
     val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(view.applicationWindowToken, 0)
-}
-
-fun View.runBeforeDraw(onFinished: (view: View) -> Unit) {
-    val preDrawListener = object : ViewTreeObserver.OnPreDrawListener {
-        override fun onPreDraw(): Boolean {
-            Runnable { onFinished.invoke(this@runBeforeDraw) }.run()
-            viewTreeObserver.removeOnPreDrawListener(this)
-            return true
-        }
-    }
-    viewTreeObserver.addOnPreDrawListener(preDrawListener)
 }
 
 fun View.snackbar(

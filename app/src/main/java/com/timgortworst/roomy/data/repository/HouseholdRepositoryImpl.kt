@@ -6,9 +6,8 @@ import com.timgortworst.roomy.domain.model.Household.Companion.HOUSEHOLD_COLLECT
 import com.timgortworst.roomy.domain.repository.HouseholdRepository
 import kotlinx.coroutines.tasks.await
 
-class HouseholdRepositoryImpl(
-    db: FirebaseFirestore
-) : HouseholdRepository {
+class HouseholdRepositoryImpl : HouseholdRepository {
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val householdCollection = db.collection(HOUSEHOLD_COLLECTION_REF)
 
     override suspend fun createHousehold(): String {

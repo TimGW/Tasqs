@@ -2,6 +2,7 @@ package com.timgortworst.roomy.domain.usecase.household
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.HouseholdRepository
@@ -21,9 +22,9 @@ class SwitchHouseholdUseCaseImpl(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository,
     private val taskRepository: TaskRepository,
-    private val errorHandler: ErrorHandler,
-    private val fbAuth: FirebaseAuth
+    private val errorHandler: ErrorHandler
 ) : SwitchHouseholdUseCase {
+    private val fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     data class Params(val newId: String)
 

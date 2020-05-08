@@ -20,12 +20,10 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.utils.snackbar
+import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.features.splash.SplashActivity
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SettingsFragment : PreferenceFragmentCompat() {

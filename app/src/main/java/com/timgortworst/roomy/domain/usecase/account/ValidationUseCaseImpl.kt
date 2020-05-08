@@ -17,9 +17,9 @@ import kotlinx.coroutines.launch
 
 class ValidationUseCaseImpl(
     private val userRepository: UserRepository,
-    private val errorHandler: ErrorHandler,
-    private val auth: FirebaseAuth
+    private val errorHandler: ErrorHandler
 ) : ValidationUseCase {
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     data class Params(val referredId: String)
 

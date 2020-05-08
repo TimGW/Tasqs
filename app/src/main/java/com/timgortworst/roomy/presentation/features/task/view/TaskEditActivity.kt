@@ -22,8 +22,8 @@ import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
 import com.timgortworst.roomy.domain.model.TaskUser
-import com.timgortworst.roomy.domain.utils.clearFocus
-import com.timgortworst.roomy.domain.utils.snackbar
+import com.timgortworst.roomy.presentation.base.clearFocus
+import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskEditViewModel

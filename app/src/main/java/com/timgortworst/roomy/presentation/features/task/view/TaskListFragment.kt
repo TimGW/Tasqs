@@ -17,8 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentTaskListBinding
 import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.TaskRecurrence
-import com.timgortworst.roomy.domain.utils.snackbar
+import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.base.view.AdapterStateListener
 import com.timgortworst.roomy.presentation.base.view.BaseFragment
 import com.timgortworst.roomy.presentation.features.main.MainActivity
@@ -30,9 +29,6 @@ import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskListViewM
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
-import org.threeten.bp.ZonedDateTime
-import org.threeten.bp.format.TextStyle
-import java.util.*
 
 // todo refactor logic to viewmodel / usecase
 class TaskListFragment : BaseFragment(),

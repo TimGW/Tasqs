@@ -11,10 +11,9 @@ import com.timgortworst.roomy.domain.model.User.Companion.USER_TOKENS_REF
 import com.timgortworst.roomy.domain.repository.UserRepository
 import kotlinx.coroutines.tasks.await
 
-class UserRepositoryImpl(
-    private val db: FirebaseFirestore,
-    private val firebaseAuth: FirebaseAuth
-) : UserRepository {
+class UserRepositoryImpl : UserRepository {
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val userCollection = db.collection(USER_COLLECTION_REF)
 
     @Throws(FirebaseFirestoreException::class)

@@ -4,6 +4,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.presentation.usecase.settings.ForceUpdateUseCase
 
+// todo implement UseCase Interface
 class ForceUpdateUseCaseImpl(private val onUpdateNeededListener: ForceUpdateUseCase?) {
     private var currentVersion: String = "1.0.0" // fallback
 

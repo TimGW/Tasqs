@@ -14,7 +14,7 @@ import com.timgortworst.roomy.databinding.FragmentUserListBinding
 import com.timgortworst.roomy.presentation.base.model.BottomMenuItem
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.utils.snackbar
+import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
 import com.timgortworst.roomy.presentation.features.main.MainActivity

@@ -13,7 +13,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityMainBinding
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.utils.snackbar
+import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity

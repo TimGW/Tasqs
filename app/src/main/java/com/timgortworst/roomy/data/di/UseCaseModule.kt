@@ -28,14 +28,15 @@ val useCaseModule = module {
     factory<GetAllTasksUseCase> { GetAllTasksUseCaseImpl(get()) }
     factory<GetFbUserUseCase> { GetFbUserUseCaseImpl(get(), get()) }
     factory<DeleteTaskUseCase> { DeleteTaskUseCaseImpl(get(), get()) }
-    factory<CompleteTaskUseCase> { CompleteTaskUseCaseImpl(get(), get()) }
+    factory<CompleteTaskUseCase> { CompleteTaskUseCaseImpl(get(), get(), get()) }
+    factory<CalculateNextTaskUseCase> { CalculateNextTaskUseCaseImpl() }
     factory<CreateOrUpdateTaskUseCase> { CreateOrUpdateTaskUseCaseImpl(get(), get()) }
-    factory<SignInUseCase> { SignInUseCaseImpl(get(), get(), get(), get(), get()) }
-    factory<AdsVisibleUseCase> { AdsVisibleUseCaseImpl(get(), get()) }
+    factory<SignInUseCase> { SignInUseCaseImpl(get(), get(), get()) }
+    factory<AdsVisibleUseCase> { AdsVisibleUseCaseImpl(get()) }
     factory<GetUserUseCase> { GetUserUseCaseImpl(get(), get()) }
     factory<EasterEggUseCase> { EasterEggUseCaseImpl(get()) }
-    factory<SwitchHouseholdUseCase> { SwitchHouseholdUseCaseImpl(get(), get(), get(), get(), get()) }
-    factory<ValidationUseCase> { ValidationUseCaseImpl(get(), get(), get()) }
+    factory<SwitchHouseholdUseCase> { SwitchHouseholdUseCaseImpl(get(), get(), get(), get()) }
+    factory<ValidationUseCase> { ValidationUseCaseImpl(get(), get()) }
     factory<GetAllUsersUseCase> { GetAllUsersUseCaseImpl(get(), get()) }
     factory<RemoveUserUseCase> { RemoveUserUseCaseImpl(get(), get(), get(), get()) }
 }

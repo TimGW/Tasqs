@@ -6,19 +6,13 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.app.NavUtils
-import androidx.lifecycle.viewModelScope
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityInfoTaskBinding
 import com.timgortworst.roomy.domain.model.Task
-import com.timgortworst.roomy.domain.model.TaskRecurrence
-import com.timgortworst.roomy.domain.utils.snackbar
 import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.base.model.TaskInfoAction
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskInfoViewModel
-import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskListViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class TaskInfoActivity : BaseActivity() {

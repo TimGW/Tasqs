@@ -1,6 +1,7 @@
 package com.timgortworst.roomy.domain.usecase.account
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.iid.FirebaseInstanceId
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
@@ -20,10 +21,10 @@ import kotlinx.coroutines.tasks.await
 class SignInUseCaseImpl(
     private val householdRepository: HouseholdRepository,
     private val userRepository: UserRepository,
-    private val errorHandler: ErrorHandler,
-    private val fbAuth: FirebaseAuth,
-    private val fbInstanceId: FirebaseInstanceId
+    private val errorHandler: ErrorHandler
 ) : SignInUseCase {
+    private val fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val fbInstanceId: FirebaseInstanceId = FirebaseInstanceId.getInstance()
 
     data class Params(val newUser: Boolean)
 

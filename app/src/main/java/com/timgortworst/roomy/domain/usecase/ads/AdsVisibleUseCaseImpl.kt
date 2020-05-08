@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class AdsVisibleUseCaseImpl(
-    private val sharedPrefs: SharedPrefs,
-    private val remoteConfig: FirebaseRemoteConfig
+    private val sharedPrefs: SharedPrefs
 ) : AdsVisibleUseCase {
+    private val remoteConfig: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
     override fun execute(params: Unit?) = flow {
         val remoteValue = remoteConfig.getBoolean(RoomyApp.KEY_ENABLE_ADS)

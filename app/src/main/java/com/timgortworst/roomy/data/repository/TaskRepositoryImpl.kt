@@ -14,9 +14,9 @@ import com.timgortworst.roomy.domain.repository.UserRepository
 import kotlinx.coroutines.tasks.await
 
 class TaskRepositoryImpl(
-    private val db: FirebaseFirestore,
     private val userRepository: UserRepository
 ): TaskRepository {
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private suspend fun taskCollection(): CollectionReference {
         return db.collection(Household.HOUSEHOLD_COLLECTION_REF)
