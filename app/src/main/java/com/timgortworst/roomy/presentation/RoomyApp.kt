@@ -14,7 +14,7 @@ import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
 import com.timgortworst.roomy.data.di.*
-import com.timgortworst.roomy.domain.usecase.forcedupdate.ForceUpdateUseCaseImpl
+import com.timgortworst.roomy.domain.usecase.forcedupdate.ForcedUpdateUseCaseImpl
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -71,10 +71,10 @@ class RoomyApp : Application(), Configuration.Provider {
         val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
         val defaults = HashMap<String, Any>()
-        defaults[ForceUpdateUseCaseImpl.KEY_CURRENT_REQUIRED_VERSION] = BuildConfig.VERSION_NAME
-        defaults[ForceUpdateUseCaseImpl.KEY_CURRENT_RECOMMENDED_VERSION] = BuildConfig.VERSION_NAME
+        defaults[ForcedUpdateUseCaseImpl.KEY_CURRENT_REQUIRED_VERSION] = BuildConfig.VERSION_NAME
+        defaults[ForcedUpdateUseCaseImpl.KEY_CURRENT_RECOMMENDED_VERSION] = BuildConfig.VERSION_NAME
         defaults[KEY_ENABLE_ADS] = true
-        defaults[ForceUpdateUseCaseImpl.KEY_UPDATE_URL] = "market://details?id=com.timgortworst.roomy"
+        defaults[ForcedUpdateUseCaseImpl.KEY_UPDATE_URL] = "market://details?id=com.timgortworst.roomy"
         firebaseRemoteConfig.setDefaultsAsync(defaults)
 
         val configSettings = FirebaseRemoteConfigSettings.Builder()

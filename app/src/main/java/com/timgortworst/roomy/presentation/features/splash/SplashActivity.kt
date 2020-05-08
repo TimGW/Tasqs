@@ -8,21 +8,19 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.presentation.base.model.StartUpAction
-import com.timgortworst.roomy.domain.usecase.forcedupdate.ForceUpdateUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.user.InviteLinkBuilderUseCaseImpl.Companion.QUERY_PARAM_HOUSEHOLD
-import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
+import com.timgortworst.roomy.presentation.base.model.StartUpAction
+import com.timgortworst.roomy.presentation.base.model.UpdateAction
+import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.signin.SignInActivity
-import com.timgortworst.roomy.presentation.usecase.settings.ForceUpdateUseCase
 import org.koin.android.ext.android.inject
 
-class SplashActivity : BaseActivity(), ForceUpdateUseCase {
+class SplashActivity : BaseActivity() {
     private val viewModel: SplashViewModel by inject()
 
     companion object {
@@ -35,12 +33,9 @@ class SplashActivity : BaseActivity(), ForceUpdateUseCase {
         setTheme(R.style.MyTheme_NoActionBar_Launcher)
         super.onCreate(savedInstanceState)
 
-        val remoteConfig = FirebaseRemoteConfig.getInstance()
         val currentVersion = RoomyApp.getAppVersion()
 
-        ForceUpdateUseCaseImpl.with(remoteConfig)
-            .onUpdateNeeded(this)
-            .check(currentVersion)
+        viewModel.checkForUpdates(currentVersion)
 
         viewModel.startupAction.observe(this, Observer {
             when (it) {
@@ -55,6 +50,23 @@ class SplashActivity : BaseActivity(), ForceUpdateUseCase {
                         StartUpAction.TriggerMainFlow -> goToMainActivity()
                         StartUpAction.DialogSameId -> presentAlreadyInHouseholdDialog()
                         is StartUpAction.DialogOverrideId -> presentHouseholdOverwriteDialog(it.data.id)
+                    }
+                }
+            }
+        })
+
+        viewModel.updateAction.observe(this, Observer { response ->
+            when(response) {
+                Response.Loading -> showProgressDialog()
+                is Response.Error -> {
+                    val rootView = findViewById<View>(android.R.id.content) ?: return@Observer
+                    rootView.snackbar(message = getString(R.string.error_generic))
+                }
+                is Response.Success -> {
+                    when (response.data) {
+                        UpdateAction.none -> noUpdate()
+                        is UpdateAction.recommended -> updateRecommended(response.data.url)
+                        is UpdateAction.required -> updateNeeded(response.data.url)
                     }
                 }
             }
@@ -94,7 +106,7 @@ class SplashActivity : BaseActivity(), ForceUpdateUseCase {
             .show()
     }
 
-    override fun onUpdateNeeded(updateUrl: String) {
+    private fun updateNeeded(updateUrl: String) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.forced_update_dialog_title))
             .setMessage(getString(R.string.forced_update_dialog_text))
@@ -110,7 +122,7 @@ class SplashActivity : BaseActivity(), ForceUpdateUseCase {
             .show()
     }
 
-    override fun onUpdateRecommended(updateUrl: String) {
+    private fun updateRecommended(updateUrl: String) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.recommended_update_dialog_title))
             .setMessage(getString(R.string.recommended_update_dialog_text))
@@ -119,14 +131,14 @@ class SplashActivity : BaseActivity(), ForceUpdateUseCase {
                 finish()
             }
             .setNegativeButton(getString(R.string.recommended_update_dialog_negative_button)) { _, _ ->
-                noUpdateNeeded()
+                noUpdate()
             }
             .setCancelable(false)
             .create()
             .show()
     }
 
-    override fun noUpdateNeeded() {
+    private fun noUpdate() {
         FirebaseDynamicLinks.getInstance().getDynamicLink(intent).addOnSuccessListener {
             val referredHouseholdId = it?.link?.getQueryParameter(QUERY_PARAM_HOUSEHOLD).orEmpty()
             viewModel.handleAppStartup(referredHouseholdId)
