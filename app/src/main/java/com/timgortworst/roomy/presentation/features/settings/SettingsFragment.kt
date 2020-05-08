@@ -27,16 +27,10 @@ import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SettingsFragment : PreferenceFragmentCompat() {
-    private lateinit var parentActivity: SettingsActivity
     private val settingsViewModel: SettingsViewModel by viewModel()
     private var counter: Int = 0
     private var snackbar: Snackbar? = null
     private var remainingTimeCounter: CountDownTimer? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentActivity = (activity as? SettingsActivity) ?: return
-    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -70,7 +64,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         (findPreference("preferences_account_logout_key") as? Preference)
             ?.setOnPreferenceClickListener {
-                AlertDialog.Builder(parentActivity)
+                val activity = activity ?: return@setOnPreferenceClickListener false
+
+                AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.logout))
                     .setMessage(getString(R.string.confirm_logout_message))
                     .setPositiveButton(android.R.string.yes) { _, _ ->
@@ -113,16 +109,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun privacyPrefs() {
         (findPreference("analytics_key") as? SwitchPreferenceCompat)?.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _, newValue ->
+                val activity = activity ?: return@OnPreferenceChangeListener false
                 val isAnalyticsEnabled = newValue as Boolean
-                FirebaseAnalytics.getInstance(parentActivity)
+                FirebaseAnalytics.getInstance(activity)
                     .setAnalyticsCollectionEnabled(isAnalyticsEnabled)
                 true
             }
 
         (findPreference("privacy_policy_key") as? Preference)?.setOnPreferenceClickListener {
+            val activity = activity ?: return@setOnPreferenceClickListener false
             startActivity(
                 HtmlTextActivity.intentBuilder(
-                    parentActivity,
+                    activity,
                     getString(R.string.privacy_policy),
                     getString(R.string.privacy_policy_title)
                 )
@@ -133,15 +131,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun aboutPrefs() {
         (findPreference("preferences_rate_app_key") as? Preference)?.setOnPreferenceClickListener {
+            val activity = activity ?: return@setOnPreferenceClickListener false
+
             val intent = try {
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=${parentActivity.packageName}")
+                    Uri.parse("market://details?id=${activity.packageName}")
                 )
             } catch (ex: ActivityNotFoundException) {
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=${parentActivity.packageName}")
+                    Uri.parse("https://play.google.com/store/apps/details?id=${activity.packageName}")
                 )
             }
             startActivity(intent)
@@ -166,11 +166,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun signOut() = settingsViewModel.viewModelScope.launch {
-        AuthUI.getInstance().signOut(parentActivity)
+        val activity = activity ?: return@launch
+
+        AuthUI.getInstance().signOut(activity)
             .addOnSuccessListener {
                 context?.cacheDir?.deleteRecursively() // clear cache
-                parentActivity.finishAffinity()
-                startActivity(SplashActivity.intentBuilder(parentActivity))
+                activity.finishAffinity()
+                startActivity(SplashActivity.intentBuilder(activity))
             }
             .addOnFailureListener {
                 errorMessage()

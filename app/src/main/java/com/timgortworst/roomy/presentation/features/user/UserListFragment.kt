@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.presentation.features.user
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,18 +10,17 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.FragmentUserListBinding
-import com.timgortworst.roomy.presentation.base.model.BottomMenuItem
 import com.timgortworst.roomy.domain.model.User
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.presentation.base.snackbar
-import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
+import com.timgortworst.roomy.presentation.base.model.BottomMenuItem
+import com.timgortworst.roomy.presentation.base.model.EventObserver
+import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class UserListFragment : Fragment(), OnLongClickListener {
     private lateinit var userAdapter: UserAdapter
-    private lateinit var parentActivity: MainActivity
     private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
     private val userViewModel by viewModel<UserViewModel>()
@@ -32,11 +30,6 @@ class UserListFragment : Fragment(), OnLongClickListener {
         fun newInstance(): UserListFragment {
             return UserListFragment()
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentActivity = (activity as? MainActivity) ?: return
     }
 
     override fun onCreateView(
@@ -62,22 +55,23 @@ class UserListFragment : Fragment(), OnLongClickListener {
         userViewModel.userOptions.observe(viewLifecycleOwner, EventObserver {showBottomMenuFor(it)})
 
         userViewModel.userRemoved.observe(viewLifecycleOwner, Observer { response ->
+            val activity = (activity as? MainActivity) ?: return@Observer
             when (response) {
                 is Response.Success -> {
                     response.data?.let { userId ->
                         val userName = userAdapter.getUser(userId)?.name.orEmpty()
-                        parentActivity.binding.bottomNavigationContainer.snackbar(
+                        activity.binding.bottomNavigationContainer.snackbar(
                             message = getString(R.string.removed, userName),
-                            anchorView = parentActivity.binding.fab
+                            anchorView = activity.binding.fab
                         )
 
                         userAdapter.remove(userId) // update local list
                     }
                 }
                 is Response.Error -> {
-                    parentActivity.binding.bottomNavigationContainer.snackbar(
+                    activity.binding.bottomNavigationContainer.snackbar(
                         message = getString(R.string.users_removing_error),
-                        anchorView = parentActivity.binding.fab
+                        anchorView = activity.binding.fab
                     )
                 }
             }
@@ -92,9 +86,8 @@ class UserListFragment : Fragment(), OnLongClickListener {
     private fun setupRecyclerView() {
         userAdapter = UserAdapter(mutableListOf(), this@UserListFragment)
         binding.recyclerView.apply {
-            val linearLayoutManager = LinearLayoutManager(parentActivity)
-            val dividerItemDecoration =
-                DividerItemDecoration(parentActivity, linearLayoutManager.orientation)
+            val linearLayoutManager = LinearLayoutManager(activity)
+            val dividerItemDecoration = DividerItemDecoration(activity, linearLayoutManager.orientation)
             layoutManager = linearLayoutManager
             adapter = userAdapter
             addItemDecoration(dividerItemDecoration)
