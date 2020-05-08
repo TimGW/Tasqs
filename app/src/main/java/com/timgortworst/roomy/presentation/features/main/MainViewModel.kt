@@ -4,13 +4,13 @@ import android.net.Uri
 import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.usecase.settings.AdsVisibleUseCase
-import com.timgortworst.roomy.presentation.usecase.user.InviteUserUseCase
+import com.timgortworst.roomy.presentation.usecase.user.InviteLinkBuilderUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val adsVisibleUseCase: AdsVisibleUseCase,
-    private val inviteUserUseCase: InviteUserUseCase
+    private val inviteLinkBuilderUseCase: InviteLinkBuilderUseCase
 ) : ViewModel() {
 
     private val _uriEvent = MutableLiveData<Response<Uri>>()
@@ -18,7 +18,7 @@ class MainViewModel(
         get() = _uriEvent
 
     fun inviteUser() = viewModelScope.launch {
-        inviteUserUseCase.execute().collect { response ->
+        inviteLinkBuilderUseCase.execute().collect { response ->
             when (response) {
                 Response.Loading -> _uriEvent.value = Response.Loading
                 is Response.Success -> {

@@ -5,7 +5,7 @@ import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.usecase.user.GetUserUseCase
-import com.timgortworst.roomy.presentation.usecase.user.InviteUserUseCase
+import com.timgortworst.roomy.presentation.usecase.user.InviteLinkBuilderUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flowOn
 
 class InviteLinkBuilderUseCaseImpl(
     private val getUserUseCase: GetUserUseCase
-) : InviteUserUseCase {
+) : InviteLinkBuilderUseCase {
 
     override fun execute(params: Unit?) = flow {
         try {

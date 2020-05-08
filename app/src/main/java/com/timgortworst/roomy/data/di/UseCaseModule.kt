@@ -36,5 +36,5 @@ val useCaseModule = module {
     factory<ValidationUseCase> { ValidationUseCaseImpl(get(), get()) }
     factory<GetAllUsersUseCase> { GetAllUsersUseCaseImpl(get(), get()) }
     factory<RemoveUserUseCase> { RemoveUserUseCaseImpl(get(), get(), get(), get()) }
-    factory<InviteUserUseCase> { InviteLinkBuilderUseCaseImpl(get()) }
+    factory<InviteLinkBuilderUseCase> { InviteLinkBuilderUseCaseImpl(get()) }
 }
