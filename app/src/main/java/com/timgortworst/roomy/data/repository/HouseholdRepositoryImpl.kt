@@ -12,11 +12,7 @@ class HouseholdRepositoryImpl : HouseholdRepository {
 
     override suspend fun createHousehold(): String {
         val household = householdCollection.document()
-        household.set(
-            Household(
-                householdId = household.id
-            )
-        ).await()
+        household.set(Household(householdId = household.id)).await()
         return household.id
     }
 
