@@ -1,8 +1,8 @@
 package com.timgortworst.roomy.presentation.features.task.view
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ActionMode
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -36,8 +36,6 @@ class TaskListFragment : Fragment(),
     ActionModeCallback.ActionItemListener,
     TaskClickListener,
     AdapterStateListener {
-
-    private lateinit var parentActivity: MainActivity
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
     private var taskListAdapter: TaskFirestoreAdapter? = null
@@ -69,11 +67,6 @@ class TaskListFragment : Fragment(),
         super.onSaveInstanceState(outState)
         tracker?.onSaveInstanceState(outState)
         outState.putBoolean(IS_IN_ACTION_MODE_KEY, actionMode != null)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        parentActivity = (activity as? MainActivity) ?: return
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,15 +122,11 @@ class TaskListFragment : Fragment(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.filter_all -> {
-                taskViewModel.viewModelScope.launch {
-                    taskViewModel.allDataQuery()
-                }
+                taskViewModel.viewModelScope.launch { taskViewModel.allDataQuery() }
                 true
             }
             R.id.filter_me -> {
-                taskViewModel.viewModelScope.launch {
-                    taskViewModel.filterDataQuery()
-                }
+                taskViewModel.viewModelScope.launch { taskViewModel.filterDataQuery() }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -154,7 +143,8 @@ class TaskListFragment : Fragment(),
 
     private fun setupRecyclerView() {
         binding.recyclerView.apply {
-            val linearLayoutManager = LinearLayoutManager(parentActivity)
+            val activity = activity ?: return
+            val linearLayoutManager = LinearLayoutManager(activity)
             layoutManager = linearLayoutManager
             adapter = taskListAdapter
             addItemDecoration(DividerItemDecoration(context, linearLayoutManager.orientation))
@@ -198,7 +188,9 @@ class TaskListFragment : Fragment(),
     }
 
     private fun startActionMode(tracker: SelectionTracker<String>) {
-        actionMode = parentActivity.startSupportActionMode(
+        val activity = (activity as? MainActivity) ?: return
+
+        actionMode = activity.startSupportActionMode(
             ActionModeCallback(
                 this@TaskListFragment,
                 tracker,
@@ -225,50 +217,55 @@ class TaskListFragment : Fragment(),
     }
 
     override fun onActionItemDelete(selectedTasks: List<Task>, mode: ActionMode) {
-        askForDeleteDialog(selectedTasks, mode).show()
+        askForDeleteDialog(selectedTasks, mode)?.show()
     }
 
     override fun onActionItemEdit(selectedTask: Task) {
-        startActivity(TaskEditActivity.intentBuilder(parentActivity, selectedTask))
+        val activity = activity ?: return
+        startActivity(TaskEditActivity.intentBuilder(activity, selectedTask))
     }
 
     override fun onActionItemInfo(selectedTask: Task) {
-        startActivity(TaskInfoActivity.intentBuilder(parentActivity, selectedTask))
+        val activity = activity ?: return
+        startActivity(TaskInfoActivity.intentBuilder(activity, selectedTask))
     }
 
     override fun onActionItemDone(selectedTasks: List<Task>) {
         taskViewModel.viewModelScope.launch {
             taskViewModel.tasksCompleted(selectedTasks).collect()
 
-            parentActivity.binding.bottomNavigationContainer.snackbar(
+            val activity = (activity as? MainActivity) ?: return@launch
+            activity.binding.bottomNavigationContainer.snackbar(
                 message = getString(R.string.tasks_done, selectedTasks.size),
-                anchorView = parentActivity.binding.fab
+                anchorView = activity.binding.fab
             )
         }
     }
 
     override fun onTaskInfoClicked(task: Task) {
-        startActivity(TaskInfoActivity.intentBuilder(parentActivity, task))
+        val activity = activity ?: return
+        startActivity(TaskInfoActivity.intentBuilder(activity, task))
     }
 
-    private fun askForDeleteDialog(tasks: List<Task>, mode: ActionMode) =
-        MaterialAlertDialogBuilder(parentActivity)
+    private fun askForDeleteDialog(tasks: List<Task>, mode: ActionMode): AlertDialog? {
+        val activity = (activity as? MainActivity) ?: return null
+
+        return MaterialAlertDialogBuilder(activity)
             .setTitle(R.string.delete)
             .setMessage(getString(R.string.delete_dialog_text, tasks.size))
             .setIcon(R.drawable.ic_delete)
             .setPositiveButton(R.string.delete) { dialog, _ ->
                 taskViewModel.viewModelScope.launch {
                     taskViewModel.deleteTasks(tasks).collect()
-
                     if (tasks.size == 1) {
-                        parentActivity.binding.bottomNavigationContainer.snackbar(
+                        activity.binding.bottomNavigationContainer.snackbar(
                             message = getString(R.string.task_deleted, tasks.first().description),
-                            anchorView = parentActivity.binding.fab
+                            anchorView = activity.binding.fab
                         )
                     } else {
-                        parentActivity.binding.bottomNavigationContainer.snackbar(
+                        activity.binding.bottomNavigationContainer.snackbar(
                             message = getString(R.string.tasks_deleted, tasks.size),
-                            anchorView = parentActivity.binding.fab
+                            anchorView = activity.binding.fab
                         )
                     }
                 }
@@ -277,12 +274,12 @@ class TaskListFragment : Fragment(),
             }
             .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .create()
-
+    }
 
     private fun setMsgView(isVisible: Int, title: Int?, text: Int?) {
         binding.layoutStateMessage.apply {
-            title?.let { this.stateTitle.text = parentActivity.getString(it) }
-            text?.let { this.stateMessage.text = parentActivity.getString(it) }
+            title?.let { this.stateTitle.text = getString(it) }
+            text?.let { this.stateMessage.text = getString(it) }
             root.visibility = isVisible
         }
     }

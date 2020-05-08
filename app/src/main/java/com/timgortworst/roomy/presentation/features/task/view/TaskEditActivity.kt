@@ -1,6 +1,7 @@
 package com.timgortworst.roomy.presentation.features.task.view
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -48,7 +49,7 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
     companion object {
         const val INTENT_EXTRA_EDIT_TASK = "INTENT_EXTRA_EDIT_TASK"
 
-        fun intentBuilder(context: AppCompatActivity, task: Task? = null): Intent {
+        fun intentBuilder(context: Context, task: Task? = null): Intent {
             val intent = Intent(context, TaskEditActivity::class.java)
             task?.let { intent.putExtra(INTENT_EXTRA_EDIT_TASK, it) }
             return intent
