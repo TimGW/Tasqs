@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.timgortworst.roomy.data.utils.CustomMapper
+import com.timgortworst.roomy.data.repository.TaskParser
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
@@ -60,14 +60,14 @@ class TaskListViewModel(
     suspend fun allDataQuery() = withContext(Dispatchers.IO) {
         _liveQueryOptions.postValue(FirestoreRecyclerOptions.Builder<Task>()
             .setQuery(getAllTasksUseCase.execute()) {
-                CustomMapper.toTask(it.toObject(TaskJson::class.java)!!)!!
+                TaskParser.toTask(it.toObject(TaskJson::class.java)!!)!!
             })
     }
 
     suspend fun filterDataQuery() = withContext(Dispatchers.IO) {
         _liveQueryOptions.postValue(FirestoreRecyclerOptions.Builder<Task>()
             .setQuery(getTasksForUserUseCase.execute()) {
-                CustomMapper.toTask(it.toObject(TaskJson::class.java)!!)!!
+                TaskParser.toTask(it.toObject(TaskJson::class.java)!!)!!
             })
     }
 }

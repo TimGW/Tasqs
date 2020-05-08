@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.data.utils
+package com.timgortworst.roomy.data.repository
 
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskMetaData
@@ -15,7 +15,7 @@ import org.threeten.bp.ZoneId
 /**
  * Custom object mapper class to convert firestore data models to app models and vice-versa
  */
-object CustomMapper {
+object TaskParser {
     fun toTask(taskJson: TaskJson): Task? {
         if (
             taskJson.id == null ||

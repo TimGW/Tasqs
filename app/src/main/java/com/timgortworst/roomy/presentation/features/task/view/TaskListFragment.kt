@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
-// todo refactor logic to viewmodel / usecase
 class TaskListFragment : BaseFragment(),
     ActionModeCallback.ActionItemListener,
     TaskClickListener,
@@ -67,7 +66,6 @@ class TaskListFragment : BaseFragment(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         tracker?.onSaveInstanceState(outState)
-        taskListAdapter?.onSaveInstanceState(outState)
         outState.putBoolean(IS_IN_ACTION_MODE_KEY, actionMode != null)
     }
 
@@ -92,11 +90,11 @@ class TaskListFragment : BaseFragment(),
             taskViewModel.viewModelScope.launch {
                 taskViewModel.loadInitialQuery()
 
-                setupAdapter(savedInstanceState)
+                setupAdapter()
                 setupRecyclerView()
             }
         } else {
-            setupAdapter(savedInstanceState)
+            setupAdapter()
             setupRecyclerView()
         }
 
@@ -150,13 +148,11 @@ class TaskListFragment : BaseFragment(),
         }
     }
 
-    private fun setupAdapter(savedInstanceState: Bundle?) {
+    private fun setupAdapter() {
         taskListAdapter = TaskFirestoreAdapter(
             this,
             this,
-            taskViewModel.liveQueryOptions.value!!.setLifecycleOwner(this).build(),
-            savedInstanceState,
-            binding.recyclerView
+            taskViewModel.liveQueryOptions.value!!.setLifecycleOwner(this).build()
         )
     }
 

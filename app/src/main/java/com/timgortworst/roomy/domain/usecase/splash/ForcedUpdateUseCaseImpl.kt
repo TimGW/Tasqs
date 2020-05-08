@@ -9,8 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class ForcedUpdateUseCaseImpl :
-    ForcedUpdateUseCase {
+class ForcedUpdateUseCaseImpl : ForcedUpdateUseCase {
     private val remoteConfig = FirebaseRemoteConfig.getInstance()
     private var currentVersion: String = "1.0.0" // fallback
 

@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.presentation.features.task.adapter
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.roomy.R
@@ -24,14 +24,8 @@ import java.util.*
 class TaskFirestoreAdapter(
     private val taskClickListener: TaskClickListener,
     private val adapterStateListener: AdapterStateListener,
-    options: FirestoreRecyclerOptions<Task>,
-    savedInstanceState: Bundle?,
-    recyclerView: RecyclerView
-) : SavedStateAdapter<Task, TaskFirestoreAdapter.ViewHolder>(
-    options,
-    savedInstanceState,
-    recyclerView
-) {
+    options: FirestoreRecyclerOptions<Task>
+) : FirestoreRecyclerAdapter<Task, TaskFirestoreAdapter.ViewHolder>(options) {
     var tracker: SelectionTracker<String>? = null
 
     init {

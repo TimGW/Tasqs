@@ -9,7 +9,6 @@ import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskInfoViewM
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskListViewModel
 import com.timgortworst.roomy.presentation.features.user.UserViewModel
 import org.koin.android.viewmodel.dsl.viewModel
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val viewModelModule = module {

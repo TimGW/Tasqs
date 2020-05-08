@@ -20,7 +20,6 @@ import com.timgortworst.roomy.presentation.base.customview.BottomSheetMenu
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 
-// todo refactor logic to viewmodel / usecase
 class UserListFragment : Fragment(), OnLongClickListener {
     private lateinit var userAdapter: UserAdapter
     private lateinit var parentActivity: MainActivity

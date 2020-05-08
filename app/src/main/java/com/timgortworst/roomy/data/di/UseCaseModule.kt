@@ -6,12 +6,14 @@ import com.timgortworst.roomy.domain.usecase.signin.SignInUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.splash.ValidationUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.settings.AdsVisibleUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.settings.EasterEggUseCaseImpl
+import com.timgortworst.roomy.domain.usecase.splash.ForcedUpdateUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.splash.SwitchHouseholdUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.task.*
 import com.timgortworst.roomy.domain.usecase.user.*
 import com.timgortworst.roomy.presentation.usecase.splash.SwitchHouseholdUseCase
 import com.timgortworst.roomy.presentation.usecase.settings.*
 import com.timgortworst.roomy.presentation.usecase.signin.SignInUseCase
+import com.timgortworst.roomy.presentation.usecase.splash.ForcedUpdateUseCase
 import com.timgortworst.roomy.presentation.usecase.splash.ValidationUseCase
 import com.timgortworst.roomy.presentation.usecase.task.*
 import com.timgortworst.roomy.presentation.usecase.user.*
@@ -29,28 +31,13 @@ val useCaseModule = module {
     factory<CalculateNextTaskUseCase> { CalculateNextTaskUseCaseImpl() }
     factory<CreateOrUpdateTaskUseCase> { CreateOrUpdateTaskUseCaseImpl(get(), get()) }
     factory<SignInUseCase> { SignInUseCaseImpl(get(), get(), get()) }
-    factory<AdsVisibleUseCase> {
-        AdsVisibleUseCaseImpl(
-            get()
-        )
-    }
+    factory<AdsVisibleUseCase> { AdsVisibleUseCaseImpl(get()) }
     factory<GetUserUseCase> { GetUserUseCaseImpl(get(), get()) }
     factory<EasterEggUseCase> { EasterEggUseCaseImpl(get()) }
-    factory<SwitchHouseholdUseCase> {
-        SwitchHouseholdUseCaseImpl(
-            get(),
-            get(),
-            get(),
-            get()
-        )
-    }
-    factory<ValidationUseCase> {
-        ValidationUseCaseImpl(
-            get(),
-            get()
-        )
-    }
+    factory<SwitchHouseholdUseCase> { SwitchHouseholdUseCaseImpl(get(), get(), get(), get()) }
+    factory<ValidationUseCase> { ValidationUseCaseImpl(get(), get()) }
     factory<GetAllUsersUseCase> { GetAllUsersUseCaseImpl(get(), get()) }
     factory<RemoveUserUseCase> { RemoveUserUseCaseImpl(get(), get(), get(), get()) }
     factory<InviteLinkBuilderUseCase> { InviteLinkBuilderUseCaseImpl(get()) }
+    factory<ForcedUpdateUseCase> { ForcedUpdateUseCaseImpl() }
 }

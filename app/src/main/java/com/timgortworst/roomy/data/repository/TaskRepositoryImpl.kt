@@ -1,7 +1,6 @@
 package com.timgortworst.roomy.data.repository
 
 import com.google.firebase.firestore.*
-import com.timgortworst.roomy.data.utils.CustomMapper
 import com.timgortworst.roomy.domain.model.Household
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.User.Companion.USER_ID_REF
@@ -27,14 +26,14 @@ class TaskRepositoryImpl(
     @Throws(FirebaseFirestoreException::class)
     override suspend fun createTask(task: Task): String? {
         val document = taskCollection().document()
-        document.set(CustomMapper.convertToMap(task.apply { id = document.id })).await()
+        document.set(TaskParser.convertToMap(task.apply { id = document.id })).await()
         return document.id
     }
 
     @Throws(FirebaseFirestoreException::class)
     override suspend fun updateTask(task: Task) {
         val document = taskCollection().document(task.id)
-        document.update(CustomMapper.convertToMap(task)).await()
+        document.update(TaskParser.convertToMap(task)).await()
     }
 
     @Throws(FirebaseFirestoreException::class)
@@ -46,7 +45,7 @@ class TaskRepositoryImpl(
             .get()
             .await()
             .toObjects(TaskJson::class.java)
-            .mapNotNull { CustomMapper.toTask(it) }
+            .mapNotNull { TaskParser.toTask(it) }
     }
 
     @Throws(FirebaseFirestoreException::class)
@@ -66,7 +65,7 @@ class TaskRepositoryImpl(
     override suspend fun updateTasks(tasks: List<Task>) {
         val batch = db.batch()
         tasks.forEach {
-            batch.update(taskCollection().document(it.id), CustomMapper.convertToMap(it))
+            batch.update(taskCollection().document(it.id), TaskParser.convertToMap(it))
         }
         batch.commit().await()
     }
