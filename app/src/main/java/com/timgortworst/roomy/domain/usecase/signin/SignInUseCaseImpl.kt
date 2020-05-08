@@ -1,7 +1,6 @@
-package com.timgortworst.roomy.domain.usecase.account
+package com.timgortworst.roomy.domain.usecase.signin
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.iid.FirebaseInstanceId
 import com.timgortworst.roomy.domain.model.response.ErrorHandler

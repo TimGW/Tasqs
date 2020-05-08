@@ -7,7 +7,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.usecase.user.AddTokenUseCaseImpl
 import com.timgortworst.roomy.presentation.features.notifications.NotificationBuilder
 import com.timgortworst.roomy.presentation.features.notifications.NotificationWorkManager
-import com.timgortworst.roomy.presentation.usecase.settings.AddTokenUseCase
+import com.timgortworst.roomy.presentation.usecase.user.AddTokenUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

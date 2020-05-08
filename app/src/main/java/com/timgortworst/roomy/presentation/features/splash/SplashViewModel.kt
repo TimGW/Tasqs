@@ -2,14 +2,14 @@ package com.timgortworst.roomy.presentation.features.splash
 
 import androidx.lifecycle.*
 import com.timgortworst.roomy.domain.model.response.Response
-import com.timgortworst.roomy.domain.usecase.account.ValidationUseCaseImpl
-import com.timgortworst.roomy.domain.usecase.forcedupdate.ForcedUpdateUseCaseImpl
+import com.timgortworst.roomy.domain.usecase.splash.ValidationUseCaseImpl
+import com.timgortworst.roomy.domain.usecase.splash.ForcedUpdateUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
-import com.timgortworst.roomy.domain.usecase.household.SwitchHouseholdUseCaseImpl
+import com.timgortworst.roomy.domain.usecase.splash.SwitchHouseholdUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.UpdateAction
-import com.timgortworst.roomy.presentation.usecase.household.SwitchHouseholdUseCase
-import com.timgortworst.roomy.presentation.usecase.settings.ForcedUpdateUseCase
-import com.timgortworst.roomy.presentation.usecase.signin.ValidationUseCase
+import com.timgortworst.roomy.presentation.usecase.splash.SwitchHouseholdUseCase
+import com.timgortworst.roomy.presentation.usecase.splash.ForcedUpdateUseCase
+import com.timgortworst.roomy.presentation.usecase.splash.ValidationUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 

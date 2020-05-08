@@ -1,15 +1,16 @@
-package com.timgortworst.roomy.domain.usecase.forcedupdate
+package com.timgortworst.roomy.domain.usecase.splash
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.base.model.UpdateAction
-import com.timgortworst.roomy.presentation.usecase.settings.ForcedUpdateUseCase
+import com.timgortworst.roomy.presentation.usecase.splash.ForcedUpdateUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class ForcedUpdateUseCaseImpl : ForcedUpdateUseCase {
+class ForcedUpdateUseCaseImpl :
+    ForcedUpdateUseCase {
     private val remoteConfig = FirebaseRemoteConfig.getInstance()
     private var currentVersion: String = "1.0.0" // fallback
 

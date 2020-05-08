@@ -1,8 +1,7 @@
-package com.timgortworst.roomy.domain.usecase.household
+package com.timgortworst.roomy.domain.usecase.splash
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.domain.model.response.ErrorHandler
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.HouseholdRepository
@@ -10,7 +9,7 @@ import com.timgortworst.roomy.domain.repository.TaskRepository
 import com.timgortworst.roomy.domain.repository.UserRepository
 import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
-import com.timgortworst.roomy.presentation.usecase.household.SwitchHouseholdUseCase
+import com.timgortworst.roomy.presentation.usecase.splash.SwitchHouseholdUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

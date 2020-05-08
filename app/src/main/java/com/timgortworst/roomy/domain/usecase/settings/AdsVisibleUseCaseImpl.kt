@@ -1,4 +1,4 @@
-package com.timgortworst.roomy.domain.usecase.ads
+package com.timgortworst.roomy.domain.usecase.settings
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.timgortworst.roomy.data.sharedpref.SharedPrefs
