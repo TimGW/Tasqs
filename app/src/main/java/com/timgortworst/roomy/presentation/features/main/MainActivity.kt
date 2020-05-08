@@ -50,11 +50,7 @@ class MainActivity : BaseActivity() {
         super.onSaveInstanceState(outState)
         if (activeFragment?.isAdded == true) {
             activeFragment?.let {
-                supportFragmentManager.putFragment(
-                    outState,
-                    ACTIVE_FRAG_KEY,
-                    it
-                )
+                supportFragmentManager.putFragment(outState, ACTIVE_FRAG_KEY, it)
             }
         }
     }
