@@ -22,7 +22,7 @@ class NotificationWorker(
         val id =
             inputData.getString(NotificationWorkManager.NOTIFICATION_ID_KEY) ?: title.plus(text)
 
-        NotificationBuilder.triggerNotification(
+        NotificationTrigger.triggerNotification(
             context,
             id.hashCode(),
             context.getString(R.string.notification_title, title),

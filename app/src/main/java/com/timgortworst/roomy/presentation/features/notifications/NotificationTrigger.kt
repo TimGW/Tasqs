@@ -1,5 +1,6 @@
 package com.timgortworst.roomy.presentation.features.notifications
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,16 +12,14 @@ import androidx.core.app.NotificationManagerCompat
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 
-object NotificationBuilder {
+object NotificationTrigger {
     private const val CHANNEL_ID = "channel_01"
     private const val CHANNEL_DESC = "channel for notifications to remind users to perform their tasks"
     private const val NOTIFICATION_GROUP_KEY = "GROUP_1"
     private const val NOTIFICATION_GROUP_ID = 1
 
     fun triggerNotification(context: Context, id: Int, notificationTitle: String, notificationText: String) {
-        createNotificationChannelIfRequired(
-            context
-        )
+        createNotificationChannelIfRequired(context)
 
         val pendingIntent = PendingIntent.getActivity(
             context,
@@ -30,19 +29,12 @@ object NotificationBuilder {
         )
 
         with(NotificationManagerCompat.from(context)) {
-            notify(id, buildNotification(
-                context,
-                notificationTitle,
-                notificationText,
-                pendingIntent
-            ).build())
+            notify(
+                id,
+                buildNotification(context, notificationTitle, notificationText, pendingIntent))
             notify(
                 NOTIFICATION_GROUP_ID,
-                buildSummaryNotification(
-                    context,
-                    notificationTitle,
-                    notificationText
-                ).build()
+                buildSummaryNotification(context, notificationTitle, notificationText)
             )
         }
     }
@@ -51,10 +43,8 @@ object NotificationBuilder {
         context: Context,
         title: String,
         text: String
-    ): NotificationCompat.Builder {
-        return NotificationCompat.Builder(context,
-            CHANNEL_ID
-        )
+    ): Notification {
+        return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_home)
             .setContentTitle(title)
             .setContentText(text)
@@ -62,6 +52,7 @@ object NotificationBuilder {
             .setGroupSummary(true)
             .setGroup(NOTIFICATION_GROUP_KEY)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            .build()
     }
 
     private fun buildNotification(
@@ -69,9 +60,7 @@ object NotificationBuilder {
         notificationTitle: String,
         notificationMessage: String,
         notificationPendingIntent: PendingIntent
-    ) = NotificationCompat.Builder(context,
-        CHANNEL_ID
-    )
+    ) = NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_home)
         .setContentTitle(notificationTitle)
         .setContentText(notificationMessage)
@@ -80,10 +69,9 @@ object NotificationBuilder {
         .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
         .setGroup(NOTIFICATION_GROUP_KEY)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .build()
 
     private fun createNotificationChannelIfRequired(context: Context) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = context.getString(R.string.app_name)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -92,7 +80,6 @@ object NotificationBuilder {
                     description =
                         CHANNEL_DESC
                 }
-            // Register the channel with the system
             val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
