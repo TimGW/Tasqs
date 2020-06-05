@@ -5,12 +5,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.presentation.features.main.MainActivity
+import com.timgortworst.roomy.presentation.features.task.view.TaskInfoActivity
 
 object NotificationTrigger {
     private const val CHANNEL_ID = "channel_01"
@@ -18,19 +17,19 @@ object NotificationTrigger {
     private const val NOTIFICATION_GROUP_KEY = "GROUP_1"
     private const val NOTIFICATION_GROUP_ID = 1
 
-    fun triggerNotification(context: Context, id: Int, notificationTitle: String, notificationText: String) {
+    fun triggerNotification(context: Context, id: String, notificationTitle: String, notificationText: String) {
         createNotificationChannelIfRequired(context)
 
         val pendingIntent = PendingIntent.getActivity(
             context,
-            0,
-            Intent(context, MainActivity::class.java),
+            id.hashCode(),
+            TaskInfoActivity.intentBuilder(context, id),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         with(NotificationManagerCompat.from(context)) {
             notify(
-                id,
+                id.hashCode(),
                 buildNotification(context, notificationTitle, notificationText, pendingIntent))
             notify(
                 NOTIFICATION_GROUP_ID,

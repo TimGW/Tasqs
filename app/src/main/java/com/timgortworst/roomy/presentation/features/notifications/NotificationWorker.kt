@@ -24,7 +24,7 @@ class NotificationWorker(
 
         NotificationTrigger.triggerNotification(
             context,
-            id.hashCode(),
+            id,
             context.getString(R.string.notification_title, title),
             context.getString(R.string.notification_message, text)
         )

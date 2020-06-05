@@ -4,130 +4,143 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="task"
-            type="com.timgortworst.roomy.domain.model.Task" />
 
         <variable
             name="viewmodel"
             type="com.timgortworst.roomy.presentation.features.task.viewmodel.TaskInfoViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/keyline_4">
+        android:orientation="vertical">
 
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-7dp"
+            android:layout_marginBottom="-7dp"
+            android:indeterminate="true"
+            android:max="100"
+            tools:visibility="visible"
+            app:loadingVisibility="@{viewmodel.task}"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:padding="@dimen/keyline_4">
 
-            <TextView
-                android:id="@+id/info_date_caption"
-                style="@style/TextAppearance.MyTheme.Caption"
+            <ScrollView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/info_task_next_date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/info_user" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/info_date"
-                style="@style/TextAppearance.MyTheme.Body1"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/info_date_caption"
+                        style="@style/TextAppearance.MyTheme.Caption"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/info_task_next_date"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/info_user" />
+
+                    <TextView
+                        android:id="@+id/info_date"
+                        style="@style/TextAppearance.MyTheme.Body1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:formatDate="@{viewmodel.task}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/info_date_caption" />
+
+                    <TextView
+                        android:id="@+id/info_repeated_caption"
+                        style="@style/TextAppearance.MyTheme.Caption"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/info_repeated_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/info_date" />
+
+                    <TextView
+                        android:id="@+id/info_repeated"
+                        style="@style/TextAppearance.MyTheme.Body1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:formatRecurrence="@{viewmodel.task}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/info_repeated_caption" />
+
+                    <TextView
+                        android:id="@+id/info_description_caption"
+                        style="@style/TextAppearance.MyTheme.Caption"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/info_task_description_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/info_repeated" />
+
+                    <TextView
+                        android:id="@+id/info_description"
+                        style="@style/TextAppearance.MyTheme.Body1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:formatDescription="@{viewmodel.task}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/info_description_caption"
+                        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eleifend dignissim lacus, non faucibus ipsum interdum at. Sed pellentesque nunc in lorem ullamcorper, et pulvinar felis ultricies. Maecenas eu elit odio. Phasellus aliquam, felis quis efficitur hendrerit, purus felis bibendum ex, sit amet laoreet ante tortor quis sem. Donec consectetur libero ex, sit amet venenatis eros ullamcorper ac. Duis quis risus non nunc suscipit rhoncus. Cras cursus mauris nunc, nec pharetra nibh cursus eget. Nullam sit amet lacus non enim feugiat tincidunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eleifend dignissim lacus, non faucibus ipsum interdum at. Sed pellentesque nunc in lorem ullamcorper, et pulvinar felis ultricies. Maecenas eu elit odio. Phasellus aliquam, felis quis efficitur hendrerit, purus felis bibendum ex, sit amet laoreet ante tortor quis sem. Donec consectetur libero ex, sit amet venenatis eros ullamcorper ac. Duis quis risus non nunc suscipit rhoncus. Cras cursus mauris nunc, nec pharetra nibh cursus eget. Nullam sit amet lacus non enim feugiat tincidunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eleifend dignissim lacus, non faucibus ipsum interdum at. Sed pellentesque nunc in lorem ullamcorper, et pulvinar felis ultricies. Maecenas eu elit odio. Phasellus aliquam, felis quis efficitur hendrerit, purus felis bibendum ex, sit amet laoreet ante tortor quis sem. Donec consectetur libero ex, sit amet venenatis eros ullamcorper ac. Duis quis risus non nunc suscipit rhoncus. Cras cursus mauris nunc, nec pharetra nibh cursus eget. Nullam sit amet lacus non enim feugiat tincidunt." />
+
+                    <TextView
+                        android:id="@+id/info_user_caption"
+                        style="@style/TextAppearance.MyTheme.Caption"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/info_task_assinged_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/info_user"
+                        style="@style/TextAppearance.MyTheme.Body1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:formatName="@{viewmodel.task}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/info_user_caption"
+                        tools:text="Tim Gortworst" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/task_done"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:formatDate="@{task.metaData.startDateTime}"
+                android:padding="@dimen/keyline_4"
+                android:text="@string/button_done_text"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/info_date_caption" />
-
-            <TextView
-                android:id="@+id/info_repeated_caption"
-                style="@style/TextAppearance.MyTheme.Caption"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/info_repeated_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/info_date" />
-
-            <TextView
-                android:id="@+id/info_repeated"
-                style="@style/TextAppearance.MyTheme.Body1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:formatRecurrence="@{task.metaData.recurrence}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/info_repeated_caption" />
-
-            <TextView
-                android:id="@+id/info_description_caption"
-                style="@style/TextAppearance.MyTheme.Caption"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/info_task_description_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/info_repeated" />
-
-            <TextView
-                android:id="@+id/info_description"
-                style="@style/TextAppearance.MyTheme.Body1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{task.description}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/info_description_caption"
-                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eleifend dignissim lacus, non faucibus ipsum interdum at. Sed pellentesque nunc in lorem ullamcorper, et pulvinar felis ultricies. Maecenas eu elit odio. Phasellus aliquam, felis quis efficitur hendrerit, purus felis bibendum ex, sit amet laoreet ante tortor quis sem. Donec consectetur libero ex, sit amet venenatis eros ullamcorper ac. Duis quis risus non nunc suscipit rhoncus. Cras cursus mauris nunc, nec pharetra nibh cursus eget. Nullam sit amet lacus non enim feugiat tincidunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eleifend dignissim lacus, non faucibus ipsum interdum at. Sed pellentesque nunc in lorem ullamcorper, et pulvinar felis ultricies. Maecenas eu elit odio. Phasellus aliquam, felis quis efficitur hendrerit, purus felis bibendum ex, sit amet laoreet ante tortor quis sem. Donec consectetur libero ex, sit amet venenatis eros ullamcorper ac. Duis quis risus non nunc suscipit rhoncus. Cras cursus mauris nunc, nec pharetra nibh cursus eget. Nullam sit amet lacus non enim feugiat tincidunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eleifend dignissim lacus, non faucibus ipsum interdum at. Sed pellentesque nunc in lorem ullamcorper, et pulvinar felis ultricies. Maecenas eu elit odio. Phasellus aliquam, felis quis efficitur hendrerit, purus felis bibendum ex, sit amet laoreet ante tortor quis sem. Donec consectetur libero ex, sit amet venenatis eros ullamcorper ac. Duis quis risus non nunc suscipit rhoncus. Cras cursus mauris nunc, nec pharetra nibh cursus eget. Nullam sit amet lacus non enim feugiat tincidunt." />
-
-            <TextView
-                android:id="@+id/info_user_caption"
-                style="@style/TextAppearance.MyTheme.Caption"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/info_task_assinged_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/info_user"
-                style="@style/TextAppearance.MyTheme.Body1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{task.user.name}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/info_user_caption"
-                tools:text="Tim Gortworst" />
-
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/task_done"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/keyline_4"
-        android:text="@string/button_done_text"
-        android:onClick="@{() -> viewmodel.taskCompleted(task)}"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
-
-    </layout>
+    </LinearLayout>
+</layout>

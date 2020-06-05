@@ -19,5 +19,5 @@ val viewModelModule = module {
     viewModel { MainViewModel(get(), get()) }
     viewModel { SplashViewModel(get(), get(), get()) }
     viewModel { TaskEditViewModel(get(), get()) }
-    viewModel { TaskInfoViewModel(get()) }
+    viewModel { TaskInfoViewModel(get(), get()) }
 }

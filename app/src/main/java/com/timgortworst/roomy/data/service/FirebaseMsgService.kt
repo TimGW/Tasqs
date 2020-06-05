@@ -97,7 +97,7 @@ class FirebaseMsgService : FirebaseMessagingService(), KoinComponent {
     ) {
         NotificationTrigger.triggerNotification(
             this@FirebaseMsgService,
-            taskId.hashCode(),
+            taskId,
             title,
             text
         )

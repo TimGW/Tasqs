@@ -5,6 +5,7 @@ import com.timgortworst.roomy.domain.model.Household
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.User.Companion.USER_ID_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson
+import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_ID_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_META_DATA_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskJson.Companion.TASK_USER_REF
 import com.timgortworst.roomy.domain.model.firestore.TaskMetaDataJson.Companion.TASK_DATE_TIME_REF
@@ -75,5 +76,15 @@ class TaskRepositoryImpl(
         val batch = db.batch()
         tasks.forEach { batch.delete(taskCollection().document(it.id)) }
         batch.commit().await()
+    }
+
+    @Throws(FirebaseFirestoreException::class)
+    override suspend fun getTask(taskId: String): Task? {
+        val result = taskCollection()
+            .document(taskId)
+            .get()
+            .await()
+            .toObject(TaskJson::class.java) ?: return null
+        return (TaskParser.toTask(result))
     }
 }

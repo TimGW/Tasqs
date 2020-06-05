@@ -26,4 +26,7 @@ interface TaskRepository {
 
     @Throws(FirebaseFirestoreException::class)
     suspend fun deleteTasks(tasks: List<Task>)
+
+    @Throws(FirebaseFirestoreException::class)
+    suspend fun getTask(taskId: String) : Task?
 }
