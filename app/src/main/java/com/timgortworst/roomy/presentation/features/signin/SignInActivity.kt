@@ -41,7 +41,7 @@ class SignInActivity : BaseActivity() {
                 .setAvailableProviders(providers)
                 .setLogo(R.drawable.ic_launcher_foreground)
                 .setTheme(R.style.MyTheme_NoActionBar)
-                .setIsSmartLockEnabled(!BuildConfig.DEBUG, true)
+                .setIsSmartLockEnabled(false, true)
                 .build(),
             RC_SIGN_IN
         )

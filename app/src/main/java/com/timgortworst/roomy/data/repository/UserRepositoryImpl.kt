@@ -27,7 +27,7 @@ class UserRepositoryImpl : UserRepository {
             val userDoc = transition.get(currentUserDocRef)
             val newUser = User(
                 userId = fireBaseUser.uid,
-                name = fireBaseUser.displayName ?: "",
+                name = fireBaseUser.displayName ?: "Unknown",
                 email = fireBaseUser.email ?: "",
                 isAdmin = true,
                 householdId = householdId,
