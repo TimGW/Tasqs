@@ -26,6 +26,9 @@
 -keep class androidx.core.app.CoreComponentFactory { *; }
 -keep class com.google.firebase.example.fireeats.java.model.** { *; }
 -keep class com.google.firebase.example.fireeats.kotlin.model.** { *; }
--keep class com.timgortworst.roomy.data.model.** { *; }
+-keep class com.timgortworst.roomy.domain.model.** { *; }
 -keep class com.google.ads.**
 -dontwarn com.google.ads.**
+
+-keepattributes SourceFile,LineNumberTable        # Keep file names and line numbers.
+-keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.

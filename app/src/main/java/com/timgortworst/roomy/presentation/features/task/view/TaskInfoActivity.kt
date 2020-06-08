@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.app.NavUtils
-import androidx.lifecycle.Observer
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityInfoTaskBinding
 import com.timgortworst.roomy.domain.model.Task
@@ -21,7 +20,6 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class TaskInfoActivity : BaseActivity() {
     private lateinit var binding: ActivityInfoTaskBinding
     private val taskViewModel by viewModel<TaskInfoViewModel>()
-    private lateinit var task: Task
 
     companion object {
         private const val INTENT_EXTRA_INFO_TASK = "INTENT_EXTRA_INFO_TASK"
@@ -87,7 +85,7 @@ class TaskInfoActivity : BaseActivity() {
                 true
             }
             R.id.action_go_to_edit -> {
-                startActivity(TaskEditActivity.intentBuilder(this, task))
+                startActivity(TaskEditActivity.intentBuilder(this, intent.getParcelableExtra(INTENT_EXTRA_INFO_TASK)))
                 true
             }
             else -> super.onOptionsItemSelected(item)
