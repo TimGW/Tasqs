@@ -134,13 +134,11 @@ class TaskListFragment : Fragment(),
     }
 
     private fun setupAdapter() {
-        taskViewModel.liveQueryOptions.value?.setLifecycleOwner(this)?.build()?.let {
-            taskListAdapter = TaskFirestoreAdapter(
-                this,
-                this,
-                it
-            )
-        }
+        taskListAdapter = TaskFirestoreAdapter(
+            this,
+            this,
+            taskViewModel.liveQueryOptions.value!!.setLifecycleOwner(this).build()
+        )
     }
 
     private fun setupRecyclerView() {

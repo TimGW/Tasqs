@@ -1,8 +1,10 @@
 package com.timgortworst.roomy.domain.model.response
 
+import androidx.annotation.Keep
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.FirebaseFirestoreException.Code.*
 
+@Keep
 class ErrorHandlerImpl :
     ErrorHandler {
 

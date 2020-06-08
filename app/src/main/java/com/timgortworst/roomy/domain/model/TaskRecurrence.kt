@@ -1,10 +1,12 @@
 package com.timgortworst.roomy.domain.model
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import com.google.firebase.firestore.Exclude
 import com.timgortworst.roomy.R
 import kotlinx.android.parcel.Parcelize
 
+@Keep
 sealed class TaskRecurrence : Parcelable {
     abstract var frequency: Int
 

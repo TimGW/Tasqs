@@ -1,9 +1,11 @@
 package com.timgortworst.roomy.domain.model.firestore
 
+import androidx.annotation.Keep
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.google.firebase.firestore.PropertyName
 
 @IgnoreExtraProperties
+@Keep
 data class TaskMetaDataJson(
     @JvmField @PropertyName(TASK_DATE_TIME_REF) var startDateTime: Long? = null,
     @JvmField @PropertyName(TASK_TIME_ZONE_REF) var timeZone: String? = null,

@@ -1,5 +1,8 @@
 package com.timgortworst.roomy.domain.model.response
 
+import androidx.annotation.Keep
+
+@Keep
 sealed class ErrorEntity {
     abstract val originalException: Throwable
     data class Network(override val originalException: Throwable) : ErrorEntity()
