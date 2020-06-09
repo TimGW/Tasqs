@@ -54,7 +54,8 @@
             android:theme="@style/MyTheme.NoActionBar" />
         <activity
             android:name=".presentation.features.task.view.TaskEditActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:parentActivityName=".presentation.features.main.MainActivity"/>
         <activity
             android:name=".presentation.features.task.view.TaskInfoActivity"
             android:windowSoftInputMode="stateVisible|adjustResize"

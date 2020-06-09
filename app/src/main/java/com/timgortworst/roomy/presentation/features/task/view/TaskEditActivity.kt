@@ -71,7 +71,7 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
             binding.progressBar.visibility = View.INVISIBLE
             when (it) {
                 Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                is Response.Success -> navigateUpTo(Intent(this, MainActivity::class.java))
+                is Response.Success -> navigateUpTo(parentActivityIntent)
                 is Response.Error -> presentError(R.string.error_generic)
                 is Response.Empty -> binding.taskDescriptionHint.error = getString(it.msg)
             }
@@ -85,10 +85,6 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home -> {
-                navigateUpTo(Intent(this, MainActivity::class.java))
-                true
-            }
             R.id.action_edit_done -> {
                 viewModel.taskDoneClicked(task.apply {
                     // collect values for recurrence only when user is done, since it's a complex object

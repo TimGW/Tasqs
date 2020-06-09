@@ -5,14 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.core.app.NavUtils
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityInfoTaskBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.base.model.TaskInfoAction
 import com.timgortworst.roomy.presentation.base.view.BaseActivity
-import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskInfoViewModel
 import kotlinx.android.synthetic.main.activity_info_task.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -76,14 +74,6 @@ class TaskInfoActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            android.R.id.home -> {
-                if (intent.hasExtra(INTENT_EXTRA_INFO_TASK_ID)) {
-                    parentActivityIntent?.let { NavUtils.navigateUpTo(this, MainActivity.intentBuilder(this)) }
-                } else {
-                    parentActivityIntent?.let { NavUtils.navigateUpTo(this, it) }
-                }
-                true
-            }
             R.id.action_go_to_edit -> {
                 startActivity(TaskEditActivity.intentBuilder(this, intent.getParcelableExtra(INTENT_EXTRA_INFO_TASK)))
                 true

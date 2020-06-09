@@ -53,16 +53,6 @@ class TaskListFragment : Fragment(),
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        savedInstanceState?.let { bundle ->
-            tracker?.let {
-                it.onRestoreInstanceState(bundle)
-                if (bundle.getBoolean(IS_IN_ACTION_MODE_KEY, false)) startActionMode(it)
-            }
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         tracker?.onSaveInstanceState(outState)
@@ -82,9 +72,17 @@ class TaskListFragment : Fragment(),
         _binding = FragmentTaskListBinding.inflate(inflater, container, false)
 
         taskViewModel.viewModelScope.launch {
-            if (savedInstanceState == null) taskViewModel.loadInitialQuery()
+            taskViewModel.loadInitialQuery()
             setupAdapter()
             setupRecyclerView()
+
+            savedInstanceState?.let { bundle ->
+                tracker?.let {
+                    it.onRestoreInstanceState(bundle)
+                    if (bundle.getBoolean(IS_IN_ACTION_MODE_KEY, false)) startActionMode(it)
+                    setActionModeTitle(it.selection.size())
+                }
+            }
         }
 
         return binding.root
@@ -134,11 +132,13 @@ class TaskListFragment : Fragment(),
     }
 
     private fun setupAdapter() {
-        taskListAdapter = TaskFirestoreAdapter(
-            this,
-            this,
-            taskViewModel.liveQueryOptions.value!!.setLifecycleOwner(this).build()
-        )
+        taskViewModel.liveQueryOptions.value?.setLifecycleOwner(this)?.build()?.let {
+            taskListAdapter = TaskFirestoreAdapter(
+                this,
+                this,
+                it
+            )
+        }
     }
 
     private fun setupRecyclerView() {
