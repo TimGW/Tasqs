@@ -90,6 +90,8 @@ class MainActivity : BaseActivity() {
                     response.data?.let { presentShareLinkUri(it) }
                 }
                 is Response.Error -> {
+                    hideProgressDialog()
+                    binding.fab.isEnabled = true
                     binding.bottomNavigationContainer.snackbar(
                         message = getString(R.string.error_connection),
                         anchorView = binding.fab
@@ -175,11 +177,11 @@ class MainActivity : BaseActivity() {
                 openTaskEditActivity()
             }
             userListFragment::class.java.toString() -> { _ ->
+                binding.fab.isEnabled = false
                 viewModel.inviteUser()
             }
             else -> { _ -> }
         }
-
         binding.fab.setOnClickListener(clickTask)
     }
 
@@ -210,6 +212,7 @@ class MainActivity : BaseActivity() {
             .setLongLink(linkUri)
             .buildShortDynamicLink()
             .addOnCompleteListener(this) { task ->
+                binding.fab.isEnabled = true
                 if (task.isSuccessful) {
                     val shortLink = task.result?.shortLink
                     val msg = "$shortLink"
