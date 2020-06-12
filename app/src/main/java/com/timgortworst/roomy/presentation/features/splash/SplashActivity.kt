@@ -12,6 +12,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.usecase.user.InviteLinkBuilderUseCaseImpl.Companion.QUERY_PARAM_HOUSEHOLD
 import com.timgortworst.roomy.presentation.RoomyApp
+import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
 import com.timgortworst.roomy.presentation.base.model.UpdateAction
 import com.timgortworst.roomy.presentation.base.snackbar
@@ -37,11 +38,11 @@ class SplashActivity : BaseActivity() {
 
         viewModel.checkForUpdates(currentVersion)
 
-        viewModel.startupAction.observe(this, Observer {
+        viewModel.startupAction.observe(this, EventObserver {
             when (it) {
                 Response.Loading -> showProgressDialog()
                 is Response.Error -> {
-                    val rootView = findViewById<View>(android.R.id.content) ?: return@Observer
+                    val rootView = findViewById<View>(android.R.id.content) ?: return@EventObserver
                     rootView.snackbar(message = getString(R.string.error_generic))
                 }
                 is Response.Success -> {
@@ -55,11 +56,11 @@ class SplashActivity : BaseActivity() {
             }
         })
 
-        viewModel.updateAction.observe(this, Observer { response ->
+        viewModel.updateAction.observe(this, EventObserver { response ->
             when(response) {
                 Response.Loading -> showProgressDialog()
                 is Response.Error -> {
-                    val rootView = findViewById<View>(android.R.id.content) ?: return@Observer
+                    val rootView = findViewById<View>(android.R.id.content) ?: return@EventObserver
                     rootView.snackbar(message = getString(R.string.error_generic))
                 }
                 is Response.Success -> {
@@ -153,5 +154,6 @@ class SplashActivity : BaseActivity() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateUrl))
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+        finish()
     }
 }

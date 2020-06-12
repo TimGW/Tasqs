@@ -6,6 +6,7 @@ import com.timgortworst.roomy.domain.usecase.splash.ValidationUseCaseImpl
 import com.timgortworst.roomy.domain.usecase.splash.ForcedUpdateUseCaseImpl
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
 import com.timgortworst.roomy.domain.usecase.splash.SwitchHouseholdUseCaseImpl
+import com.timgortworst.roomy.presentation.base.model.Event
 import com.timgortworst.roomy.presentation.base.model.UpdateAction
 import com.timgortworst.roomy.presentation.usecase.splash.SwitchHouseholdUseCase
 import com.timgortworst.roomy.presentation.usecase.splash.ForcedUpdateUseCase
@@ -19,18 +20,18 @@ class SplashViewModel(
     private val forcedUpdateUseCase: ForcedUpdateUseCase
 ) : ViewModel() {
 
-    private val _startupAction = MutableLiveData<Response<StartUpAction>>()
-    val startupAction: LiveData<Response<StartUpAction>>
+    private val _startupAction = MutableLiveData<Event<Response<StartUpAction>>>()
+    val startupAction: LiveData<Event<Response<StartUpAction>>>
         get() = _startupAction
 
-    private val _updateAction = MutableLiveData<Response<UpdateAction>>()
-    val updateAction: LiveData<Response<UpdateAction>>
+    private val _updateAction = MutableLiveData<Event<Response<UpdateAction>>>()
+    val updateAction: LiveData<Event<Response<UpdateAction>>>
         get() = _updateAction
 
     fun handleAppStartup(referredHouseholdId: String) {
         viewModelScope.launch {
             appStartupUseCase.execute(ValidationUseCaseImpl.Params(referredHouseholdId)).collect {
-                _startupAction.value = it
+                _startupAction.value = Event(it)
             }
         }
     }
@@ -38,7 +39,7 @@ class SplashViewModel(
     fun switchHousehold(newId: String) {
         viewModelScope.launch {
             switchHouseholdUseCase.execute(SwitchHouseholdUseCaseImpl.Params(newId)).collect {
-                _startupAction.value = it
+                _startupAction.value = Event(it)
             }
         }
     }
@@ -46,7 +47,7 @@ class SplashViewModel(
     fun checkForUpdates(currentVersion: String) {
         viewModelScope.launch {
             forcedUpdateUseCase.execute(ForcedUpdateUseCaseImpl.Params(currentVersion)).collect {
-                _updateAction.value = it
+                _updateAction.value = Event(it)
             }
         }
     }

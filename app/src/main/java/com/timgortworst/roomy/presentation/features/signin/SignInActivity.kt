@@ -8,7 +8,6 @@ import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
-import com.timgortworst.roomy.BuildConfig
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.base.model.SignInAction
 import com.timgortworst.roomy.presentation.base.toast
@@ -30,6 +29,15 @@ class SignInActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel.action.observe(this@SignInActivity, Observer {
+            when (it) {
+                SignInAction.LoadingDialog -> showProgressDialog()
+                SignInAction.MainActivity -> loginSuccessful()
+                is SignInAction.WelcomeBack -> welcomeBack(it.userName)
+                is SignInAction.Failed -> loginFailed(it.errorMsg)
+            }
+        })
+
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
             AuthUI.IdpConfig.GoogleBuilder().build()
@@ -46,14 +54,7 @@ class SignInActivity : BaseActivity() {
             RC_SIGN_IN
         )
 
-        viewModel.action.observe(this@SignInActivity, Observer {
-            when (it) {
-                SignInAction.LoadingDialog -> showProgressDialog()
-                SignInAction.MainActivity -> loginSuccessful()
-                is SignInAction.WelcomeBack -> welcomeBack(it.userName)
-                is SignInAction.Failed -> loginFailed(it.errorMsg)
-            }
-        })
+        finish()
     }
 
     override fun onActivityResult(
@@ -97,6 +98,6 @@ class SignInActivity : BaseActivity() {
 
     private fun loginFailed(errorMessage: Int) {
         toast(errorMessage)
-        finishAffinity()
+        finish()
     }
 }

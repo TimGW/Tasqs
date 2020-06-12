@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
@@ -23,26 +24,20 @@ class ValidationUseCaseImpl(
 
     data class Params(val referredId: String)
 
-    override fun execute(params: Params?) = channelFlow {
+    override fun execute(params: Params?) = flow {
         checkNotNull(params)
-
-        val loadingJob = CoroutineScope(coroutineContext).launch {
-            delay(RoomyApp.LOADING_DELAY)
-            offer(Response.Loading)
-        }
+        emit(Response.Loading)
 
         try {
             val currentId = fetchHouseholdId() // fetch here to update local cache
-            offer(validate(currentId, params.referredId))
+            emit(validate(currentId, params.referredId))
         } catch (e: FirebaseFirestoreException) {
-            offer(Response.Error(errorHandler.getError(e)))
-        } finally {
-            loadingJob.cancel()
+            emit(Response.Error(errorHandler.getError(e)))
         }
     }.flowOn(Dispatchers.IO)
 
     private fun validate(currentId: String, referredId: String): Response<StartUpAction> {
-       return when {
+        return when {
             // first check if user has valid authentication
             (auth.currentUser == null ||
                     auth.currentUser?.uid?.isBlank() == true) -> {
