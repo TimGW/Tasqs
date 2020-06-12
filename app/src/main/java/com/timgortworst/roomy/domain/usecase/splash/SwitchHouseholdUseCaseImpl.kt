@@ -7,15 +7,11 @@ import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.repository.HouseholdRepository
 import com.timgortworst.roomy.domain.repository.TaskRepository
 import com.timgortworst.roomy.domain.repository.UserRepository
-import com.timgortworst.roomy.presentation.RoomyApp.Companion.LOADING_DELAY
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
 import com.timgortworst.roomy.presentation.usecase.splash.SwitchHouseholdUseCase
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 
 class SwitchHouseholdUseCaseImpl(
     private val householdRepository: HouseholdRepository,
@@ -27,17 +23,14 @@ class SwitchHouseholdUseCaseImpl(
 
     data class Params(val newId: String)
 
-    override fun execute(params: Params?) = channelFlow {
+    override fun execute(params: Params?) = flow {
         checkNotNull(params)
 
-        val loadingJob = CoroutineScope(coroutineContext).launch {
-            delay(LOADING_DELAY)
-            offer(Response.Loading)
-        }
+        emit(Response.Loading)
 
         try {
-            val oldId = userRepository.getUser()?.householdId ?: return@channelFlow
-            val currentUserId = fbAuth.currentUser?.uid ?: return@channelFlow
+            val oldId = userRepository.getUser()?.householdId ?: return@flow
+            val currentUserId = fbAuth.currentUser?.uid ?: return@flow
 
             // remove old tasks assigned to user
             taskRepository.deleteTasks(
@@ -54,11 +47,9 @@ class SwitchHouseholdUseCaseImpl(
                 householdId = params.newId,
                 isAdmin = false
             )
-            offer(Response.Success(StartUpAction.TriggerMainFlow))
+            emit(Response.Success(StartUpAction.TriggerMainFlow))
         } catch (e: FirebaseFirestoreException) {
-            offer(Response.Error(errorHandler.getError(e)))
-        } finally {
-            loadingJob.cancel()
+            emit(Response.Error(errorHandler.getError(e)))
         }
     }.flowOn(Dispatchers.IO)
 }

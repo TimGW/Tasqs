@@ -23,6 +23,7 @@ class GetTaskUseCaseImpl(
     override fun execute(params: Params?) = flow {
         checkNotNull(params)
         emit(Response.Loading)
+
         try {
             val result = taskRepository.getTask(params.id)
             emit(Response.Success(result))

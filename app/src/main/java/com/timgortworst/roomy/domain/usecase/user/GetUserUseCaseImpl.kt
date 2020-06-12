@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
@@ -25,26 +26,20 @@ class GetUserUseCaseImpl(
         val userId: String? = FirebaseAuth.getInstance().currentUser?.uid
     )
 
-    override fun execute(params: Params?) = channelFlow {
+    override fun execute(params: Params?) = flow {
         checkNotNull(params)
-
-        val loadingJob = CoroutineScope(coroutineContext).launch {
-            delay(LOADING_DELAY)
-            offer(Response.Loading)
-        }
+        emit(Response.Loading)
 
         try {
             val user = userRepository.getUser(params.userId, params.source)
 
             if (user != null) {
-                offer(Response.Success(user))
+                emit(Response.Success(user))
             } else {
-                offer(Response.Empty())
+                emit(Response.Empty())
             }
         } catch (e: FirebaseFirestoreException) {
-            offer(Response.Error(errorHandler.getError(e)))
-        } finally {
-            loadingJob.cancel()
+            emit(Response.Error(errorHandler.getError(e)))
         }
     }.flowOn(Dispatchers.IO)
 }

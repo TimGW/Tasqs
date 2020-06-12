@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
@@ -19,21 +20,16 @@ class GetAllUsersUseCaseImpl(
     private val errorHandler: ErrorHandler
 ) : GetAllUsersUseCase {
 
-    override fun execute(params: Unit?) = channelFlow {
-        val loadingJob = CoroutineScope(coroutineContext).launch {
-            delay(LOADING_DELAY)
-            offer(Response.Loading)
-        }
+    override fun execute(params: Unit?) = flow {
+        emit(Response.Loading)
 
         try {
             val householdId = userRepository.getUser(source = Source.CACHE)?.householdId
-                ?: run { offer(Response.Error()); return@channelFlow }
+                ?: run { emit(Response.Error()); return@flow }
 
-            offer(Response.Success(userRepository.getAllUsersForHousehold(householdId)))
+            emit(Response.Success(userRepository.getAllUsersForHousehold(householdId)))
         } catch (e: FirebaseFirestoreException) {
-            offer(Response.Error(errorHandler.getError(e)))
-        } finally {
-            loadingJob.cancel()
+            emit(Response.Error(errorHandler.getError(e)))
         }
     }.flowOn(Dispatchers.IO)
 }
