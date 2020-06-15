@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
-import com.timgortworst.roomy.presentation.base.view.BaseActivity
 
 class SettingsActivity : AppCompatActivity() {
 

@@ -47,10 +47,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.base.view.BaseActivity" />
         <activity
             android:name=".presentation.features.signin.SignInActivity"
-            android:screenOrientation="fullSensor"
             android:theme="@style/MyTheme.NoActionBar" />
         <activity
             android:name=".presentation.features.task.view.TaskEditActivity"

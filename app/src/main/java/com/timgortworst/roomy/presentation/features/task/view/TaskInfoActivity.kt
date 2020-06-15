@@ -5,17 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityInfoTaskBinding
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.base.model.TaskInfoAction
-import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskInfoViewModel
 import kotlinx.android.synthetic.main.activity_info_task.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class TaskInfoActivity : BaseActivity() {
+class TaskInfoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityInfoTaskBinding
     private val taskViewModel by viewModel<TaskInfoViewModel>()
 

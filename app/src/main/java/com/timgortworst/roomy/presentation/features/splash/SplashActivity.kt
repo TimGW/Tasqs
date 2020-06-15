@@ -6,7 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
@@ -16,12 +16,11 @@ import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
 import com.timgortworst.roomy.presentation.base.model.UpdateAction
 import com.timgortworst.roomy.presentation.base.snackbar
-import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.signin.SignInActivity
 import org.koin.android.ext.android.inject
 
-class SplashActivity : BaseActivity() {
+class SplashActivity : AppCompatActivity() {
     private val viewModel: SplashViewModel by inject()
 
     companion object {
@@ -40,7 +39,6 @@ class SplashActivity : BaseActivity() {
 
         viewModel.startupAction.observe(this, EventObserver {
             when (it) {
-                Response.Loading -> showProgressDialog()
                 is Response.Error -> {
                     val rootView = findViewById<View>(android.R.id.content) ?: return@EventObserver
                     rootView.snackbar(message = getString(R.string.error_generic))
@@ -58,7 +56,6 @@ class SplashActivity : BaseActivity() {
 
         viewModel.updateAction.observe(this, EventObserver { response ->
             when(response) {
-                Response.Loading -> showProgressDialog()
                 is Response.Error -> {
                     val rootView = findViewById<View>(android.R.id.content) ?: return@EventObserver
                     rootView.snackbar(message = getString(R.string.error_generic))

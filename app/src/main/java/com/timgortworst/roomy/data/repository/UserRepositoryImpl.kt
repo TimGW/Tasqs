@@ -1,6 +1,5 @@
 package com.timgortworst.roomy.data.repository
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.timgortworst.roomy.domain.model.User
@@ -12,7 +11,6 @@ import com.timgortworst.roomy.domain.repository.UserRepository
 import kotlinx.coroutines.tasks.await
 
 class UserRepositoryImpl : UserRepository {
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val userCollection = db.collection(USER_COLLECTION_REF)
 
@@ -45,10 +43,6 @@ class UserRepositoryImpl : UserRepository {
         if (userId.isNullOrEmpty()) return null
         val currentUserDocRef = userCollection.document(userId)
         return currentUserDocRef.get().await().toObject(User::class.java)
-    }
-
-    override fun getFbUser(): FirebaseUser? {
-        return firebaseAuth.currentUser
     }
 
     @Throws(FirebaseFirestoreException::class)

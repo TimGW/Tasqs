@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.gms.ads.AdRequest
@@ -15,14 +16,13 @@ import com.timgortworst.roomy.databinding.ActivityMainBinding
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.RoomyApp
-import com.timgortworst.roomy.presentation.base.view.BaseActivity
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
 import com.timgortworst.roomy.presentation.features.user.UserListFragment
 import org.koin.android.ext.android.inject
 
-class MainActivity : BaseActivity() {
+class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
     private val viewModel: MainViewModel by inject()
@@ -84,13 +84,10 @@ class MainActivity : BaseActivity() {
 
         viewModel.uriEvent.observe(this, Observer { response ->
             when (response) {
-                Response.Loading -> showProgressDialog()
                 is Response.Success -> {
-                    hideProgressDialog()
                     response.data?.let { presentShareLinkUri(it) }
                 }
                 is Response.Error -> {
-                    hideProgressDialog()
                     binding.fab.isEnabled = true
                     binding.bottomNavigationContainer.snackbar(
                         message = getString(R.string.error_connection),
