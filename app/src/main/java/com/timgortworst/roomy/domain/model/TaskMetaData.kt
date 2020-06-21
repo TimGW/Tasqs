@@ -15,7 +15,7 @@ import org.threeten.bp.ZonedDateTime
 data class TaskMetaData(
     var startDateTime: ZonedDateTime = ZonedDateTime.of(
         LocalDate.now(),
-        LocalTime.NOON,
+        LocalTime.now(),
         ZoneId.systemDefault()
     ),
     var recurrence: TaskRecurrence = TaskRecurrence.SingleTask(

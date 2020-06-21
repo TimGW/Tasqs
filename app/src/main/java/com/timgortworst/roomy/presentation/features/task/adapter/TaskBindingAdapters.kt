@@ -9,6 +9,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
 import com.timgortworst.roomy.domain.model.response.Response
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
 import java.util.*
 
@@ -18,8 +19,8 @@ fun ProgressBar.loadingVisibility(response: Response<Task>?) {
     visibility = if (response is Response.Loading) View.VISIBLE else View.INVISIBLE
 }
 
-@BindingAdapter("formatDate")
-fun TextView.formatDate(response: Response<Task>?) {
+@BindingAdapter("formatDateTime")
+fun TextView.formatDateTime(response: Response<Task>?) {
     text = when(response) {
         Response.Loading -> "-"
         is Response.Success -> {
@@ -28,11 +29,15 @@ fun TextView.formatDate(response: Response<Task>?) {
             val formattedMonth =
                 zonedDateTime.month?.getDisplayName(TextStyle.FULL, Locale.getDefault())
             val formattedYear = zonedDateTime.year.toString()
-            "$formattedDayOfMonth $formattedMonth $formattedYear"
+            "$formattedDayOfMonth $formattedMonth $formattedYear om ${formatTime(zonedDateTime)}"
         }
         is Response.Error -> context.getString(R.string.error_generic)
         else -> return
     }
+}
+
+fun formatTime(taskDateTime: ZonedDateTime): String {
+    return String.format("%02d:%02d", taskDateTime.hour, taskDateTime.minute)
 }
 
 @BindingAdapter("formatRecurrence")

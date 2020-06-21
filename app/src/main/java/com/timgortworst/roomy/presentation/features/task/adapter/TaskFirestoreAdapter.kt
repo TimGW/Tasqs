@@ -90,7 +90,7 @@ class TaskFirestoreAdapter(
             }
 
             val dateTimeTask = task.metaData.startDateTime
-            dateTime.text = formatDate(dateTimeTask)
+            dateTime.text = "${formatDate(dateTimeTask)} om ${formatTime(dateTimeTask)}"
             if (dateTimeTask.isBefore(ZonedDateTime.now())) {
                 dateTime.setTextColor(ContextCompat.getColor(itemView.context, R.color.color_error))
             } else {
@@ -110,6 +110,10 @@ class TaskFirestoreAdapter(
                 .ofLocalizedDate(FormatStyle.MEDIUM)
                 .withLocale(Locale.getDefault())
         )
+
+        private fun formatTime(taskDateTime: ZonedDateTime): String {
+            return String.format("%02d:%02d", taskDateTime.hour, taskDateTime.minute)
+        }
 
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<String> =
             object : ItemDetailsLookup.ItemDetails<String>() {

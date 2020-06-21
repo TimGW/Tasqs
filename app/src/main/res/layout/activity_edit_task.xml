@@ -108,6 +108,30 @@
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/task_time"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:hint="@string/edit_task_time_hint"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/task_date">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/task_time_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <CheckBox
                     android:id="@+id/task_repeat_checkbox"
                     android:layout_width="0dp"
@@ -118,7 +142,7 @@
                     android:text="@string/repeat_checkbox_text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/task_date" />
+                    app:layout_constraintTop_toBottomOf="@+id/task_time" />
 
                 <include
                     android:id="@+id/task_repeat_view"

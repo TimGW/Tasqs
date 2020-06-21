@@ -59,7 +59,7 @@
                         style="@style/TextAppearance.MyTheme.Body1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        app:formatDate="@{viewmodel.task}"
+                        app:formatDateTime="@{viewmodel.task}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/info_date_caption" />

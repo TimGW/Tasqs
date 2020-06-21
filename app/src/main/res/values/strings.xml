@@ -14,6 +14,7 @@
     <string name="dialog_household_similar_text">You\'re already in this household. Press \'OK\' to continue</string>
     <string name="dialog_household_similar_title">Same household!</string>
     <string name="edit_task_date_hint">Date</string>
+    <string name="edit_task_time_hint">Time</string>
     <string name="edit_task_description_hint">Description</string>
     <string name="edit_task_user_hint">Persoon</string>
     <string name="empty_list_state_text_tasks">Add your first task by clicking the + button</string>

@@ -1,6 +1,7 @@
 package com.timgortworst.roomy.presentation.features.task.view
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.widget.doAfterTextChanged
@@ -31,9 +33,11 @@ import org.koin.android.ext.android.inject
 import org.threeten.bp.*
 import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.ChronoField
+import org.threeten.bp.temporal.ChronoUnit
 import java.util.*
 
-class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
+class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
+    TimePickerDialog.OnTimeSetListener {
     private val task: Task by lazy {
         intent.getParcelableExtra(INTENT_EXTRA_EDIT_TASK) as? Task ?: Task()
     }
@@ -112,6 +116,7 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         setupTaskDescription(task.description)
         setupTaskUser(task.user)
         setupTaskDate(task.metaData.startDateTime)
+        setupTaskTime(task.metaData.startDateTime)
         setupTaskRepeatCheckbox(task.metaData.recurrence)
         setupTaskFrequency(task.metaData.recurrence.frequency)
         setupTaskRecurrence(task.metaData.recurrence)
@@ -188,9 +193,26 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                     it.monthValue - 1,
                     it.dayOfMonth
                 ).apply {
-                    datePicker.minDate = Instant.now().toEpochMilli()
+                    datePicker.minDate = ZonedDateTime.now().toInstant().toEpochMilli()
                     show()
                 }
+            }
+        }
+    }
+
+    private fun setupTaskTime(taskDateTime: ZonedDateTime) {
+        // set initial value
+        binding.taskTimeInput.setText(formatTime(taskDateTime))
+
+        // set listener
+        binding.taskTimeInput.setOnClickListener {
+            task.metaData.startDateTime.let {
+                TimePickerDialog(
+                    this, this,
+                    it.hour,
+                    it.minute,
+                    true
+                ).show()
             }
         }
     }
@@ -318,7 +340,7 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val newDate = ZonedDateTime.of(
             LocalDate.of(year, month + 1, dayOfMonth),
-            LocalTime.NOON,
+            task.metaData.startDateTime.toLocalTime(),
             ZoneId.systemDefault()
         )
 
@@ -329,11 +351,29 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         binding.taskDateInput.setText(formatDate(newDate))
     }
 
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        // set new task time
+        val newTime = ZonedDateTime.of(
+            task.metaData.startDateTime.toLocalDate(),
+            LocalTime.of(hourOfDay, minute),
+            ZoneId.systemDefault()
+        )
+        // set new task date
+        task.metaData.startDateTime = newTime
+
+        // update UI
+        binding.taskTimeInput.setText(formatTime(task.metaData.startDateTime))
+    }
+
     private fun formatDate(taskDateTime: ZonedDateTime): String {
         val formattedDayOfMonth = taskDateTime.dayOfMonth.toString()
         val formattedMonth = taskDateTime.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         val formattedYear = taskDateTime.year.toString()
         return "$formattedDayOfMonth $formattedMonth $formattedYear"
+    }
+
+    private fun formatTime(taskDateTime: ZonedDateTime): String {
+        return String.format("%02d:%02d", taskDateTime.hour, taskDateTime.minute)
     }
 
     private fun presentError(stringRes: Int) {

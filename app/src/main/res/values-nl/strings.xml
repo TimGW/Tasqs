@@ -14,6 +14,7 @@
     <string name="dialog_household_similar_text">Je bent al in dit huishouden. Druk op \'OK\' om door te gaan</string>
     <string name="dialog_household_similar_title">Hetzelfde huishouden!</string>
     <string name="edit_task_date_hint">Datum</string>
+    <string name="edit_task_time_hint">Tijd</string>
     <string name="edit_task_description_hint">Omschrijving</string>
     <string name="edit_task_user_hint">Persoon</string>
     <string name="empty_list_state_text_tasks">Voeg je eerste taak toe door op de knop + te klikken</string>
