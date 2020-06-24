@@ -27,13 +27,11 @@ import com.timgortworst.roomy.domain.model.TaskUser
 import com.timgortworst.roomy.presentation.base.clearFocus
 import com.timgortworst.roomy.presentation.base.snackbar
 import com.timgortworst.roomy.presentation.base.model.EventObserver
-import com.timgortworst.roomy.presentation.features.main.MainActivity
 import com.timgortworst.roomy.presentation.features.task.viewmodel.TaskEditViewModel
 import org.koin.android.ext.android.inject
 import org.threeten.bp.*
 import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.ChronoField
-import org.threeten.bp.temporal.ChronoUnit
 import java.util.*
 
 class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
@@ -118,8 +116,8 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         setupTaskDate(task.metaData.startDateTime)
         setupTaskTime(task.metaData.startDateTime)
         setupTaskRepeatCheckbox(task.metaData.recurrence)
-        setupTaskFrequency(task.metaData.recurrence.frequency)
         setupTaskRecurrence(task.metaData.recurrence)
+        setupTaskFrequency(task.metaData.recurrence.frequency)
     }
 
     private fun setupTaskDescription(taskDescription: String) {
@@ -248,16 +246,9 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                     it.replace(0, 1, "1")
                 }
             }
-
-            val frequency = binding.taskRepeatView.recurrenceFrequency.text.toString()
-            recurrenceAdapter.clear()
-            if (frequency.toIntOrNull()?.equals(1) == true || frequency.isBlank()) {
-                recurrenceAdapter.addAll(recurrences.map { getString(it.name) })
-            } else {
-                recurrenceAdapter.addAll(recurrences.map { getString(it.pluralName) })
-            }
-            recurrenceAdapter.notifyDataSetChanged()
+            updateFrequencySpinnerText()
         }
+        updateFrequencySpinnerText()
     }
 
     private fun setupTaskRecurrence(taskRecurrence: TaskRecurrence) {
@@ -379,5 +370,16 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
     private fun presentError(stringRes: Int) {
         val rootView = findViewById<View>(android.R.id.content) ?: return
         rootView.snackbar(message = getString(stringRes))
+    }
+
+    private fun updateFrequencySpinnerText(){
+        val frequency = binding.taskRepeatView.recurrenceFrequency.text.toString()
+        recurrenceAdapter.clear()
+        if (frequency.toIntOrNull()?.equals(1) == true || frequency.isBlank()) {
+            recurrenceAdapter.addAll(recurrences.map { getString(it.name) })
+        } else {
+            recurrenceAdapter.addAll(recurrences.map { getString(it.pluralName) })
+        }
+        recurrenceAdapter.notifyDataSetChanged()
     }
 }
