@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.google.android.material.button.MaterialButton
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.Task
 import com.timgortworst.roomy.domain.model.TaskRecurrence
@@ -17,6 +18,11 @@ import java.util.*
 @BindingAdapter("loadingVisibility")
 fun ProgressBar.loadingVisibility(response: Response<Task>?) {
     visibility = if (response is Response.Loading) View.VISIBLE else View.INVISIBLE
+}
+
+@BindingAdapter("setDoneButtonActive")
+fun MaterialButton.setDoneButtonActive(response: Response<Task>?) {
+    isEnabled = response !is Response.Loading
 }
 
 @BindingAdapter("formatDateTime")
