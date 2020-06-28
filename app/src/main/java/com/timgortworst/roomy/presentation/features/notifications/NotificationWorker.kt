@@ -2,9 +2,9 @@ package com.timgortworst.roomy.presentation.features.notifications
 
 import android.content.Context
 import androidx.work.*
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.timgortworst.roomy.R
 import org.threeten.bp.Duration
-import org.threeten.bp.LocalTime
 import org.threeten.bp.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
@@ -19,10 +19,9 @@ class NotificationWorker(
             ?: context.getString(R.string.app_name)
         val text = inputData.getString(NotificationWorkManager.NOTIFICATION_MSG_KEY)
             ?: context.getString(R.string.notification_default_msg)
-        val id =
-            inputData.getString(NotificationWorkManager.NOTIFICATION_ID_KEY) ?: title.plus(text)
+        val id = tags.first().toString()
 
-        NotificationTrigger.triggerNotification(
+        NotificationBuilder.triggerNotification(
             context,
             id,
             context.getString(R.string.notification_title, title),
@@ -33,6 +32,7 @@ class NotificationWorker(
 
         Result.success()
     } catch (e: Exception) {
+        FirebaseCrashlytics.getInstance().recordException(e)
         Result.failure()
     }
 
@@ -40,11 +40,12 @@ class NotificationWorker(
         id: String
     ) {
         val now = ZonedDateTime.now()
-        val tomorrowNoon = now.plusDays(1).with(LocalTime.NOON)
-        val initialDelay = Duration.between(now, tomorrowNoon).toMillis()
+        val nextReminder = now.plusDays(1)
+        val initialDelay = Duration.between(now, nextReminder).toMillis()
 
-        val workRequest = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
+        val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
             .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+            .addTag(id)
             .setInputData(inputData)
             .build()
 

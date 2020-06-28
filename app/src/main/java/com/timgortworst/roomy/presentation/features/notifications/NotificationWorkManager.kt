@@ -11,7 +11,6 @@ class NotificationWorkManager(context: Context) {
     private val workManager = WorkManager.getInstance(context)
 
     companion object {
-        const val NOTIFICATION_ID_KEY = "NOTIFICATION_ID_KEY"
         const val NOTIFICATION_TITLE_KEY = "NOTIFICATION_TITLE_KEY"
         const val NOTIFICATION_MSG_KEY = "NOTIFICATION_MSG_KEY"
     }
@@ -23,9 +22,9 @@ class NotificationWorkManager(context: Context) {
         taskDescription: String
     ) {
         val delay = max(0L, Duration.between(ZonedDateTime.now(), taskDateTime).toMillis())
-        val inputData = buildInputData(taskId, userName, taskDescription)
+        val inputData = buildInputData(userName, taskDescription)
 
-        val workRequest = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
+        val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .addTag(taskId)
             .setInputData(inputData)
@@ -39,11 +38,9 @@ class NotificationWorkManager(context: Context) {
     }
 
     private fun buildInputData(
-        taskId: String,
         userName: String,
         taskDescription: String
     ) = Data.Builder()
-        .putString(NOTIFICATION_ID_KEY, taskId)
         .putString(NOTIFICATION_TITLE_KEY, userName)
         .putString(NOTIFICATION_MSG_KEY, taskDescription)
         .build()

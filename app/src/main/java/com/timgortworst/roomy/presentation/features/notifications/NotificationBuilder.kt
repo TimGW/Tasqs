@@ -11,7 +11,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.presentation.features.task.view.TaskInfoActivity
 
-object NotificationTrigger {
+object NotificationBuilder {
     private const val CHANNEL_ID = "channel_01"
     private const val CHANNEL_DESC = "channel for notifications to remind users to perform their tasks"
     private const val NOTIFICATION_GROUP_KEY = "GROUP_1"
