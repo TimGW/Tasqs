@@ -26,7 +26,7 @@ import java.util.*
 /**
  * Created by tim.gortworst on 17/02/2018.
  */
-class RoomyApp : Application(), Configuration.Provider {
+class TasqsApp : Application(), Configuration.Provider {
     private val sharedPref: SharedPrefs by inject()
     private val appComponent: List<Module> = listOf(
         appModule,
@@ -44,7 +44,7 @@ class RoomyApp : Application(), Configuration.Provider {
 
         startKoin {
             if (BuildConfig.DEBUG) androidLogger(Level.DEBUG)
-            androidContext(this@RoomyApp)
+            androidContext(this@TasqsApp)
             modules(appComponent)
         }
 
@@ -101,7 +101,7 @@ class RoomyApp : Application(), Configuration.Provider {
         const val TAG = "RoomyApp"
         const val KEY_ENABLE_ADS = "enable_ads"
         const val LOADING_DELAY = 500L
-        private lateinit var instance: RoomyApp
+        private lateinit var instance: TasqsApp
 
         fun getAppVersion(): String {
             var result = ""

@@ -11,7 +11,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.roomy.R
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.domain.usecase.user.InviteLinkBuilderUseCaseImpl.Companion.QUERY_PARAM_HOUSEHOLD
-import com.timgortworst.roomy.presentation.RoomyApp
+import com.timgortworst.roomy.presentation.TasqsApp
 import com.timgortworst.roomy.presentation.base.model.EventObserver
 import com.timgortworst.roomy.presentation.base.model.StartUpAction
 import com.timgortworst.roomy.presentation.base.model.UpdateAction
@@ -33,7 +33,7 @@ class SplashActivity : AppCompatActivity() {
         setTheme(R.style.MyTheme_NoActionBar_Launcher)
         super.onCreate(savedInstanceState)
 
-        val currentVersion = RoomyApp.getAppVersion()
+        val currentVersion = TasqsApp.getAppVersion()
 
         viewModel.checkForUpdates(currentVersion)
 

@@ -15,7 +15,7 @@ import com.timgortworst.roomy.R
 import com.timgortworst.roomy.databinding.ActivityMainBinding
 import com.timgortworst.roomy.domain.model.response.Response
 import com.timgortworst.roomy.presentation.base.snackbar
-import com.timgortworst.roomy.presentation.RoomyApp
+import com.timgortworst.roomy.presentation.TasqsApp
 import com.timgortworst.roomy.presentation.features.settings.SettingsActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskEditActivity
 import com.timgortworst.roomy.presentation.features.task.view.TaskListFragment
@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity() {
                     else
                         startActivity(sendIntent)
                 } else {
-                    Log.e(RoomyApp.TAG, task.exception?.message!!)
+                    Log.e(TasqsApp.TAG, task.exception?.message!!)
                 }
             }
     }

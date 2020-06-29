@@ -43,10 +43,10 @@
     <string name="preferences_about_header">About</string>
     <string name="privacy_policy_title">Privacy policy</string>
     <string name="privacy_policy"><![CDATA[
-    <p>I built Roomy app as an Ad Supported app. This SERVICE is provided by me at no cost and is intended for use as is.
+    <p>I built Tasqs app as an Ad Supported app. This SERVICE is provided by me at no cost and is intended for use as is.
   <br><br>This page is used to inform visitors regarding the policies with the collection, use, and disclosure of Personal Information if anyone decided to use this service.
   <br><br>If you choose to use this service, then you agree to the collection and use of information in relation to this policy. The Information that I collect is used for providing and improving the Service. I will not use or share your information with anyone except as described in this Privacy Policy.
-  <br><br>The terms used in this Privacy Policy have the same meanings as in the Terms and Conditions, which is accessible at Roomy unless otherwise defined in this Privacy Policy.
+  <br><br>The terms used in this Privacy Policy have the same meanings as in the Terms and Conditions, which is accessible at Tasqs unless otherwise defined in this Privacy Policy.
   <br><br><strong>Information Collection and Use</strong><br>For a better experience, while using this service, I may require you to provide me with certain personally identifiable information. The information that I request will be retained on your device and is not collected by me in any way.
   <br><br>The app does use third party services that may collect information used to identify you.
   <br><br>Link to privacy policy of third party service providers used by the app
@@ -136,12 +136,12 @@
     <string name="info_task_assinged_title">Assigned to</string>
     <string name="forced_update_dialog_negative_button">Close</string>
     <string name="forced_update_dialog_positive_button">Update</string>
-    <string name="forced_update_dialog_text">This verion of Roomy is deprecated. Please update to the newest version to keep using the application.</string>
-    <string name="forced_update_dialog_title">Update Roomy</string>
+    <string name="forced_update_dialog_text">This verion of Tasqs is deprecated. Please update to the newest version to keep using the application.</string>
+    <string name="forced_update_dialog_title">Update Tasqs</string>
     <string name="recommended_update_dialog_negative_button">Not now</string>
     <string name="recommended_update_dialog_positive_button">Update</string>
-    <string name="recommended_update_dialog_text">This verion of Roomy is deprecated. Please update to the newest version.</string>
-    <string name="recommended_update_dialog_title">Update Roomy</string>
+    <string name="recommended_update_dialog_text">This verion of Tasqs is deprecated. Please update to the newest version.</string>
+    <string name="recommended_update_dialog_title">Update Tasqs</string>
     <string name="welcome_back">Welcome back %1$s</string>
     <string name="preferences_account_header">Account</string>
     <string name="username">Username</string>
