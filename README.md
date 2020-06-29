@@ -1,25 +1,28 @@
 # Tasqs: Reminder, ToDo list, Task List
 
+Tasqs is an Android application with network capabilities to manage, create, share and edit your tasks from anywhere, at anytime, with to-dos that sync across all your Android devices with offline support.
 
-Get more done with the Tasqs mobile app. Manage, capture, and edit your tasks from anywhere, at anytime, with to-dos that sync across all your devices with offline support. Invite people and work together on gettings things done
+## Contributing
 
-**Quickly capture tasks anywhere**
-* Create task lists with your most important to-dos
-* View, edit, and manage tasks on the go, from any device
+Thank you for considering contributing to this application! To contribute, please submit a [Pull request](https://github.com/tim91G/Tasqs/pulls). You can report an [Issue](https://github.com/tim91G/Tasqs/issues) using this repository.
 
-**Add details and create subtasks**
-* Add repeating notifications to your tasks
-* Add details about the work you need to focus on
-* Tasqs has Darkmode support 
+## Security Vulnerabilities
 
-**Stay on track with due dates and notifications**
-* Set a due date for every task to help you achieve your goals
-* Task can be filtered to show just your own tasks or everyone in the group
-* Receive due date notification reminders to keep your tasks on track
+If you discover a security vulnerability, please send an e-mail to Tim Gortworst at tim.gortworst@gmail.com. All security vulnerabilities will be promptly addressed.
 
-**Collaborate with other to get tasks done**
-* Invite others with an easy-to-share invitation link
-* Only the person who is assigned to the task will receive the reminder notification
-* Everyone in your group can mark a task as 'done'
+## License
 
-Take control of your task management and install the Tasqs mobile app. Start easily managing your to-do list on the go with the Tasqs planner app.
+Licensed to the Apache Software Foundation (ASF) under one or more contributor
+license agreements. See the NOTICE file distributed with this work for
+additional information regarding copyright ownership. The ASF licenses this
+file to you under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
