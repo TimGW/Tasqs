@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Stofzuigen Stofzuigen Stofzuigen Stofzuigen " />
 
-    <com.timgortworst.roomy.presentation.base.customview.RepeatIcon
+    <com.timgortworst.tasqs.presentation.base.customview.RepeatIcon
         android:id="@+id/task_repeat_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

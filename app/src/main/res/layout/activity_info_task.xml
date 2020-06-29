@@ -7,7 +7,7 @@
 
         <variable
             name="viewmodel"
-            type="com.timgortworst.roomy.presentation.features.task.viewmodel.TaskInfoViewModel" />
+            type="com.timgortworst.tasqs.presentation.features.task.viewmodel.TaskInfoViewModel" />
     </data>
 
     <LinearLayout

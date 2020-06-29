@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.timgortworst.roomy.presentation.features.user.UserViewModel" />
+            type="com.timgortworst.tasqs.presentation.features.user.UserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

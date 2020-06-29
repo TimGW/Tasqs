@@ -6,11 +6,11 @@
     <data>
         <variable
             name="user"
-            type="com.timgortworst.roomy.domain.model.User" />
+            type="com.timgortworst.tasqs.domain.model.User" />
 
         <variable
             name="userClickListener"
-            type="com.timgortworst.roomy.presentation.features.user.OnLongClickListener" />
+            type="com.timgortworst.tasqs.presentation.features.user.OnLongClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

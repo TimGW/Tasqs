@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:importantForAccessibility="noHideDescendants">
 
-    <com.timgortworst.roomy.presentation.base.customview.LoadingShimmer
+    <com.timgortworst.tasqs.presentation.base.customview.LoadingShimmer
         android:id="@+id/task_name"
         android:layout_width="0dp"
         android:layout_height="@dimen/loading_line_height"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.timgortworst.roomy.presentation.base.customview.LoadingShimmer
+    <com.timgortworst.tasqs.presentation.base.customview.LoadingShimmer
         android:id="@+id/task_date_time"
         android:layout_width="0dp"
         android:layout_height="@dimen/loading_line_height"
@@ -43,7 +43,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.timgortworst.roomy.presentation.base.customview.LoadingShimmer
+    <com.timgortworst.tasqs.presentation.base.customview.LoadingShimmer
         android:id="@+id/task_user"
         android:layout_width="0dp"
         android:layout_height="@dimen/loading_line_height"
