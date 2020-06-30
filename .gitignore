@@ -14,3 +14,5 @@ castlib/build/
 bottom-bar/build/
 video-player/build/
 imagin/build/
+keystore.properties
+apikey.properties
