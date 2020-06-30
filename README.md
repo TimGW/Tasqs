@@ -12,4 +12,4 @@ If you discover a security vulnerability, please send an e-mail to tim.gortworst
 
 ## License
 
-See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
+See the [LICENSE](LICENSE.md) file for license rights and limitations (GNU GPLv3).
