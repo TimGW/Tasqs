@@ -11,13 +11,9 @@ import androidx.core.app.NotificationManagerCompat
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.presentation.features.task.view.TaskInfoActivity
 
-object NotificationBuilder {
-    private const val CHANNEL_ID = "channel_01"
-    private const val CHANNEL_DESC = "channel for notifications to remind users to perform their tasks"
-    private const val NOTIFICATION_GROUP_KEY = "GROUP_1"
-    private const val NOTIFICATION_GROUP_ID = 1
-
-    fun triggerNotification(context: Context, id: String, notificationTitle: String, notificationText: String) {
+class NotificationsImpl(private val context: Context) : Notifications {
+ 
+    override fun notify(id: String, notificationTitle: String, notificationText: String) {
         createNotificationChannelIfRequired(context)
 
         val pendingIntent = PendingIntent.getActivity(
@@ -84,4 +80,13 @@ object NotificationBuilder {
             notificationManager.createNotificationChannel(channel)
         }
     }
+
+    companion object {
+        private const val CHANNEL_ID = "channel_01"
+        private const val CHANNEL_DESC =
+            "channel for notifications to remind users to perform their tasks"
+        private const val NOTIFICATION_GROUP_KEY = "GROUP_1"
+        private const val NOTIFICATION_GROUP_ID = 1
+    }
+
 }

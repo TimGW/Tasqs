@@ -17,9 +17,7 @@ class AddTokenUseCaseImpl(
 
     data class Params(val token: String)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
-
+    override fun execute(params: Params) = flow {
         emit(Response.Loading)
 
         try {

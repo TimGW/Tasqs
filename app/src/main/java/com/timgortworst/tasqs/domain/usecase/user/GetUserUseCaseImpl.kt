@@ -21,8 +21,7 @@ class GetUserUseCaseImpl(
         val userId: String? = FirebaseAuth.getInstance().currentUser?.uid
     )
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
+    override fun execute(params: Params) = flow {
         emit(Response.Loading)
 
         try {

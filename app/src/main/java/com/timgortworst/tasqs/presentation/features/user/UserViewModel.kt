@@ -3,6 +3,7 @@ package com.timgortworst.tasqs.presentation.features.user
 import androidx.lifecycle.*
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.model.User
+import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.tasqs.domain.usecase.user.RemoveUserUseCaseImpl
 import com.timgortworst.tasqs.presentation.base.model.Event
@@ -18,7 +19,7 @@ class UserViewModel(
     getAllUsersUseCase: GetAllUsersUseCase
 ) : ViewModel() {
 
-    val allUsers = getAllUsersUseCase.execute().asLiveData(viewModelScope.coroutineContext)
+    val allUsers = getAllUsersUseCase.execute(None).asLiveData(viewModelScope.coroutineContext)
 
     private val _userOptions = MutableLiveData<Event<User>>()
     val userOptions: LiveData<Event<User>>

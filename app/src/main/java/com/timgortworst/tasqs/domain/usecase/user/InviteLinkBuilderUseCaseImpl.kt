@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.firebase.dynamiclinks.DynamicLink
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.timgortworst.tasqs.domain.model.response.Response
+import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.presentation.usecase.user.GetUserUseCase
 import com.timgortworst.tasqs.presentation.usecase.user.InviteLinkBuilderUseCase
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,7 @@ class InviteLinkBuilderUseCaseImpl(
     private val getUserUseCase: GetUserUseCase
 ) : InviteLinkBuilderUseCase {
 
-    override fun execute(params: Unit?) = flow {
+    override fun execute(params: None) = flow {
         try {
             getUserUseCase.execute(GetUserUseCaseImpl.Params()).collect { response ->
                 when(response) {

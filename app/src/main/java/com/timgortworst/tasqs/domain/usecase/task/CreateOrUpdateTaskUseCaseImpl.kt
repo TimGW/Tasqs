@@ -17,8 +17,7 @@ class CreateOrUpdateTaskUseCaseImpl(
 
     data class Params(val task: Task)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
+    override fun execute(params: Params) = flow {
         emit(Response.Loading)
 
         try {

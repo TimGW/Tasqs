@@ -15,9 +15,7 @@ class ForcedUpdateUseCaseImpl : ForcedUpdateUseCase {
 
     data class Params(val appVersion: String)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
-
+    override fun execute(params: Params) = flow {
         currentVersion = stripVersionNameSuffix(params.appVersion)
         val requiredVersion = stripVersionNameSuffix(remoteConfig.getString(
             KEY_CURRENT_REQUIRED_VERSION
