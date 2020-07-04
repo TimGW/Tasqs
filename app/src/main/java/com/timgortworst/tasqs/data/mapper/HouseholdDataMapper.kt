@@ -12,7 +12,7 @@ class HouseholdDataMapper : Mapper<Map<String, Any>, Household> {
     }
 
     override fun mapIncoming(network: Map<String, Any>): Household {
-        return Household(network[HOUSEHOLD_ID_REF] as? String)
+        return Household(network[HOUSEHOLD_ID_REF] as String)
     }
 
     companion object {
