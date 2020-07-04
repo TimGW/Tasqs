@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.features.notifications
+package com.timgortworst.tasqs.infrastructure.notifications
 
 import org.threeten.bp.ZonedDateTime
 

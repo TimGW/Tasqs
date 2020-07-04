@@ -24,9 +24,9 @@ import com.timgortworst.tasqs.presentation.base.view.ViewFadeAnimator.toggleFade
 import com.timgortworst.tasqs.presentation.features.main.MainActivity
 import com.timgortworst.tasqs.presentation.features.task.adapter.TaskClickListener
 import com.timgortworst.tasqs.presentation.features.task.adapter.TaskFirestoreAdapter
-import com.timgortworst.tasqs.presentation.features.task.adapter.actionmode.ActionModeCallback
-import com.timgortworst.tasqs.presentation.features.task.adapter.actionmode.TaskItemDetailsLookup
-import com.timgortworst.tasqs.presentation.features.task.adapter.actionmode.TaskItemKeyProvider
+import com.timgortworst.tasqs.presentation.features.task.actionmode.ActionModeCallback
+import com.timgortworst.tasqs.presentation.features.task.actionmode.TaskItemDetailsLookup
+import com.timgortworst.tasqs.presentation.features.task.actionmode.TaskItemKeyProvider
 import com.timgortworst.tasqs.presentation.features.task.viewmodel.TaskListViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -156,8 +156,12 @@ class TaskListFragment : Fragment(),
         tracker = SelectionTracker.Builder<String>(
             TASK_SELECTION_ID,
             recyclerView,
-            TaskItemKeyProvider(recyclerView.adapter),
-            TaskItemDetailsLookup(recyclerView),
+            TaskItemKeyProvider(
+                recyclerView.adapter
+            ),
+            TaskItemDetailsLookup(
+                recyclerView
+            ),
             StorageStrategy.createStringStorage()
         ).withSelectionPredicate(
             SelectionPredicates.createSelectAnything()

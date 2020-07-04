@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.features.main
+package com.timgortworst.tasqs.infrastructure.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context

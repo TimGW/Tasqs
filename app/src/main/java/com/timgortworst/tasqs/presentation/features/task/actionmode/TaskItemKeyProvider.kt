@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.features.task.adapter.actionmode
+package com.timgortworst.tasqs.presentation.features.task.actionmode
 
 import androidx.recyclerview.selection.ItemKeyProvider
 import androidx.recyclerview.widget.RecyclerView

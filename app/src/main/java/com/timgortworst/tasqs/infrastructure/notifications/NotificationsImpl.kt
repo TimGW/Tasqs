@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.features.notifications
+package com.timgortworst.tasqs.infrastructure.notifications
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -11,7 +11,8 @@ import androidx.core.app.NotificationManagerCompat
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.presentation.features.task.view.TaskInfoActivity
 
-class NotificationsImpl(private val context: Context) : Notifications {
+class NotificationsImpl(private val context: Context) :
+    Notifications {
  
     override fun notify(id: String, notificationTitle: String, notificationText: String) {
         createNotificationChannelIfRequired(context)
@@ -39,7 +40,9 @@ class NotificationsImpl(private val context: Context) : Notifications {
         title: String,
         text: String
     ): Notification {
-        return NotificationCompat.Builder(context, CHANNEL_ID)
+        return NotificationCompat.Builder(context,
+            CHANNEL_ID
+        )
             .setSmallIcon(R.drawable.ic_home)
             .setContentTitle(title)
             .setContentText(text)
@@ -55,7 +58,9 @@ class NotificationsImpl(private val context: Context) : Notifications {
         notificationTitle: String,
         notificationMessage: String,
         notificationPendingIntent: PendingIntent
-    ) = NotificationCompat.Builder(context, CHANNEL_ID)
+    ) = NotificationCompat.Builder(context,
+        CHANNEL_ID
+    )
         .setSmallIcon(R.drawable.ic_home)
         .setContentTitle(notificationTitle)
         .setContentText(notificationMessage)

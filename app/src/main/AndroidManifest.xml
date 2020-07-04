@@ -80,7 +80,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_home" />
-        <service android:name=".data.service.FirebaseMsgService">
+        <service android:name=".infrastructure.service.FirebaseMsgService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
