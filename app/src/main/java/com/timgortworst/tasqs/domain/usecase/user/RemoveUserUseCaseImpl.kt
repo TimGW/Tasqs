@@ -21,9 +21,7 @@ class RemoveUserUseCaseImpl(
 
     data class Params(val id: String)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
-
+    override fun execute(params: Params) = flow {
         emit(Response.Loading)
 
         try {

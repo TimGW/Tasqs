@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.response.Response
+import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.domain.usecase.task.CreateOrUpdateTaskUseCaseImpl
 import com.timgortworst.tasqs.presentation.base.model.Event
 import com.timgortworst.tasqs.presentation.usecase.task.CreateOrUpdateTaskUseCase
@@ -15,7 +16,7 @@ class TaskEditViewModel(
     private val createOrUpdateTaskUseCase: CreateOrUpdateTaskUseCase,
     getAllUsersUseCase: GetAllUsersUseCase
 ) : ViewModel() {
-    val allUsersLiveData = getAllUsersUseCase.execute().asLiveData(viewModelScope.coroutineContext)
+    val allUsersLiveData = getAllUsersUseCase.execute(None).asLiveData(viewModelScope.coroutineContext)
 
     private val _actionDone = MutableLiveData<Event<Response<Task>>>()
     val actionDone: LiveData<Event<Response<Task>>>

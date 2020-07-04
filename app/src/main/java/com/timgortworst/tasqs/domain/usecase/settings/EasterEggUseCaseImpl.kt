@@ -15,9 +15,7 @@ class EasterEggUseCaseImpl(
 
     data class Params(internal val count: Int)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
-
+    override fun execute(params: Params) = flow {
         if (sharedPrefs.isAdsEnabled()) {
             when {
                 betweenUntil(params.count,

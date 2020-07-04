@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.work.*
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.timgortworst.tasqs.R
+import org.koin.android.ext.android.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
 import java.util.concurrent.TimeUnit
@@ -11,18 +14,18 @@ import java.util.concurrent.TimeUnit
 class NotificationWorker(
     private val context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : Worker(context, params), KoinComponent {
     private val workManager = WorkManager.getInstance(context)
+    private val notifications: Notifications by inject()
 
     override fun doWork() = try {
-        val title = inputData.getString(NotificationWorkManager.NOTIFICATION_TITLE_KEY)
+        val title = inputData.getString(NotificationQueueImpl.NOTIFICATION_TITLE_KEY)
             ?: context.getString(R.string.app_name)
-        val text = inputData.getString(NotificationWorkManager.NOTIFICATION_MSG_KEY)
+        val text = inputData.getString(NotificationQueueImpl.NOTIFICATION_MSG_KEY)
             ?: context.getString(R.string.notification_default_msg)
         val id = tags.first().toString()
 
-        NotificationBuilder.triggerNotification(
-            context,
+        notifications.notify(
             id,
             context.getString(R.string.notification_title, title),
             context.getString(R.string.notification_message, text)

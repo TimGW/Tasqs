@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.response.Response
+import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.domain.usecase.task.CompleteTaskUseCaseImpl
 import com.timgortworst.tasqs.domain.usecase.task.DeleteTaskUseCaseImpl
 import com.timgortworst.tasqs.presentation.usecase.task.CompleteTaskUseCase
@@ -56,12 +57,12 @@ class TaskListViewModel(
     }
 
     suspend fun allDataQuery() = withContext(Dispatchers.IO) {
-        val fireStoreOptions = getAllTasksUseCase.execute()
+        val fireStoreOptions = getAllTasksUseCase.execute(None)
         _liveQueryOptions.postValue(fireStoreOptions)
     }
 
     suspend fun filterDataQuery() = withContext(Dispatchers.IO) {
-        val fireStoreOptions = getTasksForUserUseCase.execute()
+        val fireStoreOptions = getTasksForUserUseCase.execute(None)
         _liveQueryOptions.postValue(fireStoreOptions)
     }
 }

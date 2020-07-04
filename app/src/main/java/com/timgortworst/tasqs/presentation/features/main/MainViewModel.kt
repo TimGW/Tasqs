@@ -3,6 +3,7 @@ package com.timgortworst.tasqs.presentation.features.main
 import android.net.Uri
 import androidx.lifecycle.*
 import com.timgortworst.tasqs.domain.model.response.Response
+import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.presentation.usecase.settings.AdsVisibleUseCase
 import com.timgortworst.tasqs.presentation.usecase.user.InviteLinkBuilderUseCase
 import kotlinx.coroutines.flow.collect
@@ -18,7 +19,7 @@ class MainViewModel(
         get() = _uriEvent
 
     fun inviteUser() = viewModelScope.launch {
-        inviteLinkBuilderUseCase.execute().collect { response ->
+        inviteLinkBuilderUseCase.execute(None).collect { response ->
             when (response) {
                 Response.Loading -> _uriEvent.value = Response.Loading
                 is Response.Success -> {
@@ -34,5 +35,5 @@ class MainViewModel(
         }
     }
 
-    fun showOrHideAd() = adsVisibleUseCase.execute().asLiveData(viewModelScope.coroutineContext)
+    fun showOrHideAd() = adsVisibleUseCase.execute(None).asLiveData(viewModelScope.coroutineContext)
 }

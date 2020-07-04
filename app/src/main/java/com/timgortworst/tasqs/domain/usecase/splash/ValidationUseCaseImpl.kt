@@ -19,8 +19,7 @@ class ValidationUseCaseImpl(
 
     data class Params(val referredId: String)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
+    override fun execute(params: Params) = flow {
         emit(Response.Loading)
 
         try {
