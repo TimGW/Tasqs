@@ -21,7 +21,7 @@ data class Task(
     @Parcelize
     data class MetaData(
         var startDateTime: ZonedDateTime = ZonedDateTime.of(
-            LocalDate.now(),
+            LocalDate.now().plusDays(1),
             LocalTime.now(),
             ZoneId.systemDefault()
         ),
