@@ -1,6 +1,7 @@
 package com.timgortworst.tasqs.domain.usecase.user
 
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.timgortworst.tasqs.domain.model.User
 import com.timgortworst.tasqs.domain.model.response.ErrorHandler
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.repository.HouseholdRepository

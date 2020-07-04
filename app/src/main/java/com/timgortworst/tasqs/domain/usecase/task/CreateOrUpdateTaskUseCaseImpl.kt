@@ -24,7 +24,7 @@ class CreateOrUpdateTaskUseCaseImpl(
         try {
             val result = params.task
 
-            if (params.task.id.isEmpty()) {
+            if (params.task.id.isNullOrBlank()) {
                 taskRepository.createTask(result)
             } else {
                 taskRepository.updateTask(result)

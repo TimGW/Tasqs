@@ -1,5 +1,6 @@
 package com.timgortworst.tasqs.domain.repository
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.timgortworst.tasqs.domain.model.Task
@@ -16,10 +17,10 @@ interface TaskRepository {
     suspend fun getTasksForUser(userId: String): List<Task>
 
     @Throws(FirebaseFirestoreException::class)
-    suspend fun getAllTasksQuery(): Query
+    suspend fun getAllTasksQuery(): FirestoreRecyclerOptions.Builder<Task>
 
     @Throws(FirebaseFirestoreException::class)
-    suspend fun getTasksForUserQuery(userId: String): Query
+    suspend fun getTasksForUserQuery(userId: String): FirestoreRecyclerOptions.Builder<Task>
 
     @Throws(FirebaseFirestoreException::class)
     suspend fun updateTasks(tasks: List<Task>)

@@ -2,15 +2,33 @@ package com.timgortworst.tasqs.domain.model
 
 import android.os.Parcelable
 import androidx.annotation.Keep
-import com.google.firebase.firestore.IgnoreExtraProperties
 import kotlinx.android.parcel.Parcelize
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 
-@Parcelize
-@IgnoreExtraProperties
 @Keep
+@Parcelize
 data class Task(
-    var id: String = "",
+    var id: String? = null,
     var description: String = "",
-    var metaData: TaskMetaData = TaskMetaData(),
-    var user: TaskUser = TaskUser()
-) : Parcelable
+    var metaData: MetaData = MetaData(),
+    var user: User? = null
+) : Parcelable {
+
+    @Keep
+    @Parcelize
+    data class MetaData(
+        var startDateTime: ZonedDateTime = ZonedDateTime.of(
+            LocalDate.now(),
+            LocalTime.now(),
+            ZoneId.systemDefault()
+        ),
+        var recurrence: TaskRecurrence = TaskRecurrence.SingleTask(1)
+    ) : Parcelable
+
+    @Keep
+    @Parcelize
+    data class User(val userId: String, val name: String) : Parcelable
+}

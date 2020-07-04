@@ -23,7 +23,6 @@ import com.timgortworst.tasqs.databinding.ActivityEditTaskBinding
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.TaskRecurrence
-import com.timgortworst.tasqs.domain.model.TaskUser
 import com.timgortworst.tasqs.presentation.base.clearFocus
 import com.timgortworst.tasqs.presentation.base.snackbar
 import com.timgortworst.tasqs.presentation.base.model.EventObserver
@@ -131,7 +130,7 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         }
     }
 
-    private fun setupTaskUser(user: TaskUser) {
+    private fun setupTaskUser(user: Task.User?) {
         // retrieve all users for this household
         viewModel.allUsersLiveData.observe(this, Observer { response ->
             binding.progressBar.visibility = View.INVISIBLE
@@ -144,9 +143,9 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
                     if (response.data.filterNot { it.userId == currentUser.userId }.isEmpty()) {
                         // assign current user to the task, since there is only 1 user in house
-                        task.user = TaskUser(currentUser.userId, currentUser.name)
+                        task.user = Task.User(currentUser.userId, currentUser.name)
                     } else {
-                        val userList = response.data.map { TaskUser(it.userId, it.name) }
+                        val userList = response.data.map { Task.User(it.userId, it.name) }
                         binding.userGroup.visibility = View.VISIBLE
 
                         binding.spinnerUsers.adapter = ArrayAdapter(
@@ -167,7 +166,7 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                             }
                         }
 
-                        if (isEditMode) {
+                        if (isEditMode && user != null) {
                             val activeUser = userList.indexOf(user)
                             binding.spinnerUsers.setSelection(activeUser)
                         }
