@@ -1,12 +1,12 @@
-package com.timgortworst.tasqs.data.service
+package com.timgortworst.tasqs.infrastructure.service
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.timgortworst.tasqs.BuildConfig
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.usecase.user.AddTokenUseCaseImpl
-import com.timgortworst.tasqs.presentation.features.notifications.NotificationQueue
-import com.timgortworst.tasqs.presentation.features.notifications.Notifications
+import com.timgortworst.tasqs.infrastructure.notifications.NotificationQueue
+import com.timgortworst.tasqs.infrastructure.notifications.Notifications
 import com.timgortworst.tasqs.presentation.usecase.user.AddTokenUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

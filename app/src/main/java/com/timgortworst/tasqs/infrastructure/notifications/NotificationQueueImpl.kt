@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.features.notifications
+package com.timgortworst.tasqs.infrastructure.notifications
 
 import android.content.Context
 import androidx.work.*
@@ -7,7 +7,8 @@ import org.threeten.bp.ZonedDateTime
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
-class NotificationQueueImpl(context: Context) : NotificationQueue {
+class NotificationQueueImpl(context: Context) :
+    NotificationQueue {
     private val workManager = WorkManager.getInstance(context)
 
     companion object {
