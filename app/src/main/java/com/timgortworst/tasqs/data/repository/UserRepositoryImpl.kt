@@ -2,15 +2,21 @@ package com.timgortworst.tasqs.data.repository
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
+import com.timgortworst.tasqs.data.mapper.ListMapper
+import com.timgortworst.tasqs.data.mapper.Mapper
+import com.timgortworst.tasqs.data.mapper.NullableOutputListMapper
+import com.timgortworst.tasqs.data.mapper.UserDataMapper.Companion.USER_ADMIN_REF
+import com.timgortworst.tasqs.data.mapper.UserDataMapper.Companion.USER_COLLECTION_REF
+import com.timgortworst.tasqs.data.mapper.UserDataMapper.Companion.USER_HOUSEHOLD_ID_REF
+import com.timgortworst.tasqs.data.mapper.UserDataMapper.Companion.USER_TOKENS_REF
 import com.timgortworst.tasqs.domain.model.User
-import com.timgortworst.tasqs.domain.model.User.Companion.USER_ADMIN_REF
-import com.timgortworst.tasqs.domain.model.User.Companion.USER_COLLECTION_REF
-import com.timgortworst.tasqs.domain.model.User.Companion.USER_HOUSEHOLD_ID_REF
-import com.timgortworst.tasqs.domain.model.User.Companion.USER_TOKENS_REF
 import com.timgortworst.tasqs.domain.repository.UserRepository
 import kotlinx.coroutines.tasks.await
 
-class UserRepositoryImpl : UserRepository {
+class UserRepositoryImpl(
+    private val userDataMapper: Mapper<Map<String, Any>, User?>,
+    private val userListMapper: NullableOutputListMapper<Map<String, Any>, User?>
+) : UserRepository {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val userCollection = db.collection(USER_COLLECTION_REF)
 
@@ -42,17 +48,20 @@ class UserRepositoryImpl : UserRepository {
     override suspend fun getUser(userId: String?, source: Source): User? {
         if (userId.isNullOrEmpty()) return null
         val currentUserDocRef = userCollection.document(userId)
-        return currentUserDocRef.get().await().toObject(User::class.java)
+        val networkUser = currentUserDocRef.get().await().data.orEmpty()
+        return userDataMapper.mapIncoming(networkUser)
     }
 
     @Throws(FirebaseFirestoreException::class)
     override suspend fun getAllUsersForHousehold(id: String): List<User> {
-        return userCollection
+        val networkUserList : List<Map<String, Any>> = userCollection
             .whereEqualTo(USER_HOUSEHOLD_ID_REF, id)
             .orderBy(USER_ADMIN_REF, Query.Direction.DESCENDING)
             .get()
             .await()
-            .toObjects(User::class.java)
+            .documents.mapNotNull { it.data }
+
+        return userListMapper.mapIncoming(networkUserList)?.filterNotNull().orEmpty()
     }
 
     @Throws(FirebaseFirestoreException::class)
@@ -62,7 +71,7 @@ class UserRepositoryImpl : UserRepository {
         isAdmin: Boolean?,
         tokens: MutableList<String>?
     ) {
-        // don't update ID and name, since those are also used in tasks.
+        // ! don't update ID and name, since those are also used in tasks.
         // Otherwise implement cascading update for the tasks
 
         userId ?: return

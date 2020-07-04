@@ -2,7 +2,6 @@ package com.timgortworst.tasqs.domain.usecase.task
 
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.tasqs.domain.model.Task
-import com.timgortworst.tasqs.domain.model.TaskMetaData
 import com.timgortworst.tasqs.domain.model.TaskRecurrence
 import com.timgortworst.tasqs.domain.model.response.ErrorHandler
 import com.timgortworst.tasqs.domain.model.response.Response
@@ -29,7 +28,7 @@ class CompleteTaskUseCaseImpl(
 
         try {
             val (singleTasks, restTasks) = params.tasks.partition {
-                it.metaData.recurrence is TaskRecurrence.SingleTask
+                it.metaData!!.recurrence is TaskRecurrence.SingleTask
             }
 
             // delete single tasks
@@ -37,9 +36,9 @@ class CompleteTaskUseCaseImpl(
 
             // update repeating tasks
             restTasks.forEach { task ->
-                calcNextTaskDate(task.metaData).collect {
+                calcNextTaskDate(task.metaData!!).collect {
                     when (it) {
-                        is Response.Success -> task.metaData.startDateTime = it.data!!
+                        is Response.Success -> task.metaData!!.startDateTime = it.data!!
                         is Response.Error -> emit(Response.Error(it.error))
                     }
                 }
@@ -52,8 +51,8 @@ class CompleteTaskUseCaseImpl(
         }
     }.flowOn(Dispatchers.IO)
 
-    private fun calcNextTaskDate(taskMetaData: TaskMetaData): Flow<Response<ZonedDateTime>> {
-        val params = CalculateNextTaskUseCaseImpl.Params(taskMetaData.startDateTime, taskMetaData.recurrence)
+    private fun calcNextTaskDate(taskMetaData: Task.MetaData): Flow<Response<ZonedDateTime>> {
+        val params = CalculateNextTaskUseCaseImpl.Params(taskMetaData.startDateTime!!, taskMetaData.recurrence!!)
         return calcNextTaskDate.execute(params)
     }
 }
