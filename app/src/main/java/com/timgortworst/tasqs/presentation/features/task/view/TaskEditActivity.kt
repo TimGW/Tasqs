@@ -120,6 +120,8 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
     }
 
     private fun setupTaskDescription(taskDescription: String) {
+        binding.taskDescription.requestFocus()
+
         // set initial value
         binding.taskDescription.setText(taskDescription)
 
@@ -183,6 +185,8 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
         // set listener
         binding.taskDateInput.setOnClickListener {
+            clearAllFocus()
+
             task.metaData.startDateTime.let {
                 DatePickerDialog(
                     this, this,
@@ -203,6 +207,8 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
         // set listener
         binding.taskTimeInput.setOnClickListener {
+            clearAllFocus()
+
             task.metaData.startDateTime.let {
                 TimePickerDialog(
                     this, this,
