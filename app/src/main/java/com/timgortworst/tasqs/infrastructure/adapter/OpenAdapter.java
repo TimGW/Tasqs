@@ -16,6 +16,8 @@ import java.util.List;
 /**
  * A general purpose adapter where items can be added of any kind as long as an appropriate
  * viewholderbinder is added along the items.
+ *
+ * todo convert to kotlin
  */
 public class OpenAdapter extends RecyclerView.Adapter {
 

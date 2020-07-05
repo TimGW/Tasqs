@@ -20,8 +20,8 @@ import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.infrastructure.adapter.OpenAdapter
 import com.timgortworst.tasqs.infrastructure.adapter.provider.StableIdProvider
 import com.timgortworst.tasqs.infrastructure.adapter.viewholder.ViewHolderBinder
-import com.timgortworst.tasqs.presentation.base.model.EventObserver
 import com.timgortworst.tasqs.infrastructure.extension.snackbar
+import com.timgortworst.tasqs.presentation.base.model.EventObserver
 import com.timgortworst.tasqs.presentation.features.task.adapter.formatTime
 import com.timgortworst.tasqs.presentation.features.task.viewholderbinder.EditTextViewHolderBinder
 import com.timgortworst.tasqs.presentation.features.task.viewholderbinder.RecurrenceViewHolderBinder
@@ -45,7 +45,6 @@ class TaskEditActivity : AppCompatActivity(),
     private lateinit var binding: ActivityEditTaskBinding
     private val isEditMode: Boolean by lazy { intent.hasExtra(INTENT_EXTRA_EDIT_TASK) }
     private val viewModel: TaskEditViewModel by inject()
-    private var errorMessage : String? = null
     private val adapter: OpenAdapter = OpenAdapter().apply {
         setHasStableIds(true)
         addStableIdsProvider(object: StableIdProvider {
