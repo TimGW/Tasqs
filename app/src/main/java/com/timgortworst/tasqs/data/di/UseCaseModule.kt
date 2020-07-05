@@ -41,4 +41,5 @@ val useCaseModule = module {
     factory<InviteLinkBuilderUseCase> { InviteLinkBuilderUseCaseImpl(get()) }
     factory<ForcedUpdateUseCase> { ForcedUpdateUseCaseImpl() }
     factory<GetTaskUseCase> { GetTaskUseCaseImpl(get(), get()) }
+    factory<GetTaskUsersUseCase> { GetTaskUsersUseCaseImpl(get(), get()) }
 }

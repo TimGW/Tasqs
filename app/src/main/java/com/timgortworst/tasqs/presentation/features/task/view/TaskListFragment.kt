@@ -18,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.databinding.FragmentTaskListBinding
 import com.timgortworst.tasqs.domain.model.Task
-import com.timgortworst.tasqs.presentation.base.snackbar
+import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.base.view.AdapterStateListener
 import com.timgortworst.tasqs.presentation.base.view.ViewFadeAnimator.toggleFadeViews
 import com.timgortworst.tasqs.presentation.features.main.MainActivity

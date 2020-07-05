@@ -8,46 +8,56 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
-import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.Observer
-import com.google.android.material.button.MaterialButton
-import com.google.firebase.auth.FirebaseAuth
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.databinding.ActivityEditTaskBinding
-import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.TaskRecurrence
-import com.timgortworst.tasqs.presentation.base.clearFocus
-import com.timgortworst.tasqs.presentation.base.snackbar
+import com.timgortworst.tasqs.domain.model.response.Response
+import com.timgortworst.tasqs.infrastructure.adapter.OpenAdapter
+import com.timgortworst.tasqs.infrastructure.adapter.provider.StableIdProvider
+import com.timgortworst.tasqs.infrastructure.adapter.viewholder.ViewHolderBinder
 import com.timgortworst.tasqs.presentation.base.model.EventObserver
+import com.timgortworst.tasqs.infrastructure.extension.snackbar
+import com.timgortworst.tasqs.presentation.features.task.adapter.formatTime
+import com.timgortworst.tasqs.presentation.features.task.viewholderbinder.EditTextViewHolderBinder
+import com.timgortworst.tasqs.presentation.features.task.viewholderbinder.RecurrenceViewHolderBinder
+import com.timgortworst.tasqs.presentation.features.task.viewholderbinder.TextViewHolderBinder
+import com.timgortworst.tasqs.presentation.features.task.viewholderbinder.UserSpinnerViewHolderBinder
 import com.timgortworst.tasqs.presentation.features.task.viewmodel.TaskEditViewModel
 import org.koin.android.ext.android.inject
-import org.threeten.bp.*
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
-import org.threeten.bp.temporal.ChronoField
 import java.util.*
 
-class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
+
+class TaskEditActivity : AppCompatActivity(),
+    DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener {
     private val task: Task by lazy {
         intent.getParcelableExtra(INTENT_EXTRA_EDIT_TASK) as? Task ?: Task()
     }
     private lateinit var binding: ActivityEditTaskBinding
-    private lateinit var recurrenceAdapter: ArrayAdapter<String>
     private val isEditMode: Boolean by lazy { intent.hasExtra(INTENT_EXTRA_EDIT_TASK) }
     private val viewModel: TaskEditViewModel by inject()
-    private val recurrences = listOf(
-        TaskRecurrence.Daily(),
-        TaskRecurrence.Weekly(),
-        TaskRecurrence.Monthly(),
-        TaskRecurrence.Annually()
-    )
+    private var errorMessage : String? = null
+    private val adapter: OpenAdapter = OpenAdapter().apply {
+        setHasStableIds(true)
+        addStableIdsProvider(object: StableIdProvider {
+            override fun getItemId(item: Any?, viewHolderBinder: ViewHolderBinder<*, *>?): Long? {
+                return when(item) {
+                    is UserSpinnerViewHolderBinder.ViewItem -> item.currentUser?.userId.hashCode().toLong()
+                    null -> 999L
+                    else -> item::class.java.hashCode().toLong()
+                }
+            }
+        })
+    }
 
     companion object {
         const val INTENT_EXTRA_EDIT_TASK = "INTENT_EXTRA_EDIT_TASK"
@@ -65,8 +75,9 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         setContentView(binding.root)
 
         setupToolbar(task.description)
+        setupAdapter()
 
-        setupPageElements(task)
+        updateAdapter()
 
         viewModel.actionDone.observe(this, EventObserver {
             binding.progressBar.visibility = View.INVISIBLE
@@ -74,7 +85,12 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Response.Success -> navigateUpTo(parentActivityIntent)
                 is Response.Error -> presentError(R.string.error_generic)
-                is Response.Empty -> binding.taskDescriptionHint.error = getString(it.msg)
+                is Response.Empty -> run {
+
+                    adapter.removeItem(0)
+                    setupTaskDescription(task.description, getString(it.msg))
+                    adapter.notifyItemChanged(0)
+                }
             }
         })
     }
@@ -87,10 +103,7 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_edit_done -> {
-                viewModel.taskDoneClicked(task.apply {
-                    // collect values for recurrence only when user is done, since it's a complex object
-                    metaData.recurrence = recurrenceFromSelection()
-                })
+                viewModel.taskDoneClicked(task)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -109,256 +122,134 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         }
     }
 
-    private fun setupPageElements(task: Task) {
+    private fun setupAdapter() {
+        val layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.setHasFixedSize(true)
+    }
+
+    private fun updateAdapter() {
+        adapter.clear()
+
         setupTaskDescription(task.description)
         setupTaskUser(task.user)
         setupTaskDate(task.metaData.startDateTime)
         setupTaskTime(task.metaData.startDateTime)
-        setupTaskRepeatCheckbox(task.metaData.recurrence)
         setupTaskRecurrence(task.metaData.recurrence)
-        setupTaskFrequency(task.metaData.recurrence.frequency)
+
+        adapter.notifyDataSetChanged()
     }
 
-    private fun setupTaskDescription(taskDescription: String) {
-        binding.taskDescription.requestFocus()
-
-        // set initial value
-        binding.taskDescription.setText(taskDescription)
-
-        // set listener
-        binding.taskDescription.doAfterTextChanged {
-            if (it?.isNotBlank() == true) binding.taskDescriptionHint.error = null
-            task.description = binding.taskDescription.text.toString()
-        }
+    private fun setupTaskDescription(taskDescription: String, errorMessage: String? = null) {
+        adapter.addItem(0,
+            EditTextViewHolderBinder.ViewItem(
+                taskDescription,
+                errorMessage,
+                object : EditTextViewHolderBinder.Callback {
+                    override fun onDescriptionInput(text: String) {
+                        task.description = text
+                    }
+                }), EditTextViewHolderBinder()
+        )
     }
 
     private fun setupTaskUser(user: Task.User?) {
-        // retrieve all users for this household
-        viewModel.allUsersLiveData.observe(this, Observer { response ->
-            binding.progressBar.visibility = View.INVISIBLE
-            when (response) {
-                Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                is Response.Success -> {
-                    val currentUser = response.data?.find {
-                        it.userId == FirebaseAuth.getInstance().currentUser?.uid
-                    } ?: return@Observer
+        val userLoadingSpinnerViewHolderBinder = UserSpinnerViewHolderBinder(this)
+        userLoadingSpinnerViewHolderBinder.callback =
+            object : UserSpinnerViewHolderBinder.Callback {
+                override fun onSpinnerSelection(response: Response<Task.User>) {
+                    binding.progressBar.visibility = View.INVISIBLE
 
-                    if (response.data.filterNot { it.userId == currentUser.userId }.isEmpty()) {
-                        // assign current user to the task, since there is only 1 user in house
-                        task.user = Task.User(currentUser.userId, currentUser.name)
-                    } else {
-                        val userList = response.data.map { Task.User(it.userId, it.name) }
-                        binding.userGroup.visibility = View.VISIBLE
-
-                        binding.spinnerUsers.adapter = ArrayAdapter(
-                            this,
-                            android.R.layout.simple_spinner_dropdown_item,
-                            userList.map { it.name }
-                        )
-                        binding.spinnerUsers.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                            override fun onNothingSelected(parent: AdapterView<*>?) {}
-
-                            override fun onItemSelected(
-                                parent: AdapterView<*>?,
-                                view: View?,
-                                position: Int,
-                                id: Long
-                            ) {
-                                task.user = userList[position]
-                            }
-                        }
-
-                        if (isEditMode && user != null) {
-                            val activeUser = userList.indexOf(user)
-                            binding.spinnerUsers.setSelection(activeUser)
+                    when (response) {
+                        Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                        is Response.Error -> presentError(R.string.users_loading_error)
+                        is Response.Success -> {
+                            val data = response.data ?: return
+                            task.user = data
                         }
                     }
                 }
-                is Response.Error -> presentError(R.string.users_loading_error)
             }
-        })
+
+        adapter.addItem(
+            UserSpinnerViewHolderBinder.ViewItem(getString(R.string.edit_task_user_hint), user),
+            userLoadingSpinnerViewHolderBinder
+        )
     }
 
     private fun setupTaskDate(taskDateTime: ZonedDateTime) {
-        // set initial value
-        binding.taskDateInput.setText(formatDate(taskDateTime))
-
-        // set listener
-        binding.taskDateInput.setOnClickListener {
-            clearAllFocus()
-
-            task.metaData.startDateTime.let {
-                DatePickerDialog(
-                    this, this,
-                    it.year,
-                    it.monthValue - 1,
-                    it.dayOfMonth
-                ).apply {
-                    datePicker.minDate = ZonedDateTime.now().plusDays(1).toInstant().toEpochMilli()
-                    show()
-                }
-            }
-        }
+        adapter.addItem(
+            TextViewHolderBinder.ViewItem(
+                formatDate(taskDateTime),
+                R.string.edit_task_date_hint,
+                object : TextViewHolderBinder.Callback {
+                    override fun onClick() {
+                        with(task.metaData.startDateTime) {
+                            DatePickerDialog(
+                                this@TaskEditActivity, this@TaskEditActivity,
+                                year, monthValue - 1, dayOfMonth
+                            ).apply {
+                                datePicker.minDate =
+                                    ZonedDateTime.now().plusDays(1).toInstant().toEpochMilli()
+                                show()
+                            }
+                        }
+                    }
+                }), TextViewHolderBinder()
+        )
     }
 
     private fun setupTaskTime(taskDateTime: ZonedDateTime) {
-        // set initial value
-        binding.taskTimeInput.setText(formatTime(taskDateTime))
-
-        // set listener
-        binding.taskTimeInput.setOnClickListener {
-            clearAllFocus()
-
-            task.metaData.startDateTime.let {
-                TimePickerDialog(
-                    this, this,
-                    it.hour,
-                    it.minute,
-                    true
-                ).show()
-            }
-        }
-    }
-
-    private fun setupTaskRepeatCheckbox(taskRecurrence: TaskRecurrence) {
-        // set initial value
-        val isRepeating = taskRecurrence !is TaskRecurrence.SingleTask
-        binding.taskRepeatCheckbox.isChecked = isRepeating
-        binding.taskRepeatView.root.visibility = if (isRepeating) View.VISIBLE else View.GONE
-
-        // set listener
-        binding.taskRepeatCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            clearAllFocus()
-            binding.taskRepeatView.root.visibility = if (isChecked) View.VISIBLE else View.GONE
-        }
-    }
-
-    private fun setupTaskFrequency(frequency: Int) {
-        // set initial value
-        binding.taskRepeatView.recurrenceFrequency.setText(frequency.toString())
-
-        // set listeners
-        binding.taskRepeatView.recurrenceFrequency.setOnFocusChangeListener { _, hasFocus ->
-            binding.taskRepeatView.recurrenceFrequency.apply {
-                if (text.toString().isBlank() && !hasFocus) setText("1")
-            }
-        }
-        binding.taskRepeatView.recurrenceFrequency.doAfterTextChanged {
-            // don't allow 0 as input
-            it?.let {
-                val input = it.toString()
-                if (input.isNotEmpty() && input.first() == '0') {
-                    it.replace(0, 1, "1")
-                }
-            }
-            updateFrequencySpinnerText()
-        }
-        updateFrequencySpinnerText()
+        adapter.addItem(
+            TextViewHolderBinder.ViewItem(
+                formatTime(taskDateTime),
+                R.string.edit_task_time_hint,
+                object : TextViewHolderBinder.Callback {
+                    override fun onClick() {
+                        with(task.metaData.startDateTime) {
+                            TimePickerDialog(
+                                this@TaskEditActivity, this@TaskEditActivity,
+                                hour, minute, true
+                            ).show()
+                        }
+                    }
+                }), TextViewHolderBinder()
+        )
     }
 
     private fun setupTaskRecurrence(taskRecurrence: TaskRecurrence) {
-        // set adapter
-        recurrenceAdapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            recurrences.map { getString(it.name) }
+        val recurrenceViewHolderBinder = RecurrenceViewHolderBinder()
+        recurrenceViewHolderBinder.callback = object : RecurrenceViewHolderBinder.Callback {
+            override fun onRecurrenceSelection(selection: TaskRecurrence) {
+                task.metaData.recurrence = selection
+            }
+        }
+
+        adapter.addItem(
+            RecurrenceViewHolderBinder.ViewItem(taskRecurrence),
+            recurrenceViewHolderBinder
         )
-        binding.taskRepeatView.spinnerRecurrence.adapter = recurrenceAdapter
-
-        // set initial value
-        val recurrenceIndex = recurrences.indexOfFirst { it.name == taskRecurrence.name }
-        binding.taskRepeatView.spinnerRecurrence.setSelection(recurrenceIndex)
-        (taskRecurrence as? TaskRecurrence.Weekly)?.let { weekly ->
-            val recurrenceWeekPicker = binding.taskRepeatView.recurrenceWeekPicker
-            recurrenceWeekPicker.root.visibility = View.VISIBLE
-            val weekdayButtonGroup = recurrenceWeekPicker.weekdayButtonGroup
-            weekly.onDaysOfWeek.forEach { index ->
-                weekdayButtonGroup.check(weekdayButtonGroup[index - 1].id)
-            }
-        }
-
-        // set listeners
-        binding.taskRepeatView.spinnerRecurrence.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    clearAllFocus()
-
-                    val selectedRecurrence = recurrences[position]
-                    binding.taskRepeatView.recurrenceWeekPicker.root.visibility =
-                        if (selectedRecurrence is TaskRecurrence.Weekly) View.VISIBLE else View.GONE
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {}
-            }
-        binding.taskRepeatView.recurrenceWeekPicker.weekdayButtonGroup.addOnButtonCheckedListener { _, _, _ ->
-            clearAllFocus()
-        }
-    }
-
-    fun clearAllFocus() {
-        clearFocus(binding.taskRepeatView.recurrenceFrequency)
-        clearFocus(binding.taskDescription)
-    }
-
-    /** Provide TaskRecurrence from the current selected input */
-    private fun recurrenceFromSelection(): TaskRecurrence {
-        if (!binding.taskRepeatCheckbox.isChecked) return TaskRecurrence.SingleTask(1)
-        val freq = binding.taskRepeatView.recurrenceFrequency.text.toString().toIntOrNull() ?: 1
-        return when (recurrences[binding.taskRepeatView.spinnerRecurrence.selectedItemPosition]) {
-            is TaskRecurrence.Daily -> TaskRecurrence.Daily(freq)
-            is TaskRecurrence.Weekly -> {
-                val weekdays = getSelectedWeekdays().ifEmpty {
-                    listOf(ZonedDateTime.now().get(ChronoField.DAY_OF_WEEK))
-                }
-                TaskRecurrence.Weekly(freq, weekdays)
-            }
-            is TaskRecurrence.Monthly -> TaskRecurrence.Monthly(freq)
-            is TaskRecurrence.Annually -> TaskRecurrence.Annually(freq)
-            is TaskRecurrence.SingleTask -> TaskRecurrence.SingleTask(freq)
-        }
-    }
-
-    private fun getSelectedWeekdays(): List<Int> {
-        val buttonGroup = binding.taskRepeatView.recurrenceWeekPicker.weekdayButtonGroup
-        return buttonGroup
-            .checkedButtonIds
-            .map { buttonId ->
-                val btn = buttonGroup.findViewById<MaterialButton>(buttonId)
-                buttonGroup.indexOfChild(btn) + 1
-            } // map checked buttons to weekday index 0..6 (mo - su)
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        val newDate = ZonedDateTime.of(
+        task.metaData.startDateTime = ZonedDateTime.of(
             LocalDate.of(year, month + 1, dayOfMonth),
             task.metaData.startDateTime.toLocalTime(),
-            ZoneId.systemDefault()
+            task.metaData.startDateTime.zone
         )
 
-        // set new task date
-        task.metaData.startDateTime = newDate
-
-        // update UI
-        binding.taskDateInput.setText(formatDate(newDate))
+        updateAdapter()
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        // set new task time
-        val newTime = ZonedDateTime.of(
+        task.metaData.startDateTime = ZonedDateTime.of(
             task.metaData.startDateTime.toLocalDate(),
             LocalTime.of(hourOfDay, minute),
-            ZoneId.systemDefault()
+            task.metaData.startDateTime.zone
         )
-        // set new task date
-        task.metaData.startDateTime = newTime
 
-        // update UI
-        binding.taskTimeInput.setText(formatTime(task.metaData.startDateTime))
+        updateAdapter()
     }
 
     private fun formatDate(taskDateTime: ZonedDateTime): String {
@@ -368,23 +259,8 @@ class TaskEditActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         return "$formattedDayOfMonth $formattedMonth $formattedYear"
     }
 
-    private fun formatTime(taskDateTime: ZonedDateTime): String {
-        return String.format("%02d:%02d", taskDateTime.hour, taskDateTime.minute)
-    }
-
     private fun presentError(stringRes: Int) {
         val rootView = findViewById<View>(android.R.id.content) ?: return
         rootView.snackbar(message = getString(stringRes))
-    }
-
-    private fun updateFrequencySpinnerText(){
-        val frequency = binding.taskRepeatView.recurrenceFrequency.text.toString()
-        recurrenceAdapter.clear()
-        if (frequency.toIntOrNull()?.equals(1) == true || frequency.isBlank()) {
-            recurrenceAdapter.addAll(recurrences.map { getString(it.name) })
-        } else {
-            recurrenceAdapter.addAll(recurrences.map { getString(it.pluralName) })
-        }
-        recurrenceAdapter.notifyDataSetChanged()
     }
 }

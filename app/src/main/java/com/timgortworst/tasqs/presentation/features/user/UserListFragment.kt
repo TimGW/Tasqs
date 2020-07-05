@@ -15,7 +15,7 @@ import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.presentation.base.customview.BottomSheetMenu
 import com.timgortworst.tasqs.presentation.base.model.BottomMenuItem
 import com.timgortworst.tasqs.presentation.base.model.EventObserver
-import com.timgortworst.tasqs.presentation.base.snackbar
+import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.features.main.MainActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 

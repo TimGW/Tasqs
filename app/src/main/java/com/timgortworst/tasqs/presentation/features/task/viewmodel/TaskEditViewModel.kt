@@ -8,15 +8,15 @@ import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.domain.usecase.task.CreateOrUpdateTaskUseCaseImpl
 import com.timgortworst.tasqs.presentation.base.model.Event
 import com.timgortworst.tasqs.presentation.usecase.task.CreateOrUpdateTaskUseCase
-import com.timgortworst.tasqs.presentation.usecase.user.GetAllUsersUseCase
+import com.timgortworst.tasqs.presentation.usecase.user.GetTaskUsersUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class TaskEditViewModel(
     private val createOrUpdateTaskUseCase: CreateOrUpdateTaskUseCase,
-    getAllUsersUseCase: GetAllUsersUseCase
+    getTaskUsersUseCase: GetTaskUsersUseCase
 ) : ViewModel() {
-    val allUsersLiveData = getAllUsersUseCase.execute(None).asLiveData(viewModelScope.coroutineContext)
+    val taskUsersLiveData = getTaskUsersUseCase.execute(None).asLiveData(viewModelScope.coroutineContext)
 
     private val _actionDone = MutableLiveData<Event<Response<Task>>>()
     val actionDone: LiveData<Event<Response<Task>>>
