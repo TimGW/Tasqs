@@ -31,9 +31,9 @@ val useCaseModule = module {
     factory<CalculateNextTaskUseCase> { CalculateNextTaskUseCaseImpl() }
     factory<CreateOrUpdateTaskUseCase> { CreateOrUpdateTaskUseCaseImpl(get(), get()) }
     factory<SignInUseCase> { SignInUseCaseImpl(get(), get(), get()) }
-    factory<AdsVisibleUseCase> { AdsVisibleUseCaseImpl(get()) }
+    factory<AdsVisibleUseCase> { AdsVisibleUseCaseImpl() }
     factory<GetUserUseCase> { GetUserUseCaseImpl(get(), get()) }
-    factory<EasterEggUseCase> { EasterEggUseCaseImpl(get()) }
+    factory<EasterEggUseCase> { EasterEggUseCaseImpl() }
     factory<SwitchHouseholdUseCase> { SwitchHouseholdUseCaseImpl(get(), get(), get(), get()) }
     factory<ValidationUseCase> { ValidationUseCaseImpl(get(), get()) }
     factory<GetAllUsersUseCase> { GetAllUsersUseCaseImpl(get(), get()) }

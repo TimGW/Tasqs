@@ -10,14 +10,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class AdsVisibleUseCaseImpl(
-    private val sharedPrefs: SharedPrefs
-) : AdsVisibleUseCase {
+class AdsVisibleUseCaseImpl : AdsVisibleUseCase {
     private val remoteConfig: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
     override fun execute(params: None) = flow {
         val remoteValue = remoteConfig.getBoolean(TasqsApp.KEY_ENABLE_ADS)
-        val localValue = sharedPrefs.isAdsEnabled()
-        emit(Response.Success(remoteValue && localValue))
+        emit(Response.Success(remoteValue))
     }.flowOn(Dispatchers.Default)
 }
