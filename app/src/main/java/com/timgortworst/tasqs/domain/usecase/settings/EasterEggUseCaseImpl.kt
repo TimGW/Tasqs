@@ -9,19 +9,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class EasterEggUseCaseImpl(
-    private val sharedPrefs: SharedPrefs
-) : EasterEggUseCase {
+class EasterEggUseCaseImpl : EasterEggUseCase {
 
     data class Params(internal val count: Int)
 
     override fun execute(params: Params) = flow {
-        if (sharedPrefs.isAdsEnabled()) {
             when {
-                betweenUntil(params.count,
-                    CLICKS_FOR_MESSAGE,
-                    CLICKS_FOR_EASTER_EGG
-                ) -> {
+                betweenUntil(params.count, CLICKS_FOR_MESSAGE, CLICKS_FOR_EASTER_EGG) -> {
                     emit(
                         Response.Success(
                             EasterEgg(
@@ -32,18 +26,10 @@ class EasterEggUseCaseImpl(
                     )
                 }
                 params.count == CLICKS_FOR_EASTER_EGG -> {
-                    sharedPrefs.setAdsEnabled(false)
                     emit(Response.Success(EasterEgg(R.string.easter_egg_enabled)))
                 }
                 else -> emit(Response.Success(null))
             }
-        } else {
-            if (params.count == CLICKS_FOR_EASTER_EGG) {
-                emit(Response.Success(EasterEgg(R.string.easter_egg_already_enabled)))
-            } else {
-                emit(Response.Success(null))
-            }
-        }
     }.flowOn(Dispatchers.Default)
 
     private fun betweenUntil(comparable: Int, x: Int, y: Int): Boolean = (comparable in x until y)

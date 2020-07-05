@@ -65,9 +65,9 @@
     <string name="toolbar_title_new_task">New task</string>
     <string name="toolbar_title_tasks">Tasks</string>
     <string name="toolbar_title_users">Users</string>
-    <string name="easter_egg_enabled">Ads are now disabled!</string>
+    <string name="easter_egg_enabled">wooo!</string>
     <string name="easter_egg_already_enabled">Stahp it!</string>
-    <string name="easter_egg_message">Click %1$d more time(s) to remove ads</string>
+    <string name="easter_egg_message">Click %1$d more time(s)</string>
     <string name="edit">Edit</string>
     <string name="info">Info</string>
     <string name="delete">Delete</string>
