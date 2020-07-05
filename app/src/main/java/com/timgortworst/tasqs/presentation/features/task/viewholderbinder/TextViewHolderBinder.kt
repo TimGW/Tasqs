@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.timgortworst.tasqs.R
-import com.timgortworst.tasqs.infrastructure.adapter.viewholder.ViewHolderBinder
+import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
 import kotlinx.android.synthetic.main.layout_input_text.view.*
 
-class TextViewHolderBinder : ViewHolderBinder<TextViewHolderBinder.ViewItem, TextViewHolderBinder.ViewHolder> {
+class TextViewHolderBinder :
+    ViewHolderBinder<TextViewHolderBinder.ViewItem, TextViewHolderBinder.ViewHolder> {
 
     override fun createViewHolder(parent: ViewGroup): ViewHolder =
             ViewHolder(LayoutInflater.from(parent.context)

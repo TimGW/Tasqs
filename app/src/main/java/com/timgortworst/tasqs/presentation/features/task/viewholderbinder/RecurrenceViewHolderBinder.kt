@@ -15,7 +15,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.TaskRecurrence
-import com.timgortworst.tasqs.infrastructure.adapter.viewholder.ViewHolderBinder
+import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
 import com.timgortworst.tasqs.infrastructure.extension.getOrFirst
 import com.timgortworst.tasqs.presentation.features.task.adapter.BaseArrayAdapter
 import kotlinx.android.synthetic.main.layout_input_recurrence.view.*

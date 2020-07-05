@@ -2,13 +2,13 @@ package com.timgortworst.tasqs.infrastructure.adapter;
 
 import android.util.Pair;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.timgortworst.tasqs.BuildConfig;
-import com.timgortworst.tasqs.infrastructure.adapter.provider.StableIdProvider;
-import com.timgortworst.tasqs.infrastructure.adapter.viewholder.OnViewRecycledListener;
-import com.timgortworst.tasqs.infrastructure.adapter.viewholder.ViewHolderBinder;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,16 +58,6 @@ public class OpenAdapter extends RecyclerView.Adapter {
         return count;
     }
 
-    public int getItemCountForViewHolderHash(int hashCode) {
-        int count = 0;
-        for (Pair<List<?>, ViewHolderBinder> pair : mItemList) {
-            if (hashCode == pair.second.getClass().hashCode()) {
-                count += pair.first.size();
-            }
-        }
-        return count;
-    }
-
     @Override
     public int getItemViewType(int position) {
         if (position < 0) return -1;
@@ -80,13 +70,6 @@ public class OpenAdapter extends RecyclerView.Adapter {
         }
         
         return -1;
-    }
-
-    @Override
-    public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
-        if (holder instanceof OnViewRecycledListener) {
-            ((OnViewRecycledListener) holder).onViewRecycled();
-        }
     }
 
     /**
@@ -190,9 +173,5 @@ public class OpenAdapter extends RecyclerView.Adapter {
             position -= pair.first.size();
         }
         return null;
-    }
-
-    public List<Pair<List<?>, ViewHolderBinder>> getItems() {
-        return mItemList;
     }
 }

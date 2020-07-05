@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.infrastructure.adapter.viewholder
+package com.timgortworst.tasqs.infrastructure.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

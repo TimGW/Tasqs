@@ -18,8 +18,8 @@ import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.TaskRecurrence
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.infrastructure.adapter.OpenAdapter
-import com.timgortworst.tasqs.infrastructure.adapter.provider.StableIdProvider
-import com.timgortworst.tasqs.infrastructure.adapter.viewholder.ViewHolderBinder
+import com.timgortworst.tasqs.infrastructure.adapter.StableIdProvider
+import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
 import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.base.model.EventObserver
 import com.timgortworst.tasqs.presentation.features.task.adapter.formatTime
@@ -47,7 +47,8 @@ class TaskEditActivity : AppCompatActivity(),
     private val viewModel: TaskEditViewModel by inject()
     private val adapter: OpenAdapter = OpenAdapter().apply {
         setHasStableIds(true)
-        addStableIdsProvider(object: StableIdProvider {
+        addStableIdsProvider(object:
+            StableIdProvider {
             override fun getItemId(item: Any?, viewHolderBinder: ViewHolderBinder<*, *>?): Long? {
                 return when(item) {
                     is UserSpinnerViewHolderBinder.ViewItem -> item.currentUser?.userId.hashCode().toLong()

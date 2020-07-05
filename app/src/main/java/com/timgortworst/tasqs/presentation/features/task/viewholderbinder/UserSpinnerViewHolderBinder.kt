@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.response.Response
-import com.timgortworst.tasqs.infrastructure.adapter.viewholder.ViewHolderBinder
+import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
 import com.timgortworst.tasqs.infrastructure.extension.indexOr
 import com.timgortworst.tasqs.presentation.features.task.adapter.BaseArrayAdapter
 import com.timgortworst.tasqs.presentation.features.task.viewmodel.TaskEditViewModel
