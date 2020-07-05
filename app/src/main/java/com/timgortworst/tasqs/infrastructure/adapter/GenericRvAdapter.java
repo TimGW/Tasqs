@@ -19,7 +19,7 @@ import java.util.List;
  *
  * todo convert to kotlin
  */
-public class OpenAdapter extends RecyclerView.Adapter {
+public class GenericRvAdapter extends RecyclerView.Adapter {
 
     protected List<Pair<List<?>, ViewHolderBinder>> mItemList = new ArrayList<>();
 

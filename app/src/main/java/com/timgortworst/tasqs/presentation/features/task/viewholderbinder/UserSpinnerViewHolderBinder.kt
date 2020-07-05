@@ -14,7 +14,7 @@ import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
 import com.timgortworst.tasqs.infrastructure.extension.indexOr
-import com.timgortworst.tasqs.presentation.features.task.adapter.BaseArrayAdapter
+import com.timgortworst.tasqs.infrastructure.adapter.GenericArrayAdapter
 import com.timgortworst.tasqs.presentation.features.task.viewmodel.TaskEditViewModel
 import kotlinx.android.synthetic.main.layout_input_user.view.*
 import org.koin.core.KoinComponent
@@ -25,7 +25,7 @@ class UserSpinnerViewHolderBinder(private val lifecycleOwner: LifecycleOwner) :
     KoinComponent {
     private val viewModel: TaskEditViewModel by inject()
     var callback: Callback? = null
-    private val spinnerAdapter = object : BaseArrayAdapter<Task.User>(mutableListOf()) {
+    private val spinnerAdapter = object : GenericArrayAdapter<Task.User>(mutableListOf()) {
         override fun getAdapterView(
             position: Int,
             convertView: View?,

@@ -17,7 +17,7 @@ import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.TaskRecurrence
 import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
 import com.timgortworst.tasqs.infrastructure.extension.getOrFirst
-import com.timgortworst.tasqs.presentation.features.task.adapter.BaseArrayAdapter
+import com.timgortworst.tasqs.infrastructure.adapter.GenericArrayAdapter
 import kotlinx.android.synthetic.main.layout_input_recurrence.view.*
 import kotlinx.android.synthetic.main.layout_recurrence_picker.view.*
 import kotlinx.android.synthetic.main.layout_week_picker.view.*
@@ -28,7 +28,7 @@ class RecurrenceViewHolderBinder :
     ViewHolderBinder<RecurrenceViewHolderBinder.ViewItem, RecurrenceViewHolderBinder.ViewHolder> {
     var callback: Callback? = null
 
-    private var adapter: BaseArrayAdapter<TaskRecurrence>? = null
+    private var adapter: GenericArrayAdapter<TaskRecurrence>? = null
     private val recurrences = mutableListOf(
         TaskRecurrence.Daily(),
         TaskRecurrence.Weekly(),
@@ -88,7 +88,7 @@ class RecurrenceViewHolderBinder :
     }
 
     private fun setupSpinner(parentViewHolder: ViewHolder, item: ViewItem) {
-        adapter = object : BaseArrayAdapter<TaskRecurrence>(recurrences) {
+        adapter = object : GenericArrayAdapter<TaskRecurrence>(recurrences) {
 
             override fun getAdapterView(
                 position: Int,

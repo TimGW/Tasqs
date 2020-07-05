@@ -17,7 +17,7 @@ import com.timgortworst.tasqs.databinding.ActivityEditTaskBinding
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.TaskRecurrence
 import com.timgortworst.tasqs.domain.model.response.Response
-import com.timgortworst.tasqs.infrastructure.adapter.OpenAdapter
+import com.timgortworst.tasqs.infrastructure.adapter.GenericRvAdapter
 import com.timgortworst.tasqs.infrastructure.adapter.StableIdProvider
 import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
 import com.timgortworst.tasqs.infrastructure.extension.snackbar
@@ -45,7 +45,7 @@ class TaskEditActivity : AppCompatActivity(),
     private lateinit var binding: ActivityEditTaskBinding
     private val isEditMode: Boolean by lazy { intent.hasExtra(INTENT_EXTRA_EDIT_TASK) }
     private val viewModel: TaskEditViewModel by inject()
-    private val adapter: OpenAdapter = OpenAdapter().apply {
+    private val adapter = GenericRvAdapter().apply {
         setHasStableIds(true)
         addStableIdsProvider(object:
             StableIdProvider {
@@ -57,16 +57,6 @@ class TaskEditActivity : AppCompatActivity(),
                 }
             }
         })
-    }
-
-    companion object {
-        const val INTENT_EXTRA_EDIT_TASK = "INTENT_EXTRA_EDIT_TASK"
-
-        fun intentBuilder(context: Context, task: Task? = null): Intent {
-            val intent = Intent(context, TaskEditActivity::class.java)
-            task?.let { intent.putExtra(INTENT_EXTRA_EDIT_TASK, it) }
-            return intent
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -262,5 +252,15 @@ class TaskEditActivity : AppCompatActivity(),
     private fun presentError(stringRes: Int) {
         val rootView = findViewById<View>(android.R.id.content) ?: return
         rootView.snackbar(message = getString(stringRes))
+    }
+
+    companion object {
+        const val INTENT_EXTRA_EDIT_TASK = "INTENT_EXTRA_EDIT_TASK"
+
+        fun intentBuilder(context: Context, task: Task? = null): Intent {
+            val intent = Intent(context, TaskEditActivity::class.java)
+            task?.let { intent.putExtra(INTENT_EXTRA_EDIT_TASK, it) }
+            return intent
+        }
     }
 }

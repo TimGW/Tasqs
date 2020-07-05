@@ -1,10 +1,10 @@
-package com.timgortworst.tasqs.presentation.features.task.adapter
+package com.timgortworst.tasqs.infrastructure.adapter
 
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 
-abstract class BaseArrayAdapter<T>(private val dataSource: MutableList<T>) : BaseAdapter() {
+abstract class GenericArrayAdapter<T>(private val dataSource: MutableList<T>) : BaseAdapter() {
 
     abstract fun getAdapterView(position: Int, convertView: View?, parent: ViewGroup?, t: T): View?
 
