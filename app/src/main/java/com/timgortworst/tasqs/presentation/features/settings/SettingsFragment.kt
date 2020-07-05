@@ -20,7 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.response.Response
-import com.timgortworst.tasqs.presentation.base.snackbar
+import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.features.splash.SplashActivity
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel

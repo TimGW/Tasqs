@@ -16,7 +16,7 @@ import com.timgortworst.tasqs.databinding.ActivityMainBinding
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.infrastructure.receivers.NetworkChangeReceiver
 import com.timgortworst.tasqs.presentation.TasqsApp
-import com.timgortworst.tasqs.presentation.base.snackbar
+import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.features.settings.SettingsActivity
 import com.timgortworst.tasqs.presentation.features.task.view.TaskEditActivity
 import com.timgortworst.tasqs.presentation.features.task.view.TaskListFragment

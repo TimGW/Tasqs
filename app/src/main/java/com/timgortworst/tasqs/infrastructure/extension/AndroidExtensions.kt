@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.base
+package com.timgortworst.tasqs.infrastructure.extension
 
 import android.app.Activity
 import android.content.Context

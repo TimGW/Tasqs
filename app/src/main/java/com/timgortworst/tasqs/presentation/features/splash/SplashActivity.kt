@@ -15,7 +15,7 @@ import com.timgortworst.tasqs.presentation.TasqsApp
 import com.timgortworst.tasqs.presentation.base.model.EventObserver
 import com.timgortworst.tasqs.presentation.base.model.StartUpAction
 import com.timgortworst.tasqs.presentation.base.model.UpdateAction
-import com.timgortworst.tasqs.presentation.base.snackbar
+import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.features.main.MainActivity
 import com.timgortworst.tasqs.presentation.features.signin.SignInActivity
 import org.koin.android.ext.android.inject
