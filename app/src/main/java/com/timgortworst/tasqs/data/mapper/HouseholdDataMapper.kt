@@ -1,7 +1,6 @@
 package com.timgortworst.tasqs.data.mapper
 
 import com.timgortworst.tasqs.domain.model.Household
-import com.timgortworst.tasqs.domain.model.Task
 
 class HouseholdDataMapper : Mapper<Map<String, Any>, Household> {
 

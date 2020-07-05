@@ -2,7 +2,6 @@ package com.timgortworst.tasqs.data.mapper
 
 import com.timgortworst.tasqs.domain.model.User
 
-
 class UserDataMapper : Mapper<Map<String, Any>, User?> {
 
     override fun mapOutgoing(domain: User?): Map<String, Any> {
