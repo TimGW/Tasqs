@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.features.task.adapter.actionmode
+package com.timgortworst.tasqs.presentation.features.task.actionmode
 
 import android.view.Menu
 import android.view.MenuItem

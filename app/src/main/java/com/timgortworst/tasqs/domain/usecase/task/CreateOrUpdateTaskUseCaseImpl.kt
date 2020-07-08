@@ -17,14 +17,13 @@ class CreateOrUpdateTaskUseCaseImpl(
 
     data class Params(val task: Task)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
+    override fun execute(params: Params) = flow {
         emit(Response.Loading)
 
         try {
             val result = params.task
 
-            if (params.task.id.isEmpty()) {
+            if (params.task.id.isNullOrBlank()) {
                 taskRepository.createTask(result)
             } else {
                 taskRepository.updateTask(result)

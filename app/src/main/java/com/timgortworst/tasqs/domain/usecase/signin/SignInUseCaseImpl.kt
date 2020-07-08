@@ -23,9 +23,7 @@ class SignInUseCaseImpl(
 
     data class Params(val newUser: Boolean)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
-
+    override fun execute(params: Params) = flow {
         emit(Response.Loading)
 
         val fireBaseUser = fbAuth.currentUser ?: run { emit(Response.Error()); return@flow }

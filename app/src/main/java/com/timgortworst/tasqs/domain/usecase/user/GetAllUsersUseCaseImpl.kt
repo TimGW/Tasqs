@@ -5,6 +5,7 @@ import com.google.firebase.firestore.Source
 import com.timgortworst.tasqs.domain.model.response.ErrorHandler
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.repository.UserRepository
+import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.presentation.usecase.user.GetAllUsersUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
@@ -15,7 +16,7 @@ class GetAllUsersUseCaseImpl(
     private val errorHandler: ErrorHandler
 ) : GetAllUsersUseCase {
 
-    override fun execute(params: Unit?) = flow {
+    override fun execute(params: None) = flow {
         emit(Response.Loading)
 
         try {

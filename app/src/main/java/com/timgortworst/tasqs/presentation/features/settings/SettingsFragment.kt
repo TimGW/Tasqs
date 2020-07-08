@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.view.Gravity.TOP
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
@@ -18,12 +19,15 @@ import androidx.preference.SwitchPreferenceCompat
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.plattysoft.leonids.ParticleSystem
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.response.Response
-import com.timgortworst.tasqs.presentation.base.snackbar
+import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.features.splash.SplashActivity
+import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 class SettingsFragment : PreferenceFragmentCompat() {
     private val settingsViewModel: SettingsViewModel by viewModel()
@@ -46,7 +50,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         settingsViewModel.easterEgg.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
-                is Response.Success -> { response.data?.let { easterEggMsg(it.id, it.data) } }
+                is Response.Success -> { response.data?.let { fireEasterEggUi(it.id, it.data) } }
             }
         })
     }
@@ -178,7 +182,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
     }
 
-    private fun easterEggMsg(stringRes: Int, argument: Int?) {
+    private fun fireEasterEggUi(stringRes: Int, argument: Int?) {
         val rootView = activity?.findViewById<View>(android.R.id.content) ?: return
         val snackText = getString(stringRes, argument)
 
@@ -187,6 +191,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         snackbar?.setText(snackText)
         snackbar?.show()
+
+        if (stringRes == R.string.easter_egg_enabled) {
+            ParticleSystem(activity, 1000, R.drawable.confetti, 8000)
+                .setSpeedModuleAndAngleRange(0.0f, 0.35f, 0, 180)
+                .setRotationSpeed(120f)
+                .setAcceleration(0.00005f, 90)
+                .emitWithGravity(activity?.emiter_top, TOP, 30, 5000)
+        }
     }
 
     private fun errorMessage() {

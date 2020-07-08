@@ -97,8 +97,8 @@ class TaskFirestoreAdapter(
                 dateTime.setTextColor(description.currentTextColor)
             }
 
-            user.visibility = if (task.user.name.isNotBlank()) {
-                user.text = task.user.name.capitalize()
+            user.visibility = if (task.user?.name?.isNotBlank() == true) {
+                user.text = task.user?.name?.capitalize()
                 View.VISIBLE
             } else {
                 View.GONE

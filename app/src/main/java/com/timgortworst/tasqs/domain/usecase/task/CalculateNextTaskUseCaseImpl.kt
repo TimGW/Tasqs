@@ -13,9 +13,7 @@ class CalculateNextTaskUseCaseImpl : CalculateNextTaskUseCase {
 
     data class Params(val baseDate: ZonedDateTime, val recurrence: TaskRecurrence)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
-
+    override fun execute(params: Params) = flow {
         try {
             val result = params.baseDate.plus(params.recurrence)
             emit(Response.Success(result))

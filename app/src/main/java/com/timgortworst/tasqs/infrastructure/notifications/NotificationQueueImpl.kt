@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.features.notifications
+package com.timgortworst.tasqs.infrastructure.notifications
 
 import android.content.Context
 import androidx.work.*
@@ -7,7 +7,8 @@ import org.threeten.bp.ZonedDateTime
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
-class NotificationWorkManager(context: Context) {
+class NotificationQueueImpl(context: Context) :
+    NotificationQueue {
     private val workManager = WorkManager.getInstance(context)
 
     companion object {
@@ -15,7 +16,7 @@ class NotificationWorkManager(context: Context) {
         const val NOTIFICATION_MSG_KEY = "NOTIFICATION_MSG_KEY"
     }
 
-    fun enqueueNotification(
+    override fun enqueueNotification(
         taskId: String,
         taskDateTime: ZonedDateTime,
         userName: String,
@@ -33,7 +34,7 @@ class NotificationWorkManager(context: Context) {
         workManager.enqueueUniqueWork(taskId, ExistingWorkPolicy.REPLACE, workRequest)
     }
 
-    fun removePendingNotificationReminder(taskId: String) {
+    override fun removePendingNotification(taskId: String) {
         workManager.cancelUniqueWork(taskId)
     }
 

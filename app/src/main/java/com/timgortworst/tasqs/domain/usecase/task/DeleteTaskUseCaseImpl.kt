@@ -17,9 +17,7 @@ class DeleteTaskUseCaseImpl(
 
     data class Params(val tasks: List<Task>)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
-
+    override fun execute(params: Params) = flow {
         emit(Response.Loading)
 
         try {

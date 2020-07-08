@@ -11,7 +11,7 @@ import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.presentation.base.model.SignInAction
-import com.timgortworst.tasqs.presentation.base.toast
+import com.timgortworst.tasqs.infrastructure.extension.toast
 import com.timgortworst.tasqs.presentation.features.main.MainActivity
 import org.koin.android.viewmodel.ext.android.viewModel
 

@@ -2,6 +2,7 @@ package com.timgortworst.tasqs.domain.usecase.splash
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.timgortworst.tasqs.domain.model.User
 import com.timgortworst.tasqs.domain.model.response.ErrorHandler
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.repository.HouseholdRepository
@@ -23,9 +24,7 @@ class SwitchHouseholdUseCaseImpl(
 
     data class Params(val newId: String)
 
-    override fun execute(params: Params?) = flow {
-        checkNotNull(params)
-
+    override fun execute(params: Params) = flow {
         emit(Response.Loading)
 
         try {
@@ -43,10 +42,7 @@ class SwitchHouseholdUseCaseImpl(
             }
 
             // update current user with new household ID and role
-            userRepository.updateUser(
-                householdId = params.newId,
-                isAdmin = false
-            )
+            userRepository.updateUser(householdId = params.newId, isAdmin = false)
             emit(Response.Success(StartUpAction.TriggerMainFlow))
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
