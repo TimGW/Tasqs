@@ -39,7 +39,7 @@ class UserRepositoryImpl(
             )
 
             if (!userDoc.exists()) {
-                transition.set(currentUserDocRef, newUser)
+                transition.set(currentUserDocRef, userDataMapper.mapOutgoing(newUser))
             }
         }.await()
     }
