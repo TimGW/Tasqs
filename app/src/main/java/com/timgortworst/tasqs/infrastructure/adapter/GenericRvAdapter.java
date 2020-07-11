@@ -97,11 +97,8 @@ public class GenericRvAdapter extends RecyclerView.Adapter {
         addItems(index, Collections.singletonList(object), viewHolderBinder);
     }
 
-    /**
-     * Clear all items in the adapter
-     */
-    public void clear() {
-        mItemList.clear();
+    public <T> void updateItem(int index, T newObject, ViewHolderBinder<T,? extends RecyclerView.ViewHolder> viewHolderBinder){
+        mItemList.set(index, new Pair(Collections.singletonList(newObject), viewHolderBinder));
     }
 
     /**
@@ -119,10 +116,6 @@ public class GenericRvAdapter extends RecyclerView.Adapter {
             position -= pair.first.size();
         }
         return null;
-    }
-
-    public void removeItem(int position){
-        mItemList.remove(position);
     }
 
     public void addStableIdsProvider(@NonNull StableIdProvider stableIdsProvider) {

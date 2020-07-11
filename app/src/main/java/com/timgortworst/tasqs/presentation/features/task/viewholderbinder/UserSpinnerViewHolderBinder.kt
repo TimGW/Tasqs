@@ -24,7 +24,6 @@ class UserSpinnerViewHolderBinder(private val lifecycleOwner: LifecycleOwner) :
     ViewHolderBinder<UserSpinnerViewHolderBinder.ViewItem, UserSpinnerViewHolderBinder.ViewHolder>,
     KoinComponent {
     private val viewModel: TaskEditViewModel by inject()
-    var callback: Callback? = null
     private val spinnerAdapter = object : GenericArrayAdapter<Task.User>(mutableListOf()) {
         override fun getAdapterView(
             position: Int,
@@ -55,7 +54,7 @@ class UserSpinnerViewHolderBinder(private val lifecycleOwner: LifecycleOwner) :
                 position: Int,
                 id: Long
             ) {
-                callback?.onSpinnerSelection(Response.Success(spinnerAdapter.getItem(position)))
+                item.callback?.onSpinnerSelection(Response.Success(spinnerAdapter.getItem(position)))
             }
         }
 
@@ -67,8 +66,8 @@ class UserSpinnerViewHolderBinder(private val lifecycleOwner: LifecycleOwner) :
     private fun observeUsers(viewHolder: ViewHolder, item: ViewItem){
         viewModel.taskUsersLiveData.observe(lifecycleOwner, Observer { response ->
             when (response) {
-                Response.Loading -> callback?.onSpinnerSelection(Response.Loading)
-                is Response.Error -> callback?.onSpinnerSelection(Response.Error())
+                Response.Loading -> item.callback?.onSpinnerSelection(Response.Loading)
+                is Response.Error -> item.callback?.onSpinnerSelection(Response.Error())
                 is Response.Success -> {
                     val userList = response.data ?: return@Observer
 
@@ -77,11 +76,11 @@ class UserSpinnerViewHolderBinder(private val lifecycleOwner: LifecycleOwner) :
                     spinnerAdapter.notifyDataSetChanged()
 
                     if (userList.size == 1) {
-                        callback?.onSpinnerSelection(Response.Success(userList.first()))
+                        item.callback?.onSpinnerSelection(Response.Success(userList.first()))
                     } else {
                         val index = userList.indexOr(item.currentUser, 0)
                         viewHolder.spinner.setSelection(index)
-                        callback?.onSpinnerSelection(Response.Success(userList[index]))
+                        item.callback?.onSpinnerSelection(Response.Success(userList[index]))
                     }
                 }
             }
@@ -119,7 +118,9 @@ class UserSpinnerViewHolderBinder(private val lifecycleOwner: LifecycleOwner) :
         val label: TextView = row?.findViewById(android.R.id.text1) as TextView
     }
 
-    data class ViewItem(val title: String, val currentUser: Task.User?)
+    data class ViewItem(val title: String, val currentUser: Task.User?) {
+        var callback: Callback? = null
+    }
 
     interface Callback {
         fun onSpinnerSelection(response: Response<Task.User>)
