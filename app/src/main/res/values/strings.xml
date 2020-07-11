@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="admin_label">Chief</string>
+    <string name="admin_label">Admin</string>
     <string name="cd_add_button">add button</string>
     <string name="cd_application_logo">application logo</string>
     <string name="cd_delete">delete</string>
-    <string name="cd_household_categories">household categories</string>
-    <string name="dialog_household_banned_text">You\'ve been removed from this household press \'OK\' to setup a new household</string>
+    <string name="dialog_household_banned_text">You\'ve been removed from this group press \'OK\' to setup a new group</string>
     <string name="dialog_household_banned_title">Insufficient permissions</string>
-    <string name="dialog_household_full_text">Ask the admin of the household to first remove someone</string>
-    <string name="dialog_household_full_title">Household is full!</string>
-    <string name="dialog_household_overwrite_text">Your current household will be overwritten. All data will be lost. Are you sure?</string>
-    <string name="dialog_household_overwrite_title">Household overwrite</string>
-    <string name="dialog_household_similar_text">You\'re already in this household. Press \'OK\' to continue</string>
-    <string name="dialog_household_similar_title">Same household!</string>
+    <string name="dialog_household_full_text">Ask the admin of the group to first remove someone</string>
+    <string name="dialog_household_full_title">Group is full!</string>
+    <string name="dialog_household_overwrite_text">Your current group will be overwritten. All data will be lost. Are you sure?</string>
+    <string name="dialog_household_overwrite_title">Group overwrite</string>
+    <string name="dialog_household_similar_text">You\'re already in this group. Press \'OK\' to continue</string>
+    <string name="dialog_household_similar_title">Same group!</string>
     <string name="edit_task_date_hint">Date</string>
     <string name="edit_task_time_hint">Time</string>
     <string name="edit_task_description_hint">Description</string>
@@ -117,7 +116,7 @@
     <string name="year">year</string>
     <string name="years">years</string>
     <string name="delete_dialog_text">Are you sure you want to delete %1$d tasks?"</string>
-    <string name="delete_account_dialog_text">Are you sure you want to delete your account, settings, reminders, tasks and remove yourself from this household?"</string>
+    <string name="delete_account_dialog_text">Are you sure you want to delete your account, settings, reminders, tasks and remove yourself from this group?"</string>
     <string name="is_not_repeated">Is not repeated</string>
     <string name="on">on:</string>
     <string name="is_repeated">is repeated every</string>
