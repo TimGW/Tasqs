@@ -22,14 +22,28 @@ class TaskEditViewModel(
     val actionDone: LiveData<Event<Response<Task>>>
         get() = _actionDone
 
+    private val _emptyUserMsg = MutableLiveData<Event<Int>>()
+    val emptyUserMsg: LiveData<Event<Int>>
+        get() = _emptyUserMsg
+
+    private val _emptyDescMsg = MutableLiveData<Event<Int>>()
+    val emptyDescMsg: LiveData<Event<Int>>
+        get() = _emptyDescMsg
+
     fun taskDoneClicked(task: Task) = viewModelScope.launch {
-        if (task.description.isEmpty()) {
-            _actionDone.value = Event(Response.Empty(R.string.task_edit_error_empty_description))
-            return@launch
-        }
-        val params = CreateOrUpdateTaskUseCaseImpl.Params(task)
-        createOrUpdateTaskUseCase.execute(params).collect {
-            _actionDone.value = Event(it)
+        when {
+            task.description.isEmpty() -> {
+                _emptyDescMsg.value = Event(R.string.task_edit_error_empty_description)
+            }
+            task.user == null -> {
+                _emptyUserMsg.value = Event(R.string.task_edit_error_empty_user)
+            }
+            else -> {
+                val params = CreateOrUpdateTaskUseCaseImpl.Params(task)
+                createOrUpdateTaskUseCase.execute(params).collect {
+                    _actionDone.value = Event(it)
+                }
+            }
         }
     }
 }

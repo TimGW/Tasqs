@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.DatePicker
+import android.widget.TextView
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -69,7 +70,6 @@ class TaskEditActivity : AppCompatActivity(),
 
         setupToolbar(task.description)
         setupAdapter()
-
         addItemsToAdapter()
 
         viewModel.actionDone.observe(this, EventObserver {
@@ -78,12 +78,15 @@ class TaskEditActivity : AppCompatActivity(),
                 Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Response.Success -> navigateUpTo(parentActivityIntent)
                 is Response.Error -> presentError(R.string.error_generic)
-                is Response.Empty -> run {
-                    val descriptionVHB = buildDescriptionVHB(task.description, getString(it.msg))
-                    adapter.updateItem(TASK_DESC_POSITION, descriptionVHB.first, descriptionVHB.second)
-                    adapter.notifyItemChanged(TASK_DESC_POSITION)
-                }
             }
+        })
+
+        viewModel.emptyUserMsg.observe(this, EventObserver{ presentError(it) })
+
+        viewModel.emptyDescMsg.observe(this, EventObserver{
+            val descriptionVHB = buildDescriptionVHB(task.description, getString(it))
+            adapter.updateItem(TASK_DESC_POSITION, descriptionVHB.first, descriptionVHB.second)
+            adapter.notifyItemChanged(TASK_DESC_POSITION)
         })
     }
 
