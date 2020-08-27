@@ -26,8 +26,6 @@ import org.threeten.bp.temporal.ChronoField
 
 class RecurrenceViewHolderBinder :
     ViewHolderBinder<RecurrenceViewHolderBinder.ViewItem, RecurrenceViewHolderBinder.ViewHolder> {
-    var callback: Callback? = null
-
     private var adapter: GenericArrayAdapter<TaskRecurrence>? = null
     private val recurrences = mutableListOf(
         TaskRecurrence.Daily(),
@@ -56,10 +54,10 @@ class RecurrenceViewHolderBinder :
 
         viewHolder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             viewHolder.taskRepeatView.visibility = if (isChecked) {
-                callback?.onRecurrenceSelection(recurrenceFromSelection(viewHolder))
+                item.callback?.onRecurrenceSelection(recurrenceFromSelection(viewHolder))
                 View.VISIBLE
             } else {
-                callback?.onRecurrenceSelection(TaskRecurrence.SingleTask())
+                item.callback?.onRecurrenceSelection(TaskRecurrence.SingleTask())
                 View.GONE
             }
         }
@@ -80,7 +78,7 @@ class RecurrenceViewHolderBinder :
                 it.replace(0, 1, "1")
             }
 
-            callback?.onRecurrenceSelection(recurrenceFromSelection(viewHolder))
+            item.callback?.onRecurrenceSelection(recurrenceFromSelection(viewHolder))
             adapter?.notifyDataSetChanged()
         }
 
@@ -113,7 +111,7 @@ class RecurrenceViewHolderBinder :
                     parentViewHolder.weekPickerView.visibility =
                         if (recurrences[position] is TaskRecurrence.Weekly) View.VISIBLE else View.GONE
 
-                    callback?.onRecurrenceSelection(recurrenceFromSelection(parentViewHolder))
+                    item.callback?.onRecurrenceSelection(recurrenceFromSelection(parentViewHolder))
                 }
             }
 
@@ -130,7 +128,7 @@ class RecurrenceViewHolderBinder :
         }
 
         weekdayButtonGroup.addOnButtonCheckedListener { _, _, _ ->
-            // clearAllFocus()
+            item.callback?.onRecurrenceSelection(recurrenceFromSelection(parentViewHolder))
         }
     }
 
@@ -205,7 +203,9 @@ class RecurrenceViewHolderBinder :
         val label: TextView = row?.findViewById(android.R.id.text1) as TextView
     }
 
-    data class ViewItem(val taskRecurrence: TaskRecurrence)
+    data class ViewItem(val taskRecurrence: TaskRecurrence){
+        var callback: Callback? = null
+    }
 
     interface Callback {
         fun onRecurrenceSelection(selection: TaskRecurrence)

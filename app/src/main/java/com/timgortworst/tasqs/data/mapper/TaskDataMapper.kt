@@ -23,8 +23,8 @@ class TaskDataMapper : Mapper<Map<String, Any>, Task> {
         val taskUser = network[TASK_USER_REF] as? Map<String, Any?>
 
         return Task(
-            network[TASK_ID_REF] as String,
-            network[TASK_DESCRIPTION_REF] as String,
+            network[TASK_ID_REF] as? String,
+            network[TASK_DESCRIPTION_REF] as? String ?: "",
             taskMetaData?.let { mapIncomingMetaData(it) } ?: Task.MetaData(),
             taskUser?.let { mapIncomingUser(it) }
         )

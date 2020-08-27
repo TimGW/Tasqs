@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.DatePicker
+import android.widget.TextView
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.infrastructure.adapter.GenericRvAdapter
 import com.timgortworst.tasqs.infrastructure.adapter.StableIdProvider
 import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
+import com.timgortworst.tasqs.infrastructure.extension.clearFocus
 import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.base.model.EventObserver
 import com.timgortworst.tasqs.presentation.features.task.adapter.formatTime
@@ -47,11 +49,13 @@ class TaskEditActivity : AppCompatActivity(),
     private val viewModel: TaskEditViewModel by inject()
     private val adapter = GenericRvAdapter().apply {
         setHasStableIds(true)
-        addStableIdsProvider(object:
-            StableIdProvider {
+        addStableIdsProvider(object : StableIdProvider {
             override fun getItemId(item: Any?, viewHolderBinder: ViewHolderBinder<*, *>?): Long? {
-                return when(item) {
-                    is UserSpinnerViewHolderBinder.ViewItem -> item.currentUser?.userId.hashCode().toLong()
+                return when (item) {
+                    is UserSpinnerViewHolderBinder.ViewItem -> item.currentUser?.userId.hashCode()
+                        .toLong()
+                    is TextViewHolderBinder.ViewItem -> item.hint.hashCode()
+                        .toLong() + item.text.hashCode().toLong()
                     null -> 999L
                     else -> item::class.java.hashCode().toLong()
                 }
@@ -66,8 +70,7 @@ class TaskEditActivity : AppCompatActivity(),
 
         setupToolbar(task.description)
         setupAdapter()
-
-        updateAdapter()
+        addItemsToAdapter()
 
         viewModel.actionDone.observe(this, EventObserver {
             binding.progressBar.visibility = View.INVISIBLE
@@ -75,13 +78,15 @@ class TaskEditActivity : AppCompatActivity(),
                 Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Response.Success -> navigateUpTo(parentActivityIntent)
                 is Response.Error -> presentError(R.string.error_generic)
-                is Response.Empty -> run {
-
-                    adapter.removeItem(0)
-                    setupTaskDescription(task.description, getString(it.msg))
-                    adapter.notifyItemChanged(0)
-                }
             }
+        })
+
+        viewModel.emptyUserMsg.observe(this, EventObserver{ presentError(it) })
+
+        viewModel.emptyDescMsg.observe(this, EventObserver{
+            val descriptionVHB = buildDescriptionVHB(task.description, getString(it))
+            adapter.updateItem(TASK_DESC_POSITION, descriptionVHB.first, descriptionVHB.second)
+            adapter.notifyItemChanged(TASK_DESC_POSITION)
         })
     }
 
@@ -117,109 +122,118 @@ class TaskEditActivity : AppCompatActivity(),
         binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = adapter
         binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.itemAnimator = null
     }
 
-    private fun updateAdapter() {
-        adapter.clear()
+    private fun addItemsToAdapter() {
+        val descriptionVHB = buildDescriptionVHB(task.description)
+        val userVHB = buildUserVHB(task.user)
+        val dateVHB = buildDateViewHolderBinder(task.metaData.startDateTime)
+        val timeVHB = buildTimeViewHolderBinder(task.metaData.startDateTime)
+        val recurrenceVHB = buildRecurrenceViewHolderBinder(task.metaData.recurrence)
 
-        setupTaskDescription(task.description)
-        setupTaskUser(task.user)
-        setupTaskDate(task.metaData.startDateTime)
-        setupTaskTime(task.metaData.startDateTime)
-        setupTaskRecurrence(task.metaData.recurrence)
+        adapter.addItem(TASK_DESC_POSITION, descriptionVHB.first, descriptionVHB.second)
+        adapter.addItem(TASK_USER_POSITION, userVHB.first, userVHB.second)
+        adapter.addItem(TASK_DATE_POSITION, dateVHB.first, dateVHB.second)
+        adapter.addItem(TASK_TIME_POSITION, timeVHB.first, timeVHB.second)
+        adapter.addItem(TASK_REC_POSITION, recurrenceVHB.first, recurrenceVHB.second)
 
         adapter.notifyDataSetChanged()
     }
 
-    private fun setupTaskDescription(taskDescription: String, errorMessage: String? = null) {
-        adapter.addItem(0,
-            EditTextViewHolderBinder.ViewItem(
-                taskDescription,
-                errorMessage,
-                object : EditTextViewHolderBinder.Callback {
-                    override fun onDescriptionInput(text: String) {
-                        task.description = text
-                    }
-                }), EditTextViewHolderBinder()
-        )
+    private fun buildDescriptionVHB(
+        taskDescription: String,
+        errorMessage: String? = null
+    ): Pair<EditTextViewHolderBinder.ViewItem, EditTextViewHolderBinder> {
+        val viewItem = EditTextViewHolderBinder.ViewItem(
+            taskDescription,
+            errorMessage,
+            object : EditTextViewHolderBinder.Callback {
+                override fun onDescriptionInput(text: String) {
+                    task.description = text
+                }
+            })
+
+        return Pair(viewItem, EditTextViewHolderBinder())
     }
 
-    private fun setupTaskUser(user: Task.User?) {
-        val userLoadingSpinnerViewHolderBinder = UserSpinnerViewHolderBinder(this)
-        userLoadingSpinnerViewHolderBinder.callback =
-            object : UserSpinnerViewHolderBinder.Callback {
-                override fun onSpinnerSelection(response: Response<Task.User>) {
-                    binding.progressBar.visibility = View.INVISIBLE
+    private fun buildUserVHB(
+        user: Task.User?
+    ): Pair<UserSpinnerViewHolderBinder.ViewItem, UserSpinnerViewHolderBinder> {
+        val viewItem = UserSpinnerViewHolderBinder.ViewItem(getString(R.string.edit_task_user_hint), user)
+        viewItem.callback = object : UserSpinnerViewHolderBinder.Callback {
+            override fun onSpinnerSelection(response: Response<Task.User>) {
+                clearFocus(binding.recyclerView)
+                binding.progressBar.visibility = View.INVISIBLE
 
-                    when (response) {
-                        Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                        is Response.Error -> presentError(R.string.users_loading_error)
-                        is Response.Success -> {
-                            val data = response.data ?: return
-                            task.user = data
-                        }
+                when (response) {
+                    Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Response.Error -> presentError(R.string.users_loading_error)
+                    is Response.Success -> {
+                        val data = response.data ?: return
+                        task.user = data
                     }
                 }
             }
-
-        adapter.addItem(
-            UserSpinnerViewHolderBinder.ViewItem(getString(R.string.edit_task_user_hint), user),
-            userLoadingSpinnerViewHolderBinder
-        )
+        }
+        return Pair(viewItem, UserSpinnerViewHolderBinder(this))
     }
 
-    private fun setupTaskDate(taskDateTime: ZonedDateTime) {
-        adapter.addItem(
-            TextViewHolderBinder.ViewItem(
-                formatDate(taskDateTime),
-                R.string.edit_task_date_hint,
-                object : TextViewHolderBinder.Callback {
-                    override fun onClick() {
-                        with(task.metaData.startDateTime) {
-                            DatePickerDialog(
-                                this@TaskEditActivity, this@TaskEditActivity,
-                                year, monthValue - 1, dayOfMonth
-                            ).apply {
-                                datePicker.minDate =
-                                    ZonedDateTime.now().plusDays(1).toInstant().toEpochMilli()
-                                show()
-                            }
-                        }
+    private fun buildDateViewHolderBinder(
+        taskDateTime: ZonedDateTime
+    ): Pair<TextViewHolderBinder.ViewItem, TextViewHolderBinder> {
+        val viewItem =
+            TextViewHolderBinder.ViewItem(formatDate(taskDateTime), R.string.edit_task_date_hint)
+        viewItem.callback = object : TextViewHolderBinder.Callback {
+            override fun onClick() {
+                clearFocus(binding.recyclerView)
+                with(task.metaData.startDateTime) {
+                    DatePickerDialog(
+                        this@TaskEditActivity, this@TaskEditActivity,
+                        year, monthValue - 1, dayOfMonth
+                    ).apply {
+                        datePicker.minDate =
+                            ZonedDateTime.now().plusDays(1).toInstant().toEpochMilli()
+                        show()
                     }
-                }), TextViewHolderBinder()
-        )
+                }
+            }
+        }
+
+        return Pair(viewItem, TextViewHolderBinder())
     }
 
-    private fun setupTaskTime(taskDateTime: ZonedDateTime) {
-        adapter.addItem(
-            TextViewHolderBinder.ViewItem(
-                formatTime(taskDateTime),
-                R.string.edit_task_time_hint,
-                object : TextViewHolderBinder.Callback {
-                    override fun onClick() {
-                        with(task.metaData.startDateTime) {
-                            TimePickerDialog(
-                                this@TaskEditActivity, this@TaskEditActivity,
-                                hour, minute, true
-                            ).show()
-                        }
-                    }
-                }), TextViewHolderBinder()
-        )
+    private fun buildTimeViewHolderBinder(
+        taskDateTime: ZonedDateTime
+    ): Pair<TextViewHolderBinder.ViewItem, TextViewHolderBinder> {
+        val viewItem =
+            TextViewHolderBinder.ViewItem(formatTime(taskDateTime), R.string.edit_task_time_hint)
+        viewItem.callback = object : TextViewHolderBinder.Callback {
+            override fun onClick() {
+                clearFocus(binding.recyclerView)
+                with(task.metaData.startDateTime) {
+                    TimePickerDialog(
+                        this@TaskEditActivity, this@TaskEditActivity,
+                        hour, minute, true
+                    ).show()
+                }
+            }
+        }
+        return Pair(viewItem, TextViewHolderBinder())
     }
 
-    private fun setupTaskRecurrence(taskRecurrence: TaskRecurrence) {
-        val recurrenceViewHolderBinder = RecurrenceViewHolderBinder()
-        recurrenceViewHolderBinder.callback = object : RecurrenceViewHolderBinder.Callback {
+    private fun buildRecurrenceViewHolderBinder(
+        taskRecurrence: TaskRecurrence
+    ): Pair<RecurrenceViewHolderBinder.ViewItem, RecurrenceViewHolderBinder> {
+        val viewItem = RecurrenceViewHolderBinder.ViewItem(taskRecurrence)
+        viewItem.callback = object : RecurrenceViewHolderBinder.Callback {
             override fun onRecurrenceSelection(selection: TaskRecurrence) {
+                clearFocus(binding.recyclerView)
                 task.metaData.recurrence = selection
             }
         }
 
-        adapter.addItem(
-            RecurrenceViewHolderBinder.ViewItem(taskRecurrence),
-            recurrenceViewHolderBinder
-        )
+        return Pair(viewItem, RecurrenceViewHolderBinder())
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
@@ -229,7 +243,9 @@ class TaskEditActivity : AppCompatActivity(),
             task.metaData.startDateTime.zone
         )
 
-        updateAdapter()
+        val vhb = buildDateViewHolderBinder(task.metaData.startDateTime)
+        adapter.updateItem(TASK_DATE_POSITION, vhb.first, vhb.second)
+        adapter.notifyItemChanged(TASK_DATE_POSITION)
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
@@ -239,7 +255,9 @@ class TaskEditActivity : AppCompatActivity(),
             task.metaData.startDateTime.zone
         )
 
-        updateAdapter()
+        val vhb = buildTimeViewHolderBinder(task.metaData.startDateTime)
+        adapter.updateItem(TASK_TIME_POSITION, vhb.first, vhb.second)
+        adapter.notifyItemChanged(TASK_TIME_POSITION)
     }
 
     private fun formatDate(taskDateTime: ZonedDateTime): String {
@@ -256,6 +274,12 @@ class TaskEditActivity : AppCompatActivity(),
 
     companion object {
         const val INTENT_EXTRA_EDIT_TASK = "INTENT_EXTRA_EDIT_TASK"
+
+        const val TASK_DESC_POSITION = 0
+        const val TASK_USER_POSITION = 1
+        const val TASK_DATE_POSITION = 2
+        const val TASK_TIME_POSITION = 3
+        const val TASK_REC_POSITION = 4
 
         fun intentBuilder(context: Context, task: Task? = null): Intent {
             val intent = Intent(context, TaskEditActivity::class.java)

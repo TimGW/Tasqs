@@ -34,9 +34,10 @@ class TextViewHolderBinder :
 
     data class ViewItem(
         val text: String,
-        @StringRes val hint: Int,
-        val callback: Callback? = null
-    )
+        @StringRes val hint: Int
+    ){
+        var callback: Callback? = null
+    }
 
     interface Callback {
         fun onClick()

@@ -24,7 +24,7 @@ class TaskRepositoryImpl(
 
     private suspend fun taskCollection(): CollectionReference {
         return db.collection(HOUSEHOLD_COLLECTION_REF)
-            .document(userRepository.getUser(source = Source.CACHE)!!.householdId!!)
+            .document(userRepository.getUser()!!.householdId)
             .collection(TASK_COLLECTION_REF)
     }
 

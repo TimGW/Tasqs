@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="admin_label">Chef</string>
+    <string name="admin_label">Beheerder</string>
     <string name="cd_add_button">toevoegen knop</string>
     <string name="cd_application_logo">app logo</string>
     <string name="cd_delete">verwijderen</string>
-    <string name="cd_household_categories">huishoudelijke categorieën</string>
-    <string name="dialog_household_banned_text">Je bent uit dit huishouden verwijderd. Druk op \'OK\' om een ​​nieuw huishouden in te stellen</string>
+    <string name="dialog_household_banned_text">Je bent uit deze groep verwijderd. Druk op \'OK\' om een ​​nieuwe groep aan te maken</string>
     <string name="dialog_household_banned_title">Onvoldoende rechten</string>
-    <string name="dialog_household_full_text">Vraag de beheerder van het huishouden om eerst iemand te verwijderen</string>
-    <string name="dialog_household_full_title">Huishouden is vol!</string>
-    <string name="dialog_household_overwrite_text">Je huidige huishouden wordt overschreven. Alle gegevens gaan verloren. Weet je het zeker?</string>
-    <string name="dialog_household_overwrite_title">Huishouden overschrijven</string>
-    <string name="dialog_household_similar_text">Je bent al in dit huishouden. Druk op \'OK\' om door te gaan</string>
-    <string name="dialog_household_similar_title">Hetzelfde huishouden!</string>
+    <string name="dialog_household_full_text">Vraag de beheerder van de groep om eerst iemand te verwijderen</string>
+    <string name="dialog_household_full_title">Groep is vol!</string>
+    <string name="dialog_household_overwrite_text">Je huidige groep wordt overschreven. Alle gegevens gaan verloren. Weet je het zeker?</string>
+    <string name="dialog_household_overwrite_title">Groep overschrijven</string>
+    <string name="dialog_household_similar_text">Je zit al in deze groep. Druk op \'OK\' om door te gaan</string>
+    <string name="dialog_household_similar_title">Dezelfde groep!</string>
     <string name="edit_task_date_hint">Datum</string>
     <string name="edit_task_time_hint">Tijd</string>
     <string name="edit_task_description_hint">Omschrijving</string>
@@ -81,6 +80,7 @@
     <string name="night_mode_label_off">Uit</string>
     <string name="night_mode_label_on">Aan</string>
     <string name="task_edit_error_empty_description">Voer een beschrijving in</string>
+    <string name="task_edit_error_empty_user">Wacht aub tot gebruikers zijn geladen</string>
     <string name="button_done_text">Klaar</string>
     <string name="empty_string" />
 
@@ -110,7 +110,7 @@
     <string name="year">jaar</string>
     <string name="years">jaren</string>
     <string name="delete_dialog_text">Weet je zeker dat je %1$d taken wilt verwijderen?"</string>
-    <string name="delete_account_dialog_text">Weet je zeker dat je dit account wilt verwijderen samen met alle, instellingen, reminders, taken and jezelf van dit huishouden?"</string>
+    <string name="delete_account_dialog_text">Weet je zeker dat je dit account wilt verwijderen samen met alle, instellingen, reminders, taken en jezelf van deze groep?"</string>
     <string name="is_not_repeated">Wordt niet herhaald</string>
     <string name="on">op:</string>
     <string name="is_repeated">wordt herhaald elke</string>
