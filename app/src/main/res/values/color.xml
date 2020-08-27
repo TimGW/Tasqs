@@ -59,4 +59,6 @@
     <color name="color_alpha_12">#1F000000</color>
     <color name="color_alpha_20">#33000000</color>
 
+    <color name="color_progress_indicator">#222D36</color>
+
 </resources>

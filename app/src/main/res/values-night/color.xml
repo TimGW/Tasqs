@@ -40,4 +40,6 @@
   <color name="color_alpha_12">#1FFFFFFF</color>
   <color name="color_alpha_20">#33FFFFFF</color>
 
+  <color name="color_progress_indicator">@color/color_primary</color>
+
 </resources>
