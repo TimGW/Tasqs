@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.features.task.viewholderbinder
+package com.timgortworst.tasqs.presentation.features.task.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.response.Response
-import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
 import com.timgortworst.tasqs.infrastructure.extension.indexOr
 import com.timgortworst.tasqs.infrastructure.adapter.GenericArrayAdapter
 import com.timgortworst.tasqs.presentation.features.task.viewmodel.TaskEditViewModel
@@ -20,9 +19,10 @@ import kotlinx.android.synthetic.main.layout_input_user.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class UserSpinnerViewHolderBinder(private val lifecycleOwner: LifecycleOwner) :
-    ViewHolderBinder<UserSpinnerViewHolderBinder.ViewItem, UserSpinnerViewHolderBinder.ViewHolder>,
-    KoinComponent {
+class UserSpinnerAdapter(
+    private val lifecycleOwner: LifecycleOwner,
+    private val viewItem: ViewItem
+) : RecyclerView.Adapter<UserSpinnerAdapter.ViewHolder>(), KoinComponent {
     private val viewModel: TaskEditViewModel by inject()
     private val spinnerAdapter = object : GenericArrayAdapter<Task.User>(mutableListOf()) {
         override fun getAdapterView(
@@ -35,17 +35,14 @@ class UserSpinnerViewHolderBinder(private val lifecycleOwner: LifecycleOwner) :
         }
     }
 
-    override fun createViewHolder(parent: ViewGroup): ViewHolder =
-        ViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.layout_input_user, parent, false)
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ViewHolder(LayoutInflater.from(parent.context)
+                .inflate(R.layout.layout_input_user, parent, false))
 
-    override fun bind(viewHolder: ViewHolder, item: ViewItem) {
-        viewHolder.spinnerTitle.text = item.title
-
-        viewHolder.spinner.adapter = spinnerAdapter
-        viewHolder.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.spinnerTitle.text = viewItem.title
+        holder.spinner.adapter = spinnerAdapter
+        holder.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(
@@ -54,14 +51,18 @@ class UserSpinnerViewHolderBinder(private val lifecycleOwner: LifecycleOwner) :
                 position: Int,
                 id: Long
             ) {
-                item.callback?.onSpinnerSelection(Response.Success(spinnerAdapter.getItem(position)))
+                viewItem.callback?.onSpinnerSelection(Response.Success(spinnerAdapter.getItem(position)))
             }
         }
 
-        if(viewHolder.spinner.adapter.isEmpty){
-            observeUsers(viewHolder, item)
+        if(holder.spinner.adapter.isEmpty){
+            observeUsers(holder, viewItem)
         }
     }
+
+    override fun getItemViewType(position: Int): Int = R.layout.layout_input_user
+
+    override fun getItemCount() = 1
 
     private fun observeUsers(viewHolder: ViewHolder, item: ViewItem){
         viewModel.taskUsersLiveData.observe(lifecycleOwner, Observer { response ->
@@ -109,12 +110,12 @@ class UserSpinnerViewHolderBinder(private val lifecycleOwner: LifecycleOwner) :
         return view
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val spinnerTitle: TextView = itemView.spinner_title
         val spinner: Spinner = itemView.spinner
     }
 
-    class SpinnerViewHolder(row: View?) {
+    inner class SpinnerViewHolder(row: View?) {
         val label: TextView = row?.findViewById(android.R.id.text1) as TextView
     }
 

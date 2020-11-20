@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.features.task.viewholderbinder
+package com.timgortworst.tasqs.presentation.features.task.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,23 +8,31 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.timgortworst.tasqs.R
-import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
 import kotlinx.android.synthetic.main.layout_input_text.view.*
 
-class TextViewHolderBinder :
-    ViewHolderBinder<TextViewHolderBinder.ViewItem, TextViewHolderBinder.ViewHolder> {
+class TextViewAdapter(
+    private var viewItem: ViewItem
+) : RecyclerView.Adapter<TextViewAdapter.ViewHolder>() {
 
-    override fun createViewHolder(parent: ViewGroup): ViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             ViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.layout_input_text, parent, false))
 
-    override fun bind(viewHolder: ViewHolder, item: ViewItem) {
-        viewHolder.hint?.hint = viewHolder.hint?.context?.getString(item.hint)
-        viewHolder.textView.setText(item.text)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.hint?.hint = holder.hint?.context?.getString(viewItem.hint)
+        holder.textView.setText(viewItem.text)
 
-        viewHolder.textView.setOnClickListener {
-            item.callback?.onClick()
+        holder.textView.setOnClickListener {
+            viewItem.callback?.onClick()
         }
+    }
+
+    override fun getItemViewType(position: Int): Int = R.layout.layout_input_text
+
+    override fun getItemCount() = 1
+
+    fun setViewItem(viewItem: ViewItem) {
+        this.viewItem = viewItem
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

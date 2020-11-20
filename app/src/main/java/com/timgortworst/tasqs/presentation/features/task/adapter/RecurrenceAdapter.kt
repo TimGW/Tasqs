@@ -1,4 +1,4 @@
-package com.timgortworst.tasqs.presentation.features.task.viewholderbinder
+package com.timgortworst.tasqs.presentation.features.task.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +15,6 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.TaskRecurrence
-import com.timgortworst.tasqs.infrastructure.adapter.ViewHolderBinder
 import com.timgortworst.tasqs.infrastructure.extension.getOrFirst
 import com.timgortworst.tasqs.infrastructure.adapter.GenericArrayAdapter
 import kotlinx.android.synthetic.main.layout_input_recurrence.view.*
@@ -24,8 +23,9 @@ import kotlinx.android.synthetic.main.layout_week_picker.view.*
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
 
-class RecurrenceViewHolderBinder :
-    ViewHolderBinder<RecurrenceViewHolderBinder.ViewItem, RecurrenceViewHolderBinder.ViewHolder> {
+class RecurrenceAdapter(
+    private val viewItem: ViewItem
+) : RecyclerView.Adapter<RecurrenceAdapter.ViewHolder>() {
     private var adapter: GenericArrayAdapter<TaskRecurrence>? = null
     private val recurrences = mutableListOf(
         TaskRecurrence.Daily(),
@@ -34,17 +34,19 @@ class RecurrenceViewHolderBinder :
         TaskRecurrence.Annually()
     )
 
-    override fun createViewHolder(parent: ViewGroup): ViewHolder =
-        ViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.layout_input_recurrence, parent, false)
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ViewHolder(LayoutInflater.from(parent.context)
+                .inflate(R.layout.layout_input_recurrence, parent, false))
 
-    override fun bind(viewHolder: ViewHolder, item: ViewItem) {
-        setupCheckBox(viewHolder, item)
-        setupFrequency(viewHolder, item)
-        setupSpinner(viewHolder, item)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        setupCheckBox(holder, viewItem)
+        setupFrequency(holder, viewItem)
+        setupSpinner(holder, viewItem)
     }
+
+    override fun getItemViewType(position: Int): Int = R.layout.layout_input_recurrence
+
+    override fun getItemCount() = 1
 
     private fun setupCheckBox(
         viewHolder: ViewHolder,
@@ -190,7 +192,7 @@ class RecurrenceViewHolderBinder :
         return view
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val checkBox: CheckBox = itemView.task_repeat_checkbox
         val taskRepeatView: View = itemView.task_repeat_view
         val frequency: TextInputEditText = taskRepeatView.recurrence_frequency
