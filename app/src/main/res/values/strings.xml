@@ -160,4 +160,6 @@
     <string name="filter_show_all">Show everything</string>
     <string name="users_loading_error">Could not load users</string>
     <string name="users_removing_error">Error occurred when removing user</string>
+    <string name="preferences_app_version_title">App version</string>
+    <string name="preferences_household_title">Group ID</string>
 </resources>

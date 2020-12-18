@@ -13,6 +13,11 @@
             app:iconSpaceReserved="false" />
 
         <Preference
+            android:key="preferences_household_key"
+            android:title="@string/preferences_household_title"
+            app:iconSpaceReserved="false"/>
+
+        <Preference
             android:key="preferences_account_logout_key"
             android:summary="@string/preferences_account_logout_summary"
             android:title="@string/logout"
@@ -66,10 +71,8 @@
         <Preference
             android:key="preferences_app_version_key"
             android:summary="@string/versionName"
-            android:title="App version"
-            app:iconSpaceReserved="false">
-
-        </Preference>
+            android:title="@string/preferences_app_version_title"
+            app:iconSpaceReserved="false"/>
 
         <Preference
             android:key="preferences_rate_app_key"
