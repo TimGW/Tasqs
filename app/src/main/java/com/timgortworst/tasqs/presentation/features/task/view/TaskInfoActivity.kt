@@ -43,7 +43,7 @@ class TaskInfoActivity : AppCompatActivity() {
 
         when {
             intent.hasExtra(INTENT_EXTRA_INFO_TASK) -> {
-                taskViewModel.setTaskFromLocalSource(intent.getParcelableExtra(INTENT_EXTRA_INFO_TASK) as Task)
+                taskViewModel.setTaskFromLocalSource(intent.getParcelableExtra<Task>(INTENT_EXTRA_INFO_TASK) as Task)
             }
             intent.hasExtra(INTENT_EXTRA_INFO_TASK_ID) -> {
                 val id = intent.getStringExtra(INTENT_EXTRA_INFO_TASK_ID) as String
