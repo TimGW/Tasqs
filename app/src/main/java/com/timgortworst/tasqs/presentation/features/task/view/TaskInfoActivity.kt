@@ -75,7 +75,7 @@ class TaskInfoActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_go_to_edit -> {
-                startActivity(TaskEditActivity.intentBuilder(this, intent.getParcelableExtra(INTENT_EXTRA_INFO_TASK)))
+                startActivity(TaskEditActivity.intentBuilder(this, taskViewModel.getTaskOrNull()))
                 true
             }
             else -> super.onOptionsItemSelected(item)
