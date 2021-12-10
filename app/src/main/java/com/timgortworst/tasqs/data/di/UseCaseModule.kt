@@ -23,7 +23,6 @@ import org.koin.dsl.module
 val useCaseModule = module {
     factory<ErrorHandler> { ErrorHandlerImpl() }
 
-    factory<AddTokenUseCase> { AddTokenUseCaseImpl(get(), get()) }
     factory<GetTasksForUserUseCase> { GetTasksForUserUseCaseImpl(get()) }
     factory<GetAllTasksUseCase> { GetAllTasksUseCaseImpl(get()) }
     factory<DeleteTaskUseCase> { DeleteTaskUseCaseImpl(get(), get()) }

@@ -12,7 +12,6 @@ class UserDataMapper : Mapper<Map<String, Any>, User?> {
             result[USER_EMAIL_REF] = domain.email
             result[USER_ADMIN_REF] = domain.isAdmin
             result[USER_HOUSEHOLD_ID_REF] = domain.householdId
-            result[USER_TOKENS_REF] = domain.registrationTokens
         }
         return result
     }
@@ -23,9 +22,8 @@ class UserDataMapper : Mapper<Map<String, Any>, User?> {
         val email = network[USER_EMAIL_REF] as? String ?: ""
         val isAdmin = network[USER_ADMIN_REF] as? Boolean ?: false
         val householdId = network[USER_HOUSEHOLD_ID_REF] as? String ?: return null
-        val userTokens = network[USER_TOKENS_REF] as? MutableList<String>  ?: return null
 
-        return User(id, name, email, isAdmin, householdId, userTokens)
+        return User(id, name, email, isAdmin, householdId)
     }
 
     companion object {
@@ -35,6 +33,5 @@ class UserDataMapper : Mapper<Map<String, Any>, User?> {
         const val USER_EMAIL_REF = "email"
         const val USER_ADMIN_REF = "is_admin"
         const val USER_HOUSEHOLD_ID_REF = "household_id"
-        const val USER_TOKENS_REF = "registrationTokens"
     }
 }

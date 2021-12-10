@@ -4,10 +4,8 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.timgortworst.tasqs.BuildConfig
 import com.timgortworst.tasqs.R
-import com.timgortworst.tasqs.domain.usecase.user.AddTokenUseCaseImpl
 import com.timgortworst.tasqs.infrastructure.notifications.NotificationQueue
 import com.timgortworst.tasqs.infrastructure.notifications.Notifications
-import com.timgortworst.tasqs.presentation.usecase.user.AddTokenUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,12 +16,11 @@ import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 
+@Deprecated("set notification locally")
 class FirebaseMsgService : FirebaseMessagingService(), KoinComponent {
     private val notificationQueue: NotificationQueue by inject()
-    private val addTokenUseCase: AddTokenUseCase by inject()
     private val notifications: Notifications by inject()
     private val serviceJob = Job()
-    private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
     override fun onMessageReceived(rm: RemoteMessage) {
         val data: Map<String, String> = if (rm.data.isNotEmpty()) rm.data else return
@@ -71,16 +68,23 @@ class FirebaseMsgService : FirebaseMessagingService(), KoinComponent {
         if (zonedDateTime.isBefore(ZonedDateTime.now())) {
             notifications.notify(taskId, notificationTitle, notificationText)
         } else {
-            notificationQueue.enqueueNotification(taskId, zonedDateTime, notificationTitle, notificationText)
+            notificationQueue.enqueueNotification(
+                taskId,
+                zonedDateTime,
+                notificationTitle,
+                notificationText
+            )
 
-            if (BuildConfig.DEBUG) notifications.notify(taskId, "Notification set for", debugNotificationText)
+            if (BuildConfig.DEBUG) notifications.notify(
+                taskId,
+                "Notification set for",
+                debugNotificationText
+            )
         }
     }
 
     override fun onNewToken(token: String) {
-        serviceScope.launch {
-            addTokenUseCase.execute(AddTokenUseCaseImpl.Params(token))
-        }
+
     }
 
     override fun onDestroy() {

@@ -9,12 +9,14 @@ interface UserRepository {
     @Throws(FirebaseFirestoreException::class)
     suspend fun createUser(
         householdId: String,
-        fireBaseUser: FirebaseUser,
-        registrationToken: String)
+        fireBaseUser: FirebaseUser
+    )
 
     @Throws(FirebaseFirestoreException::class)
-    suspend fun getUser(userId: String? = FirebaseAuth.getInstance().currentUser?.uid,
-                        source: Source = Source.DEFAULT): User?
+    suspend fun getUser(
+        userId: String? = FirebaseAuth.getInstance().currentUser?.uid,
+        source: Source = Source.DEFAULT
+    ): User?
 
     @Throws(FirebaseFirestoreException::class)
     suspend fun getAllUsersForHousehold(id: String): List<User>
@@ -23,11 +25,6 @@ interface UserRepository {
     suspend fun updateUser(
         userId: String? = FirebaseAuth.getInstance().currentUser?.uid,
         householdId: String? = null,
-        isAdmin: Boolean? = null,
-        tokens: MutableList<String>? = null)
-
-    @Throws(FirebaseFirestoreException::class)
-    suspend fun addUserToken(
-        userId: String?,
-        token: String)
+        isAdmin: Boolean? = null
+    )
 }

@@ -2,13 +2,11 @@ package com.timgortworst.tasqs.data.repository
 
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
-import com.timgortworst.tasqs.data.mapper.ListMapper
 import com.timgortworst.tasqs.data.mapper.Mapper
 import com.timgortworst.tasqs.data.mapper.NullableOutputListMapper
 import com.timgortworst.tasqs.data.mapper.UserDataMapper.Companion.USER_ADMIN_REF
 import com.timgortworst.tasqs.data.mapper.UserDataMapper.Companion.USER_COLLECTION_REF
 import com.timgortworst.tasqs.data.mapper.UserDataMapper.Companion.USER_HOUSEHOLD_ID_REF
-import com.timgortworst.tasqs.data.mapper.UserDataMapper.Companion.USER_TOKENS_REF
 import com.timgortworst.tasqs.domain.model.User
 import com.timgortworst.tasqs.domain.repository.UserRepository
 import kotlinx.coroutines.tasks.await
@@ -23,8 +21,7 @@ class UserRepositoryImpl(
     @Throws(FirebaseFirestoreException::class)
     override suspend fun createUser(
         householdId: String,
-        fireBaseUser: FirebaseUser,
-        registrationToken: String
+        fireBaseUser: FirebaseUser
     ) {
         db.runTransaction { transition ->
             val currentUserDocRef = userCollection.document(fireBaseUser.uid)
@@ -34,8 +31,7 @@ class UserRepositoryImpl(
                 name = fireBaseUser.displayName ?: "Unknown",
                 email = fireBaseUser.email ?: "",
                 isAdmin = true,
-                householdId = householdId,
-                registrationTokens = mutableListOf(registrationToken)
+                householdId = householdId
             )
 
             if (!userDoc.exists()) {
@@ -54,7 +50,7 @@ class UserRepositoryImpl(
 
     @Throws(FirebaseFirestoreException::class)
     override suspend fun getAllUsersForHousehold(id: String): List<User> {
-        val networkUserList : List<Map<String, Any>> = userCollection
+        val networkUserList: List<Map<String, Any>> = userCollection
             .whereEqualTo(USER_HOUSEHOLD_ID_REF, id)
             .orderBy(USER_ADMIN_REF, Query.Direction.DESCENDING)
             .get()
@@ -68,8 +64,7 @@ class UserRepositoryImpl(
     override suspend fun updateUser(
         userId: String?,
         householdId: String?,
-        isAdmin: Boolean?,
-        tokens: MutableList<String>?
+        isAdmin: Boolean?
     ) {
         // ! don't update ID and name, since those are also used in tasks.
         // Otherwise implement cascading update for the tasks
@@ -80,18 +75,7 @@ class UserRepositoryImpl(
         val userFieldMap = mutableMapOf<String, Any>()
         householdId?.let { userFieldMap[USER_HOUSEHOLD_ID_REF] = it }
         isAdmin?.let { userFieldMap[USER_ADMIN_REF] = it }
-        tokens?.let { userFieldMap[USER_TOKENS_REF] = it }
 
         userDocRef.set(userFieldMap, SetOptions.merge()).await()
-    }
-
-    @Throws(FirebaseFirestoreException::class)
-    override suspend fun addUserToken(
-        userId: String?,
-        token: String
-    ) {
-        userId ?: return
-        val userDocRef = userCollection.document(userId)
-        userDocRef.update(USER_TOKENS_REF, FieldValue.arrayUnion(token)).await()
     }
 }

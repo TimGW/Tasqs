@@ -14,8 +14,7 @@ data class User(
     var name: String = "",
     var email: String = "",
     var isAdmin: Boolean = false,
-    var householdId: String,
-    val registrationTokens: MutableList<String> = mutableListOf()
+    var householdId: String
 ) : Parcelable
 
 
