@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.databinding.ActivityInfoTaskBinding
 import com.timgortworst.tasqs.domain.model.Task
@@ -43,7 +45,11 @@ class TaskInfoActivity : AppCompatActivity() {
 
         when {
             intent.hasExtra(INTENT_EXTRA_INFO_TASK) -> {
-                taskViewModel.setTaskFromLocalSource(intent.getParcelableExtra<Task>(INTENT_EXTRA_INFO_TASK) as Task)
+                taskViewModel.setTaskFromLocalSource(
+                    intent.getParcelableExtra<Task>(
+                        INTENT_EXTRA_INFO_TASK
+                    ) as Task
+                )
             }
             intent.hasExtra(INTENT_EXTRA_INFO_TASK_ID) -> {
                 val id = intent.getStringExtra(INTENT_EXTRA_INFO_TASK_ID) as String
@@ -64,8 +70,12 @@ class TaskInfoActivity : AppCompatActivity() {
         }
 
         taskViewModel.taskInfoAction.observe(this, EventObserver {
-            when (it) { TaskInfoAction.Continue -> finish() }
+            when (it) {
+                TaskInfoAction.Continue -> finish()
+            }
         })
+
+        task_done.visibility = if (isOwnTask()) View.VISIBLE else View.GONE
 
         task_done.setOnClickListener {
             taskViewModel.getTaskOrNull()?.let { taskViewModel.taskCompleted(it) }
@@ -84,6 +94,13 @@ class TaskInfoActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.info_menu, menu)
+
+        menu.findItem(R.id.action_go_to_edit).isVisible = isOwnTask()
+
         return true
     }
+
+    private fun isOwnTask() = taskViewModel.getTaskOrNull()?.user?.userId.equals(
+        FirebaseAuth.getInstance().currentUser?.uid
+    )
 }

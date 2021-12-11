@@ -213,11 +213,7 @@ class TaskListFragment : Fragment(),
     }
 
     private fun setActionModeTitle(size: Int) {
-        actionMode?.apply {
-            menu?.findItem(R.id.edit)?.isVisible = size == 1
-            menu?.findItem(R.id.info)?.isVisible = size == 1
-            title = size.toString()
-        }
+        actionMode?.title = size.toString()
     }
 
     override fun onActionItemDelete(selectedTasks: List<Task>, mode: ActionMode) {

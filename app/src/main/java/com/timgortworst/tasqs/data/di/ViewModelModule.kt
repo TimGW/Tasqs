@@ -18,6 +18,6 @@ val viewModelModule = module {
     viewModel { SignInViewModel(get()) }
     viewModel { MainViewModel(get(), get()) }
     viewModel { SplashViewModel(get(), get(), get()) }
-    viewModel { TaskEditViewModel(get(), get()) }
+    viewModel { TaskEditViewModel(get()) }
     viewModel { TaskInfoViewModel(get(), get()) }
 }

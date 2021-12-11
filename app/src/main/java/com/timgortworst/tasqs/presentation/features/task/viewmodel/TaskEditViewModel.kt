@@ -34,9 +34,6 @@ class TaskEditViewModel(
             task.description.isEmpty() -> {
                 _emptyDescMsg.value = Event(R.string.task_edit_error_empty_description)
             }
-            task.user == null -> {
-                _emptyUserMsg.value = Event(R.string.task_edit_error_empty_user)
-            }
             else -> {
                 val params = CreateOrUpdateTaskUseCaseImpl.Params(task)
                 createOrUpdateTaskUseCase.execute(params).collect {
