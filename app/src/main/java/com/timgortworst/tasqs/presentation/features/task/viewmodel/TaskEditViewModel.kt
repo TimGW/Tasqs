@@ -1,22 +1,21 @@
 package com.timgortworst.tasqs.presentation.features.task.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.response.Response
-import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.domain.usecase.task.CreateOrUpdateTaskUseCaseImpl
 import com.timgortworst.tasqs.presentation.base.model.Event
 import com.timgortworst.tasqs.presentation.usecase.task.CreateOrUpdateTaskUseCase
-import com.timgortworst.tasqs.presentation.usecase.user.GetTaskUsersUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class TaskEditViewModel(
-    private val createOrUpdateTaskUseCase: CreateOrUpdateTaskUseCase,
-    getTaskUsersUseCase: GetTaskUsersUseCase
+    private val createOrUpdateTaskUseCase: CreateOrUpdateTaskUseCase
 ) : ViewModel() {
-    val taskUsersLiveData = getTaskUsersUseCase.execute(None).asLiveData(viewModelScope.coroutineContext)
 
     private val _actionDone = MutableLiveData<Event<Response<Task>>>()
     val actionDone: LiveData<Event<Response<Task>>>

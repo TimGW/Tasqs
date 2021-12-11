@@ -1,13 +1,14 @@
 package com.timgortworst.tasqs.domain.usecase.task
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.response.ErrorHandler
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.repository.TaskRepository
+import com.timgortworst.tasqs.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.tasqs.presentation.usecase.task.CreateOrUpdateTaskUseCase
 import com.timgortworst.tasqs.presentation.usecase.task.SetNotificationUseCase
+import com.timgortworst.tasqs.presentation.usecase.user.GetUserUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -16,7 +17,8 @@ import kotlinx.coroutines.flow.flowOn
 class CreateOrUpdateTaskUseCaseImpl(
     private val taskRepository: TaskRepository,
     private val errorHandler: ErrorHandler,
-    private val setNotificationUseCase: SetNotificationUseCase
+    private val setNotificationUseCase: SetNotificationUseCase,
+    private val getUserUseCase: GetUserUseCase
 ) : CreateOrUpdateTaskUseCase {
 
     data class Params(val task: Task)
@@ -24,8 +26,15 @@ class CreateOrUpdateTaskUseCaseImpl(
     override fun execute(params: Params) = flow {
         emit(Response.Loading)
 
+        val result = params.task
+
+        getUserUseCase.execute(GetUserUseCaseImpl.Params()).collect {
+            val data = (it as? Response.Success)?.data ?: return@collect
+            result.user = Task.User(data.userId, data.name)
+        }
+
         try {
-            val result = params.task
+
             if (params.task.id.isNullOrBlank()) {
                 val newId = taskRepository.createTask(result)
                 result.apply { id = newId }

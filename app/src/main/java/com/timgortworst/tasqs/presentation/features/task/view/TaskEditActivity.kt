@@ -21,11 +21,7 @@ import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.infrastructure.extension.clearFocus
 import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.base.model.EventObserver
-import com.timgortworst.tasqs.presentation.features.task.adapter.formatTime
-import com.timgortworst.tasqs.presentation.features.task.adapter.EditTextAdapter
-import com.timgortworst.tasqs.presentation.features.task.adapter.RecurrenceAdapter
-import com.timgortworst.tasqs.presentation.features.task.adapter.TextViewAdapter
-import com.timgortworst.tasqs.presentation.features.task.adapter.UserSpinnerAdapter
+import com.timgortworst.tasqs.presentation.features.task.adapter.*
 import com.timgortworst.tasqs.presentation.features.task.viewmodel.TaskEditViewModel
 import org.koin.android.ext.android.inject
 import org.threeten.bp.LocalDate
@@ -48,7 +44,6 @@ class TaskEditActivity : AppCompatActivity(),
     private lateinit var recurrenceAdapter: RecurrenceAdapter
     private lateinit var timeAdapter: TextViewAdapter
     private lateinit var dateAdapter: TextViewAdapter
-    private lateinit var userAdapter: UserSpinnerAdapter
     private lateinit var descriptionAdapter: EditTextAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,14 +60,19 @@ class TaskEditActivity : AppCompatActivity(),
                 Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Response.Success -> navigateUpTo(parentActivityIntent)
                 is Response.Error -> presentError(R.string.error_generic)
-                is Response.Empty -> { }
+                is Response.Empty -> {}
             }
         })
 
-        viewModel.emptyUserMsg.observe(this, EventObserver{ presentError(it) })
+        viewModel.emptyUserMsg.observe(this, EventObserver { presentError(it) })
 
-        viewModel.emptyDescMsg.observe(this, EventObserver{
-            descriptionAdapter.setViewItem(buildDescriptionViewItem(task.description, getString(it)))
+        viewModel.emptyDescMsg.observe(this, EventObserver {
+            descriptionAdapter.setViewItem(
+                buildDescriptionViewItem(
+                    task.description,
+                    getString(it)
+                )
+            )
             adapter.notifyItemChanged(TASK_DESC_POSITION)
         })
     }
@@ -111,13 +111,11 @@ class TaskEditActivity : AppCompatActivity(),
         binding.recyclerView.setHasFixedSize(true)
 
         descriptionAdapter = EditTextAdapter(buildDescriptionViewItem(task.description))
-        userAdapter = UserSpinnerAdapter(this, buildUserViewItem(task.user))
         dateAdapter = TextViewAdapter(buildDateViewItem(task.metaData.startDateTime))
         timeAdapter = TextViewAdapter(buildTimeViewItem(task.metaData.startDateTime))
         recurrenceAdapter = RecurrenceAdapter(buildRecurrenceViewItem(task.metaData.recurrence))
 
         adapter.addAdapter(TASK_DESC_POSITION, descriptionAdapter)
-        adapter.addAdapter(TASK_USER_POSITION, userAdapter)
         adapter.addAdapter(TASK_DATE_POSITION, dateAdapter)
         adapter.addAdapter(TASK_TIME_POSITION, timeAdapter)
         adapter.addAdapter(TASK_REC_POSITION, recurrenceAdapter)
@@ -136,28 +134,6 @@ class TaskEditActivity : AppCompatActivity(),
                     task.description = text
                 }
             })
-    }
-
-    private fun buildUserViewItem(
-        user: Task.User?
-    ): UserSpinnerAdapter.ViewItem {
-        val viewItem = UserSpinnerAdapter.ViewItem(getString(R.string.edit_task_user_hint), user)
-        viewItem.callback = object : UserSpinnerAdapter.Callback {
-            override fun onSpinnerSelection(response: Response<Task.User>) {
-                clearFocus(binding.recyclerView)
-                binding.progressBar.visibility = View.INVISIBLE
-
-                when (response) {
-                    Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Response.Error -> presentError(R.string.users_loading_error)
-                    is Response.Success -> {
-                        val data = response.data ?: return
-                        task.user = data
-                    }
-                }
-            }
-        }
-        return viewItem
     }
 
     private fun buildDateViewItem(
@@ -253,10 +229,9 @@ class TaskEditActivity : AppCompatActivity(),
         const val INTENT_EXTRA_EDIT_TASK = "INTENT_EXTRA_EDIT_TASK"
 
         const val TASK_DESC_POSITION = 0
-        const val TASK_USER_POSITION = 1
-        const val TASK_DATE_POSITION = 2
-        const val TASK_TIME_POSITION = 3
-        const val TASK_REC_POSITION = 4
+        const val TASK_DATE_POSITION = 1
+        const val TASK_TIME_POSITION = 2
+        const val TASK_REC_POSITION = 3
 
         fun intentBuilder(context: Context, task: Task? = null): Intent {
             val intent = Intent(context, TaskEditActivity::class.java)

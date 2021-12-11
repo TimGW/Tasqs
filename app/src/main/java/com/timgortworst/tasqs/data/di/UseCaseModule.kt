@@ -28,7 +28,7 @@ val useCaseModule = module {
     factory<DeleteTaskUseCase> { DeleteTaskUseCaseImpl(get(), get(), get()) }
     factory<CompleteTaskUseCase> { CompleteTaskUseCaseImpl(get(), get(), get(), get()) }
     factory<CalculateNextTaskUseCase> { CalculateNextTaskUseCaseImpl() }
-    factory<CreateOrUpdateTaskUseCase> { CreateOrUpdateTaskUseCaseImpl(get(), get(), get()) }
+    factory<CreateOrUpdateTaskUseCase> { CreateOrUpdateTaskUseCaseImpl(get(), get(), get(), get()) }
     factory<SignInUseCase> { SignInUseCaseImpl(get(), get(), get()) }
     factory<AdsVisibleUseCase> { AdsVisibleUseCaseImpl() }
     factory<GetUserUseCase> { GetUserUseCaseImpl(get(), get()) }
@@ -40,7 +40,6 @@ val useCaseModule = module {
     factory<InviteLinkBuilderUseCase> { InviteLinkBuilderUseCaseImpl(get()) }
     factory<ForcedUpdateUseCase> { ForcedUpdateUseCaseImpl() }
     factory<GetTaskUseCase> { GetTaskUseCaseImpl(get(), get()) }
-    factory<GetTaskUsersUseCase> { GetTaskUsersUseCaseImpl(get(), get()) }
     factory<DeleteNotificationsUseCase> { DeleteNotificationsUseCaseImpl(get(), get()) }
     factory<SetNotificationUseCase> { SetNotificationUseCaseImpl(get(), get(), get()) }
 }
