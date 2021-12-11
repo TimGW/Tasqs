@@ -7,8 +7,9 @@ import org.threeten.bp.ZonedDateTime
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
-class NotificationQueueImpl(context: Context) :
-    NotificationQueue {
+class NotificationQueueImpl(
+    private val context: Context
+) : NotificationQueue {
     private val workManager = WorkManager.getInstance(context)
 
     companion object {

@@ -11,10 +11,14 @@ import androidx.core.app.NotificationManagerCompat
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.presentation.features.task.view.TaskInfoActivity
 
-class NotificationsImpl(private val context: Context) :
-    Notifications {
- 
+class NotificationsImpl(
+    private val context: Context
+) : Notifications {
+
     override fun notify(id: String, notificationTitle: String, notificationText: String) {
+        val title = context.getString(R.string.notification_title, notificationTitle)
+        val text = context.getString(R.string.notification_message, notificationText)
+
         createNotificationChannelIfRequired(context)
 
         val pendingIntent = PendingIntent.getActivity(
@@ -27,10 +31,11 @@ class NotificationsImpl(private val context: Context) :
         with(NotificationManagerCompat.from(context)) {
             notify(
                 id.hashCode(),
-                buildNotification(context, notificationTitle, notificationText, pendingIntent))
+                buildNotification(context, title, text, pendingIntent)
+            )
             notify(
                 NOTIFICATION_GROUP_ID,
-                buildSummaryNotification(context, notificationTitle, notificationText)
+                buildSummaryNotification(context, title, text)
             )
         }
     }
@@ -40,7 +45,8 @@ class NotificationsImpl(private val context: Context) :
         title: String,
         text: String
     ): Notification {
-        return NotificationCompat.Builder(context,
+        return NotificationCompat.Builder(
+            context,
             CHANNEL_ID
         )
             .setSmallIcon(R.drawable.ic_home)
@@ -58,7 +64,8 @@ class NotificationsImpl(private val context: Context) :
         notificationTitle: String,
         notificationMessage: String,
         notificationPendingIntent: PendingIntent
-    ) = NotificationCompat.Builder(context,
+    ) = NotificationCompat.Builder(
+        context,
         CHANNEL_ID
     )
         .setSmallIcon(R.drawable.ic_home)

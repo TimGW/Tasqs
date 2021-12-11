@@ -6,8 +6,7 @@ import com.timgortworst.tasqs.domain.model.TaskRecurrence
 import com.timgortworst.tasqs.domain.model.response.ErrorHandler
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.repository.TaskRepository
-import com.timgortworst.tasqs.presentation.usecase.task.CalculateNextTaskUseCase
-import com.timgortworst.tasqs.presentation.usecase.task.CompleteTaskUseCase
+import com.timgortworst.tasqs.presentation.usecase.task.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -16,9 +15,10 @@ import kotlinx.coroutines.flow.flowOn
 import org.threeten.bp.ZonedDateTime
 
 class CompleteTaskUseCaseImpl(
-    private val taskRepository: TaskRepository,
     private val calcNextTaskDate: CalculateNextTaskUseCase,
-    private val errorHandler: ErrorHandler
+    private val errorHandler: ErrorHandler,
+    private val deleteTaskUseCase: DeleteTaskUseCase,
+    private val createOrUpdateTaskUseCase: CreateOrUpdateTaskUseCase
 ) : CompleteTaskUseCase {
 
     data class Params(val tasks: List<Task>)
@@ -30,18 +30,22 @@ class CompleteTaskUseCaseImpl(
             }
 
             // delete single tasks
-            taskRepository.deleteTasks(singleTasks)
+            deleteTaskUseCase.execute(DeleteTaskUseCaseImpl.Params(singleTasks)).collect()
 
             // update repeating tasks
             restTasks.forEach { task ->
                 calcNextTaskDate(task.metaData).collect {
                     when (it) {
-                        is Response.Success -> task.metaData.startDateTime = it.data ?: ZonedDateTime.now()
+                        is Response.Success -> task.metaData.startDateTime =
+                            it.data ?: ZonedDateTime.now()
                         is Response.Error -> emit(Response.Error(it.error))
                     }
                 }
+
+                createOrUpdateTaskUseCase.execute(
+                    CreateOrUpdateTaskUseCaseImpl.Params(task)
+                ).collect()
             }
-            if(restTasks.isNotEmpty()) taskRepository.updateTasks(restTasks)
 
             emit(Response.Success<Nothing>())
         } catch (e: FirebaseFirestoreException) {
@@ -50,7 +54,8 @@ class CompleteTaskUseCaseImpl(
     }.flowOn(Dispatchers.IO)
 
     private fun calcNextTaskDate(taskMetaData: Task.MetaData): Flow<Response<ZonedDateTime>> {
-        val params = CalculateNextTaskUseCaseImpl.Params(taskMetaData.startDateTime, taskMetaData.recurrence)
+        val params =
+            CalculateNextTaskUseCaseImpl.Params(taskMetaData.startDateTime, taskMetaData.recurrence)
         return calcNextTaskDate.execute(params)
     }
 }

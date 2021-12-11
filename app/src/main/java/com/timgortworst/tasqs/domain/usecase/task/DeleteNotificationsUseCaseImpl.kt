@@ -1,22 +1,20 @@
 package com.timgortworst.tasqs.domain.usecase.task
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.response.ErrorHandler
 import com.timgortworst.tasqs.domain.model.response.Response
-import com.timgortworst.tasqs.domain.repository.TaskRepository
+import com.timgortworst.tasqs.infrastructure.notifications.NotificationQueue
 import com.timgortworst.tasqs.presentation.usecase.task.DeleteNotificationsUseCase
-import com.timgortworst.tasqs.presentation.usecase.task.DeleteTaskUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class DeleteTaskUseCaseImpl(
-    private val taskRepository: TaskRepository,
+class DeleteNotificationsUseCaseImpl(
     private val errorHandler: ErrorHandler,
-    private val deleteNotificationsUseCase: DeleteNotificationsUseCase
-) : DeleteTaskUseCase {
+    private val notificationQueue: NotificationQueue
+) : DeleteNotificationsUseCase {
 
     data class Params(val tasks: List<Task>)
 
@@ -24,17 +22,21 @@ class DeleteTaskUseCaseImpl(
         emit(Response.Loading)
 
         try {
-            taskRepository.deleteTasks(params.tasks)
+            params.tasks.forEach {
+                val taskId = it.id ?: return@forEach
+                notificationQueue.removePendingNotification(taskId)
 
-            // delete pending notifications
-            deleteNotificationsUseCase.execute(
-                DeleteNotificationsUseCaseImpl.Params(params.tasks)
-            ).collect()
+                Log.i(TAG, "Notification removed for: $taskId")
+            }
 
             emit(Response.Success())
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(Dispatchers.Default)
+
+    companion object {
+        private const val TAG = "DeleteNotificationUseCase"
+    }
 }
 
