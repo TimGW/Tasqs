@@ -12,7 +12,7 @@ import com.timgortworst.tasqs.domain.usecase.task.DeleteTaskUseCaseImpl
 import com.timgortworst.tasqs.presentation.usecase.task.CompleteTaskUseCase
 import com.timgortworst.tasqs.presentation.usecase.task.DeleteTaskUseCase
 import com.timgortworst.tasqs.presentation.usecase.task.GetAllTasksUseCase
-import com.timgortworst.tasqs.presentation.usecase.task.GetTasksForUserUseCase
+import com.timgortworst.tasqs.presentation.usecase.task.GetTasksForUserQueryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +23,7 @@ class TaskListViewModel(
     private val completeTaskUseCase: CompleteTaskUseCase,
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val getAllTasksUseCase: GetAllTasksUseCase,
-    private val getTasksForUserUseCase: GetTasksForUserUseCase
+    private val getTasksForUserQueryUseCase: GetTasksForUserQueryUseCase
 ) : ViewModel() {
 
     private val _showLoading = MutableLiveData<Boolean>()
@@ -62,7 +62,7 @@ class TaskListViewModel(
     }
 
     suspend fun filterDataQuery() = withContext(Dispatchers.IO) {
-        val fireStoreOptions = getTasksForUserUseCase.execute(None)
+        val fireStoreOptions = getTasksForUserQueryUseCase.execute(None)
         _liveQueryOptions.postValue(fireStoreOptions)
     }
 }

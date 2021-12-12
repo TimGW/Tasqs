@@ -5,5 +5,5 @@ import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.domain.usecase.SuspendUseCase
 
-interface GetTasksForUserUseCase : SuspendUseCase<FirestoreRecyclerOptions.Builder<Task> , None>
+interface GetTasksForUserQueryUseCase : SuspendUseCase<FirestoreRecyclerOptions.Builder<Task>, None>
 

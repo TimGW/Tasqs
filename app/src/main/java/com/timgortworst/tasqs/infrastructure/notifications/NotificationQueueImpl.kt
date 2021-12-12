@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
 class NotificationQueueImpl(
-    private val context: Context
+    context: Context
 ) : NotificationQueue {
     private val workManager = WorkManager.getInstance(context)
 
@@ -37,6 +37,10 @@ class NotificationQueueImpl(
 
     override fun removePendingNotification(taskId: String) {
         workManager.cancelUniqueWork(taskId)
+    }
+
+    override fun removeAllPendingNotifications() {
+        workManager.cancelAllWork()
     }
 
     private fun buildInputData(

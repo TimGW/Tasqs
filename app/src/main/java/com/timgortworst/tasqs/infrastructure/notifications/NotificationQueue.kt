@@ -12,4 +12,6 @@ interface NotificationQueue {
     )
 
     fun removePendingNotification(taskId: String)
+
+    fun removeAllPendingNotifications()
 }
