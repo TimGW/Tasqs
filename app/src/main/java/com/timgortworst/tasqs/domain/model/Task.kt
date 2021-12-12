@@ -7,6 +7,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.temporal.ChronoUnit
 
 @Keep
 @Parcelize
@@ -21,8 +22,8 @@ data class Task(
     @Parcelize
     data class MetaData(
         var startDateTime: ZonedDateTime = ZonedDateTime.of(
-            LocalDate.now().plusDays(1),
-            LocalTime.now(),
+            LocalDate.now(),
+            LocalTime.now().truncatedTo(ChronoUnit.HOURS).plusHours(1),
             ZoneId.systemDefault()
         ),
         var recurrence: TaskRecurrence = TaskRecurrence.SingleTask(1)
