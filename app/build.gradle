@@ -20,8 +20,8 @@ android {
         applicationId "com.timgortworst.tasqs"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 8
-        versionName "1.0.6"
+        versionCode 9
+        versionName "1.0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resValue "string", "ad_app_id", apikeyProperties["ad_app_id"]
