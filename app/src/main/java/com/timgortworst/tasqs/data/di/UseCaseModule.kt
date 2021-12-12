@@ -23,7 +23,7 @@ import org.koin.dsl.module
 val useCaseModule = module {
     factory<ErrorHandler> { ErrorHandlerImpl() }
 
-    factory<GetTasksForUserUseCase> { GetTasksForUserUseCaseImpl(get()) }
+    factory<GetTasksForUserQueryUseCase> { GetTasksForUserQueryUseCaseImpl(get()) }
     factory<GetAllTasksUseCase> { GetAllTasksUseCaseImpl(get()) }
     factory<DeleteTaskUseCase> { DeleteTaskUseCaseImpl(get(), get(), get()) }
     factory<CompleteTaskUseCase> { CompleteTaskUseCaseImpl(get(), get(), get(), get()) }
@@ -42,4 +42,5 @@ val useCaseModule = module {
     factory<GetTaskUseCase> { GetTaskUseCaseImpl(get(), get()) }
     factory<DeleteNotificationsUseCase> { DeleteNotificationsUseCaseImpl(get(), get()) }
     factory<SetNotificationUseCase> { SetNotificationUseCaseImpl(get(), get(), get()) }
+    factory<AppStartupNotificationUseCase> { AppStartupNotificationUseCaseImpl(get(), get(), get()) }
 }
