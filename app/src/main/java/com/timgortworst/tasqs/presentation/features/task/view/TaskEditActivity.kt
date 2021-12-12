@@ -149,7 +149,7 @@ class TaskEditActivity : AppCompatActivity(),
                         year, monthValue - 1, dayOfMonth
                     ).apply {
                         datePicker.minDate =
-                            ZonedDateTime.now().plusDays(1).toInstant().toEpochMilli()
+                            ZonedDateTime.now().toInstant().toEpochMilli()
                         show()
                     }
                 }
