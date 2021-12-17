@@ -81,10 +81,14 @@ class TaskInfoActivity : AppCompatActivity() {
         }
 
         taskViewModel.taskInfoAction.observe(this, EventObserver {
+            progress_bar.visibility = View.GONE
             when (it) {
                 TaskInfoAction.Finish -> {
                     finishAffinity()
                     startActivity(MainActivity.intentBuilder(this))
+                }
+                TaskInfoAction.Loading -> {
+                    progress_bar.visibility = View.VISIBLE
                 }
             }
         })

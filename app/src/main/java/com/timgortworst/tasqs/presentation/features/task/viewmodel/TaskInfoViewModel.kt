@@ -39,6 +39,8 @@ class TaskInfoViewModel(
     }
 
     fun taskCompleted(task: Task) {
+        _taskInfoAction.value = Event(TaskInfoAction.Loading)
+
         viewModelScope.launch {
             completeTaskUseCase.execute(CompleteTaskUseCaseImpl.Params(listOf(task))).collect()
             _taskInfoAction.value = Event(TaskInfoAction.Finish)
