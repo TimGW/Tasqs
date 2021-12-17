@@ -6,15 +6,23 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
+import androidx.lifecycle.viewModelScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.databinding.ActivityInfoTaskBinding
 import com.timgortworst.tasqs.domain.model.Task
+import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.base.model.EventObserver
 import com.timgortworst.tasqs.presentation.base.model.TaskInfoAction
+import com.timgortworst.tasqs.presentation.features.main.MainActivity
 import com.timgortworst.tasqs.presentation.features.task.viewmodel.TaskInfoViewModel
 import kotlinx.android.synthetic.main.activity_info_task.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class TaskInfoActivity : AppCompatActivity() {
@@ -71,7 +79,7 @@ class TaskInfoActivity : AppCompatActivity() {
 
         taskViewModel.taskInfoAction.observe(this, EventObserver {
             when (it) {
-                TaskInfoAction.Continue -> finish()
+                TaskInfoAction.Finish -> finish()
             }
         })
 
@@ -88,6 +96,10 @@ class TaskInfoActivity : AppCompatActivity() {
                 startActivity(TaskEditActivity.intentBuilder(this, taskViewModel.getTaskOrNull()))
                 true
             }
+            R.id.action_delete -> {
+                askForDeleteDialog().show()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -95,6 +107,7 @@ class TaskInfoActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.info_menu, menu)
 
+        menu.findItem(R.id.action_delete).isVisible = isOwnTask()
         menu.findItem(R.id.action_go_to_edit).isVisible = isOwnTask()
 
         return true
@@ -103,4 +116,27 @@ class TaskInfoActivity : AppCompatActivity() {
     private fun isOwnTask() = taskViewModel.getTaskOrNull()?.user?.userId.equals(
         FirebaseAuth.getInstance().currentUser?.uid
     )
+
+    private fun askForDeleteDialog(): AlertDialog {
+        return MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.delete)
+            .setMessage(getString(R.string.delete_dialog_text_single))
+            .setIcon(R.drawable.ic_delete)
+            .setPositiveButton(R.string.delete) { dialog, _ ->
+                taskViewModel.viewModelScope.launch {
+                    taskViewModel.deleteTask()
+
+                    binding.root.snackbar(
+                        message = getString(
+                            R.string.task_deleted,
+                            taskViewModel.getTaskOrNull()?.description.orEmpty()
+                        )
+                    )
+                }
+                finish()
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
+            .create()
+    }
 }
