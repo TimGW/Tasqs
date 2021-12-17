@@ -1,20 +1,21 @@
 package com.timgortworst.tasqs.presentation.features.splash
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.timgortworst.tasqs.domain.model.response.Response
-import com.timgortworst.tasqs.domain.usecase.splash.ValidationUseCaseImpl
 import com.timgortworst.tasqs.domain.usecase.splash.ForcedUpdateUseCaseImpl
-import com.timgortworst.tasqs.presentation.base.model.StartUpAction
 import com.timgortworst.tasqs.domain.usecase.splash.SwitchHouseholdUseCaseImpl
+import com.timgortworst.tasqs.domain.usecase.splash.ValidationUseCaseImpl
 import com.timgortworst.tasqs.domain.usecase.task.AppStartupNotificationUseCaseImpl
-import com.timgortworst.tasqs.domain.usecase.task.SetNotificationUseCaseImpl
 import com.timgortworst.tasqs.presentation.base.model.Event
+import com.timgortworst.tasqs.presentation.base.model.StartUpAction
 import com.timgortworst.tasqs.presentation.base.model.UpdateAction
-import com.timgortworst.tasqs.presentation.usecase.splash.SwitchHouseholdUseCase
 import com.timgortworst.tasqs.presentation.usecase.splash.ForcedUpdateUseCase
+import com.timgortworst.tasqs.presentation.usecase.splash.SwitchHouseholdUseCase
 import com.timgortworst.tasqs.presentation.usecase.splash.ValidationUseCase
 import com.timgortworst.tasqs.presentation.usecase.task.AppStartupNotificationUseCase
-import com.timgortworst.tasqs.presentation.usecase.task.SetNotificationUseCase
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 

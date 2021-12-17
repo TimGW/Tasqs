@@ -12,6 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import org.threeten.bp.ZonedDateTime.*
+import java.time.ZonedDateTime
 
 class AppStartupNotificationUseCaseImpl(
     private val taskRepository: TaskRepository,
@@ -29,7 +31,9 @@ class AppStartupNotificationUseCaseImpl(
         notificationQueue.removeAllPendingNotifications()
 
         tasks.forEach {
-            setNotificationUseCase.execute(SetNotificationUseCaseImpl.Params(it)).collect()
+            if (it.metaData.startDateTime.isAfter(now())) {
+                setNotificationUseCase.execute(SetNotificationUseCaseImpl.Params(it)).collect()
+            }
         }
         emit(Response.Success(None))
     }.flowOn(Dispatchers.IO)
