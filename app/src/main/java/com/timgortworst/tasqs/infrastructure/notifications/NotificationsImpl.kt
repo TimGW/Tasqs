@@ -20,17 +20,18 @@ class NotificationsImpl(
         val text = context.getString(R.string.notification_message, notificationText)
 
         createNotificationChannelIfRequired(context)
+        val requestCode = id.hashCode()
 
         val pendingIntent = PendingIntent.getActivity(
             context,
-            id.hashCode(),
+            requestCode,
             TaskInfoActivity.intentBuilder(context, id),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         with(NotificationManagerCompat.from(context)) {
             notify(
-                id.hashCode(),
+                requestCode,
                 buildNotification(context, title, text, pendingIntent)
             )
             notify(

@@ -3,18 +3,21 @@ package com.timgortworst.tasqs.presentation.features.task.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.databinding.ActivityInfoTaskBinding
 import com.timgortworst.tasqs.domain.model.Task
+import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.infrastructure.extension.snackbar
 import com.timgortworst.tasqs.presentation.base.model.EventObserver
 import com.timgortworst.tasqs.presentation.base.model.TaskInfoAction
@@ -60,8 +63,8 @@ class TaskInfoActivity : AppCompatActivity() {
                 )
             }
             intent.hasExtra(INTENT_EXTRA_INFO_TASK_ID) -> {
-                val id = intent.getStringExtra(INTENT_EXTRA_INFO_TASK_ID) as String
-                taskViewModel.fetchTask(id)
+                val id = intent.getStringExtra(INTENT_EXTRA_INFO_TASK_ID)
+                if (id.isNullOrBlank()) finish() else taskViewModel.fetchTask(id)
             }
             else -> finish()
         }
@@ -79,15 +82,24 @@ class TaskInfoActivity : AppCompatActivity() {
 
         taskViewModel.taskInfoAction.observe(this, EventObserver {
             when (it) {
-                TaskInfoAction.Finish -> finish()
+                TaskInfoAction.Finish -> {
+                    finishAffinity()
+                    startActivity(MainActivity.intentBuilder(this))
+                }
             }
         })
 
-        task_done.visibility = if (isOwnTask()) View.VISIBLE else View.GONE
+        taskViewModel.task.observe(this, Observer {
+            val task = (it as? Response.Success)?.data ?: return@Observer
 
-        task_done.setOnClickListener {
-            taskViewModel.getTaskOrNull()?.let { taskViewModel.taskCompleted(it) }
-        }
+            task_done.visibility = if (isOwnTask(task)) View.VISIBLE else View.GONE
+
+            task_done.setOnClickListener {
+                taskViewModel.taskCompleted(task)
+            }
+
+            invalidateOptionsMenu()
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -107,15 +119,17 @@ class TaskInfoActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.info_menu, menu)
 
-        menu.findItem(R.id.action_delete).isVisible = isOwnTask()
-        menu.findItem(R.id.action_go_to_edit).isVisible = isOwnTask()
+        val task = taskViewModel.getTaskOrNull() ?: return true
+
+        menu.findItem(R.id.action_delete).isVisible = isOwnTask(task)
+        menu.findItem(R.id.action_go_to_edit).isVisible = isOwnTask(task)
 
         return true
     }
 
-    private fun isOwnTask() = taskViewModel.getTaskOrNull()?.user?.userId.equals(
-        FirebaseAuth.getInstance().currentUser?.uid
-    )
+    private fun isOwnTask(
+        task: Task
+    ) = task.user?.userId.equals(FirebaseAuth.getInstance().currentUser?.uid)
 
     private fun askForDeleteDialog(): AlertDialog {
         return MaterialAlertDialogBuilder(this)
@@ -133,7 +147,8 @@ class TaskInfoActivity : AppCompatActivity() {
                         )
                     )
                 }
-                finish()
+                finishAffinity()
+                startActivity(MainActivity.intentBuilder(this))
                 dialog.dismiss()
             }
             .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
