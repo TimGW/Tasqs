@@ -14,20 +14,23 @@ class NotificationWorker(
 ) : Worker(context, params), KoinComponent {
     private val notifications: Notifications by inject()
 
-    override fun doWork() = try {
+    override fun doWork(): Result = try {
+        val id = inputData.getString(NotificationQueueImpl.NOTIFICATION_ID_KEY)
         val title = inputData.getString(NotificationQueueImpl.NOTIFICATION_TITLE_KEY)
             ?: context.getString(R.string.app_name)
         val text = inputData.getString(NotificationQueueImpl.NOTIFICATION_MSG_KEY)
             ?: context.getString(R.string.notification_default_msg)
-        val id = tags.first().toString()
 
-        notifications.notify(
-            id,
-            context.getString(R.string.notification_title, title),
-            context.getString(R.string.notification_message, text)
-        )
-
-        Result.success()
+        if (id != null) {
+            notifications.notify(
+                id,
+                context.getString(R.string.notification_title, title),
+                context.getString(R.string.notification_message, text)
+            )
+            Result.success()
+        } else {
+            Result.failure()
+        }
     } catch (e: Exception) {
         FirebaseCrashlytics.getInstance().recordException(e)
         Result.failure()
