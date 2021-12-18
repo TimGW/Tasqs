@@ -25,38 +25,33 @@ class CompleteTaskUseCaseImpl(
 
     override fun execute(params: Params) = flow {
         try {
-            val (singleTasks, restTasks) = params.tasks.partition {
+            val (singleTasks, repeatingTasks) = params.tasks.partition {
                 it.metaData.recurrence is TaskRecurrence.SingleTask
             }
 
-            // delete single tasks
-            deleteTaskUseCase.execute(DeleteTaskUseCaseImpl.Params(singleTasks)).collect()
+            if (singleTasks.isNotEmpty()) {
+                // delete single tasks
+                deleteTaskUseCase.execute(DeleteTaskUseCaseImpl.Params(singleTasks)).collect()
 
-            // update repeating tasks
-            restTasks.forEach { task ->
-                calcNextTaskDate(task.metaData).collect {
-                    when (it) {
-                        is Response.Success -> task.metaData.startDateTime =
-                            it.data ?: ZonedDateTime.now()
-                        is Response.Error -> emit(Response.Error(it.error))
-                    }
+            } else {
+                // update repeating tasks
+                repeatingTasks.forEach { task ->
+                    task.metaData.startDateTime = calcNextTaskDate.execute(
+                        CalculateNextTaskUseCaseImpl.Params(
+                            task.metaData.startDateTime,
+                            task.metaData.recurrence
+                        )
+                    )
+
+                    createOrUpdateTaskUseCase.execute(
+                        CreateOrUpdateTaskUseCaseImpl.Params(task)
+                    ).collect()
                 }
-
-                createOrUpdateTaskUseCase.execute(
-                    CreateOrUpdateTaskUseCaseImpl.Params(task)
-                ).collect()
             }
-
             emit(Response.Success<Nothing>())
         } catch (e: FirebaseFirestoreException) {
             emit(Response.Error(errorHandler.getError(e)))
         }
     }.flowOn(Dispatchers.IO)
-
-    private fun calcNextTaskDate(taskMetaData: Task.MetaData): Flow<Response<ZonedDateTime>> {
-        val params =
-            CalculateNextTaskUseCaseImpl.Params(taskMetaData.startDateTime, taskMetaData.recurrence)
-        return calcNextTaskDate.execute(params)
-    }
 }
 

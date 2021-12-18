@@ -1,11 +1,7 @@
 package com.timgortworst.tasqs.domain.usecase.task
 
 import com.timgortworst.tasqs.domain.model.TaskRecurrence
-import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.presentation.usecase.task.CalculateNextTaskUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
 
@@ -13,14 +9,9 @@ class CalculateNextTaskUseCaseImpl : CalculateNextTaskUseCase {
 
     data class Params(val baseDate: ZonedDateTime, val recurrence: TaskRecurrence)
 
-    override fun execute(params: Params) = flow {
-        try {
-            val result = params.baseDate.plus(params.recurrence)
-            emit(Response.Success(result))
-        } catch (e: NumberFormatException) {
-            emit(Response.Error())
-        }
-    }.flowOn(Dispatchers.Default)
+    override fun execute(params: Params): ZonedDateTime {
+        return params.baseDate.plus(params.recurrence)
+    }
 
     private fun ZonedDateTime.plus(recurrence: TaskRecurrence): ZonedDateTime = when (recurrence) {
         is TaskRecurrence.SingleTask -> this.plusDays(1)

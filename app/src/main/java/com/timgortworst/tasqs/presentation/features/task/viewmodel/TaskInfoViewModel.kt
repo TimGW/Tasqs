@@ -42,8 +42,9 @@ class TaskInfoViewModel(
         _taskInfoAction.value = Event(TaskInfoAction.Loading)
 
         viewModelScope.launch {
-            completeTaskUseCase.execute(CompleteTaskUseCaseImpl.Params(listOf(task))).collect()
-            _taskInfoAction.value = Event(TaskInfoAction.Finish)
+            completeTaskUseCase.execute(CompleteTaskUseCaseImpl.Params(listOf(task))).collect {
+                _taskInfoAction.value = Event(TaskInfoAction.Finish)
+            }
         }
     }
 
@@ -65,9 +66,9 @@ class TaskInfoViewModel(
                 DeleteTaskUseCaseImpl.Params((listOf(task.value as? Response.Success).map {
                     it?.data ?: return@launch
                 }))
-            ).collect()
-
-            _taskInfoAction.value = Event(TaskInfoAction.Finish)
+            ).collect {
+                _taskInfoAction.value = Event(TaskInfoAction.Finish)
+            }
         }
     }
 }
