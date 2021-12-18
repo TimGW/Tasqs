@@ -113,7 +113,10 @@ class TaskEditActivity : AppCompatActivity(),
         descriptionAdapter = EditTextAdapter(buildDescriptionViewItem(task.description))
         dateAdapter = TextViewAdapter(buildDateViewItem(task.metaData.startDateTime))
         timeAdapter = TextViewAdapter(buildTimeViewItem(task.metaData.startDateTime))
-        recurrenceAdapter = RecurrenceAdapter(buildRecurrenceViewItem(task.metaData.recurrence))
+        recurrenceAdapter = RecurrenceAdapter(
+            supportFragmentManager,
+            buildRecurrenceViewItem(task.metaData.recurrence)
+        )
 
         adapter.addAdapter(TASK_DESC_POSITION, descriptionAdapter)
         adapter.addAdapter(TASK_DATE_POSITION, dateAdapter)

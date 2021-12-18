@@ -156,4 +156,6 @@
     <string name="users_removing_error">Er ging iets mis bij het verwijderen</string>
     <string name="preferences_app_version_title">App versie</string>
     <string name="preferences_household_title">Groep ID</string>
+    <string name="recurrence">Herhalingen</string>
+    <string name="pick_frequency">Kies een frequentie</string>
 </resources>

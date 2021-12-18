@@ -3,20 +3,17 @@ package com.timgortworst.tasqs.presentation.features.task.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.CheckBox
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.core.view.get
-import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
-import com.google.android.material.textfield.TextInputEditText
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.TaskRecurrence
-import com.timgortworst.tasqs.infrastructure.extension.getOrFirst
 import com.timgortworst.tasqs.infrastructure.adapter.GenericArrayAdapter
+import com.timgortworst.tasqs.infrastructure.extension.getOrFirst
+import com.timgortworst.tasqs.presentation.features.task.view.NumberPickerDialog
 import kotlinx.android.synthetic.main.layout_input_recurrence.view.*
 import kotlinx.android.synthetic.main.layout_recurrence_picker.view.*
 import kotlinx.android.synthetic.main.layout_week_picker.view.*
@@ -24,6 +21,7 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoField
 
 class RecurrenceAdapter(
+    private val supportFragmentManager: FragmentManager,
     private val viewItem: ViewItem
 ) : RecyclerView.Adapter<RecurrenceAdapter.ViewHolder>() {
     private var adapter: GenericArrayAdapter<TaskRecurrence>? = null
@@ -35,8 +33,10 @@ class RecurrenceAdapter(
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.layout_input_recurrence, parent, false))
+        ViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.layout_input_recurrence, parent, false)
+        )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         setupCheckBox(holder, viewItem)
@@ -68,23 +68,18 @@ class RecurrenceAdapter(
     }
 
     private fun setupFrequency(viewHolder: ViewHolder, item: ViewItem) {
-        viewHolder.frequency.setOnFocusChangeListener { _, hasFocus ->
-            viewHolder.frequency.apply { if (text?.isBlank() == true && !hasFocus) setText("1") }
-        }
-
-        viewHolder.frequency.doAfterTextChanged {
-            if (it == null) return@doAfterTextChanged
-
-            val input = it.toString() // don't allow 0 as input
-            if (input.isNotEmpty() && input.first() == '0') {
-                it.replace(0, 1, "1")
+        viewHolder.frequency.setOnClickListener {
+            val numberPickerDialog = NumberPickerDialog(
+                viewHolder.frequency.text.toString().toInt()
+            ).apply {
+                valueChangeListener = NumberPicker.OnValueChangeListener { numberPicker, _, _ ->
+                    viewHolder.frequency.text = numberPicker.value.toString()
+                    item.callback?.onRecurrenceSelection(recurrenceFromSelection(viewHolder))
+                    adapter?.notifyDataSetChanged()
+                }
             }
-
-            item.callback?.onRecurrenceSelection(recurrenceFromSelection(viewHolder))
-            adapter?.notifyDataSetChanged()
+            numberPickerDialog.show(supportFragmentManager, null)
         }
-
-        viewHolder.frequency.setText(item.taskRecurrence.frequency.toString())
     }
 
     private fun setupSpinner(parentViewHolder: ViewHolder, item: ViewItem) {
@@ -195,7 +190,7 @@ class RecurrenceAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val checkBox: CheckBox = itemView.task_repeat_checkbox
         val taskRepeatView: View = itemView.task_repeat_view
-        val frequency: TextInputEditText = taskRepeatView.recurrence_frequency
+        val frequency: TextView = taskRepeatView.recurrence_frequency
         val spinner: Spinner = taskRepeatView.spinner_recurrence
         val weekPickerView: View = taskRepeatView.recurrence_week_picker
         val toggleGroup: MaterialButtonToggleGroup = weekPickerView.weekday_button_group
@@ -205,7 +200,7 @@ class RecurrenceAdapter(
         val label: TextView = row?.findViewById(android.R.id.text1) as TextView
     }
 
-    data class ViewItem(val taskRecurrence: TaskRecurrence){
+    data class ViewItem(val taskRecurrence: TaskRecurrence) {
         var callback: Callback? = null
     }
 

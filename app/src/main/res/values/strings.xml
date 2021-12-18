@@ -163,4 +163,6 @@
     <string name="users_removing_error">Error occurred when removing user</string>
     <string name="preferences_app_version_title">App version</string>
     <string name="preferences_household_title">Group ID</string>
+    <string name="recurrence">Recurrence</string>
+    <string name="pick_frequency">Pick a frequency</string>
 </resources>

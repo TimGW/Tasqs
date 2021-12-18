@@ -31,7 +31,11 @@
                 android:id="@+id/recurrence_frequency"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
                 android:gravity="center"
+                android:focusableInTouchMode="false"
                 android:inputType="number"
                 android:maxLength="2"
                 android:text="@string/default_custom_recurrence" />
