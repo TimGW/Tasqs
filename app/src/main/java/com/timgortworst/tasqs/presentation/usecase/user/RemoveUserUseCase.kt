@@ -1,6 +1,6 @@
 package com.timgortworst.tasqs.presentation.usecase.user
 
-import com.timgortworst.tasqs.domain.usecase.UseCase
+import com.timgortworst.tasqs.domain.usecase.FlowUseCase
 import com.timgortworst.tasqs.domain.usecase.user.RemoveUserUseCaseImpl
 
-interface RemoveUserUseCase : UseCase<String, RemoveUserUseCaseImpl.Params>
+interface RemoveUserUseCase : FlowUseCase<String, RemoveUserUseCaseImpl.Params>
