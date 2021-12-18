@@ -36,9 +36,18 @@ class CompleteTaskUseCaseImpl(
             } else {
                 // update repeating tasks
                 repeatingTasks.forEach { task ->
+
+                    val baseDate = if (task.metaData.startDateTime.isBefore(ZonedDateTime.now())) {
+                        // if in past, calc the next occurrence from today
+                        ZonedDateTime.now()
+                    } else {
+                        // if in future, calc the next occurrence from previous occurrence
+                        task.metaData.startDateTime
+                    }
+
                     task.metaData.startDateTime = calcNextTaskDate.execute(
                         CalculateNextTaskUseCaseImpl.Params(
-                            task.metaData.startDateTime,
+                            baseDate,
                             task.metaData.recurrence
                         )
                     )
