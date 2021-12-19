@@ -45,6 +45,7 @@ class TaskEditActivity : AppCompatActivity(),
     private lateinit var timeAdapter: TextViewAdapter
     private lateinit var dateAdapter: TextViewAdapter
     private lateinit var descriptionAdapter: EditTextAdapter
+    private lateinit var rotateUserAdapter: CheckboxAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +112,7 @@ class TaskEditActivity : AppCompatActivity(),
         binding.recyclerView.setHasFixedSize(true)
 
         descriptionAdapter = EditTextAdapter(buildDescriptionViewItem(task.description))
+        rotateUserAdapter = CheckboxAdapter(buildRotateUserViewItem(task.metaData.rotateUser))
         dateAdapter = TextViewAdapter(buildDateViewItem(task.metaData.startDateTime))
         timeAdapter = TextViewAdapter(buildTimeViewItem(task.metaData.startDateTime))
         recurrenceAdapter = RecurrenceAdapter(
@@ -119,6 +121,7 @@ class TaskEditActivity : AppCompatActivity(),
         )
 
         adapter.addAdapter(TASK_DESC_POSITION, descriptionAdapter)
+        adapter.addAdapter(TASK_ROTATE_POSITION, rotateUserAdapter)
         adapter.addAdapter(TASK_DATE_POSITION, dateAdapter)
         adapter.addAdapter(TASK_TIME_POSITION, timeAdapter)
         adapter.addAdapter(TASK_REC_POSITION, recurrenceAdapter)
@@ -135,6 +138,19 @@ class TaskEditActivity : AppCompatActivity(),
             object : EditTextAdapter.Callback {
                 override fun onDescriptionInput(text: String) {
                     task.description = text
+                }
+            })
+    }
+
+    private fun buildRotateUserViewItem(
+        rotateUser: Boolean
+    ): CheckboxAdapter.ViewItem {
+        return CheckboxAdapter.ViewItem(
+            rotateUser,
+            getString(R.string.rotate_user_checkbox_text),
+            object : CheckboxAdapter.Callback {
+                override fun onCheckedChanged(isChecked: Boolean) {
+                    task.metaData.rotateUser = isChecked
                 }
             })
     }
@@ -231,9 +247,10 @@ class TaskEditActivity : AppCompatActivity(),
         const val INTENT_EXTRA_EDIT_TASK = "INTENT_EXTRA_EDIT_TASK"
 
         const val TASK_DESC_POSITION = 0
-        const val TASK_DATE_POSITION = 1
-        const val TASK_TIME_POSITION = 2
-        const val TASK_REC_POSITION = 3
+        const val TASK_ROTATE_POSITION = 1
+        const val TASK_DATE_POSITION = 2
+        const val TASK_TIME_POSITION = 3
+        const val TASK_REC_POSITION = 4
 
         fun intentBuilder(context: Context, task: Task? = null): Intent {
             val intent = Intent(context, TaskEditActivity::class.java)

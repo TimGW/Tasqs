@@ -44,6 +44,7 @@ class TaskDataMapper : Mapper<Map<String, Any>, Task> {
         if (metaData.recurrence !is TaskRecurrence.SingleTask) result[TASK_FREQUENCY] = metaData.recurrence.frequency
         result[TASK_RECURRENCE] = metaData.recurrence.id
         (metaData.recurrence as? TaskRecurrence.Weekly)?.let { result[TASK_ON_DAYS] = it.onDaysOfWeek }
+        result[TASK_ROTATE_USER] = metaData.rotateUser
         return result
     }
 
@@ -58,8 +59,9 @@ class TaskDataMapper : Mapper<Map<String, Any>, Task> {
         val recurrenceFrequency =  networkMetaData[TASK_FREQUENCY] as? Long
         val recurrenceWeekDays =  networkMetaData[TASK_ON_DAYS] as? List<Long>
         val metaRecurrence = mapIncomingRecurrence(recurrenceType, recurrenceFrequency?.toInt(), recurrenceWeekDays?.map { it.toInt() })
+        val rotateUser = (networkMetaData[TASK_ROTATE_USER] as? Boolean) ?: false
 
-        return Task.MetaData(metaZonedDateTime, metaRecurrence)
+        return Task.MetaData(metaZonedDateTime, metaRecurrence, rotateUser)
     }
 
     private fun mapIncomingUser(taskUser: Map<String, Any?>): Task.User? {
@@ -99,6 +101,7 @@ class TaskDataMapper : Mapper<Map<String, Any>, Task> {
         const val TASK_RECURRENCE = "recurrence_type"
         const val TASK_FREQUENCY = "recurrence_frequency"
         const val TASK_ON_DAYS = "recurrence_weekdays"
+        const val TASK_ROTATE_USER = "rotate_user"
 
         // user
         const val USER_ID_REF = "id"

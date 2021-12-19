@@ -26,7 +26,7 @@ val useCaseModule = module {
     factory<GetTasksForUserQueryUseCase> { GetTasksForUserQueryUseCaseImpl(get()) }
     factory<GetAllTasksUseCase> { GetAllTasksUseCaseImpl(get()) }
     factory<DeleteTaskUseCase> { DeleteTaskUseCaseImpl(get(), get(), get()) }
-    factory<CompleteTaskUseCase> { CompleteTaskUseCaseImpl(get(), get(), get(), get()) }
+    factory<CompleteTaskUseCase> { CompleteTaskUseCaseImpl(get(), get(), get(), get(), get()) }
     factory<CalculateNextTaskUseCase> { CalculateNextTaskUseCaseImpl() }
     factory<CreateOrUpdateTaskUseCase> { CreateOrUpdateTaskUseCaseImpl(get(), get(), get(), get()) }
     factory<SignInUseCase> { SignInUseCaseImpl(get(), get(), get()) }
