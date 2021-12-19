@@ -168,4 +168,5 @@
     <string name="pick_frequency">Pick a frequency</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="review_flow_done">Thank you for letting us know what you think!</string>
 </resources>

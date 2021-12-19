@@ -20,8 +20,8 @@ android {
         applicationId "com.timgortworst.tasqs"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 12
-        versionName "1.1"
+        versionCode 13
+        versionName "1.1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resValue "string", "ad_app_id", apikeyProperties["ad_app_id"]
@@ -156,4 +156,8 @@ dependencies {
     }
 
     implementation 'com.plattysoft.leonids:LeonidsLib:1.3.2'
+
+    // in-app review API
+    implementation("com.google.android.play:core:1.10.0")
+    implementation("com.google.android.play:core-ktx:1.8.1")
 }

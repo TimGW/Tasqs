@@ -18,11 +18,13 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.plattysoft.leonids.ParticleSystem
 import com.timgortworst.tasqs.R
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.infrastructure.extension.snackbar
+import com.timgortworst.tasqs.infrastructure.extension.toast
 import com.timgortworst.tasqs.presentation.features.splash.SplashActivity
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.coroutines.launch
@@ -34,6 +36,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private var counter: Int = 0
     private var snackbar: Snackbar? = null
     private var remainingTimeCounter: CountDownTimer? = null
+    private var rateAppPref: Preference? = null
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -50,7 +53,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         settingsViewModel.easterEgg.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
-                is Response.Success -> { response.data?.let { fireEasterEggUi(it.id, it.data) } }
+                is Response.Success -> {
+                    response.data?.let { fireEasterEggUi(it.id, it.data) }
+                }
             }
         })
     }
@@ -68,7 +73,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         userNamePref?.summary = data.name
                     }
                     is Response.Error -> {
-                        householdIdPref?.summary =  getString(R.string.error_generic)
+                        householdIdPref?.summary = getString(R.string.error_generic)
                         userNamePref?.summary = getString(R.string.error_generic)
                     }
                 }
@@ -142,21 +147,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun aboutPrefs() {
-        (findPreference("preferences_rate_app_key") as? Preference)?.setOnPreferenceClickListener {
-            val activity = activity ?: return@setOnPreferenceClickListener false
+        rateAppPref = (findPreference("preferences_rate_app_key") as? Preference)
 
-            val intent = try {
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("market://details?id=${activity.packageName}")
-                )
-            } catch (ex: ActivityNotFoundException) {
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=${activity.packageName}")
-                )
+        rateAppPref?.setOnPreferenceClickListener {
+            val manager = ReviewManagerFactory.create(requireActivity())
+
+            manager.requestReviewFlow().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val reviewInfo = task.result
+                    val flow = manager.launchReviewFlow(requireActivity(), reviewInfo)
+                    flow.addOnCompleteListener {
+                        requireContext().toast(R.string.review_flow_done)
+                    }
+                } else {
+                    requireContext().toast(R.string.error_generic)
+                }
             }
-            startActivity(intent)
             true
         }
 
