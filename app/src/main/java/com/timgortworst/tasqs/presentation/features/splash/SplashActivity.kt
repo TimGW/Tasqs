@@ -113,7 +113,7 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             }
             .setNegativeButton(getString(R.string.forced_update_dialog_negative_button)) { _, _ ->
-                finish()
+                noUpdate()
             }
             .setCancelable(false)
             .create()

@@ -27,7 +27,8 @@ data class Task(
             ZoneId.systemDefault()
         ),
         var recurrence: TaskRecurrence = TaskRecurrence.SingleTask(1),
-        var rotateUser: Boolean = false
+        var rotateUser: Boolean = false,
+        var isPlanned: Boolean = true
     ) : Parcelable
 
     @Keep

@@ -54,6 +54,7 @@
 ]]></string>
     <string name="repeat_checkbox_text">Herhalen</string>
     <string name="rotate_user_checkbox_text">Rouleer tussen gebruikers</string>
+    <string name="is_planned_checkbox_text">Plannen voor datum</string>
     <string name="repeat_interval_hint">Herhaal interval</string>
     <string name="repeat_label_interval_text_day">D</string>
     <string name="repeat_label_interval_text_month">M</string>

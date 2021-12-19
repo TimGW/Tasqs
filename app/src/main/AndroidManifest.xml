@@ -72,19 +72,6 @@
             android:authorities="${applicationId}.workmanager-init"
             android:exported="false"
             tools:node="remove" />
-
-        <!--FCM-->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="default_notification_channel_id" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_home" />
-        <service android:name=".infrastructure.service.FirebaseMsgService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
     </application>
 
 </manifest>

@@ -46,6 +46,7 @@ class TaskEditActivity : AppCompatActivity(),
     private lateinit var dateAdapter: TextViewAdapter
     private lateinit var descriptionAdapter: EditTextAdapter
     private lateinit var rotateUserAdapter: CheckboxAdapter
+    private lateinit var plannedAdapter: CheckboxAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,6 +114,7 @@ class TaskEditActivity : AppCompatActivity(),
 
         descriptionAdapter = EditTextAdapter(buildDescriptionViewItem(task.description))
         rotateUserAdapter = CheckboxAdapter(buildRotateUserViewItem(task.metaData.rotateUser))
+        plannedAdapter = CheckboxAdapter(buildIsPlannedViewItem(task.metaData.isPlanned))
         dateAdapter = TextViewAdapter(buildDateViewItem(task.metaData.startDateTime))
         timeAdapter = TextViewAdapter(buildTimeViewItem(task.metaData.startDateTime))
         recurrenceAdapter = RecurrenceAdapter(
@@ -122,6 +124,7 @@ class TaskEditActivity : AppCompatActivity(),
 
         adapter.addAdapter(TASK_DESC_POSITION, descriptionAdapter)
         adapter.addAdapter(TASK_ROTATE_POSITION, rotateUserAdapter)
+        adapter.addAdapter(TASK_PLANNED_POSITION, plannedAdapter)
         adapter.addAdapter(TASK_DATE_POSITION, dateAdapter)
         adapter.addAdapter(TASK_TIME_POSITION, timeAdapter)
         adapter.addAdapter(TASK_REC_POSITION, recurrenceAdapter)
@@ -151,6 +154,37 @@ class TaskEditActivity : AppCompatActivity(),
             object : CheckboxAdapter.Callback {
                 override fun onCheckedChanged(isChecked: Boolean) {
                     task.metaData.rotateUser = isChecked
+                }
+            })
+    }
+
+    private fun buildIsPlannedViewItem(
+        isPlanned: Boolean
+    ): CheckboxAdapter.ViewItem {
+        return CheckboxAdapter.ViewItem(
+            isPlanned,
+            getString(R.string.is_planned_checkbox_text),
+            object : CheckboxAdapter.Callback {
+                override fun onCheckedChanged(isChecked: Boolean) {
+                    task.metaData.isPlanned = isChecked
+
+                    if (isChecked) {
+                        adapter.addAdapter(TASK_DATE_POSITION, dateAdapter)
+                        adapter.addAdapter(TASK_TIME_POSITION, timeAdapter)
+                        adapter.addAdapter(TASK_REC_POSITION, recurrenceAdapter)
+
+                        adapter.notifyItemInserted(TASK_DATE_POSITION)
+                        adapter.notifyItemInserted(TASK_TIME_POSITION)
+                        adapter.notifyItemInserted(TASK_REC_POSITION)
+                    } else {
+                        adapter.removeAdapter(dateAdapter)
+                        adapter.removeAdapter(timeAdapter)
+                        adapter.removeAdapter(recurrenceAdapter)
+
+                        adapter.notifyItemRemoved(TASK_DATE_POSITION)
+                        adapter.notifyItemRemoved(TASK_TIME_POSITION)
+                        adapter.notifyItemRemoved(TASK_REC_POSITION)
+                    }
                 }
             })
     }
@@ -248,9 +282,10 @@ class TaskEditActivity : AppCompatActivity(),
 
         const val TASK_DESC_POSITION = 0
         const val TASK_ROTATE_POSITION = 1
-        const val TASK_DATE_POSITION = 2
-        const val TASK_TIME_POSITION = 3
-        const val TASK_REC_POSITION = 4
+        const val TASK_PLANNED_POSITION = 2
+        const val TASK_DATE_POSITION = 3
+        const val TASK_TIME_POSITION = 4
+        const val TASK_REC_POSITION = 5
 
         fun intentBuilder(context: Context, task: Task? = null): Intent {
             val intent = Intent(context, TaskEditActivity::class.java)
