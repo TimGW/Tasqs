@@ -1,5 +1,6 @@
 package com.timgortworst.tasqs.domain.usecase.task
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.timgortworst.tasqs.domain.model.Task
 import com.timgortworst.tasqs.domain.model.response.ErrorHandler
@@ -27,8 +28,9 @@ class CreateOrUpdateTaskUseCaseImpl(
         emit(Response.Loading)
 
         val result = params.task
+        val userId = params.task.user?.userId ?: FirebaseAuth.getInstance().currentUser?.uid
 
-        getUserUseCase.execute(GetUserUseCaseImpl.Params()).collect {
+        getUserUseCase.execute(GetUserUseCaseImpl.Params(userId = userId)).collect {
             val data = (it as? Response.Success)?.data ?: return@collect
             result.user = Task.User(data.userId, data.name)
         }

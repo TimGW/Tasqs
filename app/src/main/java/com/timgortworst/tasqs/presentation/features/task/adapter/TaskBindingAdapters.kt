@@ -99,6 +99,22 @@ fun TextView.formatName(response: Response<Task>?) {
     }
 }
 
+@BindingAdapter("formatRotate")
+fun TextView.formatRotate(response: Response<Task>?) {
+    text = when(response) {
+        Response.Loading -> "-"
+        is Response.Success -> {
+            if(response.data?.metaData?.rotateUser == true) {
+                context.getString(R.string.yes)
+            } else {
+                context.getString(R.string.no)
+            }
+        }
+        is Response.Error -> context.getString(R.string.error_generic)
+        else -> return
+    }
+}
+
 private fun formatWeekdays(context: Context, daysOfWeek: List<Int>?): String {
     return daysOfWeek?.joinToString {
         when (it) {

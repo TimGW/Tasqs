@@ -53,6 +53,7 @@
   <a href="mailto:mittylabs@gmail.com" target="_blank">mittylabs@gmail.com</a></p><p>&nbsp;</p><p><br></p>
 ]]></string>
     <string name="repeat_checkbox_text">Herhalen</string>
+    <string name="rotate_user_checkbox_text">Rouleer tussen gebruikers</string>
     <string name="repeat_interval_hint">Herhaal interval</string>
     <string name="repeat_label_interval_text_day">D</string>
     <string name="repeat_label_interval_text_month">M</string>
@@ -158,4 +159,6 @@
     <string name="preferences_household_title">Groep ID</string>
     <string name="recurrence">Herhalingen</string>
     <string name="pick_frequency">Kies een frequentie</string>
+    <string name="yes">ja</string>
+    <string name="no">nee</string>
 </resources>

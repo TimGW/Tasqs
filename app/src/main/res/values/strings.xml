@@ -53,6 +53,7 @@
   <a href="mailto:mittylabs@gmail.com" target="_blank">mittylabs@gmail.com</a></p><p>&nbsp;</p><p><br></p>
 ]]></string>
     <string name="repeat_checkbox_text">Repeat</string>
+    <string name="rotate_user_checkbox_text">Rotate between users</string>
     <string name="repeat_interval_hint">repeat interval</string>
     <string name="repeat_label_interval_text_day">D</string>
     <string name="repeat_label_interval_text_month">M</string>
@@ -165,4 +166,6 @@
     <string name="preferences_household_title">Group ID</string>
     <string name="recurrence">Recurrence</string>
     <string name="pick_frequency">Pick a frequency</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 </resources>

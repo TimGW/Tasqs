@@ -26,7 +26,8 @@ data class Task(
             LocalTime.now().truncatedTo(ChronoUnit.HOURS).plusHours(1),
             ZoneId.systemDefault()
         ),
-        var recurrence: TaskRecurrence = TaskRecurrence.SingleTask(1)
+        var recurrence: TaskRecurrence = TaskRecurrence.SingleTask(1),
+        var rotateUser: Boolean = false
     ) : Parcelable
 
     @Keep
