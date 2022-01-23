@@ -16,7 +16,7 @@ android {
         versionName "1.1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        resValue "string", "ad_app_id", apikeyProperties["ad_app_id"]
+        resValue "string", "ad_app_id", System.getenv("AD_APP_ID").toString()
     }
 
     signingConfigs {
@@ -56,7 +56,7 @@ android {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             resValue "string", "app_name", "Tasqs debug"
-            resValue "string", "ad_unit_id", apikeyProperties["ad_unit_id_debug"]
+            resValue "string", "ad_unit_id", System.getenv("AD_UNIT_ID_DEBUG").toString()
         }
         debugMini {
             initWith debug
@@ -73,7 +73,7 @@ android {
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "Tasqs"
-            resValue "string", "ad_unit_id", apikeyProperties["ad_unit_id"]
+            resValue "string", "ad_unit_id", System.getenv("AD_UNIT_ID").toString()
         }
     }
 
