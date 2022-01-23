@@ -24,7 +24,7 @@ import org.koin.core.module.Module
 import java.util.*
 
 /**
- * Created by tim.gortworst on 17/02/2018.
+ * Created by tim.gortworst on 17/02/2018
  */
 class TasqsApp : Application(), Configuration.Provider {
     private val sharedPref: SharedPrefs by inject()
