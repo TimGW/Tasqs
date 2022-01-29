@@ -52,7 +52,7 @@ class UserListFragment : Fragment(), OnLongClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userViewModel.userOptions.observe(viewLifecycleOwner, EventObserver {showBottomMenuFor(it)})
+        userViewModel.userOptions.observe(viewLifecycleOwner, Observer { showBottomMenuFor(it) })
 
         userViewModel.userRemoved.observe(viewLifecycleOwner, Observer { response ->
             val activity = (activity as? MainActivity) ?: return@Observer

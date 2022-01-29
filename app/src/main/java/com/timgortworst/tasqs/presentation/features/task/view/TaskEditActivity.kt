@@ -66,8 +66,6 @@ class TaskEditActivity : AppCompatActivity(),
             }
         })
 
-        viewModel.emptyUserMsg.observe(this, EventObserver { presentError(it) })
-
         viewModel.emptyDescMsg.observe(this, EventObserver {
             descriptionAdapter.setViewItem(
                 buildDescriptionViewItem(
