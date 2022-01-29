@@ -31,11 +31,11 @@ fun TextView.formatDateTime(response: Response<Task>?) {
         Response.Loading -> "-"
         is Response.Success -> {
             val zonedDateTime = response.data?.metaData?.startDateTime ?: return
+            val formattedDayOfWeek = zonedDateTime.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
             val formattedDayOfMonth = zonedDateTime.dayOfMonth.toString()
-            val formattedMonth =
-                zonedDateTime.month?.getDisplayName(TextStyle.FULL, Locale.getDefault())
+            val formattedMonth = zonedDateTime.month?.getDisplayName(TextStyle.FULL, Locale.getDefault())
             val formattedYear = zonedDateTime.year.toString()
-            "$formattedDayOfMonth $formattedMonth $formattedYear om ${formatTime(zonedDateTime)}"
+            "$formattedDayOfWeek $formattedDayOfMonth $formattedMonth $formattedYear @ ${formatTime(zonedDateTime)}"
         }
         is Response.Error -> context.getString(R.string.error_generic)
         else -> return
@@ -55,15 +55,13 @@ fun TextView.formatRecurrence(response: Response<Task>?) {
             if (recurrence is TaskRecurrence.SingleTask) {
                 context.getString(R.string.is_not_repeated)
             } else {
-                val weeklyAddon =
-                    if (recurrence is TaskRecurrence.Weekly) " ${context.getString(R.string.on)} ${formatWeekdays(
+                val weeklyAddon = if (recurrence is TaskRecurrence.Weekly) " ${context.getString(R.string.on)} ${formatWeekdays(
                         context, recurrence.onDaysOfWeek
                     )}" else ""
-                val isRepeatedOn = context.getString(R.string.is_repeated)
                 val msg = if (recurrence.frequency > 1) {
-                    "$isRepeatedOn ${recurrence.frequency} ${context.getString(recurrence.pluralName)}"
+                    "${recurrence.frequency} ${context.getString(recurrence.pluralName)}"
                 } else {
-                    "$isRepeatedOn ${context.getString(recurrence.name)}"
+                    context.getString(recurrence.name)
                 }.plus(weeklyAddon)
                 msg
             }

@@ -99,13 +99,13 @@
     <string name="repeat_weekday_sa">S</string>
     <string name="repeat_weekday_su">S</string>
 
-    <string name="repeat_mo">mo</string>
-    <string name="repeat_tu">tu</string>
-    <string name="repeat_we">we</string>
-    <string name="repeat_th">th</string>
-    <string name="repeat_fr">fr</string>
-    <string name="repeat_sa">sa</string>
-    <string name="repeat_su">su</string>
+    <string name="repeat_mo">monday</string>
+    <string name="repeat_tu">tuesday</string>
+    <string name="repeat_we">wednesday</string>
+    <string name="repeat_th">thursday</string>
+    <string name="repeat_fr">friday</string>
+    <string name="repeat_sa">saturday</string>
+    <string name="repeat_su">sunday</string>
     <string name="is_repeated_for_every">Is repeated for every</string>
     <string name="is_repeated_on">Is repeated on</string>
     <string name="default_custom_recurrence">1</string>
@@ -121,8 +121,7 @@
     <string name="delete_dialog_text_single">Are you sure you want to delete this task?"</string>
     <string name="delete_account_dialog_text">Are you sure you want to delete your account, settings, reminders, tasks and remove yourself from this group?"</string>
     <string name="is_not_repeated">Is not repeated</string>
-    <string name="on">on:</string>
-    <string name="is_repeated">is repeated every</string>
+    <string name="on">on</string>
     <string name="repeat"/>
     <string name="user_picker_error">Pick a user</string>
     <string name="skip">not now</string>
@@ -133,7 +132,7 @@
     <string name="onboarding_subtitle_connect">Invite friends or family to share and update your tasks. New or edited tasks will be automatically synced and pushed to your friends</string>
     <string name="onboarding_subtitle_login">Login now to instantly share your tasks. Je can always choose to login later</string>
     <string name="info_task_next_date">Next task on</string>
-    <string name="info_repeated_title">Repeated on</string>
+    <string name="info_repeated_title">Repeated every</string>
     <string name="info_task_description_title">Description</string>
     <string name="info_task_assinged_title">Assigned to</string>
     <string name="forced_update_dialog_negative_button">Close</string>

@@ -7,12 +7,16 @@ import com.timgortworst.tasqs.domain.model.response.ErrorHandler
 import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.infrastructure.extension.getOrFirst
-import com.timgortworst.tasqs.presentation.usecase.task.*
+import com.timgortworst.tasqs.presentation.usecase.task.CalculateNextTaskUseCase
+import com.timgortworst.tasqs.presentation.usecase.task.CompleteTaskUseCase
+import com.timgortworst.tasqs.presentation.usecase.task.CreateOrUpdateTaskUseCase
+import com.timgortworst.tasqs.presentation.usecase.task.DeleteTaskUseCase
 import com.timgortworst.tasqs.presentation.usecase.user.GetAllUsersUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import org.threeten.bp.LocalDate
 import org.threeten.bp.ZonedDateTime
 
 class CompleteTaskUseCaseImpl(
@@ -41,7 +45,11 @@ class CompleteTaskUseCaseImpl(
 
                     val baseDate = if (task.metaData.startDateTime.isBefore(ZonedDateTime.now())) {
                         // if in past, calc the next occurrence from today
-                        ZonedDateTime.now()
+                        ZonedDateTime.of(
+                            LocalDate.now(),
+                            task.metaData.startDateTime.toLocalTime(),
+                            task.metaData.startDateTime.zone
+                        )
                     } else {
                         // if in future, calc the next occurrence from previous occurrence
                         task.metaData.startDateTime
