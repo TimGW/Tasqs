@@ -16,7 +16,7 @@ android {
         versionName "1.1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        resValue "string", "ad_app_id", System.getenv("AD_APP_ID").toString()
+        resValue "string", "ad_app_id", "ca-app-pub-7139316398194231~5701195962"
     }
 
     signingConfigs {
@@ -113,7 +113,6 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:2.3.2"
     implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version" // deprecated -> used in presenters
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation 'com.google.android.material:material:1.2.0-alpha05'
@@ -138,16 +137,16 @@ dependencies {
     testImplementation "org.koin:koin-test:$koin_version"
 
     // firebase
-    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'com.firebaseui:firebase-ui-auth:6.2.1'
-    implementation 'com.google.firebase:firebase-firestore:21.4.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.0.1'
     implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
-    implementation 'com.google.firebase:firebase-analytics:17.4.3'
-    implementation 'com.google.firebase:firebase-dynamic-links:19.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.7'
+    implementation 'com.google.firebase:firebase-analytics:20.0.2'
+    implementation 'com.google.firebase:firebase-dynamic-links:21.0.0'
     implementation 'com.google.firebase:firebase-config-ktx:21.0.1'
-    implementation 'com.google.firebase:firebase-messaging:20.2.0'
-    implementation 'com.google.firebase:firebase-perf:19.0.7'
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    implementation 'com.google.firebase:firebase-perf:20.0.4'
 
     // Date/Time
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
