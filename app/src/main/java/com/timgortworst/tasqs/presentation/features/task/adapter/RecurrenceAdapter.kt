@@ -68,6 +68,8 @@ class RecurrenceAdapter(
     }
 
     private fun setupFrequency(viewHolder: ViewHolder, item: ViewItem) {
+        viewHolder.frequency.text = item.taskRecurrence.frequency.toString()
+
         viewHolder.frequency.setOnClickListener {
             val numberPickerDialog = NumberPickerDialog(
                 viewHolder.frequency.text.toString().toInt()
