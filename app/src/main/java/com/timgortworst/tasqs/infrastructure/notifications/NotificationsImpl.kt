@@ -1,6 +1,5 @@
 package com.timgortworst.tasqs.infrastructure.notifications
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -30,14 +29,8 @@ class NotificationsImpl(
         )
 
         with(NotificationManagerCompat.from(context)) {
-            notify(
-                requestCode,
-                buildNotification(context, title, text, pendingIntent)
-            )
-            notify(
-                NOTIFICATION_GROUP_ID,
-                buildSummaryNotification(context, title, text)
-            )
+            notify(requestCode, buildNotification(context, title, text, pendingIntent))
+            notify(NOTIFICATION_GROUP_ID, buildSummaryNotification(context, title, text))
         }
     }
 
@@ -45,30 +38,22 @@ class NotificationsImpl(
         context: Context,
         title: String,
         text: String
-    ): Notification {
-        return NotificationCompat.Builder(
-            context,
-            CHANNEL_ID
-        )
-            .setSmallIcon(R.drawable.ic_home)
-            .setContentTitle(title)
-            .setContentText(text)
-            .setAutoCancel(true)
-            .setGroupSummary(true)
-            .setGroup(NOTIFICATION_GROUP_KEY)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
-            .build()
-    }
+    ) = NotificationCompat.Builder(context, CHANNEL_ID)
+        .setSmallIcon(R.drawable.ic_home)
+        .setContentTitle(title)
+        .setContentText(text)
+        .setAutoCancel(true)
+        .setGroupSummary(true)
+        .setGroup(NOTIFICATION_GROUP_KEY)
+        .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+        .build()
 
     private fun buildNotification(
         context: Context,
         notificationTitle: String,
         notificationMessage: String,
         notificationPendingIntent: PendingIntent
-    ) = NotificationCompat.Builder(
-        context,
-        CHANNEL_ID
-    )
+    ) = NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_home)
         .setContentTitle(notificationTitle)
         .setContentText(notificationMessage)

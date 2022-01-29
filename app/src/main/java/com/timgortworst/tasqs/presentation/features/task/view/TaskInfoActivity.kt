@@ -80,7 +80,7 @@ class TaskInfoActivity : AppCompatActivity() {
             setDisplayShowHomeEnabled(true)
         }
 
-        taskViewModel.taskInfoAction.observe(this, EventObserver {
+        taskViewModel.taskInfoAction.observe(this, Observer {
             progress_bar.visibility = View.GONE
             when (it) {
                 TaskInfoAction.Finish -> {

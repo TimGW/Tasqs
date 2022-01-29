@@ -1,15 +1,15 @@
 package com.timgortworst.tasqs.presentation.features.user
 
 import androidx.lifecycle.*
-import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.model.User
+import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.tasqs.domain.usecase.user.RemoveUserUseCaseImpl
-import com.timgortworst.tasqs.presentation.base.model.Event
 import com.timgortworst.tasqs.presentation.usecase.user.GetAllUsersUseCase
 import com.timgortworst.tasqs.presentation.usecase.user.GetUserUseCase
 import com.timgortworst.tasqs.presentation.usecase.user.RemoveUserUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -21,8 +21,8 @@ class UserViewModel(
 
     val allUsers = getAllUsersUseCase.execute(None).asLiveData(viewModelScope.coroutineContext)
 
-    private val _userOptions = MutableLiveData<Event<User>>()
-    val userOptions: LiveData<Event<User>>
+    private val _userOptions = MutableLiveData<User>()
+    val userOptions: LiveData<User>
         get() = _userOptions
 
     private val _userRemoved = MutableLiveData<Response<String>>()
@@ -30,24 +30,22 @@ class UserViewModel(
         get() = _userRemoved
 
     fun removeFromHousehold(user: User) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             removeUserUseCase.execute(RemoveUserUseCaseImpl.Params(user.userId)).collect {
-                _userRemoved.value = it
+                _userRemoved.postValue(it)
             }
         }
     }
 
     fun shouldDisplayBottomSheetFor(user: User) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             getUserUseCase.execute(GetUserUseCaseImpl.Params()).collect { response ->
-                when (response) {
-                    is Response.Success -> {
-                        if (response.data?.isAdmin == true &&
-                            response.data.userId != user.userId
-                        ) {
-                            _userOptions.value = Event(user)
-                        }
+                if (response is Response.Success) {
+                    if (response.data?.isAdmin == true &&
+                        response.data.userId != user.userId
+                    ) {
+                        _userOptions.postValue(user)
                     }
                 }
             }

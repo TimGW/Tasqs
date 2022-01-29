@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.timgortworst.tasqs.R
@@ -55,7 +56,7 @@ class TaskEditActivity : AppCompatActivity(),
         setupToolbar(task.description)
         setupAdapter()
 
-        viewModel.actionDone.observe(this, EventObserver {
+        viewModel.actionDone.observe(this, Observer {
             binding.progressBar.visibility = View.INVISIBLE
             when (it) {
                 Response.Loading -> binding.progressBar.visibility = View.VISIBLE

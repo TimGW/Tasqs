@@ -22,11 +22,7 @@ class NotificationWorker(
             ?: context.getString(R.string.notification_default_msg)
 
         if (id != null) {
-            notifications.notify(
-                id,
-                context.getString(R.string.notification_title, title),
-                context.getString(R.string.notification_message, text)
-            )
+            notifications.notify(id, title, text)
             Result.success()
         } else {
             Result.failure()

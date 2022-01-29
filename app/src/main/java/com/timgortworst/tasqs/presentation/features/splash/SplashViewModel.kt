@@ -16,6 +16,7 @@ import com.timgortworst.tasqs.presentation.usecase.splash.ForcedUpdateUseCase
 import com.timgortworst.tasqs.presentation.usecase.splash.SwitchHouseholdUseCase
 import com.timgortworst.tasqs.presentation.usecase.splash.ValidationUseCase
 import com.timgortworst.tasqs.presentation.usecase.task.AppStartupNotificationUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -35,9 +36,9 @@ class SplashViewModel(
         get() = _updateAction
 
     fun handleAppStartup(referredHouseholdId: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             validationUseCase.execute(ValidationUseCaseImpl.Params(referredHouseholdId)).collect {
-                _startupAction.value = Event(it)
+                _startupAction.postValue(Event(it))
             }
 
             appStartupNotificationUseCase.execute(AppStartupNotificationUseCaseImpl.Params()).collect()
@@ -45,17 +46,17 @@ class SplashViewModel(
     }
 
     fun switchHousehold(newId: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             switchHouseholdUseCase.execute(SwitchHouseholdUseCaseImpl.Params(newId)).collect {
-                _startupAction.value = Event(it)
+                _startupAction.postValue(Event(it))
             }
         }
     }
 
     fun checkForUpdates(currentVersion: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             forcedUpdateUseCase.execute(ForcedUpdateUseCaseImpl.Params(currentVersion)).collect {
-                _updateAction.value = Event(it)
+                _updateAction.postValue(Event(it))
             }
         }
     }

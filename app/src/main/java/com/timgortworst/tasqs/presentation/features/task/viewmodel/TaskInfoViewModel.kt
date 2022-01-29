@@ -9,11 +9,11 @@ import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.usecase.task.CompleteTaskUseCaseImpl
 import com.timgortworst.tasqs.domain.usecase.task.DeleteTaskUseCaseImpl
 import com.timgortworst.tasqs.domain.usecase.task.GetTaskUseCaseImpl
-import com.timgortworst.tasqs.presentation.base.model.Event
 import com.timgortworst.tasqs.presentation.base.model.TaskInfoAction
 import com.timgortworst.tasqs.presentation.usecase.task.CompleteTaskUseCase
 import com.timgortworst.tasqs.presentation.usecase.task.DeleteTaskUseCase
 import com.timgortworst.tasqs.presentation.usecase.task.GetTaskUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -23,8 +23,8 @@ class TaskInfoViewModel(
     private val getTaskUseCase: GetTaskUseCase
 ) : ViewModel() {
 
-    private val _taskInfoAction = MutableLiveData<Event<TaskInfoAction>>()
-    val taskInfoAction: LiveData<Event<TaskInfoAction>>
+    private val _taskInfoAction = MutableLiveData<TaskInfoAction>()
+    val taskInfoAction: LiveData<TaskInfoAction>
         get() = _taskInfoAction
 
     private val _task = MutableLiveData<Response<Task>>()
@@ -39,19 +39,19 @@ class TaskInfoViewModel(
     }
 
     fun taskCompleted(task: Task) {
-        _taskInfoAction.value = Event(TaskInfoAction.Loading)
+        _taskInfoAction.value = TaskInfoAction.Loading
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             completeTaskUseCase.execute(CompleteTaskUseCaseImpl.Params(listOf(task))).collect {
-                _taskInfoAction.value = Event(TaskInfoAction.Finish)
+                _taskInfoAction.postValue(TaskInfoAction.Finish)
             }
         }
     }
 
     fun fetchTask(id: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getTaskUseCase.execute(GetTaskUseCaseImpl.Params(id)).collect {
-                _task.value = it
+                _task.postValue(it)
             }
         }
     }
@@ -61,13 +61,15 @@ class TaskInfoViewModel(
     }
 
     fun deleteTask() {
-        viewModelScope.launch {
+        _taskInfoAction.value = TaskInfoAction.Loading
+
+        viewModelScope.launch(Dispatchers.IO) {
             deleteTaskUseCase.execute(
                 DeleteTaskUseCaseImpl.Params((listOf(task.value as? Response.Success).map {
                     it?.data ?: return@launch
                 }))
             ).collect {
-                _taskInfoAction.value = Event(TaskInfoAction.Finish)
+                _taskInfoAction.postValue(TaskInfoAction.Finish)
             }
         }
     }
