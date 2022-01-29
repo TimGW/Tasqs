@@ -188,6 +188,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         AuthUI.getInstance().signOut(activity)
             .addOnSuccessListener {
+                settingsViewModel.removeAllNotifications()
                 context?.cacheDir?.deleteRecursively() // clear cache
                 activity.finishAffinity()
                 startActivity(SplashActivity.intentBuilder(activity))

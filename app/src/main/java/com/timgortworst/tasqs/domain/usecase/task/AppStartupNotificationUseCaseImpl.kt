@@ -6,14 +6,12 @@ import com.timgortworst.tasqs.domain.repository.TaskRepository
 import com.timgortworst.tasqs.domain.usecase.None
 import com.timgortworst.tasqs.infrastructure.notifications.NotificationQueue
 import com.timgortworst.tasqs.presentation.usecase.task.AppStartupNotificationUseCase
-import com.timgortworst.tasqs.presentation.usecase.task.DeleteNotificationsUseCase
 import com.timgortworst.tasqs.presentation.usecase.task.SetNotificationUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import org.threeten.bp.ZonedDateTime.*
-import java.time.ZonedDateTime
+import org.threeten.bp.ZonedDateTime.now
 
 class AppStartupNotificationUseCaseImpl(
     private val taskRepository: TaskRepository,

@@ -6,6 +6,7 @@ import com.timgortworst.tasqs.domain.model.response.Response
 import com.timgortworst.tasqs.domain.usecase.user.GetUserUseCaseImpl
 import com.timgortworst.tasqs.presentation.base.model.EasterEgg
 import com.timgortworst.tasqs.domain.usecase.settings.EasterEggUseCaseImpl
+import com.timgortworst.tasqs.infrastructure.notifications.NotificationQueue
 import com.timgortworst.tasqs.presentation.usecase.settings.EasterEggUseCase
 import com.timgortworst.tasqs.presentation.usecase.user.GetUserUseCase
 import kotlinx.coroutines.flow.collect
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(
     private val easterEggUseCase: EasterEggUseCase,
     private val sharedPrefs: SharedPrefs,
-    getUserUseCase: GetUserUseCase
+    getUserUseCase: GetUserUseCase,
+    private val notificationQueue: NotificationQueue
 ) : ViewModel() {
 
     private val _easterEgg = MutableLiveData<Response<EasterEgg?>>()
@@ -37,5 +39,9 @@ class SettingsViewModel(
 
     fun setDarkModeSetting(darkModeSetting: Int) {
         sharedPrefs.setDarkModeSetting(darkModeSetting)
+    }
+
+    fun removeAllNotifications() {
+        notificationQueue.removeAllPendingNotifications()
     }
 }
